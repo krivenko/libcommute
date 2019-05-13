@@ -1,5 +1,5 @@
 #
-# This file is part of libcommute, a C++ 11/14/17 header-only library
+# This file is part of libcommute, a C++11/14/17 header-only library
 # to manipulate polynomial expressions with quantum-mechanical operators.
 #
 # Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
@@ -43,10 +43,12 @@ target_include_directories(libcommute INTERFACE
 # Build unit tests
 if(Tests)
   enable_testing()
+  message(STATUS "Building unit tests")
   add_subdirectory(test)
 endif(Tests)
 
 # Build examples
 if(Examples)
+  message(STATUS "Building examples")
   add_subdirectory(example)
 endif(Examples)

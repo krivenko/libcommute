@@ -1,0 +1,20 @@
+#
+# This file is part of libcommute, a C++11/14/17 header-only library
+# to manipulate polynomial expressions with quantum-mechanical operators.
+#
+# Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Build Catch2 main object file
+add_library(catch2 OBJECT catch2/catch2-main.cpp)
+
+# Build C++ unit tests
+foreach(t static_indices)
+  set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
+  add_executable(${t} ${s})
+  target_link_libraries(${t} PRIVATE libcommute catch2)
+  add_test(NAME ${t} COMMAND ${t})
+endforeach()

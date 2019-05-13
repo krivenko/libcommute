@@ -10,6 +10,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#pragma once
 
-#define LIBCOMMUTE_VERSION "0.1"
+#include "catch2/catch.hpp"
+
+#include <libcommute/expression.hpp>
+
+using namespace libcommute;
+
+TEST_CASE("Expression with static indices", "[static_indices]") {
+
+  real_expression<> expr0;
+  real_expression<int> expr1;
+  complex_expression<std::string> expr2;
+
+  SECTION("section") {
+    // TODO
+  }
+}
