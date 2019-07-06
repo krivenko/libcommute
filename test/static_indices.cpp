@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * This file is part of libcommute, a C++11/14/17 header-only library
+ * This file is part of libcommute, a C++11/14/17 header-only library allowing
  * to manipulate polynomial expressions with quantum-mechanical operators.
  *
  * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
@@ -18,7 +18,7 @@
 using namespace libcommute;
 
 TEST_CASE("Expression with static indices", "[static_indices]") {
-
+/*
   real_expression<> expr0;
   real_expression<int> expr1;
   complex_expression<std::string> expr2;
@@ -26,4 +26,5 @@ TEST_CASE("Expression with static indices", "[static_indices]") {
   SECTION("section") {
     // TODO
   }
+*/
 }

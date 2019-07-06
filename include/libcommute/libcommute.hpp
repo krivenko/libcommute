@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * This file is part of libcommute, a C++ 11/14/17 header-only library allowing
+ * This file is part of libcommute, a C++11/14/17 header-only library allowing
  * to manipulate polynomial expressions with quantum-mechanical operators.
  *
  * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
@@ -10,6 +10,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
+#ifndef LIBCOMMUTE_HPP_
+#define LIBCOMMUTE_HPP_
 
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+//
+// Main header of libcommute
+//
+
+#include "expression.hpp"
+
+// C++17-only headers
+#if __cplusplus >= 201703L
+#include "dynamic_indices.hpp"
+#endif
+
+#endif

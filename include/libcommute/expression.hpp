@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * This file is part of libcommute, a C++11/14/17 header-only library
+ * This file is part of libcommute, a C++11/14/17 header-only library allowing
  * to manipulate polynomial expressions with quantum-mechanical operators.
  *
  * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
@@ -10,7 +10,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#pragma once
+#ifndef LIBCOMMUTE_EXPRESSION_HPP_
+#define LIBCOMMUTE_EXPRESSION_HPP_
+
+#include "generator.hpp"
 
 #include <complex>
 #include <map>
@@ -30,7 +33,7 @@ public:
   using scalar_type = ScalarType;
   using index_types = std::tuple<IndexTypes...>;
 
-  // Constructors
+  // Value semantics
   expression() = default;
   expression(expression const&) = default;
   expression(expression&&) noexcept = default;
@@ -47,4 +50,6 @@ using expression_real = expression<double, IndexTypes...>;
 template<typename... IndexTypes>
 using expression_complex = expression<std::complex<double>, IndexTypes...>;
 
-} // end of namespace libcommute
+} // namespace libcommute
+
+#endif

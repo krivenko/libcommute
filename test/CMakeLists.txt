@@ -1,5 +1,5 @@
 #
-# This file is part of libcommute, a C++11/14/17 header-only library
+# This file is part of libcommute, a C++11/14/17 header-only library allowing
 # to manipulate polynomial expressions with quantum-mechanical operators.
 #
 # Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
@@ -12,7 +12,7 @@
 add_library(catch2 OBJECT catch2/catch2-main.cpp)
 
 # Build C++ unit tests
-foreach(t static_indices)
+foreach(t generator static_indices)
   set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
   add_executable(${t} ${s})
   target_link_libraries(${t} PRIVATE libcommute catch2)
