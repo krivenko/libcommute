@@ -244,7 +244,13 @@ public:
 
   // Value semantics
   spin_generator(spin_component c, IndexTypes&&... indices) :
-    base(std::forward<IndexTypes>(indices)...), c_(c) {}
+    base(std::forward<IndexTypes>(indices)...), multiplicity_(2), c_(c) {}
+  spin_generator(double spin, spin_component c, IndexTypes&&... indices) :
+    base(std::forward<IndexTypes>(indices)...), multiplicity_(2*spin+1), c_(c) {
+      // Multiplicity has to be integer
+      assert(2*spin == int(spin*2));
+    }
+
   spin_generator() = delete;
   spin_generator(spin_generator const&) = default;
   spin_generator(spin_generator&&) noexcept = default;
@@ -252,27 +258,37 @@ public:
   spin_generator& operator=(spin_generator&&) noexcept = default;
 
 protected:
+  // Multiplicity, 2S+1
+  int multiplicity_;
+
   // Creation or annihilation operator?
   spin_component c_;
 
   // Check two generators of the same algebra for equality
   virtual bool equal(base const& g) const override {
     auto const& b_g =  dynamic_cast<spin_generator const&>(g);
-    return c_ == b_g.c_ && this->indices_ == b_g.indices_;
+    return multiplicity_ == b_g.multiplicity_ &&
+                      c_ == b_g.c_ && this->indices_ == b_g.indices_;
   }
 
   // Ordering
   virtual bool less(base const& g) const override {
     auto const& s_g =  dynamic_cast<spin_generator const&>(g);
-    // Example: S+_1 < S-_1 < Sz_1 < S+_2 < S-_2 < Sz_2
-    if(this->indices_ != s_g.indices_)
+    // Example: S1/2+_1 < S1/2-_1 < S1/2z_1 < S1/2+_2 < S1/2-_2 < S1/2z_2 <
+    //          S3/2+_1 < S3/2-_1 < S3/2z_1 < S3/2+_2 < S3/2-_2 < S3/2z_2
+    if(this->multiplicity_ != s_g.multiplicity_)
+      return (this->multiplicity_ < s_g.multiplicity_);
+    else if(this->indices_ != s_g.indices_)
       return (this->indices_ < s_g.indices_);
     else
       return this->c_ < s_g.c_;
   }
   virtual bool greater(base const& g) const override {
     auto const& s_g =  dynamic_cast<spin_generator const&>(g);
-    // Example: Sz_2 > S-_2 > S+_2 > Sz_1 > S-_1 > S+_1
+    // Example: S3/2z_2 > S3/2-_2 > S3/2+_2 > S3/2z_1 > S3/2-_1 > S3/2+_1 >
+    //          S1/2z_2 > S1/2-_2 > S1/2+_2 > S1/2z_1 > S1/2-_1 > S1/2+_1
+    if(this->multiplicity_ != s_g.multiplicity_)
+      return (this->multiplicity_ > s_g.multiplicity_);
     if(this->indices_ != s_g.indices_)
       return (this->indices_ > s_g.indices_);
     else
@@ -282,6 +298,12 @@ protected:
   // Print to stream
   virtual std::ostream & print(std::ostream & os) const override {
     os << "S";
+    if(multiplicity_ != 2) {
+      if(multiplicity_ % 2 == 0)
+        os << (multiplicity_ - 1) << "/2";
+      else
+        os << ((multiplicity_ - 1) / 2);
+    }
     switch(this->c_) {
       case spin_component::plus: os << "+"; break;
       case spin_component::minus: os << "-"; break;
@@ -298,6 +320,12 @@ template<typename... IndexTypes>
 inline spin_generator<typename c_str_to_string_t<IndexTypes>::type...>
 make_spin(spin_component c, IndexTypes&&... indices) {
   return {c, std::forward<IndexTypes>(indices)...};
+}
+
+template<typename... IndexTypes>
+inline spin_generator<typename c_str_to_string_t<IndexTypes>::type...>
+make_spin(double spin, spin_component c, IndexTypes&&... indices) {
+  return {spin, c, std::forward<IndexTypes>(indices)...};
 }
 
 } // namespace libcommute

@@ -30,7 +30,8 @@ template<size_t N> struct c_str_to_string_t<const char (&)[N]> {
   using type = std::string;
 };
 
-// Print an std::tuple to an output stream as a comma-separated list
+namespace detail {
+
 template<size_t N> struct print_tuple_impl {
   template<typename... T>
   static void apply(std::ostream & os, std::tuple<T...> const& t) {
@@ -45,9 +46,12 @@ template<> struct print_tuple_impl<0> {
   }
 };
 
+} // namespace detail
+
+// Print an std::tuple to an output stream as a comma-separated list
 template<typename... T>
 void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
-  print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
+  detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
 }
 
 } // namespace libcommute
