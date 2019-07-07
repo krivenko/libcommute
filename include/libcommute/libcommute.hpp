@@ -17,11 +17,11 @@
 // Main header of libcommute
 //
 
-#include "expression.hpp"
+#include "expression/expression.hpp"
 
 // C++17-only headers
 #if __cplusplus >= 201703L
-#include "dynamic_indices.hpp"
+#include "expression/dynamic_indices.hpp"
 #endif
 
 #endif

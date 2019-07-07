@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/expression.hpp>
+#include <libcommute/expression/expression.hpp>
 
 using namespace libcommute;
 

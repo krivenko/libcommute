@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_GENERATOR_HPP_
 #define LIBCOMMUTE_GENERATOR_HPP_
 
-#include "utility.hpp"
+#include "../utility.hpp"
 
 #include <iostream>
 #include <tuple>

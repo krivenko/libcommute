@@ -14,7 +14,7 @@
 #include "catch2/catch.hpp"
 #include "utility.hpp"
 
-#include <libcommute/generator.hpp>
+#include <libcommute/expression/generator.hpp>
 
 #include <sstream>
 #include <vector>
