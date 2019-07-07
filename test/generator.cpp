@@ -16,7 +16,6 @@
 
 #include <libcommute/expression/generator.hpp>
 
-#include <sstream>
 #include <vector>
 
 using namespace libcommute;

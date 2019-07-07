@@ -16,6 +16,7 @@
 #include "../utility.hpp"
 
 #include <iostream>
+#include <memory>
 #include <tuple>
 #include <utility>
 
@@ -50,6 +51,9 @@ public:
 
   // Get ID of the algebra this generator belongs to
   virtual int algebra_id() const = 0;
+
+  // Make a smart pointer that manages a copy of this generator
+  virtual std::unique_ptr<generator> clone() const = 0;
 
   // Comparisons
   friend bool operator==(generator const& g1, generator const& g2) {
@@ -111,6 +115,11 @@ public:
   fermion_generator(fermion_generator&&) noexcept = default;
   fermion_generator& operator=(fermion_generator const&) = default;
   fermion_generator& operator=(fermion_generator&&) noexcept = default;
+
+  // Make a smart pointer that manages a copy of this generator
+  virtual std::unique_ptr<base> clone() const override {
+    return std::unique_ptr<base>(new fermion_generator(*this));
+  }
 
 protected:
   // Creation or annihilation operator?
@@ -179,6 +188,11 @@ public:
   boson_generator(boson_generator&&) noexcept = default;
   boson_generator& operator=(boson_generator const&) = default;
   boson_generator& operator=(boson_generator&&) noexcept = default;
+
+  // Make a smart pointer that manages a copy of this generator
+  virtual std::unique_ptr<base> clone() const override {
+    return std::unique_ptr<base>(new boson_generator(*this));
+  }
 
 protected:
   // Creation or annihilation operator?
@@ -256,6 +270,11 @@ public:
   spin_generator(spin_generator&&) noexcept = default;
   spin_generator& operator=(spin_generator const&) = default;
   spin_generator& operator=(spin_generator&&) noexcept = default;
+
+  // Make a smart pointer that manages a copy of this generator
+  virtual std::unique_ptr<base> clone() const override {
+    return std::unique_ptr<base>(new spin_generator(*this));
+  }
 
 protected:
   // Multiplicity, 2S+1

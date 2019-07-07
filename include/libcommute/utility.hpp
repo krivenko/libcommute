@@ -14,7 +14,9 @@
 #define LIBCOMMUTE_UTILITY_HPP_
 
 #include <iostream>
+#include <memory>
 #include <string>
+#include <utility>
 #include <tuple>
 
 //

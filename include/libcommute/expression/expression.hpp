@@ -14,16 +14,21 @@
 #define LIBCOMMUTE_EXPRESSION_HPP_
 
 #include "generator.hpp"
+#include "monomial.hpp"
 
+#include <algorithm>
 #include <complex>
+#include <iostream>
 #include <map>
+#include <memory>
 #include <tuple>
+#include <vector>
+
+namespace libcommute {
 
 //
 // Polynomial expression involving quantum-mechanical operators
 //
-
-namespace libcommute {
 
 template <typename ScalarType, typename... IndexTypes>
 class expression {
