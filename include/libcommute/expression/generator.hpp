@@ -166,6 +166,12 @@ make_fermion(bool dagger, IndexTypes&&... indices) {
   return {dagger, std::forward<IndexTypes>(indices)...};
 }
 
+// Check if generator belongs to the fermionic algebra
+template <typename... IndexTypes>
+bool is_fermion(generator<IndexTypes...> const& gen) {
+  return gen.algebra_id() == FERMION_ALGEBRA_ID;
+}
+
 //
 // Generator of the bosonic algebra
 //
@@ -237,6 +243,12 @@ template<typename... IndexTypes>
 inline boson_generator<typename c_str_to_string_t<IndexTypes>::type...>
 make_boson(bool dagger, IndexTypes&&... indices) {
   return {dagger, std::forward<IndexTypes>(indices)...};
+}
+
+// Check if generator belongs to the bosonic algebra
+template <typename... IndexTypes>
+bool is_boson(generator<IndexTypes...> const& gen) {
+  return gen.algebra_id() == BOSON_ALGEBRA_ID;
 }
 
 //
@@ -345,6 +357,12 @@ template<typename... IndexTypes>
 inline spin_generator<typename c_str_to_string_t<IndexTypes>::type...>
 make_spin(double spin, spin_component c, IndexTypes&&... indices) {
   return {spin, c, std::forward<IndexTypes>(indices)...};
+}
+
+// Check if generator belongs to the spin algebra
+template <typename... IndexTypes>
+bool is_spin(generator<IndexTypes...> const& gen) {
+  return gen.algebra_id() == SPIN_ALGEBRA_ID;
 }
 
 } // namespace libcommute

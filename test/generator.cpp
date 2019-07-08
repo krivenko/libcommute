@@ -93,6 +93,12 @@ TEST_CASE("Algebra generators", "[generator]") {
     check_equality(fermion_ops);
     check_less_greater(fermion_ops);
 
+    for(auto const& g : fermion_ops) {
+      CHECK(is_fermion(*g));
+      CHECK_FALSE(is_boson(*g));
+      CHECK_FALSE(is_spin(*g));
+    }
+
     CHECK_THAT(Cdag_dn, Prints<gen_type>("C+(dn,0)"));
     CHECK_THAT(Cdag_up, Prints<gen_type>("C+(up,0)"));
     CHECK_THAT(C_up, Prints<gen_type>("C(up,0)"));
@@ -106,6 +112,12 @@ TEST_CASE("Algebra generators", "[generator]") {
     check_equality(boson_ops);
     check_less_greater(boson_ops);
 
+    for(auto const& g : boson_ops) {
+      CHECK_FALSE(is_fermion(*g));
+      CHECK(is_boson(*g));
+      CHECK_FALSE(is_spin(*g));
+    }
+
     CHECK_THAT(Adag_x, Prints<gen_type>("A+(x,0)"));
     CHECK_THAT(Adag_y, Prints<gen_type>("A+(y,0)"));
     CHECK_THAT(A_y, Prints<gen_type>("A(y,0)"));
@@ -118,6 +130,12 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_equality(spin_ops);
     check_less_greater(spin_ops);
+
+    for(auto const& g : spin_ops) {
+      CHECK_FALSE(is_fermion(*g));
+      CHECK_FALSE(is_boson(*g));
+      CHECK(is_spin(*g));
+    }
 
     CHECK_THAT(Sp_i, Prints<gen_type>("S+(i,0)"));
     CHECK_THAT(Sm_i, Prints<gen_type>("S-(i,0)"));
@@ -134,6 +152,12 @@ TEST_CASE("Algebra generators", "[generator]") {
     check_equality(spin1_ops);
     check_less_greater(spin_ops);
 
+    for(auto const& g : spin1_ops) {
+      CHECK_FALSE(is_fermion(*g));
+      CHECK_FALSE(is_boson(*g));
+      CHECK(is_spin(*g));
+    }
+
     CHECK_THAT(S1p_i, Prints<gen_type>("S1+(i,0)"));
     CHECK_THAT(S1m_i, Prints<gen_type>("S1-(i,0)"));
     CHECK_THAT(S1z_i, Prints<gen_type>("S1z(i,0)"));
@@ -148,6 +172,12 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_equality(spin32_ops);
     check_less_greater(spin32_ops);
+
+    for(auto const& g : spin32_ops) {
+      CHECK_FALSE(is_fermion(*g));
+      CHECK_FALSE(is_boson(*g));
+      CHECK(is_spin(*g));
+    }
 
     CHECK_THAT(S32p_i, Prints<gen_type>("S3/2+(i,0)"));
     CHECK_THAT(S32m_i, Prints<gen_type>("S3/2-(i,0)"));
