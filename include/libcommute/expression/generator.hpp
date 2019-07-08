@@ -115,6 +115,7 @@ public:
   fermion_generator(fermion_generator&&) noexcept = default;
   fermion_generator& operator=(fermion_generator const&) = default;
   fermion_generator& operator=(fermion_generator&&) noexcept = default;
+  virtual ~fermion_generator() {}
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
@@ -194,6 +195,7 @@ public:
   boson_generator(boson_generator&&) noexcept = default;
   boson_generator& operator=(boson_generator const&) = default;
   boson_generator& operator=(boson_generator&&) noexcept = default;
+  virtual ~boson_generator() {}
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
@@ -282,6 +284,7 @@ public:
   spin_generator(spin_generator&&) noexcept = default;
   spin_generator& operator=(spin_generator const&) = default;
   spin_generator& operator=(spin_generator&&) noexcept = default;
+  virtual ~spin_generator() {}
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
