@@ -26,10 +26,13 @@
 namespace libcommute {
 
 // std::make_unique<T>() from C++14
+#if __cplusplus < 201402L
 template<typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
+#define LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+#endif
 
 // Identity metafunction for all T except for the C-string type
 // that is mapped to std::string
