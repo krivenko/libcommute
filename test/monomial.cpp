@@ -91,27 +91,61 @@ TEST_CASE("Algebra generators", "[generator]") {
     check_less_greater(monomials);
   }
 
-  SECTION("Iteration and element access") {
+  SECTION("Element access") {
     mon_type m0{};
     CHECK(m0.size() == 0);
-    CHECK(m0.begin() == m0.end());
 
     mon_type m4(Cdag_dn, A_y, Sp_i, S1z_j);
     CHECK(m4.size() == 4);
+    CHECK(m4[0] == Cdag_dn);
+    CHECK(m4[1] == A_y);
+    CHECK(m4[2] == Sp_i);
+    CHECK(m4[3] == S1z_j);
+  }
+
+  SECTION("const_iterator") {
+    mon_type m0{};
+    CHECK(m0.begin() == m0.end());
+    CHECK(m0.begin() >= m0.end());
+    CHECK(m0.begin() <= m0.end());
+
+    mon_type m4(Cdag_dn, A_y, Sp_i, S1z_j);
+    CHECK(m4.begin() != m4.end());
+    CHECK(m4.cbegin() != m4.cend());
+    CHECK_FALSE(m4.begin() == m4.end());
+    CHECK_FALSE(m4.cbegin() == m4.cend());
+    CHECK(m4.begin() < m4.end());
+    CHECK(m4.begin() <= m4.end());
+    CHECK_FALSE(m4.begin() > m4.end());
+    CHECK_FALSE(m4.begin() >= m4.end());
+
     auto it = m4.begin();
-    CHECK(**it == Cdag_dn);
-    CHECK(*m4[0] == Cdag_dn);
-    ++it;
-    CHECK(**it == A_y);
-    CHECK(*m4[1] == A_y);
-    ++it;
-    CHECK(**it == Sp_i);
-    CHECK(*m4[2] == Sp_i);
-    ++it;
-    CHECK(**it == S1z_j);
-    CHECK(*m4[3] == S1z_j);
-    ++it;
-    CHECK(it == m4.end());
+    REQUIRE(*it == Cdag_dn);
+    REQUIRE(it->algebra_id() == FERMION_ALGEBRA_ID);
+    REQUIRE(it[2] == Sp_i);
+
+    CHECK(*(it + 1) == A_y);
+    CHECK(*(1 + it) == A_y);
+    CHECK(*(m4.end() - 1) == S1z_j);
+
+    CHECK(it++ == m4.begin());
+    CHECK(*it == A_y);
+    CHECK(*(++it) == Sp_i);
+    it += 1;
+    CHECK(*it == S1z_j);
+    CHECK(*(it--) == S1z_j);
+    CHECK(*it == Sp_i);
+    CHECK(*(--it) == A_y);
+    it -= 1;
+    CHECK(*it == Cdag_dn);
+
+    auto it1 = m4.begin(), it2 = m4.end();
+    CHECK(it2 - it1 == 4);
+
+    using std::swap;
+    swap(it1, it2);
+    CHECK(it2 - it1 == -4);
+    CHECK(*it2 == Cdag_dn);
   }
 
   SECTION("Printing") {
