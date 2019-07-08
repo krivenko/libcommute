@@ -119,7 +119,7 @@ public:
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
-    return std::unique_ptr<base>(new fermion_generator(*this));
+    return make_unique<fermion_generator>(*this);
   }
 
 protected:
@@ -199,7 +199,7 @@ public:
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
-    return std::unique_ptr<base>(new boson_generator(*this));
+    return make_unique<boson_generator>(*this);
   }
 
 protected:
@@ -288,7 +288,7 @@ public:
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
-    return std::unique_ptr<base>(new spin_generator(*this));
+    return make_unique<spin_generator>(*this);
   }
 
 protected:
