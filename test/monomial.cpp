@@ -14,6 +14,9 @@
 #include "catch2/catch.hpp"
 #include "utility.hpp"
 
+#include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
 
 #include <vector>

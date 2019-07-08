@@ -10,22 +10,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_HPP_
-#define LIBCOMMUTE_HPP_
+#ifndef LIBCOMMUTE_DYN_INDICES_HPP_
+#define LIBCOMMUTE_DYN_INDICES_HPP_
 
-//
-// Main header of libcommute
-//
+#include <string>
+#include <variant>
 
-#include "expression/generator_fermion.hpp"
-#include "expression/generator_boson.hpp"
-#include "expression/generator_spin.hpp"
-#include "expression/expression.hpp"
-#include "expression/factories.hpp"
+// TODO: #error if included in C++ < 17
+// TODO: document
 
-// C++17-only headers
-#if __cplusplus >= 201703L
-#include "expression/dyn_indices.hpp"
-#endif
+namespace libcommute {
+
+template<typename... IndexTypes> class dyn_indices_generic {
+  // TODO: std::variant<IndexTypes...>
+};
+
+using dyn_indices = dyn_indices_generic<int, std::string>;
+
+} // namespace libcommute
 
 #endif

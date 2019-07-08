@@ -10,7 +10,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_DYNAMIC_INDICES_HPP_
-#define LIBCOMMUTE_DYNAMIC_INDICES_HPP_
+#ifndef LIBCOMMUTE_FACTORIES_HPP_
+#define LIBCOMMUTE_FACTORIES_HPP_
+
+#include "../utility.hpp"
+
+namespace libcommute {
+
+// TODO: factories like c_dag, c, n, etc for static indices
+
+namespace dyn {
+// TODO: factories like c_dag, c, n, etc for dynamic indices
+}
+
+} // namespace libcommute
 
 #endif

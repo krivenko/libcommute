@@ -18,3 +18,7 @@ foreach(t generator monomial static_indices)
   target_link_libraries(${t} PRIVATE libcommute catch2)
   add_test(NAME ${t} COMMAND ${t})
 endforeach()
+
+# TODO: optionally build C++17-only test(s)
+#       - detect that CMake is new enough for set(CMAKE_CXX_STANDARD 17)
+#       - check that C++17 is supported by the compiler
