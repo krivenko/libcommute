@@ -59,7 +59,7 @@ public:
   explicit monomial(GenTypes&&... generators) {
     constructor_impl(std::forward<GenTypes>(generators)...);
   }
-  template<> explicit monomial<>() {};
+  explicit monomial() {};
 
   // Construct from a list of pointers to generators
   monomial(std::initializer_list<generator_type*> generators) {

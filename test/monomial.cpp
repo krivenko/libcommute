@@ -24,8 +24,8 @@
 using namespace libcommute;
 
 template<typename V> void check_equality(V const& v) {
-  for(int i1 = 0; i1 < v.size(); ++i1) {
-    for(int i2 = 0; i2 < v.size(); ++i2) {
+  for(size_t i1 = 0; i1 < v.size(); ++i1) {
+    for(size_t i2 = 0; i2 < v.size(); ++i2) {
       CHECK((v[i1] == v[i2]) == (i1 == i2));
       CHECK((v[i1] != v[i2]) == (i1 != i2));
     }
@@ -33,8 +33,8 @@ template<typename V> void check_equality(V const& v) {
 }
 
 template<typename V> void check_less_greater(V const& v) {
-  for(int i1 = 0; i1 < v.size(); ++i1) {
-    for(int i2 = 0; i2 < v.size(); ++i2) {
+  for(size_t i1 = 0; i1 < v.size(); ++i1) {
+    for(size_t i2 = 0; i2 < v.size(); ++i2) {
       CHECK((v[i1] < v[i2]) == (i1 < i2));
       CHECK((v[i1] > v[i2]) == (i1 > i2));
     }
