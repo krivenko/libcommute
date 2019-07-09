@@ -41,7 +41,7 @@ template<typename V> void check_less_greater(V const& v) {
   }
 }
 
-TEST_CASE("Algebra generators", "[generator]") {
+TEST_CASE("Monomials", "[monomial]") {
 
   // Setup
   using gen_type = generator<std::string, int>;

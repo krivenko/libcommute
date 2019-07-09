@@ -44,10 +44,12 @@ public:
   virtual int algebra_id() const override { return SPIN_ALGEBRA_ID; }
 
   // Value semantics
-  generator_spin(spin_component c, IndexTypes&&... indices) :
-    base(std::forward<IndexTypes>(indices)...), multiplicity_(2), c_(c) {}
-  generator_spin(double spin, spin_component c, IndexTypes&&... indices) :
-    base(std::forward<IndexTypes>(indices)...), multiplicity_(2*spin+1), c_(c) {
+  template<typename... Args>
+  generator_spin(spin_component c, Args&&... indices) :
+    base(std::forward<Args>(indices)...), multiplicity_(2), c_(c) {}
+  template<typename... Args>
+  generator_spin(double spin, spin_component c, Args&&... indices) :
+    base(std::forward<Args>(indices)...), multiplicity_(2*spin+1), c_(c) {
       // Multiplicity has to be integer
       assert(2*spin == int(spin*2));
     }
@@ -125,7 +127,7 @@ protected:
   }
 };
 
-// Convenience factory function
+// Convenience factory functions
 template<typename... IndexTypes>
 inline generator_spin<typename c_str_to_string_t<IndexTypes>::type...>
 make_spin(spin_component c, IndexTypes&&... indices) {
@@ -140,10 +142,32 @@ make_spin(double spin, spin_component c, IndexTypes&&... indices) {
 
 // Check if generator belongs to the spin algebra
 template <typename... IndexTypes>
-bool is_spin(generator<IndexTypes...> const& gen) {
+inline bool is_spin(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == SPIN_ALGEBRA_ID;
 }
 
 } // namespace libcommute
+
+#if __cplusplus >= 201703L
+#include "dyn_indices.hpp"
+namespace libcommute {
+namespace dyn {
+
+// Convenience factory functions for dynamic indices
+template<typename... IndexTypes>
+inline generator_spin<dyn_indices>
+make_spin(spin_component c, IndexTypes&&... indices) {
+  return {c, dyn_indices(std::forward<IndexTypes>(indices)...)};
+}
+
+template<typename... IndexTypes>
+inline generator_spin<dyn_indices>
+make_spin(double spin, spin_component c, IndexTypes&&... indices) {
+  return {spin, c, dyn_indices(std::forward<IndexTypes>(indices)...)};
+}
+
+} // namespace dyn
+} // namespace libcommute
+#endif
 
 #endif

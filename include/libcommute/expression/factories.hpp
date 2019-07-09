@@ -19,9 +19,11 @@ namespace libcommute {
 
 // TODO: factories like c_dag, c, n, etc for static indices
 
+#if __cplusplus >= 201703L
 namespace dyn {
 // TODO: factories like c_dag, c, n, etc for dynamic indices
 }
+#endif
 
 } // namespace libcommute
 

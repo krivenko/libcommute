@@ -33,7 +33,8 @@ public:
 
   using index_types = std::tuple<IndexTypes...>;
 
-  generator(IndexTypes... indices) : indices_(indices...) {}
+  template<typename... Args>
+  generator(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
   generator() = delete;
   generator(generator const&) = default;
   generator(generator&&) noexcept = default;

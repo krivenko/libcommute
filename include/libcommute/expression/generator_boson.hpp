@@ -41,8 +41,9 @@ public:
   virtual int algebra_id() const override { return BOSON_ALGEBRA_ID; }
 
   // Value semantics
-  generator_boson(bool dagger, IndexTypes&&... indices) :
-    base(std::forward<IndexTypes>(indices)...), dagger_(dagger) {}
+  template<typename... Args>
+  generator_boson(bool dagger, Args&&... indices) :
+    base(std::forward<Args>(indices)...), dagger_(dagger) {}
   generator_boson() = delete;
   generator_boson(generator_boson const&) = default;
   generator_boson(generator_boson&&) noexcept = default;
@@ -105,10 +106,26 @@ make_boson(bool dagger, IndexTypes&&... indices) {
 
 // Check if generator belongs to the bosonic algebra
 template <typename... IndexTypes>
-bool is_boson(generator<IndexTypes...> const& gen) {
+inline bool is_boson(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == BOSON_ALGEBRA_ID;
 }
 
 } // namespace libcommute
+
+#if __cplusplus >= 201703L
+#include "dyn_indices.hpp"
+namespace libcommute {
+namespace dyn {
+
+// Convenience factory functions for dynamic indices
+template<typename... IndexTypes>
+inline generator_boson<dyn_indices>
+make_boson(bool dagger, IndexTypes&&... indices) {
+  return {dagger, dyn_indices(std::forward<IndexTypes>(indices)...)};
+}
+
+} // namespace dyn
+} // namespace libcommute
+#endif
 
 #endif

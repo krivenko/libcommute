@@ -41,8 +41,9 @@ public:
   virtual int algebra_id() const override { return FERMION_ALGEBRA_ID; }
 
   // Value semantics
-  generator_fermion(bool dagger, IndexTypes&&... indices) :
-    base(std::forward<IndexTypes>(indices)...), dagger_(dagger) {}
+  template<typename... Args>
+  generator_fermion(bool dagger, Args&&... indices) :
+    base(std::forward<Args>(indices)...), dagger_(dagger) {}
   generator_fermion() = delete;
   generator_fermion(generator_fermion const&) = default;
   generator_fermion(generator_fermion&&) noexcept = default;
@@ -105,10 +106,26 @@ make_fermion(bool dagger, IndexTypes&&... indices) {
 
 // Check if generator belongs to the fermionic algebra
 template <typename... IndexTypes>
-bool is_fermion(generator<IndexTypes...> const& gen) {
+inline bool is_fermion(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == FERMION_ALGEBRA_ID;
 }
 
 } // namespace libcommute
+
+#if __cplusplus >= 201703L
+#include "dyn_indices.hpp"
+namespace libcommute {
+namespace dyn {
+
+// Convenience factory functions for dynamic indices
+template<typename... IndexTypes>
+inline generator_fermion<dyn_indices>
+make_fermion(bool dagger, IndexTypes&&... indices) {
+  return {dagger, dyn_indices(std::forward<IndexTypes>(indices)...)};
+}
+
+} // namespace dyn
+} // namespace libcommute
+#endif
 
 #endif

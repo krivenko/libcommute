@@ -14,19 +14,83 @@
 #define LIBCOMMUTE_DYN_INDICES_HPP_
 
 #include <string>
+#include <utility>
 #include <variant>
+#include <vector>
 
-// TODO: #error if included in C++ < 17
-// TODO: document
+#if __cplusplus < 201703L
+#error "This header file requires a C++-17 compliant compiler"
+#endif
 
 namespace libcommute {
+namespace dyn {
+
+//
+// Dynamic sequence of indices
+// Both length of the sequence and type of each index is defined at runtime
+// with the index type restricted to be one of `IndexTypes`.
+//
 
 template<typename... IndexTypes> class dyn_indices_generic {
-  // TODO: std::variant<IndexTypes...>
+  std::vector<std::variant<IndexTypes...>> indices_;
+
+public:
+
+  // Value semantics
+  dyn_indices_generic() = default;
+
+  template<typename... Args> dyn_indices_generic(Args&&... args) {
+    (indices_.emplace_back(std::forward<Args>(args)), ...);
+  }
+
+  dyn_indices_generic(dyn_indices_generic const&) = default;
+  dyn_indices_generic(dyn_indices_generic&&) noexcept = default;
+  dyn_indices_generic& operator=(dyn_indices_generic const&) = default;
+  dyn_indices_generic& operator=(dyn_indices_generic&&) noexcept = default;
+
+  // Equality
+  inline friend bool operator==(dyn_indices_generic const& ind1,
+                                dyn_indices_generic const& ind2) {
+    return ind1.indices_ == ind2.indices_;
+  }
+  inline friend bool operator!=(dyn_indices_generic const& ind1,
+                                dyn_indices_generic const& ind2) {
+    return !operator==(ind1, ind2);
+  }
+
+  // Ordering
+  inline friend bool operator<(dyn_indices_generic const& ind1,
+                               dyn_indices_generic const& ind2) {
+    if(ind1.indices_.size() != ind2.indices_.size())
+      return ind1.indices_.size() < ind2.indices_.size();
+    else
+      return ind1.indices_ < ind2.indices_;
+  }
+  inline friend bool operator>(dyn_indices_generic const& ind1,
+                               dyn_indices_generic const& ind2) {
+    if(ind1.indices_.size() != ind2.indices_.size())
+      return ind1.indices_.size() > ind2.indices_.size();
+    else
+      return ind1.indices_ > ind2.indices_;
+  }
+
+  // Stream output
+  friend std::ostream & operator<<(std::ostream & os,
+                                   dyn_indices_generic const& ind) {
+    const size_t N = ind.indices_.size();
+    for(size_t i = 0; i < N; ++i) {
+      std::visit([&os](auto const& x) { os << x; }, ind.indices_[i]);
+      if(i < N-1) os << ",";
+    }
+    return os;
+  }
+
 };
 
+// Dynamic sequence of integer/string indices
 using dyn_indices = dyn_indices_generic<int, std::string>;
 
+} // namespace dyn
 } // namespace libcommute
 
 #endif
