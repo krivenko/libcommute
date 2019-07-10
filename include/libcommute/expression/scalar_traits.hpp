@@ -23,13 +23,13 @@ namespace libcommute {
 template<typename T> struct is_complex : std::false_type {};
 template<typename T> struct is_complex<std::complex<T>> : std::true_type {};
 
-// Traits of types that can be used as the ScalarType parameter of `expression`.
-// User-defined scalar types need to spcialize this structure.
-template<typename S, typename = void> struct scalar_traits {};
-
 // Enable template instantiation if Trait<T>::value is true
 template<template<typename> class Trait, typename T>
 using with_trait = typename std::enable_if<Trait<T>::value>::type;
+
+// Traits of types that can be used as the ScalarType parameter of `expression`.
+// User-defined scalar types need to spcialize this structure.
+template<typename S, typename = void> struct scalar_traits {};
 
 //
 // Integral types
@@ -70,7 +70,9 @@ template<typename S>
 struct scalar_traits<S, with_trait<is_complex, S>> {
   // Zero value test
   static bool is_zero(S const& x) {
-    return is_zero(std::real(x)) && is_zero(std::imag(x));
+    using real_t = typename S::value_type;
+    return scalar_traits<real_t>::is_zero(x.real()) &&
+           scalar_traits<real_t>::is_zero(x.imag());
   }
   // Real part of x
   static S real(S const& x) { return std::real(x); }
