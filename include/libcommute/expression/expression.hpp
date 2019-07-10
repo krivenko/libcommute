@@ -15,6 +15,7 @@
 
 #include "generator.hpp"
 #include "monomial.hpp"
+#include "scalar_traits.hpp"
 
 #include <algorithm>
 #include <complex>
@@ -22,6 +23,7 @@
 #include <map>
 #include <memory>
 #include <tuple>
+#include <type_traits>
 #include <vector>
 
 namespace libcommute {
@@ -32,6 +34,12 @@ namespace libcommute {
 
 template <typename ScalarType, typename... IndexTypes>
 class expression {
+
+  using monomial_t = monomial<IndexTypes...>;
+  using monomials_map_t = std::map<monomial_t, ScalarType>;
+
+  // List of all monomials in this polynomial expression
+  monomials_map_t monomials;
 
 public:
 
@@ -44,6 +52,41 @@ public:
   expression(expression&&) noexcept = default;
   expression& operator=(expression const&) = default;
   expression& operator=(expression&&) noexcept = default;
+
+  // Construct from an expression of a different scalar type
+  template<typename S>
+  expression(expression<S, IndexTypes...> const& x) {
+   static_assert(std::is_constructible<scalar_type, S>::value,
+                 "Incompatible scalar type in construction");
+   *this = x;
+  }
+
+  // Construct expression with one constant term
+  template<typename S>
+  explicit expression(S const& x) {
+    static_assert(std::is_constructible<scalar_type, S>::value,
+                  "Incompatible scalar type in construction");
+    if(!scalar_traits<S>::is_zero(x)) monomials.emplace(monomial_t{}, x);
+  }
+
+  template<typename S>
+  expression& operator=(expression<S, IndexTypes...> const& x) {
+    static_assert(std::is_constructible<scalar_type, S>::value,
+                  "Incompatible scalar type in assignment");
+   monomials.clear();
+   for (auto const& y : x.get_monomials())
+     monomials.emplace(monomial_t(y.first), scalar_type(y.second));
+   return *this;
+  }
+
+  //
+  // Accessors
+  //
+
+  // Monomials container
+  inline monomials_map_t const& get_monomials() const { return monomials; }
+  // Number of monomials
+  inline size_t size() const { return monomials.size(); }
 
   // TODO
 

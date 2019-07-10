@@ -48,18 +48,24 @@ class monomial {
   }
   void constructor_impl() {}
 
+  template<typename T>
+  using not_monomial_const_ref =
+   typename std::enable_if<!std::is_same<T, monomial const&>::value>::type;
+
 public:
 
   using index_types = std::tuple<IndexTypes...>;
   using generator_type = generator<IndexTypes...>;
   using gen_ptr_type = std::unique_ptr<generator_type>;
 
-  // Construct from a list of generators
-  template<typename... GenTypes>
-  explicit monomial(GenTypes&&... generators) {
-    constructor_impl(std::forward<GenTypes>(generators)...);
+  // Construct empty (constant) monomial
+  monomial() = default;
+
+  // Construct from a list of >=1 generators
+  template<typename T1, typename... Tail, typename = not_monomial_const_ref<T1>>
+  explicit monomial(T1 gen1, Tail&&... more_gens) {
+    constructor_impl(std::forward<T1>(gen1), std::forward<Tail>(more_gens)...);
   }
-  explicit monomial() {};
 
   // Construct from a list of pointers to generators
   monomial(std::initializer_list<generator_type*> generators) {
@@ -67,9 +73,18 @@ public:
   }
 
   // Value semantics
-  monomial(monomial const&) = default;
+  monomial(monomial const& m) {
+    generators_.reserve(m.generators_.size());
+    for(gen_ptr_type const& g : m.generators_)
+      generators_.emplace_back(g->clone());
+  }
   monomial(monomial&&) noexcept = default;
-  monomial& operator=(monomial const&) = default;
+  monomial& operator=(monomial const& m) {
+    generators_.clear();
+    for(gen_ptr_type const& g : m.generators_)
+      generators_.emplace_back(g->clone());
+    return *this;
+  }
   monomial& operator=(monomial&&) noexcept = default;
 
   // Number of generators in this monomial

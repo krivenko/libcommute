@@ -94,6 +94,14 @@ TEST_CASE("Monomials", "[monomial]") {
     check_less_greater(monomials);
   }
 
+  SECTION("Copy") {
+    auto m1 = mon_type(Cdag_dn, A_y, Sp_i, S1z_j);
+    auto m2 = mon_type(S1z_j, S1z_j);
+    m2 = m1;
+    auto m3 = mon_type(m1);
+    CHECK(m2 == m1);
+  }
+
   SECTION("Element access") {
     mon_type m0{};
     CHECK(m0.size() == 0);
