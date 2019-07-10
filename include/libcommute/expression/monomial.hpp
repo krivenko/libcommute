@@ -75,80 +75,12 @@ public:
   // Number of generators in this monomial
   inline size_t size() const { return generators_.size(); }
 
+  //
   // Iteration interface
-  class const_iterator {
-    using vector_it = typename std::vector<gen_ptr_type>::const_iterator;
-    vector_it v_it_;
+  //
 
-  public:
-
-    using iterator_category = std::random_access_iterator_tag;
-    using value_type = generator_type const&;
-    using difference_type = std::ptrdiff_t;
-    using pointer = std::unique_ptr<generator_type> const&;
-    using reference = generator_type const&;
-
-    explicit const_iterator(vector_it const& v_it) : v_it_(v_it) {}
-
-    const_iterator() = default;
-    const_iterator(const_iterator const&) = default;
-    const_iterator(const_iterator&&) noexcept = default;
-    const_iterator& operator=(const_iterator const&) = default;
-    const_iterator& operator=(const_iterator&&) noexcept = default;
-
-    // Increments
-    const_iterator& operator++() { ++v_it_; return *this;}
-    const_iterator operator++(int) {
-      const_iterator retval = *this;
-      ++(*this);
-      return retval;
-    }
-
-    // Decrements
-    const_iterator& operator--() { --v_it_; return *this;}
-    const_iterator operator--(int) {
-      const_iterator retval = *this;
-      --(*this);
-      return retval;
-    }
-
-    // Arithmetics
-    const_iterator& operator+=(size_t n) { v_it_ += n ; return *this; }
-    const_iterator& operator-=(size_t n) { v_it_ -= n ; return *this; }
-    friend const_iterator operator+(const_iterator const& it, size_t n) {
-      return const_iterator(it.v_it_ + n);
-    }
-    friend const_iterator operator+(size_t n, const_iterator const& it) {
-      return const_iterator(it.v_it_ + n);
-    }
-    friend const_iterator operator-(const_iterator const& it, size_t n) {
-      return const_iterator(it.v_it_ - n);
-    }
-    friend difference_type operator-(const_iterator const& it1,
-                                     const_iterator const& it2) {
-      return it1.v_it_ - it2.v_it_;
-    }
-
-    // Equality
-    bool operator==(const_iterator const& it) const {return v_it_ == it.v_it_;}
-    bool operator!=(const_iterator const& it) const {return !(*this == it);}
-
-    // Ordering
-    bool operator<(const_iterator const& it) const {return v_it_ < it.v_it_;}
-    bool operator>(const_iterator const& it) const {return v_it_ > it.v_it_;}
-    bool operator<=(const_iterator const& it) const {return v_it_ <= it.v_it_;}
-    bool operator>=(const_iterator const& it) const {return v_it_ >= it.v_it_;}
-
-    // Dereference
-    reference operator*() const { return **v_it_; }
-    pointer operator->() const { return *v_it_; }
-    reference operator[](size_t n) const { return *v_it_[n]; }
-
-    // swap()
-    friend void swap(const_iterator& lhs, const_iterator& rhs) {
-      std::swap(lhs.v_it_, rhs.v_it_);
-    }
-  };
+  // Constant iterator over generators comprising this monomial
+  class const_iterator;
 
   inline const_iterator begin() const noexcept {
     return const_iterator(generators_.begin());
@@ -221,6 +153,83 @@ public:
 private:
 
   std::vector<gen_ptr_type> generators_;
+};
+
+// Constant iterator over generators comprising a monomial
+template <typename... IndexTypes>
+class monomial<IndexTypes...>::const_iterator {
+
+  using vector_it = typename std::vector<gen_ptr_type>::const_iterator;
+  vector_it v_it_;
+
+public:
+
+  using iterator_category = std::random_access_iterator_tag;
+  using value_type = generator_type const&;
+  using difference_type = std::ptrdiff_t;
+  using pointer = std::unique_ptr<generator_type> const&;
+  using reference = generator_type const&;
+
+  explicit const_iterator(vector_it const& v_it) : v_it_(v_it) {}
+
+  const_iterator() = default;
+  const_iterator(const_iterator const&) = default;
+  const_iterator(const_iterator&&) noexcept = default;
+  const_iterator& operator=(const_iterator const&) = default;
+  const_iterator& operator=(const_iterator&&) noexcept = default;
+
+  // Increments
+  const_iterator& operator++() { ++v_it_; return *this;}
+  const_iterator operator++(int) {
+    const_iterator retval = *this;
+    ++(*this);
+    return retval;
+  }
+
+  // Decrements
+  const_iterator& operator--() { --v_it_; return *this;}
+  const_iterator operator--(int) {
+    const_iterator retval = *this;
+    --(*this);
+    return retval;
+  }
+
+  // Arithmetics
+  const_iterator& operator+=(size_t n) { v_it_ += n ; return *this; }
+  const_iterator& operator-=(size_t n) { v_it_ -= n ; return *this; }
+  friend const_iterator operator+(const_iterator const& it, size_t n) {
+    return const_iterator(it.v_it_ + n);
+  }
+  friend const_iterator operator+(size_t n, const_iterator const& it) {
+    return const_iterator(it.v_it_ + n);
+  }
+  friend const_iterator operator-(const_iterator const& it, size_t n) {
+    return const_iterator(it.v_it_ - n);
+  }
+  friend difference_type operator-(const_iterator const& it1,
+                                    const_iterator const& it2) {
+    return it1.v_it_ - it2.v_it_;
+  }
+
+  // Equality
+  bool operator==(const_iterator const& it) const {return v_it_ == it.v_it_;}
+  bool operator!=(const_iterator const& it) const {return !(*this == it);}
+
+  // Ordering
+  bool operator<(const_iterator const& it) const {return v_it_ < it.v_it_;}
+  bool operator>(const_iterator const& it) const {return v_it_ > it.v_it_;}
+  bool operator<=(const_iterator const& it) const {return v_it_ <= it.v_it_;}
+  bool operator>=(const_iterator const& it) const {return v_it_ >= it.v_it_;}
+
+  // Dereference
+  reference operator*() const { return **v_it_; }
+  pointer operator->() const { return *v_it_; }
+  reference operator[](size_t n) const { return *v_it_[n]; }
+
+  // swap()
+  friend void swap(const_iterator& lhs, const_iterator& rhs) {
+    std::swap(lhs.v_it_, rhs.v_it_);
+  }
 };
 
 } // namespace libcommute
