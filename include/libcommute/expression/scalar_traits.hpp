@@ -17,6 +17,12 @@
 #include <limits>
 #include <type_traits>
 
+#ifndef LIBCOMMUTE_FLOATING_POINT_TOL_EPS
+// Tolerance for detection of zero floating point values expressed in units of
+// the machine epsilon for the respective floating point type.
+#define LIBCOMMUTE_FLOATING_POINT_TOL_EPS 100
+#endif
+
 namespace libcommute {
 
 // Metafunction to detect complex types
@@ -53,7 +59,8 @@ template<typename S>
 struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
   // Zero value test
   static bool is_zero(S const& x) {
-    return std::abs(x) < 100 * std::numeric_limits<S>::epsilon();
+    return std::abs(x) < LIBCOMMUTE_FLOATING_POINT_TOL_EPS *
+                         std::numeric_limits<S>::epsilon();
   }
   // Real part of x
   static S real(S const& x) { return x; }
