@@ -48,9 +48,18 @@ class monomial {
   }
   void constructor_impl() {}
 
-  template<typename T>
-  using not_monomial_const_ref =
-   typename std::enable_if<!std::is_same<T, monomial const&>::value>::type;
+  // Check if all provided types are derived from generator<IndexTypes...>
+  template<typename T, typename... Tail> struct all_are_generators {
+    using T_ = typename std::remove_reference<T>::type;
+    static constexpr bool value =
+      std::is_base_of<generator<IndexTypes...>, T_>::value &&
+      all_are_generators<Tail...>::value;
+  };
+  template<typename T> struct all_are_generators<T> {
+    using T_ = typename std::remove_reference<T>::type;
+    static constexpr bool value =
+      std::is_base_of<generator<IndexTypes...>, T_>::value;
+  };
 
 public:
 
@@ -62,9 +71,12 @@ public:
   monomial() = default;
 
   // Construct from a list of >=1 generators
-  template<typename T1, typename... Tail, typename = not_monomial_const_ref<T1>>
-  explicit monomial(T1 gen1, Tail&&... more_gens) {
-    constructor_impl(std::forward<T1>(gen1), std::forward<Tail>(more_gens)...);
+  template<typename... GenTypes,
+           typename = typename std::enable_if<
+              all_are_generators<GenTypes...>::value>::type
+           >
+  explicit monomial(GenTypes&&... generators) {
+    constructor_impl(std::forward<GenTypes>(generators)...);
   }
 
   // Construct from a list of pointers to generators

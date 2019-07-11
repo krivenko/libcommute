@@ -34,17 +34,19 @@ namespace libcommute {
 
 template <typename ScalarType, typename... IndexTypes>
 class expression {
+public:
 
+  using scalar_type = ScalarType;
+  using index_types = std::tuple<IndexTypes...>;
   using monomial_t = monomial<IndexTypes...>;
+
+private:
   using monomials_map_t = std::map<monomial_t, ScalarType>;
 
   // List of all monomials in this polynomial expression
   monomials_map_t monomials;
 
 public:
-
-  using scalar_type = ScalarType;
-  using index_types = std::tuple<IndexTypes...>;
 
   // Value semantics
   expression() = default;
@@ -67,6 +69,14 @@ public:
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
     if(!scalar_traits<S>::is_zero(x)) monomials.emplace(monomial_t{}, x);
+  }
+
+  // Construct from a monomial
+  template<typename S>
+  explicit expression(S const& x, monomial_t const& monomial) {
+    static_assert(std::is_constructible<scalar_type, S>::value,
+                  "Incompatible scalar type in construction");
+    if(!scalar_traits<S>::is_zero(x)) monomials.emplace(monomial, x);
   }
 
   template<typename S>

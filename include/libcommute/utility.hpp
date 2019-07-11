@@ -34,10 +34,13 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 #define LIBCOMMUTE_NO_STD_MAKE_UNIQUE
 #endif
 
-// Identity metafunction for all T except for the C-string type
+// Identity metafunction for all T except for the C-string types
 // that is mapped to std::string
 template<typename T> struct c_str_to_string_t { using type = T; };
 template<size_t N> struct c_str_to_string_t<const char (&)[N]> {
+  using type = std::string;
+};
+template<> struct c_str_to_string_t<const char *> {
   using type = std::string;
 };
 

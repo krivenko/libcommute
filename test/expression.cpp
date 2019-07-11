@@ -13,6 +13,7 @@
 
 #include "catch2/catch.hpp"
 
+#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/expression.hpp>
 
 using namespace libcommute;
@@ -44,6 +45,18 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(expr_c_from_r.size() == 1);
     CHECK((expr_c_from_r.get_monomials().begin()->first) == monomial_t{});
     CHECK((expr_c_from_r.get_monomials().begin()->second) == 2.0);
+
+    monomial_t monomial(make_fermion(true, 1, "up"),
+                        make_fermion(false, 2, "dn"));
+
+    expression_real<int, std::string> expr_tiny_monomial(1e-100, monomial);
+    CHECK(expr_tiny_monomial.size() == 0);
+    CHECK(expr_tiny_monomial.get_monomials().empty());
+
+    expression_real<int, std::string> expr_monomial(3, monomial);
+    CHECK(expr_monomial.size() == 1);
+    CHECK((expr_monomial.get_monomials().begin()->first) == monomial);
+    CHECK((expr_monomial.get_monomials().begin()->second) == 3.0);
   }
 
   SECTION("assignment") {

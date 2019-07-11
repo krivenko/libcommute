@@ -45,6 +45,8 @@ template<typename S>
 struct scalar_traits<S, with_trait<std::is_integral, S>> {
   // Zero value test
   static bool is_zero(S const& x) { return x == 0; }
+  // Unitary value
+  static constexpr S one() { return S(1); }
   // Real part of x
   static S real(S const& x) { return x; }
   // Imaginary part of x
@@ -63,6 +65,8 @@ struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
     return std::abs(x) < LIBCOMMUTE_FLOATING_POINT_TOL_EPS *
                          std::numeric_limits<S>::epsilon();
   }
+  // Unitary value
+  static S constexpr one() { return S(1); }
   // Real part of x
   static S real(S const& x) { return x; }
   // Imaginary part of x
@@ -82,6 +86,8 @@ struct scalar_traits<S, with_trait<is_complex, S>> {
     return scalar_traits<real_t>::is_zero(x.real()) &&
            scalar_traits<real_t>::is_zero(x.imag());
   }
+  // Unitary value
+  static S constexpr one() { return S(1); }
   // Real part of x
   static S real(S const& x) { return std::real(x); }
   // Imaginary part of x
