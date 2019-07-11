@@ -16,6 +16,7 @@
 #include <complex>
 #include <limits>
 #include <type_traits>
+#include <utility>
 
 #ifndef LIBCOMMUTE_FLOATING_POINT_TOL_EPS
 // Tolerance for detection of zero floating point values expressed in units of
@@ -88,6 +89,26 @@ struct scalar_traits<S, with_trait<is_complex, S>> {
   // Complex conjugate of x
   static S conj(S const& x) { return std::conj(x); }
 };
+
+//
+// Result types of arithmetic operations
+//
+
+// Type of unary minus result
+template<typename S>
+using minus_type = decltype(-std::declval<S>());
+
+// Type of sum of two objects with types S1 and S2
+template<typename S1, typename S2>
+using sum_type = decltype(std::declval<S1>() + std::declval<S2>());
+
+// Type of difference of two objects with types S1 and S2
+template<typename S1, typename S2>
+using diff_type = decltype(std::declval<S1>() - std::declval<S2>());
+
+// Type of product of two objects with types S1 and S2
+template<typename S1, typename S2>
+using mul_type = decltype(std::declval<S1>() * std::declval<S2>());
 
 } // namespace libcommute
 
