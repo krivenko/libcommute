@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "my_complex.hpp"
+#include "int_complex.hpp"
 
 #include <libcommute/expression/factories.hpp>
 
@@ -32,69 +32,73 @@ void check_monomial(E const& expr, S ref_coeff, Generators&&... generators) {
 
 TEST_CASE("Factory functions", "[factories]") {
 
-  SECTION("my_complex") {
+  SECTION("int_complex") {
     SECTION("fermion") {
-      auto c_dag_1_up = c_dag<my_complex>(1, "up");
-      check_monomial(c_dag_1_up, my_complex{1, 0}, make_fermion(true, 1, "up"));
+      auto c_dag_1_up = c_dag<int_complex>(1, "up");
+      check_monomial(c_dag_1_up,
+                     int_complex{1, 0},
+                     make_fermion(true, 1, "up"));
 
-      auto c_2_dn = c<my_complex>(2, "dn");
-      check_monomial(c_2_dn, my_complex{1, 0}, make_fermion(false, 2, "dn"));
+      auto c_2_dn = c<int_complex>(2, "dn");
+      check_monomial(c_2_dn,
+                     int_complex{1, 0},
+                     make_fermion(false, 2, "dn"));
 
-      auto n_1_dn = n<my_complex>(1, "dn");
+      auto n_1_dn = n<int_complex>(1, "dn");
       check_monomial(n_1_dn,
-                    my_complex{1, 0},
+                    int_complex{1, 0},
                     make_fermion(true, 1, "dn"),
                     make_fermion(false, 1, "dn")
                     );
     }
     SECTION("boson") {
-      auto a_dag_x = a_dag<my_complex>(0, "x");
-      check_monomial(a_dag_x, my_complex{1, 0}, make_boson(true, 0, "x"));
+      auto a_dag_x = a_dag<int_complex>(0, "x");
+      check_monomial(a_dag_x, int_complex{1, 0}, make_boson(true, 0, "x"));
 
-      auto a_y = a<my_complex>(0, "y");
-      check_monomial(a_y, my_complex{1, 0}, make_boson(false, 0, "y"));
+      auto a_y = a<int_complex>(0, "y");
+      check_monomial(a_y, int_complex{1, 0}, make_boson(false, 0, "y"));
     }
 
     SECTION("spin-1/2") {
-      auto S_p_0_x = S_p<my_complex>(0, "x");
+      auto S_p_0_x = S_p<int_complex>(0, "x");
       check_monomial(S_p_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(spin_component::plus, 0, "x"));
-      auto S_m_0_x = S_m<my_complex>(0, "x");
+      auto S_m_0_x = S_m<int_complex>(0, "x");
       check_monomial(S_m_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(spin_component::minus, 0, "x"));
-      auto S_z_0_x = S_z<my_complex>(0, "x");
+      auto S_z_0_x = S_z<int_complex>(0, "x");
       check_monomial(S_z_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(spin_component::z, 0, "x"));
     }
     SECTION("spin-1") {
-      auto S_p_0_x = S_p<3, my_complex>(0, "x");
+      auto S_p_0_x = S_p<3, int_complex>(0, "x");
       check_monomial(S_p_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(1.0, spin_component::plus, 0, "x"));
-      auto S_m_0_x = S_m<3, my_complex>(0, "x");
+      auto S_m_0_x = S_m<3, int_complex>(0, "x");
       check_monomial(S_m_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(1.0, spin_component::minus, 0, "x"));
-      auto S_z_0_x = S_z<3, my_complex>(0, "x");
+      auto S_z_0_x = S_z<3, int_complex>(0, "x");
       check_monomial(S_z_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(1.0, spin_component::z, 0, "x"));
     }
     SECTION("spin-3/2") {
-      auto S_p_0_x = S_p<4, my_complex>(0, "x");
+      auto S_p_0_x = S_p<4, int_complex>(0, "x");
       check_monomial(S_p_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(3.0/2, spin_component::plus, 0, "x"));
-      auto S_m_0_x = S_m<4, my_complex>(0, "x");
+      auto S_m_0_x = S_m<4, int_complex>(0, "x");
       check_monomial(S_m_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(3.0/2, spin_component::minus, 0, "x"));
-      auto S_z_0_x = S_z<4, my_complex>(0, "x");
+      auto S_z_0_x = S_z<4, int_complex>(0, "x");
       check_monomial(S_z_0_x,
-                     my_complex{1, 0},
+                     int_complex{1, 0},
                      make_spin(3.0/2, spin_component::z, 0, "x"));
     }
   }

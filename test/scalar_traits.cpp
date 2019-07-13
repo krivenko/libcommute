@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "my_complex.hpp"
+#include "int_complex.hpp"
 
 #include <libcommute/expression/scalar_traits.hpp>
 
@@ -95,18 +95,18 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0,-2.0));
   }
 
-  SECTION("my_complex") {
-    CHECK(scalar_traits<my_complex>::is_zero(my_complex{0, 0}));
-    CHECK_FALSE(scalar_traits<my_complex>::is_zero(my_complex{0, 4}));
-    CHECK_FALSE(scalar_traits<my_complex>::is_zero(my_complex{4, 0}));
-    CHECK_FALSE(scalar_traits<my_complex>::is_zero(my_complex{4, 4}));
-    CHECK(scalar_traits<my_complex>::one() == my_complex{1, 0});
-    CHECK(scalar_traits<my_complex>::real(my_complex{1, 2}) ==
-          my_complex{1, 0});
-    CHECK(scalar_traits<my_complex>::imag(my_complex{1, 2}) ==
-          my_complex{2, 0});
-    CHECK(scalar_traits<my_complex>::conj(my_complex{1, 2}) ==
-          my_complex{1, -2});
+  SECTION("int_complex") {
+    CHECK(scalar_traits<int_complex>::is_zero(int_complex{0, 0}));
+    CHECK_FALSE(scalar_traits<int_complex>::is_zero(int_complex{0, 4}));
+    CHECK_FALSE(scalar_traits<int_complex>::is_zero(int_complex{4, 0}));
+    CHECK_FALSE(scalar_traits<int_complex>::is_zero(int_complex{4, 4}));
+    CHECK(scalar_traits<int_complex>::one() == int_complex{1, 0});
+    CHECK(scalar_traits<int_complex>::real(int_complex{1, 2}) ==
+          int_complex{1, 0});
+    CHECK(scalar_traits<int_complex>::imag(int_complex{1, 2}) ==
+          int_complex{2, 0});
+    CHECK(scalar_traits<int_complex>::conj(int_complex{1, 2}) ==
+          int_complex{1, -2});
   }
 }
 
@@ -154,19 +154,19 @@ TEST_CASE("Result types of arithmetic operations", "[arithmetic_result_type]") {
     CHECK(std::is_same<mul_type<cmplx, cmplx>, cmplx>::value);
   }
 
-  SECTION("my_complex") {
-    CHECK(std::is_same<minus_type<my_complex>, my_complex>::value);
+  SECTION("int_complex") {
+    CHECK(std::is_same<minus_type<int_complex>, int_complex>::value);
 
-    CHECK(std::is_same<sum_type<my_complex, int>, my_complex>::value);
-    CHECK(std::is_same<sum_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<sum_type<my_complex, my_complex>, my_complex>::value);
+    CHECK(std::is_same<sum_type<int_complex, int>, int_complex>::value);
+    CHECK(std::is_same<sum_type<int, int_complex>, int_complex>::value);
+    CHECK(std::is_same<sum_type<int_complex, int_complex>,int_complex>::value);
 
-    CHECK(std::is_same<diff_type<my_complex, int>, my_complex>::value);
-    CHECK(std::is_same<diff_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<diff_type<my_complex, my_complex>, my_complex>::value);
+    CHECK(std::is_same<diff_type<int_complex, int>, int_complex>::value);
+    CHECK(std::is_same<diff_type<int, int_complex>, int_complex>::value);
+    CHECK(std::is_same<diff_type<int_complex, int_complex>,int_complex>::value);
 
-    CHECK(std::is_same<mul_type<my_complex, int>, my_complex>::value);
-    CHECK(std::is_same<mul_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<mul_type<my_complex, my_complex>, my_complex>::value);
+    CHECK(std::is_same<mul_type<int_complex, int>, int_complex>::value);
+    CHECK(std::is_same<mul_type<int, int_complex>, int_complex>::value);
+    CHECK(std::is_same<mul_type<int_complex, int_complex>, int_complex>::value);
   }
 }
