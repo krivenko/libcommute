@@ -1,0 +1,153 @@
+/*******************************************************************************
+ *
+ * This file is part of libcommute, a C++11/14/17 header-only library allowing
+ * to manipulate polynomial expressions with quantum-mechanical operators.
+ *
+ * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ ******************************************************************************/
+
+#include "catch2/catch.hpp"
+
+#include "int_complex.hpp"
+#include "utility.hpp"
+
+#include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/expression.hpp>
+#include <libcommute/expression/factories.hpp>
+
+#include <string>
+
+using namespace libcommute;
+
+TEST_CASE("Compound assignment/subtraction", "[minus_assign]") {
+  SECTION("double") {
+    auto expr_r = real::c_dag(1, "up");
+    using ref_t = decltype(expr_r);
+    expr_r -= 4;
+    CHECK_THAT(expr_r, Prints<ref_t>("-4 + 1*C+(1,up)"));
+    expr_r -= 0;
+    CHECK_THAT(expr_r, Prints<ref_t>("-4 + 1*C+(1,up)"));
+    expr_r -= -4;
+    CHECK_THAT(expr_r, Prints<ref_t>("1*C+(1,up)"));
+  }
+  SECTION("complex from double") {
+    auto expr_c = complex::c_dag(1, "up");
+    using ref_t = decltype(expr_c);
+
+    expr_c -= 4;
+    CHECK_THAT(expr_c, Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
+    expr_c -= 0;
+    CHECK_THAT(expr_c, Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
+    expr_c -= -4;
+    CHECK_THAT(expr_c, Prints<ref_t>("(1,0)*C+(1,up)"));
+  }
+  SECTION("int_complex") {
+    auto expr = c_dag<int_complex>(1, "up");
+    using ref_t = decltype(expr);
+
+    expr -= 4;
+    CHECK_THAT(expr, Prints<ref_t>("{-4,0} + {1,0}*C+(1,up)"));
+    expr -= 0;
+    CHECK_THAT(expr, Prints<ref_t>("{-4,0} + {1,0}*C+(1,up)"));
+    expr -= -4;
+    CHECK_THAT(expr, Prints<ref_t>("{1,0}*C+(1,up)"));
+  }
+}
+
+TEST_CASE("Subtraction", "[minus]") {
+  SECTION("double") {
+    auto expr_r = real::c_dag(1, "up");
+    using ref_t = decltype(expr_r);
+
+    // Result type
+    CHECK(std::is_same<decltype(expr_r - 2), ref_t>::value);
+    CHECK(std::is_same<decltype(2 - expr_r), ref_t>::value);
+
+    CHECK_THAT((expr_r - 0), Prints<ref_t>("1*C+(1,up)"));
+    CHECK_THAT((0 - expr_r), Prints<ref_t>("-1*C+(1,up)"));
+    CHECK_THAT((expr_r - 2), Prints<ref_t>("-2 + 1*C+(1,up)"));
+    CHECK_THAT((2 - expr_r), Prints<ref_t>("2 + -1*C+(1,up)"));
+
+    expr_r -= 2;
+
+    CHECK_THAT((expr_r - 0), Prints<ref_t>("-2 + 1*C+(1,up)"));
+    CHECK_THAT((0 - expr_r), Prints<ref_t>("2 + -1*C+(1,up)"));
+    CHECK_THAT((expr_r - 2), Prints<ref_t>("-4 + 1*C+(1,up)"));
+    CHECK_THAT((2 - expr_r), Prints<ref_t>("4 + -1*C+(1,up)"));
+    CHECK_THAT((expr_r - (-2)), Prints<ref_t>("1*C+(1,up)"));
+    CHECK_THAT(((-2) - expr_r), Prints<ref_t>("-1*C+(1,up)"));
+  }
+  SECTION("complex and double") {
+    auto expr_c = complex::c_dag(1, "up");
+    using ref_t = decltype(expr_c);
+
+    // Result type
+    CHECK(std::is_same<decltype(expr_c - 2.0), ref_t>::value);
+    CHECK(std::is_same<decltype(2.0 - expr_c), ref_t>::value);
+
+    CHECK_THAT((expr_c - 0.0), Prints<ref_t>("(1,0)*C+(1,up)"));
+    CHECK_THAT((0.0 - expr_c), Prints<ref_t>("(-1,-0)*C+(1,up)"));
+    CHECK_THAT((expr_c - 2.0), Prints<ref_t>("(-2,0) + (1,0)*C+(1,up)"));
+    CHECK_THAT((2.0 - expr_c), Prints<ref_t>("(2,-0) + (-1,-0)*C+(1,up)"));
+
+    expr_c -= 2.0;
+
+    CHECK_THAT((expr_c - 0.0), Prints<ref_t>("(-2,0) + (1,0)*C+(1,up)"));
+    CHECK_THAT((0.0 - expr_c), Prints<ref_t>("(2,-0) + (-1,-0)*C+(1,up)"));
+    CHECK_THAT((expr_c - 2.0), Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
+    CHECK_THAT((2.0 - expr_c), Prints<ref_t>("(4,-0) + (-1,-0)*C+(1,up)"));
+    CHECK_THAT((expr_c - (-2.0)), Prints<ref_t>("(1,0)*C+(1,up)"));
+    CHECK_THAT(((-2.0) - expr_c), Prints<ref_t>("(-1,-0)*C+(1,up)"));
+  }
+  SECTION("double and complex") {
+    auto expr_r = real::c_dag(1, "up");
+    using ref_t = expression<std::complex<double>, int, std::string>;
+    const std::complex<double> Id(1,0);
+    const std::complex<double> I(0,1);
+
+    // Result type
+    CHECK(std::is_same<decltype(expr_r - 2.0*I), ref_t>::value);
+    CHECK(std::is_same<decltype(2.0*I - expr_r), ref_t>::value);
+
+    CHECK_THAT((expr_r - 0.0*I), Prints<ref_t>("(1,-0)*C+(1,up)"));
+    CHECK_THAT((0.0*I - expr_r), Prints<ref_t>("(-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - 2.0*I), Prints<ref_t>("(0,-2) + (1,-0)*C+(1,up)"));
+    CHECK_THAT((2.0*I - expr_r), Prints<ref_t>("(0,2) + (-1,0)*C+(1,up)"));
+
+    expr_r -= 2.0;
+
+    CHECK_THAT((expr_r - 0.0*I), Prints<ref_t>("(-2,-0) + (1,-0)*C+(1,up)"));
+    CHECK_THAT((0.0*I - expr_r), Prints<ref_t>("(2,0) + (-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - 2.0*Id), Prints<ref_t>("(-4,-0) + (1,-0)*C+(1,up)"));
+    CHECK_THAT((2.0*Id - expr_r), Prints<ref_t>("(4,0) + (-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - (-2.0*Id)), Prints<ref_t>("(1,-0)*C+(1,up)"));
+    CHECK_THAT(((-2.0*Id) - expr_r), Prints<ref_t>("(-1,0)*C+(1,up)"));
+  }
+  SECTION("int_complex") {
+    auto expr = c_dag<int_complex>(1, "up");
+    using ref_t = decltype(expr);
+
+    // Result type
+    CHECK(std::is_same<decltype(expr - 2), ref_t>::value);
+    CHECK(std::is_same<decltype(2 - expr), ref_t>::value);
+
+    CHECK_THAT((expr - 0), Prints<ref_t>("{1,0}*C+(1,up)"));
+    CHECK_THAT((0 - expr), Prints<ref_t>("{-1,0}*C+(1,up)"));
+    CHECK_THAT((expr - 2), Prints<ref_t>("{-2,0} + {1,0}*C+(1,up)"));
+    CHECK_THAT((2 - expr), Prints<ref_t>("{2,0} + {-1,0}*C+(1,up)"));
+
+    expr -= 2;
+
+    CHECK_THAT((expr - 0), Prints<ref_t>("{-2,0} + {1,0}*C+(1,up)"));
+    CHECK_THAT((0 - expr), Prints<ref_t>("{2,0} + {-1,0}*C+(1,up)"));
+    CHECK_THAT((expr - 2), Prints<ref_t>("{-4,0} + {1,0}*C+(1,up)"));
+    CHECK_THAT((2 - expr), Prints<ref_t>("{4,0} + {-1,0}*C+(1,up)"));
+    CHECK_THAT((expr - (-2)), Prints<ref_t>("{1,0}*C+(1,up)"));
+    CHECK_THAT(((-2) - expr), Prints<ref_t>("{-1,0}*C+(1,up)"));
+  }
+}

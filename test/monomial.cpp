@@ -58,11 +58,13 @@ TEST_CASE("Monomials", "[monomial]") {
   // Monomial of order 0
   monomials.emplace_back();
   CHECK(monomials.back().size() == 0);
+  CHECK(monomials.back().empty());
 
   // Monomial of order 1
   for(auto p0 : basis_gens)
     monomials.emplace_back(mon_type{p0});
   CHECK(monomials.back().size() == 1);
+  CHECK_FALSE(monomials.back().empty());
   CHECK(monomials.back() == mon_type(S1z_j));
 
   // Monomial of order 2
@@ -70,6 +72,7 @@ TEST_CASE("Monomials", "[monomial]") {
     for(auto p1 : basis_gens)
       monomials.emplace_back(mon_type{p0, p1});
   CHECK(monomials.back().size() == 2);
+  CHECK_FALSE(monomials.back().empty());
   CHECK(monomials.back() == mon_type(S1z_j, S1z_j));
 
   // Monomials of order 3
@@ -78,6 +81,7 @@ TEST_CASE("Monomials", "[monomial]") {
       for(auto p2 : basis_gens)
         monomials.emplace_back(mon_type{p0, p1, p2});
   CHECK(monomials.back().size() == 3);
+  CHECK_FALSE(monomials.back().empty());
   CHECK(monomials.back() == mon_type(S1z_j, S1z_j, S1z_j));
 
   // Monomials of order 4
@@ -87,6 +91,7 @@ TEST_CASE("Monomials", "[monomial]") {
         for(auto p3 : basis_gens)
           monomials.emplace_back(mon_type{p0, p1, p2, p3});
   CHECK(monomials.back().size() == 4);
+  CHECK_FALSE(monomials.back().empty());
   CHECK(monomials.back() == mon_type(S1z_j, S1z_j, S1z_j, S1z_j));
 
   SECTION("Equality and ordering") {

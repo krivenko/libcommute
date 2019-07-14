@@ -34,6 +34,13 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 #define LIBCOMMUTE_NO_STD_MAKE_UNIQUE
 #endif
 
+// std::remove_cvref from C++20
+template<typename T> struct remove_cvref {
+  using type = typename std::remove_cv<
+    typename std::remove_reference<T>::type
+  >::type;
+};
+
 // Identity metafunction for all T except for the C-string types
 // that is mapped to std::string
 template<typename T> struct c_str_to_string_t { using type = T; };

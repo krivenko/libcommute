@@ -16,6 +16,8 @@
 
 #include <libcommute/expression/scalar_traits.hpp>
 
+#include <iostream>
+
 //
 // Non-default-constructible mock scalar type
 //
@@ -24,12 +26,35 @@ struct int_complex {
 
   int_complex() = delete;
 
+  int_complex(int re, int im) : re(re), im(im) {}
+  int_complex(int re) : re(re), im(0) {}
+
   friend bool operator==(int_complex const& c1, int_complex const& c2) {
     return c1.re == c2.re && c1.im == c2.im;
   }
 
   // Arithmetics
   int_complex operator-() {return {-re, -im};}
+
+  int_complex & operator+=(int_complex c) {
+    re += c.re;
+    im += c.im;
+    return *this;
+  }
+  int_complex & operator-=(int_complex c) {
+    re -= c.re;
+    im -= c.im;
+    return *this;
+  }
+  int_complex & operator*=(int_complex c2) {
+    auto c1 = *this;
+    re = c1.re*c2.re - c1.im*c2.im;
+    im = c1.re*c2.im + c1.im*c2.re;
+    return *this;
+  }
+  int_complex & operator+=(int n) { return *this += {n, 0}; }
+  int_complex & operator-=(int n) { return *this -= {n, 0}; }
+  int_complex & operator*=(int n) { return *this *= {n, 0}; }
 
   friend int_complex operator+(int_complex c, int n) {return {c.re + n, c.im};}
   friend int_complex operator+(int n, int_complex c) {return c + n;}
@@ -50,14 +75,20 @@ struct int_complex {
   }
 };
 
+std::ostream & operator<<(std::ostream & os, int_complex const& c) {
+  return os << "{" << c.re << "," << c.im << "}";
+}
+
 namespace libcommute {
 
 // Specialize scalar_traits for int_complex
 template<> struct scalar_traits<int_complex> {
   // Zero value test
   static bool is_zero(int_complex const& x) { return x.re == 0 && x.im == 0; }
+  // Zero value
+  static int_complex zero() { return {0, 0}; }
   // Unitary value
-  static constexpr int_complex one() { return {1, 0}; }
+  static int_complex one() { return {1, 0}; }
   // Real part of x
   static int_complex real(int_complex const& x) { return {x.re, 0}; }
   // Imaginary part of x

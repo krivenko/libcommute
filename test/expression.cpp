@@ -13,7 +13,8 @@
 
 #include "catch2/catch.hpp"
 
-#include "static_int.hpp"
+#include "int_complex.hpp"
+#include "utility.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/expression.hpp>
@@ -21,100 +22,47 @@
 
 using namespace libcommute;
 
-using monomial_t = monomial<int, std::string>;
-
-template<typename E, typename S, typename... Generators>
-void check_monomial(E const& expr, S ref_coeff, Generators&&... generators) {
-  monomial_t ref_monomial(std::forward<Generators>(generators)...);
-
-  CHECK(expr.get_monomials().size() == 1);
-  CHECK((expr.get_monomials().begin()->first) == ref_monomial);
-  CHECK((expr.get_monomials().begin()->second) == ref_coeff);
-}
-
 TEST_CASE("Expression with static indices", "[expression]") {
-
-  using monomial_t = monomial<int, std::string>;
-
   SECTION("Constructors") {
     expression_real<int, std::string> expr0;
-    CHECK(expr0.size() == 0);
-    CHECK(expr0.get_monomials().empty());
+    CHECK_THAT(expr0, Prints<decltype(expr0)>("0"));
 
     expression_real<int, std::string> expr_tiny_const(1e-100);
-    CHECK(expr_tiny_const.size() == 0);
-    CHECK(expr_tiny_const.get_monomials().empty());
+    CHECK_THAT(expr_tiny_const, Prints<decltype(expr_tiny_const)>("0"));
 
     expression_real<int, std::string> expr_const(2);
-    check_monomial(expr_const, 2.0);
+    CHECK_THAT(expr_const, Prints<decltype(expr_const)>("2"));
 
     expression_complex<int, std::string> expr_c_const(2);
-    check_monomial(expr_c_const, 2.0);
+    CHECK_THAT(expr_c_const, Prints<decltype(expr_c_const)>("(2,0)"));
 
     expression_complex<int, std::string> expr_c_from_r(expr_const);
-    check_monomial(expr_c_from_r, 2.0);
+    CHECK_THAT(expr_c_from_r, Prints<decltype(expr_c_from_r)>("(2,0)"));
 
-    monomial_t monomial(make_fermion(true, 1, "up"),
-                        make_fermion(false, 2, "dn"));
+    monomial<int, std::string> mon(make_fermion(true, 1, "up"),
+                                   make_fermion(false, 2, "dn"));
 
-    expression_real<int, std::string> expr_tiny_monomial(1e-100, monomial);
-    CHECK(expr_tiny_monomial.size() == 0);
-    CHECK(expr_tiny_monomial.get_monomials().empty());
+    expression_real<int, std::string> expr_tiny_monomial(1e-100, mon);
+    CHECK_THAT(expr_tiny_monomial, Prints<decltype(expr_tiny_monomial)>("0"));
 
-    expression_real<int, std::string> expr_monomial(3, monomial);
-    check_monomial(expr_monomial,
-                   3.0,
-                   make_fermion(true, 1, "up"),
-                   make_fermion(false, 2, "dn"));
+    expression_real<int, std::string> expr_monomial(3, mon);
+    CHECK_THAT(expr_monomial,
+               Prints<decltype(expr_monomial)>("3*C+(1,up)C(2,dn)"));
   }
 
-  SECTION("assignment") {
+  SECTION("Assignment") {
     expression_real<int, std::string> expr_const(2);
     expression_real<int, std::string> expr0;
     expr0 = expr_const;
-    check_monomial(expr0, 2.0);
+    CHECK_THAT(expr0, Prints<decltype(expr0)>("2"));
   }
 
   SECTION("Unary minus") {
     auto expr_r = real::c_dag(1, "up");
-    check_monomial(-expr_r, -1.0, make_fermion(true, 1, "up"));
+    CHECK_THAT(-expr_r, Prints<decltype(expr_r)>("-1*C+(1,up)"));
 
-    auto expr_static_int = c_dag<static_int<1>>(1, "up");
-    check_monomial(-expr_static_int,
-                   static_int<-1>(),
-                   make_fermion(true, 1, "up"));
+    auto expr_static_int = c_dag<int_complex>(1, "up");
+    CHECK_THAT(-expr_static_int,
+               Prints<decltype(expr_static_int)>("{-1,0}*C+(1,up)"));
   }
-
-  SECTION("Multiplication by scalar") {
-    auto gen = make_fermion(true, 1, "up");
-
-    // ScalarType = double
-    auto expr_r = real::c_dag(1, "up");
-    check_monomial(expr_r*2, 2.0, gen);
-    check_monomial(2*expr_r, 2.0, gen);
-    CHECK((expr_r*0).size() == 0);
-    CHECK((0*expr_r).size() == 0);
-
-    expr_r *= 2;
-    check_monomial(expr_r, 2.0, gen);
-    expr_r *= 0;
-    CHECK(expr_r.size() == 0);
-
-    // ScalarType = static_int<N>
-    auto expr_static_int = c_dag<static_int<1>>(1, "up");
-    check_monomial(expr_static_int * static_int<2>(),
-                   static_int<2>(),
-                   gen);
-    check_monomial(static_int<2>() * expr_static_int,
-                   static_int<2>(),
-                   gen);
-    CHECK((expr_static_int * static_int<0>()).size() == 0);
-    CHECK((static_int<0>() * expr_static_int).size() == 0);
-
-    expr_static_int *= static_int<1>();
-    check_monomial(expr_static_int,
-                   static_int<1>(),
-                   gen);
-  }
-  // TODO
 }

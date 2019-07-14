@@ -11,8 +11,19 @@
 # Build Catch2 main object file
 add_library(catch2 OBJECT catch2/catch2-main.cpp)
 
+set(TESTS
+  generator
+  monomial
+  scalar_traits
+  factories
+  expression
+  expression.const.addition
+  expression.const.subtraction
+  expression.const.multiplication
+)
+
 # Build C++ unit tests
-foreach(t generator monomial scalar_traits factories expression)
+foreach(t ${TESTS})
   set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
   add_executable(${t} ${s})
   target_link_libraries(${t} PRIVATE libcommute catch2)

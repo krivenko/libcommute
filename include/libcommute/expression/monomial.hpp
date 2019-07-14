@@ -102,6 +102,9 @@ public:
   // Number of generators in this monomial
   inline size_t size() const { return generators_.size(); }
 
+  // Is this monomial empty?
+  inline bool empty() const { return generators_.empty(); }
+
   //
   // Iteration interface
   //
