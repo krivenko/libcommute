@@ -40,6 +40,7 @@ template<typename T> struct remove_cvref {
     typename std::remove_reference<T>::type
   >::type;
 };
+template<typename T> using remove_cvref_t = typename remove_cvref<T>::type;
 
 // Identity metafunction for all T except for the C-string types
 // that is mapped to std::string

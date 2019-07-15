@@ -51,6 +51,15 @@ private:
   // Expression with only the IndexTypes fixed
   template<typename S> using expression_t = expression<S, IndexTypes...>;
 
+  // Is T an instance of expression_t?
+  template<typename T> struct is_expression : std::false_type {};
+  template<typename S> struct is_expression<expression_t<S>>
+    : std::true_type {};
+
+  // Disable overload for expressions
+  template<typename T> using disable_for_expression =
+    typename std::enable_if<!is_expression<T>::value>::type;
+
 public:
 
   // Value semantics
@@ -117,16 +126,66 @@ public:
   // Arithmetics
   //
 
+  template<typename S>
+  expression_t<sum_type<ScalarType, S>>
+  operator+(expression_t<S> const& expr) {
+    return add_impl(expr, std::is_same<sum_type<ScalarType, S>, ScalarType>());
+  }
+
+  template<typename S>
+  expression_t<diff_type<ScalarType, S>>
+  operator-(expression_t<S> const& expr) {
+    return sub_impl(expr, std::is_same<diff_type<ScalarType, S>, ScalarType>());
+  }
+
+  //
+  // Compound assignments
+  //
+
+  template<typename S>
+  expression & operator+=(expression_t<S> const& expr) {
+    for(auto const& p : expr.get_monomials()) {
+      auto it = monomials_.find(p.first);
+      if(it == monomials_.end())
+        monomials_.emplace(p);
+      else {
+        it->second = it->second + p.second;
+        if(scalar_traits<ScalarType>::is_zero(it->second))
+          monomials_.erase(it);
+      }
+    }
+    return *this;
+  }
+
+  template<typename S>
+  expression & operator-=(expression_t<S> const& expr) {
+    for(auto const& p : expr.get_monomials()) {
+      auto it = monomials_.find(p.first);
+      if(it == monomials_.end())
+        monomials_.emplace(p.first, -p.second);
+      else {
+        it->second = it->second - p.second;
+        if(scalar_traits<ScalarType>::is_zero(it->second))
+          monomials_.erase(it);
+      }
+    }
+    return *this;
+  }
+
   // Unary minus
   auto operator-() const -> expression_t<minus_type<ScalarType>> {
     return unary_minus_impl(std::is_same<minus_type<ScalarType>, ScalarType>());
   }
 
+  //
+  // Arithmetics involving constants
+  //
+
   // Multiplication by scalar (postfix form)
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   auto operator*(S && alpha) const
     -> expression_t<mul_type<ScalarType, S>> {
-    if(scalar_traits<typename remove_cvref<S>::type>::is_zero(alpha))
+    if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       return {};
     else
       return mul_const_postfix_impl(
@@ -136,10 +195,10 @@ public:
   }
 
   // Multiplication by scalar (prefix form)
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   friend auto operator*(S && alpha, expression const& expr)
     -> expression_t<mul_type<S, ScalarType>> {
-    if(scalar_traits<typename remove_cvref<S>::type>::is_zero(alpha))
+    if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       return {};
     else
       return expr.mul_const_prefix_impl(
@@ -149,7 +208,7 @@ public:
   }
 
   // Addition of scalar (postfix form)
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   auto operator+(S && alpha) const -> expression_t<sum_type<ScalarType, S>> {
     return add_const_postfix_impl(
       std::forward<S>(alpha),
@@ -158,7 +217,7 @@ public:
   }
 
   // Addition of scalar (prefix form)
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   friend auto operator+(S && alpha, expression const& expr)
     -> expression_t<sum_type<S, ScalarType>> {
     return expr.add_const_prefix_impl(
@@ -168,7 +227,7 @@ public:
   }
 
   // Subtraction of scalar (postfix form)
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   auto operator-(S && alpha) const -> expression_t<diff_type<ScalarType, S>> {
     return sub_const_postfix_impl(
       std::forward<S>(alpha),
@@ -177,7 +236,7 @@ public:
   }
 
   // Subtraction of scalar (prefix form)
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   friend auto operator-(S && alpha, expression const& expr)
     -> expression_t<diff_type<S, ScalarType>> {
     using res_s_t = diff_type<S, ScalarType>;
@@ -205,9 +264,9 @@ public:
   //
 
   // Compound assignment/multiplication by scalar
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   expression & operator*=(S && alpha) {
-    if(scalar_traits<typename remove_cvref<S>::type>::is_zero(alpha))
+    if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       monomials_.clear();
     else
       for(auto & p : monomials_) p.second *= alpha;
@@ -215,9 +274,9 @@ public:
   }
 
   // Compound assignments/addition of scalar
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   expression & operator+=(S && alpha) {
-    using s_t = typename remove_cvref<S>::type;
+    using s_t = remove_cvref_t<S>;
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
       if(it == monomials_.end()) {
@@ -234,9 +293,9 @@ public:
   }
 
   // Compound assignments/subtraction of scalar
-  template<typename S>
+  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   expression & operator-=(S && alpha) {
-    using s_t = typename remove_cvref<S>::type;
+    using s_t = remove_cvref_t<S>;
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
       if(it == monomials_.end()) {
@@ -265,13 +324,147 @@ public:
     return os;
   }
 
-  // TODO
-
 private:
 
   //
   // Implementations of arithmetic operations
   //
+
+  //
+  // Addition
+  //
+
+  // Addition
+  // sum_type<ScalarType, S> == ScalarType
+  template<typename S>
+  inline expression add_impl(expression_t<S> const& expr,
+                             std::true_type) const {
+    expression res(*this);
+    auto & res_mons = res.get_monomials();
+    for(auto const& p : expr.get_monomials()) {
+      auto it = res_mons.find(p.first);
+      if(it == res_mons.end())
+        res_mons.emplace(p);
+      else {
+        it->second = it->second + p.second;
+        if(scalar_traits<ScalarType>::is_zero(it->second))
+          res_mons.erase(it);
+      }
+    }
+    return res;
+  }
+
+  // Addition
+  // sum_type<ScalarType, S> != ScalarType
+  template<typename S>
+  inline expression_t<sum_type<ScalarType, S>>
+  add_impl(expression_t<S> const& expr, std::false_type) const {
+    expression_t<sum_type<ScalarType, S>> res;
+    auto & res_mons = res.get_monomials();
+    auto const& m1 = monomials_;
+    auto const& m2 = expr.get_monomials();
+    auto z1 = scalar_traits<ScalarType>::zero();
+    auto z2 = scalar_traits<S>::zero();
+
+    auto it1 = m1.begin();
+    auto it2 = m2.begin();
+
+    while(it1 != m1.end() && it2 != m2.end()) {
+      if(it1->first < it2->first) {
+        res_mons.emplace_hint(res_mons.end(), it1->first, it1->second + z2);
+        ++it1;
+      } else if(it2->first < it1->first) {
+        res_mons.emplace_hint(res_mons.end(), it2->first, z1 + it2->second);
+        ++it2;
+      } else {
+        auto val = it1->second + it2->second;
+        if(!scalar_traits<sum_type<ScalarType, S>>::is_zero(val)) {
+          res_mons.emplace_hint(res_mons.end(), it1->first, val);
+        }
+        ++it1;
+        ++it2;
+      }
+    }
+
+    if(it1 == m1.end() && it2 != m2.end()) {
+      for(; it2 != m2.end(); ++it2)
+        res_mons.emplace_hint(res_mons.end(), it2->first, z1 + it2->second);
+    }
+    if(it1 != m1.end() && it2 == m2.end()) {
+      for(; it1 != m1.end(); ++it1)
+        res_mons.emplace_hint(res_mons.end(), it1->first, it1->second + z2);
+    }
+
+    return res;
+  }
+
+  //
+  // Subtraction
+  //
+
+  // Subtraction
+  // diff_type<ScalarType, S> == ScalarType
+  template<typename S>
+  inline expression sub_impl(expression_t<S> const& expr,
+                             std::true_type) const {
+    expression res(*this);
+    auto & res_mons = res.get_monomials();
+    for(auto const& p : expr.get_monomials()) {
+      auto it = res_mons.find(p.first);
+      if(it == res_mons.end())
+        res_mons.emplace(p.first, -p.second);
+      else {
+        it->second = it->second - p.second;
+        if(scalar_traits<ScalarType>::is_zero(it->second))
+          res_mons.erase(it);
+      }
+    }
+    return res;
+  }
+
+  // Subtraction
+  // diff_type<ScalarType, S> != ScalarType
+  template<typename S>
+  inline expression_t<diff_type<ScalarType, S>>
+  sub_impl(expression_t<S> const& expr, std::false_type) const {
+    expression_t<diff_type<ScalarType, S>> res;
+    auto & res_mons = res.get_monomials();
+    auto const& m1 = monomials_;
+    auto const& m2 = expr.get_monomials();
+    auto z1 = scalar_traits<ScalarType>::zero();
+    auto z2 = scalar_traits<S>::zero();
+
+    auto it1 = m1.begin();
+    auto it2 = m2.begin();
+
+    while(it1 != m1.end() && it2 != m2.end()) {
+      if(it1->first < it2->first) {
+        res_mons.emplace_hint(res_mons.end(), it1->first, it1->second - z2);
+        ++it1;
+      } else if(it2->first < it1->first) {
+        res_mons.emplace_hint(res_mons.end(), it2->first, z1 - it2->second);
+        ++it2;
+      } else {
+        auto val = it1->second - it2->second;
+        if(!scalar_traits<diff_type<ScalarType, S>>::is_zero(val)) {
+          res_mons.emplace_hint(res_mons.end(), it1->first, val);
+        }
+        ++it1;
+        ++it2;
+      }
+    }
+
+    if(it1 == m1.end() && it2 != m2.end()) {
+      for(; it2 != m2.end(); ++it2)
+        res_mons.emplace_hint(res_mons.end(), it2->first, z1 - it2->second);
+    }
+    if(it1 != m1.end() && it2 == m2.end()) {
+      for(; it1 != m1.end(); ++it1)
+        res_mons.emplace_hint(res_mons.end(), it1->first, it1->second - z2);
+    }
+
+    return res;
+  }
 
   //
   // Unary minus
@@ -295,7 +488,7 @@ private:
   }
 
   //
-  // Multiplication
+  // Multiplication by scalar
   //
 
   // Multiplication by scalar (postfix form)
@@ -341,7 +534,7 @@ private:
   }
 
   //
-  // Addition
+  // Addition of scalar
   //
 
   // Addition of scalar (postfix form)
@@ -431,7 +624,7 @@ private:
   }
 
   //
-  // Subtraction
+  // Subtraction of scalar
   //
 
   // Subtraction of scalar (postfix form)

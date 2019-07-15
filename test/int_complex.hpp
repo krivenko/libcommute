@@ -34,7 +34,7 @@ struct int_complex {
   }
 
   // Arithmetics
-  int_complex operator-() {return {-re, -im};}
+  int_complex operator-() const {return {-re, -im};}
 
   int_complex & operator+=(int_complex c) {
     re += c.re;

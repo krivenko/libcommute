@@ -17,6 +17,8 @@ set(TESTS
   scalar_traits
   factories
   expression
+  expression.addition
+  expression.subtraction
   expression.const.addition
   expression.const.subtraction
   expression.const.multiplication
