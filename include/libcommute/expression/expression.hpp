@@ -674,9 +674,9 @@ private:
 
 // Aliases for specific scalar types
 template<typename... IndexTypes>
-using expression_real = expression<double, IndexTypes...>;
+using expr_real = expression<double, IndexTypes...>;
 template<typename... IndexTypes>
-using expression_complex = expression<std::complex<double>, IndexTypes...>;
+using expr_complex = expression<std::complex<double>, IndexTypes...>;
 
 } // namespace libcommute
 
