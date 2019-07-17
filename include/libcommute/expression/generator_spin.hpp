@@ -129,13 +129,13 @@ protected:
 
 // Convenience factory functions
 template<typename... IndexTypes>
-inline generator_spin<typename c_str_to_string_t<IndexTypes>::type...>
+inline generator_spin<c_str_to_string_t<IndexTypes>...>
 make_spin(spin_component c, IndexTypes&&... indices) {
   return {c, std::forward<IndexTypes>(indices)...};
 }
 
 template<typename... IndexTypes>
-inline generator_spin<typename c_str_to_string_t<IndexTypes>::type...>
+inline generator_spin<c_str_to_string_t<IndexTypes>...>
 make_spin(double spin, spin_component c, IndexTypes&&... indices) {
   return {spin, c, std::forward<IndexTypes>(indices)...};
 }

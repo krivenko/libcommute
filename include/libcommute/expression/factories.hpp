@@ -29,34 +29,32 @@
 namespace libcommute {
 
 #define INDICES std::forward<IndexTypes>(indices)...
-#define DEFINE_FACTORY(NAME, ...)                                       \
-template<typename ScalarType, typename... IndexTypes>                   \
-inline                                                                  \
-expression<ScalarType, typename c_str_to_string_t<IndexTypes>::type...> \
-NAME(IndexTypes... indices) {                                           \
-  using ret_t = expression<ScalarType,                                  \
-    typename c_str_to_string_t<IndexTypes>::type...>;                   \
-  return ret_t(scalar_traits<ScalarType>::one(),                        \
-               typename ret_t::monomial_t(__VA_ARGS__)                  \
-  );                                                                    \
+#define DEFINE_FACTORY(NAME, ...)                                         \
+template<typename ScalarType, typename... IndexTypes>                     \
+inline                                                                    \
+expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
+NAME(IndexTypes... indices) {                                             \
+  using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
+  return ret_t(scalar_traits<ScalarType>::one(),                          \
+               typename ret_t::monomial_t(__VA_ARGS__)                    \
+  );                                                                      \
 }
 
-#define DEFINE_FACTORY_SPIN(NAME, ...)                                   \
-template<int Multiplicity, typename ScalarType, typename... IndexTypes>  \
-inline                                                                   \
-expression<ScalarType, typename c_str_to_string_t<IndexTypes>::type...>  \
-NAME(IndexTypes... indices) {                                            \
-  static_assert(Multiplicity >= 2, "Invalid multiplicity");              \
-  using ret_t = expression<ScalarType,                                   \
-    typename c_str_to_string_t<IndexTypes>::type...>;                    \
-  return ret_t(scalar_traits<ScalarType>::one(),                         \
-               typename ret_t::monomial_t(__VA_ARGS__)                   \
-  );                                                                     \
+#define DEFINE_FACTORY_SPIN(NAME, ...)                                    \
+template<int Multiplicity, typename ScalarType, typename... IndexTypes>   \
+inline                                                                    \
+expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
+NAME(IndexTypes... indices) {                                             \
+  static_assert(Multiplicity >= 2, "Invalid multiplicity");               \
+  using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
+  return ret_t(scalar_traits<ScalarType>::one(),                          \
+               typename ret_t::monomial_t(__VA_ARGS__)                    \
+  );                                                                      \
 }
 
 #define DEFINE_FACTORY_SCALAR_TYPE(NAME, S)                             \
 template<typename... IndexTypes>                                        \
-inline expression<S, typename c_str_to_string_t<IndexTypes>::type...>   \
+inline expression<S, c_str_to_string_t<IndexTypes>...>                  \
 NAME(IndexTypes... indices) {                                           \
   using libcommute::NAME;                                               \
   return NAME<S>(INDICES);                                              \
@@ -64,7 +62,7 @@ NAME(IndexTypes... indices) {                                           \
 
 #define DEFINE_FACTORY_SPIN_SCALAR_TYPE(NAME, S)                        \
 template<int Multiplicity, typename... IndexTypes>                      \
-inline expression<S, typename c_str_to_string_t<IndexTypes>::type...>   \
+inline expression<S, c_str_to_string_t<IndexTypes>...>                  \
 NAME(IndexTypes... indices) {                                           \
   using libcommute::NAME;                                               \
   return NAME<Multiplicity, S>(INDICES);                                \

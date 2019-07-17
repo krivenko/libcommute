@@ -99,7 +99,7 @@ protected:
 
 // Convenience factory function
 template<typename... IndexTypes>
-inline generator_fermion<typename c_str_to_string_t<IndexTypes>::type...>
+inline generator_fermion<c_str_to_string_t<IndexTypes>...>
 make_fermion(bool dagger, IndexTypes&&... indices) {
   return {dagger, std::forward<IndexTypes>(indices)...};
 }

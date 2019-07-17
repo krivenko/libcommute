@@ -44,13 +44,15 @@ template<typename T> using remove_cvref_t = typename remove_cvref<T>::type;
 
 // Identity metafunction for all T except for the C-string types
 // that is mapped to std::string
-template<typename T> struct c_str_to_string_t { using type = T; };
-template<size_t N> struct c_str_to_string_t<const char (&)[N]> {
+template<typename T> struct c_str_to_string { using type = T; };
+template<size_t N> struct c_str_to_string<const char (&)[N]> {
   using type = std::string;
 };
-template<> struct c_str_to_string_t<const char *> {
+template<> struct c_str_to_string<const char *> {
   using type = std::string;
 };
+template<typename T>
+using c_str_to_string_t = typename c_str_to_string<T>::type;
 
 namespace detail {
 
