@@ -32,8 +32,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
   SECTION("int") {
     CHECK(scalar_traits<int>::is_zero(0));
     CHECK_FALSE(scalar_traits<int>::is_zero(4));
-    CHECK(scalar_traits<int>::zero() == 0);
-    CHECK(scalar_traits<int>::one() == 1);
+    CHECK(scalar_traits<int>::make_const(0) == 0);
+    CHECK(scalar_traits<int>::make_const(1) == 1);
     CHECK(scalar_traits<int>::real(4) == 4);
     CHECK(scalar_traits<int>::imag(4) == 0);
     CHECK(scalar_traits<int>::conj(4) == 4);
@@ -42,8 +42,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
   SECTION("long") {
     CHECK(scalar_traits<long>::is_zero(0));
     CHECK_FALSE(scalar_traits<long>::is_zero(4));
-    CHECK(scalar_traits<long>::zero() == 0);
-    CHECK(scalar_traits<long>::one() == 1);
+    CHECK(scalar_traits<long>::make_const(0) == 0);
+    CHECK(scalar_traits<long>::make_const(1) == 1);
     CHECK(scalar_traits<long>::real(4) == 4);
     CHECK(scalar_traits<long>::imag(4) == 0);
     CHECK(scalar_traits<long>::conj(4) == 4);
@@ -53,8 +53,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK(scalar_traits<float>::is_zero(.0));
     CHECK(scalar_traits<float>::is_zero(1e-50));
     CHECK_FALSE(scalar_traits<float>::is_zero(4.0));
-    CHECK(scalar_traits<float>::zero() == .0);
-    CHECK(scalar_traits<float>::one() == 1.0);
+    CHECK(scalar_traits<float>::make_const(0) == .0);
+    CHECK(scalar_traits<float>::make_const(1) == 1.0);
     CHECK(scalar_traits<float>::real(4.0) == 4.0);
     CHECK(scalar_traits<float>::imag(4.0) == 0);
     CHECK(scalar_traits<float>::conj(4.0) == 4.0);
@@ -64,8 +64,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK(scalar_traits<double>::is_zero(.0));
     CHECK(scalar_traits<double>::is_zero(1e-50));
     CHECK_FALSE(scalar_traits<double>::is_zero(4.0));
-    CHECK(scalar_traits<double>::zero() == .0);
-    CHECK(scalar_traits<double>::one() == 1.0);
+    CHECK(scalar_traits<double>::make_const(0) == .0);
+    CHECK(scalar_traits<double>::make_const(1) == 1.0);
     CHECK(scalar_traits<double>::real(4.0) == 4.0);
     CHECK(scalar_traits<double>::imag(4.0) == 0);
     CHECK(scalar_traits<double>::conj(4.0) == 4.0);
@@ -79,8 +79,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(.0, 4.0)));
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, .0)));
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, 4.0)));
-    CHECK(scalar_traits<cmplx>::zero() == cmplx(0));
-    CHECK(scalar_traits<cmplx>::one() == cmplx(1.0));
+    CHECK(scalar_traits<cmplx>::make_const(0) == cmplx(0));
+    CHECK(scalar_traits<cmplx>::make_const(1) == cmplx(1.0));
     CHECK(scalar_traits<cmplx>::real(cmplx(1.0, 2.0)) == cmplx(1.0));
     CHECK(scalar_traits<cmplx>::imag(cmplx(1.0, 2.0)) == cmplx(2.0));
     CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0,-2.0));
@@ -94,8 +94,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(.0, 4.0)));
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, .0)));
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, 4.0)));
-    CHECK(scalar_traits<cmplx>::zero() == cmplx(0));
-    CHECK(scalar_traits<cmplx>::one() == cmplx(1.0));
+    CHECK(scalar_traits<cmplx>::make_const(0) == cmplx(0));
+    CHECK(scalar_traits<cmplx>::make_const(1) == cmplx(1.0));
     CHECK(scalar_traits<cmplx>::real(cmplx(1.0, 2.0)) == cmplx(1.0));
     CHECK(scalar_traits<cmplx>::imag(cmplx(1.0, 2.0)) == cmplx(2.0));
     CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0,-2.0));
@@ -106,8 +106,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<int_complex>::is_zero(int_complex{0, 4}));
     CHECK_FALSE(scalar_traits<int_complex>::is_zero(int_complex{4, 0}));
     CHECK_FALSE(scalar_traits<int_complex>::is_zero(int_complex{4, 4}));
-    CHECK(scalar_traits<int_complex>::zero() == int_complex{0, 0});
-    CHECK(scalar_traits<int_complex>::one() == int_complex{1, 0});
+    CHECK(scalar_traits<int_complex>::make_const(0) == int_complex{0, 0});
+    CHECK(scalar_traits<int_complex>::make_const(1) == int_complex{1, 0});
     CHECK(scalar_traits<int_complex>::real(int_complex{1, 2}) ==
           int_complex{1, 0});
     CHECK(scalar_traits<int_complex>::imag(int_complex{1, 2}) ==
@@ -116,8 +116,6 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
           int_complex{1, -2});
   }
 }
-
-
 
 TEST_CASE("Result types of arithmetic operations", "[arithmetic_result_type]") {
   using cmplx = std::complex<double>;

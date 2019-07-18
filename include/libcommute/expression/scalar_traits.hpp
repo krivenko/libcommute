@@ -15,6 +15,7 @@
 
 #include <complex>
 #include <limits>
+#include <cmath>
 #include <type_traits>
 #include <utility>
 
@@ -45,10 +46,11 @@ template<typename S>
 struct scalar_traits<S, with_trait<std::is_integral, S>> {
   // Zero value test
   static bool is_zero(S const& x) { return x == 0; }
-  // Zero value
-  static constexpr S zero() { return S{}; }
-  // Unitary value
-  static constexpr S one() { return S(1); }
+  // Make a constant from a double value
+  static S make_const(double x) {
+    assert(std::nearbyint(x) == x);
+    return S(std::nearbyint(x));
+  }
   // Real part of x
   static S real(S const& x) { return x; }
   // Imaginary part of x
@@ -67,10 +69,8 @@ struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
     return std::abs(x) < LIBCOMMUTE_FLOATING_POINT_TOL_EPS *
                          std::numeric_limits<S>::epsilon();
   }
-  // Zero value
-  static constexpr S zero() { return S{}; }
-  // Unitary value
-  static constexpr S one() { return S(1); }
+  // Make a constant from a double value
+  static S make_const(double x) { return x; }
   // Real part of x
   static S real(S const& x) { return x; }
   // Imaginary part of x
@@ -90,10 +90,8 @@ struct scalar_traits<S, with_trait<is_complex, S>> {
     return scalar_traits<real_t>::is_zero(x.real()) &&
            scalar_traits<real_t>::is_zero(x.imag());
   }
-  // Zero value
-  static constexpr S zero() { return S(0); }
-  // Unitary value
-  static constexpr S one() { return S(1); }
+  // Make a constant from a double value
+  static S make_const(double x) { return S(x); }
   // Real part of x
   static S real(S const& x) { return std::real(x); }
   // Imaginary part of x

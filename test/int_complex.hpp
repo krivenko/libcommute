@@ -85,10 +85,11 @@ namespace libcommute {
 template<> struct scalar_traits<int_complex> {
   // Zero value test
   static bool is_zero(int_complex const& x) { return x.re == 0 && x.im == 0; }
-  // Zero value
-  static int_complex zero() { return {0, 0}; }
-  // Unitary value
-  static int_complex one() { return {1, 0}; }
+  // Make a constant from a double value
+  static int_complex make_const(double x) {
+    assert(std::nearbyint(x) == x);
+    return {(int)std::nearbyint(x), 0};
+  }
   // Real part of x
   static int_complex real(int_complex const& x) { return {x.re, 0}; }
   // Imaginary part of x

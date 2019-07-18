@@ -241,14 +241,14 @@ public:
     -> expression_t<diff_type<S, ScalarType>> {
     using res_s_t = diff_type<S, ScalarType>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::zero();
+    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : expr.monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, z - p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
-        auto z = scalar_traits<ScalarType>::zero();
+        auto z = scalar_traits<ScalarType>::make_const(0);
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha - z);
       } else {
         it->second = alpha + it->second;
@@ -280,7 +280,7 @@ public:
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
       if(it == monomials_.end()) {
-        auto val = scalar_traits<ScalarType>::zero();
+        auto val = scalar_traits<ScalarType>::make_const(0);
         val += alpha;
         monomials_.emplace_hint(monomials_.begin(), monomial_t{}, val);
       } else {
@@ -320,7 +320,7 @@ public:
         print_plus = true;
       }
     } else
-      os << scalar_traits<ScalarType>::zero();
+      os << scalar_traits<ScalarType>::make_const(0);
     return os;
   }
 
@@ -363,8 +363,8 @@ private:
     auto & res_mons = res.get_monomials();
     auto const& m1 = monomials_;
     auto const& m2 = expr.get_monomials();
-    auto z1 = scalar_traits<ScalarType>::zero();
-    auto z2 = scalar_traits<S>::zero();
+    auto z1 = scalar_traits<ScalarType>::make_const(0);
+    auto z2 = scalar_traits<S>::make_const(0);
 
     auto it1 = m1.begin();
     auto it2 = m2.begin();
@@ -431,8 +431,8 @@ private:
     auto & res_mons = res.get_monomials();
     auto const& m1 = monomials_;
     auto const& m2 = expr.get_monomials();
-    auto z1 = scalar_traits<ScalarType>::zero();
-    auto z2 = scalar_traits<S>::zero();
+    auto z1 = scalar_traits<ScalarType>::make_const(0);
+    auto z2 = scalar_traits<S>::make_const(0);
 
     auto it1 = m1.begin();
     auto it2 = m2.begin();
@@ -563,7 +563,7 @@ private:
   add_const_postfix_impl(S&& alpha, std::false_type) const {
     using res_s_t = sum_type<ScalarType, S>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::zero();
+    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, p.second + z);
@@ -606,7 +606,7 @@ private:
   add_const_prefix_impl(S&& alpha, std::false_type) const {
     using res_s_t = sum_type<S, ScalarType>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::zero();
+    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, z + p.second);
@@ -653,14 +653,14 @@ private:
   sub_const_postfix_impl(S&& alpha, std::false_type) const {
     using res_s_t = diff_type<ScalarType, S>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::zero();
+    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, p.second - z);
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
-        auto z = scalar_traits<ScalarType>::zero();
+        auto z = scalar_traits<ScalarType>::make_const(0);
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, z - alpha);
       } else {
         it->second = it->second - alpha;
