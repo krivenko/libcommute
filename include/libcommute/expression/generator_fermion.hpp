@@ -105,7 +105,7 @@ make_fermion(bool dagger, IndexTypes&&... indices) {
 }
 
 // Check if generator belongs to the fermionic algebra
-template <typename... IndexTypes>
+template<typename... IndexTypes>
 inline bool is_fermion(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == FERMION_ALGEBRA_ID;
 }

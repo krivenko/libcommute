@@ -141,7 +141,7 @@ make_spin(double spin, spin_component c, IndexTypes&&... indices) {
 }
 
 // Check if generator belongs to the spin algebra
-template <typename... IndexTypes>
+template<typename... IndexTypes>
 inline bool is_spin(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == SPIN_ALGEBRA_ID;
 }

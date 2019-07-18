@@ -33,7 +33,7 @@ namespace libcommute {
 // Monomial: a product of algebra generators
 //
 
-template <typename... IndexTypes>
+template<typename... IndexTypes>
 class monomial {
 
   // Helper method for one of constructors
@@ -164,6 +164,17 @@ public:
     }
   }
 
+  // Concatenate two monomials
+  friend monomial concatenate(monomial const& m1, monomial const& m2) {
+    monomial res;
+    res.generators_.reserve(m1.size() + m2.size());
+    for(auto const& g : m1.generators_)
+      res.generators_.emplace_back(g->clone());
+    for(auto const& g : m2.generators_)
+      res.generators_.emplace_back(g->clone());
+    return res;
+  }
+
   // Print to stream
   friend std::ostream& operator<<(std::ostream& os, monomial const& m) {
     auto it = m.begin(), end_it = m.end();
@@ -186,7 +197,7 @@ private:
 };
 
 // Constant iterator over generators comprising a monomial
-template <typename... IndexTypes>
+template<typename... IndexTypes>
 class monomial<IndexTypes...>::const_iterator {
 
   using vector_it = typename std::vector<gen_ptr_type>::const_iterator;

@@ -34,7 +34,7 @@ namespace libcommute {
 // multiplication
 //
 
-template <typename ScalarType, typename... IndexTypes>
+template<typename ScalarType, typename... IndexTypes>
 class expression {
 public:
 

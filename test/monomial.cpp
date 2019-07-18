@@ -107,6 +107,16 @@ TEST_CASE("Monomials", "[monomial]") {
     CHECK(m2 == m1);
   }
 
+  SECTION("Concatenation") {
+    auto m0 = mon_type();
+    auto m1 = mon_type(Cdag_dn, A_y);
+    auto m2 = mon_type(Sp_i, S1z_j);
+    CHECK(concatenate(m1, m0) == m1);
+    CHECK(concatenate(m0, m1) == m1);
+    CHECK(concatenate(m1, m2) == mon_type(Cdag_dn, A_y, Sp_i, S1z_j));
+    CHECK(concatenate(m2, m1) == mon_type(Sp_i, S1z_j, Cdag_dn, A_y));
+  }
+
   SECTION("Element access") {
     mon_type m0{};
     CHECK(m0.size() == 0);

@@ -105,7 +105,7 @@ make_boson(bool dagger, IndexTypes&&... indices) {
 }
 
 // Check if generator belongs to the bosonic algebra
-template <typename... IndexTypes>
+template<typename... IndexTypes>
 inline bool is_boson(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == BOSON_ALGEBRA_ID;
 }
