@@ -18,6 +18,7 @@
 #include <string>
 #include <utility>
 #include <tuple>
+#include <vector>
 
 //
 // Various utility functions and metafunctions
@@ -77,6 +78,14 @@ template<typename... T>
 void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
   detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
 }
+
+// Linear function of objects
+template<typename T> struct linear_function {
+  // Constant term
+  double const_term;
+  // Generators and their respective coefficients
+  std::vector<std::pair<T, double>> terms;
+};
 
 } // namespace libcommute
 

@@ -74,6 +74,21 @@ public:
   // Return a positive integer n, if the n-th power of generator is zero
   virtual int nilpotent_power() const = 0;
 
+  // We assume that any pair of generators g1 and g2 satisfy
+  //
+  // g1 * g2 = c * g2 * g1 + f(g),
+  //
+  // where c is a constant, and f(g) is a linear function of generators of
+  // the same algebra. In particular, this condition is fulfilled by generators
+  // of the Lie and Clifford algebras.
+  //
+  // Given a pair g1 = *this and g2, commute() must return c and write
+  // f(g) into its second argument. For the sake of optimization, it is
+  // required that g1 > g2.
+  virtual double commute(generator const& g2,
+                         linear_function<std::unique_ptr<generator>> & f) const
+                         = 0;
+
   // Stream output
   friend std::ostream & operator<<(std::ostream & os, generator const& g) {
     return g.print(os);
@@ -91,6 +106,22 @@ protected:
   // Print to stream
   virtual std::ostream & print(std::ostream & os) const = 0;
 };
+
+// Check if g1 and g2 belong to the same algebra
+// and call g1.commute(g2) accordingly
+template<typename... IndexTypes>
+double commute(generator<IndexTypes...> const& g1,
+               generator<IndexTypes...> const& g2,
+               linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
+  // ** Generators of different algebras always commute **
+  if(g1.algebra_id() != g2.algebra_id()) {
+    f.const_term = 0;
+    f.terms.clear();
+    return 1;
+  } else {
+    return g1.commute(g2, f);
+  }
+}
 
 } // namespace libcommute
 

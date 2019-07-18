@@ -74,8 +74,38 @@ public:
     return c_ == spin_component::z ? -1 : multiplicity_;
   }
 
+  // Generators with different indices or multiplicities commute.
+  // Same indices and multiplicity:
+  //  S_- * S_+ = S_+ * S_- - 2*S_z
+  //  S_z * S_+ = S_+ * S_z + S_+
+  //  S_z * S_- = S_- * S_z - S_-
+  virtual double
+  commute(base const& g2,
+          linear_function<std::unique_ptr<base>> & f) const override {
+    assert(*this > g2);
+    auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
+    f.const_term = 0;
+    f.terms.clear();
+    if(this->indices_ == g2_.indices_ &&
+       this->multiplicity_ == g2_.multiplicity_) {
+      if(c_ == spin_component::z) {
+        if(g2_.c_ == spin_component::plus) {
+          f.terms.emplace_back(g2_.clone(), 1);
+        } else { /// g2.c_ == spin_component::minus
+          f.terms.emplace_back(g2_.clone(), -1);
+        }
+      } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
+        f.terms.emplace_back(g2_.clone(), -2);
+        dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
+          spin_component::z;
+      }
+    }
+    return 1;
+  }
+
   // Accessors
   inline int multiplicity() const { return multiplicity_; }
+  inline int spin() const { return (multiplicity_-1)/2; }
   inline spin_component component() const { return c_; }
 
 protected:

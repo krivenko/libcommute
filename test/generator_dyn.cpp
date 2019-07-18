@@ -40,6 +40,33 @@ template<typename V> void check_less_greater(V const& v) {
   }
 }
 
+template<typename GenType>
+void check_generator_spin_commute(std::vector<GenType*> const& v) {
+  linear_function<std::unique_ptr<GenType>> f;
+  for(size_t i = 0; i < v.size(); ++i) {
+    for(size_t j = i + 1; j < v.size(); ++j) {
+      double c = v[j]->commute(*v[i], f);
+      CHECK(c == 1);
+      CHECK(f.const_term == 0);
+      if(j%3 == 1 && i == j - 1) { // S_- S_+
+        CHECK(f.terms.size() == 1);
+        CHECK(*f.terms[0].first == *v[i + 2]);
+        CHECK(f.terms[0].second == -2);
+      } else if(j%3 == 2 && i == j - 2) { // S_z S_+
+        CHECK(f.terms.size() == 1);
+        CHECK(*f.terms[0].first == *v[i]);
+        CHECK(f.terms[0].second == 1);
+      } else if(j%3 == 2 && i == j - 1) { // S_z S_-
+        CHECK(f.terms.size() == 1);
+        CHECK(*f.terms[0].first == *v[i]);
+        CHECK(f.terms[0].second == -1);
+      } else {
+        CHECK(f.terms.empty());
+      }
+    }
+  }
+}
+
 TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
   // Setup
@@ -103,6 +130,16 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK_FALSE(is_spin(*g));
     }
 
+    linear_function<std::unique_ptr<gen_type>> f;
+    for(size_t i = 0; i < fermion_ops.size(); ++i) {
+      for(size_t j = i + 1; j < fermion_ops.size(); ++j) {
+        double c = fermion_ops[j]->commute(*fermion_ops[i], f);
+        CHECK(c == -1);
+        CHECK(f.terms.empty());
+        CHECK(f.const_term == ((j == 2 && i == 1) || (j == 3 && i == 0)));
+      }
+    }
+
     CHECK_THAT(Cdag_dn, Prints<gen_type>("C+(dn,0)"));
     CHECK_THAT(Cdag_up, Prints<gen_type>("C+(up,0)"));
     CHECK_THAT(C_up, Prints<gen_type>("C(up,0)"));
@@ -122,6 +159,16 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK_FALSE(is_fermion(*g));
       CHECK(is_boson(*g));
       CHECK_FALSE(is_spin(*g));
+    }
+
+    linear_function<std::unique_ptr<gen_type>> f;
+    for(size_t i = 0; i < boson_ops.size(); ++i) {
+      for(size_t j = i + 1; j < boson_ops.size(); ++j) {
+        double c = boson_ops[j]->commute(*boson_ops[i], f);
+        CHECK(c == 1);
+        CHECK(f.terms.empty());
+        CHECK(f.const_term == ((j == 2 && i == 1) || (j == 3 && i == 0)));
+      }
     }
 
     CHECK_THAT(Adag_x, Prints<gen_type>("A+(x)"));
@@ -147,6 +194,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK_FALSE(is_boson(*g));
       CHECK(is_spin(*g));
     }
+
+    check_generator_spin_commute(spin_ops);
 
     CHECK_THAT(Sp_i, Prints<gen_type>("S+(1)"));
     CHECK_THAT(Sm_i, Prints<gen_type>("S-(1)"));
@@ -174,6 +223,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK(is_spin(*g));
     }
 
+    check_generator_spin_commute(spin1_ops);
+
     CHECK_THAT(S1p_i, Prints<gen_type>("S1+(1)"));
     CHECK_THAT(S1m_i, Prints<gen_type>("S1-(1)"));
     CHECK_THAT(S1z_i, Prints<gen_type>("S1z(1)"));
@@ -200,6 +251,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK(is_spin(*g));
     }
 
+    check_generator_spin_commute(spin32_ops);
+
     CHECK_THAT(S32p_i, Prints<gen_type>("S3/2+(1)"));
     CHECK_THAT(S32m_i, Prints<gen_type>("S3/2-(1)"));
     CHECK_THAT(S32z_i, Prints<gen_type>("S3/2z(1)"));
@@ -220,5 +273,18 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
     check_equality(all_ops);
     check_less_greater(all_ops);
+
+    // Check that generators from different algebras commute
+    linear_function<std::unique_ptr<gen_type>> f;
+    for(size_t i = 0; i < all_ops.size(); ++i) {
+      for(size_t j = i + 1; j < all_ops.size(); ++j) {
+        double c = commute(*all_ops[j], *all_ops[i], f);
+        if(all_ops[j]->algebra_id() != all_ops[i]->algebra_id()) {
+          CHECK(c == 1);
+          CHECK(f.const_term == 0);
+          CHECK(f.terms.empty());
+        }
+      }
+    }
   }
 }

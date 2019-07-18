@@ -62,6 +62,19 @@ public:
   // A square of C^+/C is vanising
   virtual int nilpotent_power() const override { return 2; }
 
+  // c = -1, f(g) = \delta(g1, g2)
+  virtual double
+  commute(base const& g2,
+          linear_function<std::unique_ptr<base>> & f) const override {
+    assert(*this > g2);
+    auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
+    f.const_term = (this->indices_ == g2_.indices_ &&
+                    dagger_ != g2_.dagger_) ?
+                    1 : 0;
+    f.terms.clear();
+    return -1;
+  }
+
   // Accessor
   inline int dagger() const { return dagger_; }
 
