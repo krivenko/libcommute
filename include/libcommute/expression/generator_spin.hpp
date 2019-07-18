@@ -69,6 +69,15 @@ public:
     return make_unique<generator_spin>(*this);
   }
 
+  // Raising and lowering operators are nilpotent
+  virtual int nilpotent_power() const override {
+    return c_ == spin_component::z ? -1 : multiplicity_;
+  }
+
+  // Accessors
+  inline int multiplicity() const { return multiplicity_; }
+  inline spin_component component() const { return c_; }
+
 protected:
   // Multiplicity, 2S+1
   int multiplicity_;

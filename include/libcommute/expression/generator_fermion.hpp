@@ -59,6 +59,12 @@ public:
     return make_unique<generator_fermion>(*this);
   }
 
+  // A square of C^+/C is vanising
+  virtual int nilpotent_power() const override { return 2; }
+
+  // Accessor
+  inline int dagger() const { return dagger_; }
+
 protected:
   // Creation or annihilation operator?
   bool dagger_;

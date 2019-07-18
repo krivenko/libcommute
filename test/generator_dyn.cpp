@@ -89,8 +89,10 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
                                        &S32p_j,&S32m_j,&S32z_j};
 
   SECTION("fermion") {
-    for(auto * op : fermion_ops)
+    for(auto * op : fermion_ops) {
       CHECK(op->algebra_id() == FERMION_ALGEBRA_ID);
+      CHECK(op->nilpotent_power() == 2);
+    }
 
     check_equality(fermion_ops);
     check_less_greater(fermion_ops);
@@ -108,8 +110,10 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   }
 
   SECTION("boson") {
-    for(auto * op : boson_ops)
+    for(auto * op : boson_ops) {
       CHECK(op->algebra_id() == BOSON_ALGEBRA_ID);
+      CHECK(op->nilpotent_power() == -1);
+    }
 
     check_equality(boson_ops);
     check_less_greater(boson_ops);
@@ -127,8 +131,13 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   }
 
   SECTION("spin-1/2") {
-    for(auto * op : spin_ops)
+    for(auto * op : spin_ops) {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
+
+      auto spin_gen_p = dynamic_cast<generator_spin<dyn::dyn_indices>*>(op);
+      CHECK((spin_gen_p->component() == spin_component::z ||
+            (op->nilpotent_power() == 2)));
+    }
 
     check_equality(spin_ops);
     check_less_greater(spin_ops);
@@ -148,8 +157,13 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   }
 
   SECTION("spin-1") {
-    for(auto * op : spin1_ops)
+    for(auto * op : spin1_ops) {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
+
+      auto spin_gen_p = dynamic_cast<generator_spin<dyn::dyn_indices>*>(op);
+      CHECK((spin_gen_p->component() == spin_component::z ||
+            (op->nilpotent_power() == 3)));
+    }
 
     check_equality(spin1_ops);
     check_less_greater(spin_ops);
@@ -169,8 +183,13 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   }
 
   SECTION("spin-3/2") {
-    for(auto * op : spin32_ops)
+    for(auto * op : spin32_ops) {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
+
+      auto spin_gen_p = dynamic_cast<generator_spin<dyn::dyn_indices>*>(op);
+      CHECK((spin_gen_p->component() == spin_component::z ||
+            (op->nilpotent_power() == 4)));
+    }
 
     check_equality(spin32_ops);
     check_less_greater(spin32_ops);

@@ -68,6 +68,12 @@ public:
       return g1.greater(g2);
   }
 
+  // Accessor
+  inline index_types const& indices() const { return indices_; }
+
+  // Return a positive integer n, if the n-th power of generator is zero
+  virtual int nilpotent_power() const = 0;
+
   // Stream output
   friend std::ostream & operator<<(std::ostream & os, generator const& g) {
     return g.print(os);

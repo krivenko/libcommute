@@ -59,6 +59,12 @@ public:
     return make_unique<generator_boson>(*this);
   }
 
+  // Any power of this generator can be non-vanising
+  virtual int nilpotent_power() const override { return -1; }
+
+  // Accessor
+  inline int dagger() const { return dagger_; }
+
 protected:
   // Creation or annihilation operator?
   bool dagger_;
