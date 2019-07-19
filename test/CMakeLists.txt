@@ -23,6 +23,7 @@ set(TESTS
   expression.const.addition
   expression.const.subtraction
   expression.const.multiplication
+  commutators
 )
 
 # Build C++ unit tests

@@ -129,21 +129,21 @@ public:
   // Addition
   template<typename S>
   expression_t<sum_type<ScalarType, S>>
-  operator+(expression_t<S> const& expr) {
+  operator+(expression_t<S> const& expr) const {
     return add_impl(expr, std::is_same<sum_type<ScalarType, S>, ScalarType>());
   }
 
   // Subtraction
   template<typename S>
   expression_t<diff_type<ScalarType, S>>
-  operator-(expression_t<S> const& expr) {
+  operator-(expression_t<S> const& expr) const {
     return sub_impl(expr, std::is_same<diff_type<ScalarType, S>, ScalarType>());
   }
 
   // Multiplication
   template<typename S>
   expression_t<mul_type<ScalarType, S>>
-  operator*(expression_t<S> const& expr) {
+  operator*(expression_t<S> const& expr) const {
     expression_t<mul_type<ScalarType, S>> res(*this);
     res *= expr;
     return res;
