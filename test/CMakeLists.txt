@@ -19,6 +19,7 @@ set(TESTS
   expression
   expression.addition
   expression.subtraction
+  expression.multiplication
   expression.const.addition
   expression.const.subtraction
   expression.const.multiplication

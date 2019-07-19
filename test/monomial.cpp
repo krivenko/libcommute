@@ -111,10 +111,30 @@ TEST_CASE("Monomials", "[monomial]") {
     auto m0 = mon_type();
     auto m1 = mon_type(Cdag_dn, A_y);
     auto m2 = mon_type(Sp_i, S1z_j);
+    auto m3 = mon_type(Cdag_dn, A_y, Sp_i, S1z_j);
+    auto m4 = mon_type(Sp_i, S1z_j, Cdag_dn, A_y);
     CHECK(concatenate(m1, m0) == m1);
     CHECK(concatenate(m0, m1) == m1);
-    CHECK(concatenate(m1, m2) == mon_type(Cdag_dn, A_y, Sp_i, S1z_j));
-    CHECK(concatenate(m2, m1) == mon_type(Sp_i, S1z_j, Cdag_dn, A_y));
+    CHECK(concatenate(m1, m2) == m3);
+    CHECK(concatenate(m2, m1) == m4);
+    CHECK(concatenate(m1, m2, m1) ==
+          mon_type(Cdag_dn, A_y, Sp_i, S1z_j, Cdag_dn, A_y));
+    CHECK(concatenate(std::make_pair(m3.begin(), m3.begin()),
+                      std::make_pair(m3.begin() + 1, m3.begin() + 3),
+                      m1,
+                      m0,
+                      m2,
+                      Cdag_dn,
+                      std::make_pair(m4.begin() + 1, m4.begin() + 3)
+                     ) ==
+          mon_type(A_y,Sp_i,Cdag_dn,A_y,Sp_i,S1z_j,Cdag_dn,S1z_j,Cdag_dn)
+    );
+  }
+
+  SECTION("swap_generators()") {
+    auto m = mon_type(Sp_i, S1z_j, Cdag_dn, A_y);
+    m.swap_generators(1, 3);
+    CHECK(m == mon_type(Sp_i, A_y, Cdag_dn, S1z_j));
   }
 
   SECTION("Element access") {
@@ -127,6 +147,19 @@ TEST_CASE("Monomials", "[monomial]") {
     CHECK(m4[1] == A_y);
     CHECK(m4[2] == Sp_i);
     CHECK(m4[3] == S1z_j);
+  }
+
+  SECTION("is_vanishing()") {
+    CHECK_FALSE(mon_type().is_vanishing());
+    CHECK_FALSE(mon_type(Sp_i).is_vanishing());
+    CHECK_FALSE(mon_type(Cdag_dn, A_y, Cdag_dn, S1z_j).is_vanishing());
+    CHECK(mon_type(A_y, Cdag_dn, Cdag_dn, S1z_j).is_vanishing());
+    CHECK_FALSE(mon_type(Cdag_dn, A_y, A_y, S1z_j).is_vanishing());
+    CHECK_FALSE(mon_type(Cdag_dn, A_y, A_y, S1z_j).is_vanishing());
+
+    auto S1p_k = make_spin(1, spin_component::plus, "k", 0);
+    CHECK_FALSE(mon_type(Cdag_dn, S1p_k, S1p_k, A_y).is_vanishing());
+    CHECK(mon_type(Cdag_dn, S1p_k, S1p_k, S1p_k, A_y).is_vanishing());
   }
 
   SECTION("const_iterator") {

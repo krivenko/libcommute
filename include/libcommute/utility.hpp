@@ -79,11 +79,11 @@ void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
   detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
 }
 
-// Linear function of objects
+// Multilinear function of basis objects
 template<typename T> struct linear_function {
   // Constant term
   double const_term;
-  // Generators and their respective coefficients
+  // Basis objects and their respective coefficients
   std::vector<std::pair<T, double>> terms;
 };
 

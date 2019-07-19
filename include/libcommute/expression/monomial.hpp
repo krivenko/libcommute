@@ -130,6 +130,7 @@ public:
   inline generator_type const& operator[](size_t n) const {
     return *generators_[n];
   }
+  inline generator_type& operator[](size_t n) { return *generators_[n]; }
 
   // Equality
   friend bool operator==(monomial const& m1, monomial const& m2) {
@@ -164,15 +165,38 @@ public:
     }
   }
 
-  // Concatenate two monomials
-  friend monomial concatenate(monomial const& m1, monomial const& m2) {
+  // Concatenate monomials, generators and ranges specified
+  // by a pair of monomial iterators
+  template<typename... PartTypes>
+  friend monomial concatenate(PartTypes&&... parts) {
     monomial res;
-    res.generators_.reserve(m1.size() + m2.size());
-    for(auto const& g : m1.generators_)
-      res.generators_.emplace_back(g->clone());
-    for(auto const& g : m2.generators_)
-      res.generators_.emplace_back(g->clone());
+    res.generators_.reserve(concat_parts_total_size(parts...));
+    res.concat_impl(parts...);
     return res;
+  }
+
+  // Swap a pair of generators in this monomial
+  void swap_generators(size_t n1, size_t n2) {
+    assert(n1 < size());
+    assert(n2 < size());
+    std::swap(generators_[n1], generators_[n2]);
+  }
+
+  // Check if monomial is vanishing due to presence of nilpotent generators
+  bool is_vanishing() const {
+    if(empty()) return false;
+    auto it = begin(), end_it = end();
+    auto next_it = it + 1;
+    int power = 1;
+    for(;it != end_it; ++it, ++next_it) {
+      if(next_it == end_it || *next_it != *it) {
+        int np = it->nilpotent_power();
+        if(np > 0 && power >= np) return true;
+        power = 1;
+      } else
+        ++power;
+    }
+    return false;
   }
 
   // Print to stream
@@ -192,6 +216,58 @@ public:
   }
 
 private:
+
+  //
+  // Implementation bits of concatenate()
+  //
+
+  // Size of a generator is 1
+  static constexpr size_t monomial_part_size(generator_type const& m) {
+    return 1;
+  }
+  // Size of a complete monomial
+  static size_t monomial_part_size(monomial const& m) { return m.size(); }
+  // Size of a range within a monomial
+  static size_t
+  monomial_part_size(std::pair<const_iterator, const_iterator> const& range) {
+    return std::distance(range.first, range.second);
+  }
+
+  // Total number of generators in a mixed list of generators,
+  // monomials and monomial ranges
+  template<typename P1, typename... PTail>
+  static size_t concat_parts_total_size(P1&& p1, PTail&&... p_tail) {
+    return monomial_part_size(std::forward<P1>(p1)) +
+           concat_parts_total_size(std::forward<PTail>(p_tail)...);
+  }
+  template<typename P1>
+  static size_t concat_parts_total_size(P1&& p1) {
+    return monomial_part_size(std::forward<P1>(p1));
+  }
+
+  // Append generator
+  void append_generators(generator_type const& g) {
+    generators_.emplace_back(g.clone());
+  }
+  // Append generators from a monomial
+  void append_generators(monomial const& m) {
+    for(auto const& g : m.generators_)
+      generators_.emplace_back(g->clone());
+  }
+  // Append generators from a monomial range
+  void append_generators(std::pair<const_iterator, const_iterator> const& r) {
+    for(auto it = r.first; it != r.second; ++it)
+      generators_.emplace_back(it->clone());
+  }
+
+  // Append generators from a mixed list of monomials and monomial ranges
+  template<typename P1, typename... PTail>
+  void concat_impl(P1&& p1, PTail&&... p_tail) {
+    append_generators(p1);
+    concat_impl(std::forward<PTail>(p_tail)...);
+  }
+  template<typename P1>
+  void concat_impl(P1&& p1) { append_generators(p1); }
 
   std::vector<gen_ptr_type> generators_;
 };
