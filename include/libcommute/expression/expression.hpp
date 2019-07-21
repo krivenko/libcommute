@@ -144,6 +144,29 @@ public:
     return const_iterator(monomials_.cend());
   }
 
+  // Apply functor 'f' to all monomial/coefficient pairs
+  // and replace the coefficients with the functor return values.
+  template<typename F,
+#ifndef LIBCOMMUTE_NO_STD_INVOKE_RESULT
+           typename NewScalarType = std::invoke_result_t<F,
+             expression::monomial_t const&,
+             expression::scalar_type const&>>
+#else
+           typename NewScalarType = invoke_result_t<F,
+             expression::monomial_t const&,
+             expression::scalar_type const&>>
+#endif
+  friend expression_t<NewScalarType> transform(expression const& expr, F&& f) {
+    expression_t<NewScalarType> res;
+    auto & res_mons = res.get_monomials();
+    for(auto const& m : expr.monomials_) {
+      auto val = f(m.first, m.second);
+      if(!scalar_traits<NewScalarType>::is_zero(val))
+        res_mons.emplace_hint(res_mons.end(), m.first, val);
+    }
+    return res;
+  }
+
   //
   // Arithmetics
   //

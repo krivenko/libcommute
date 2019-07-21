@@ -141,4 +141,35 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(it1 == expr.cend());
     CHECK(it2 == expr.cbegin());
   }
+
+  SECTION("transform()") {
+    using namespace real;
+    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
+                3.0 * a(0, "x") + 2.0 * a_dag(0, "y");
+    using mon_type = decltype(expr)::monomial_t;
+
+    // Multiply coefficients in front of bosonic operators by 2*I
+    auto f = [](mon_type const& m, double c) -> std::complex<double> {
+      return (m.size() > 0 && is_boson(m[0])) ?
+             std::complex<double>(0, 2*c) : .0;
+    };
+
+    auto new_expr = transform(expr, f);
+
+    std::vector<mon_type> ref_mons = {
+      mon_type(make_boson(true, 0, "y")),
+      mon_type(make_boson(false, 0, "x")),
+    };
+    std::vector<std::complex<double>> ref_coeffs =
+      {std::complex<double>(0, 4.0), std::complex<double>(0, 6.0)};
+
+    CHECK(new_expr.size() == 2);
+
+    int n = 0;
+    for(auto it = new_expr.begin(); it != new_expr.end(); ++it, ++n) {
+      auto val = *it;
+      CHECK(val.monomial == ref_mons[n]);
+      CHECK(val.coeff == ref_coeffs[n]);
+    }
+  }
 }
