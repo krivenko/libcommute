@@ -65,4 +65,79 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK_THAT(-expr_static_int,
                Prints<decltype(expr_static_int)>("{-1,0}*C+(1,up)"));
   }
+
+  SECTION("const_iterator") {
+    using expr_type = expression<double, int, std::string>;
+    using mon_type = expr_type::monomial_t;
+    using real::c_dag;
+    using real::c;
+    using real::a_dag;
+    using real::a;
+
+    expr_type expr0;
+    CHECK(expr0.begin() == expr0.end());
+    CHECK_FALSE(expr0.begin() != expr0.end());
+
+    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
+                3.0*a(0, "x") + 2.0*a_dag(0, "y");
+
+    CHECK_FALSE(expr.begin() == expr.end());
+    CHECK(expr.begin() != expr0.end());
+
+    std::vector<mon_type> ref_mons = {
+      mon_type(),
+      mon_type(make_boson(true, 0, "y")),
+      mon_type(make_boson(false, 0, "x")),
+      mon_type(make_fermion(true, 1, "up"), make_fermion(false, 2, "dn"))
+    };
+    std::vector<double> ref_coeffs = {1.0, 2.0, 3.0, 4.0};
+
+    int n = 0;
+    expr_type::const_iterator it;
+
+    SECTION("Prefix increment/decrement") {
+      // Forward iteration
+      for(it = expr.begin(); it != expr.end(); ++it, ++n) {
+        auto val = *it;
+        CHECK(val.monomial == ref_mons[n]);
+        CHECK(val.coeff == ref_coeffs[n]);
+        CHECK(it->monomial == ref_mons[n]);
+        CHECK(it->coeff == ref_coeffs[n]);
+      }
+      // Backward iteration
+      for(--it, --n; n >= 0; --it, --n) {
+        auto val = *it;
+        CHECK(val.monomial == ref_mons[n]);
+        CHECK(val.coeff == ref_coeffs[n]);
+        CHECK(it->monomial == ref_mons[n]);
+        CHECK(it->coeff == ref_coeffs[n]);
+      }
+    }
+
+    SECTION("Postfix increment/decrement") {
+      // Forward iteration
+      for(it = expr.begin(); it != expr.end(); it++, n++) {
+        auto val = *it;
+        CHECK(val.monomial == ref_mons[n]);
+        CHECK(val.coeff == ref_coeffs[n]);
+        CHECK(it->monomial == ref_mons[n]);
+        CHECK(it->coeff == ref_coeffs[n]);
+      }
+      // Backward iteration
+      for(it--, n--; n >= 0; it--, n--) {
+        auto val = *it;
+        CHECK(val.monomial == ref_mons[n]);
+        CHECK(val.coeff == ref_coeffs[n]);
+        CHECK(it->monomial == ref_mons[n]);
+        CHECK(it->coeff == ref_coeffs[n]);
+      }
+    }
+
+    using std::swap;
+    auto it1 = expr.cbegin();
+    auto it2 = expr.cend();
+    swap(it1, it2);
+    CHECK(it1 == expr.cend());
+    CHECK(it2 == expr.cbegin());
+  }
 }

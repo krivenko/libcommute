@@ -16,6 +16,7 @@
 #include "generator.hpp"
 #include "monomial.hpp"
 #include "scalar_traits.hpp"
+#include "../utility.hpp"
 
 #include <complex>
 #include <iostream>
@@ -120,6 +121,27 @@ public:
   }
   inline friend bool operator!=(expression const& e1, expression const& e2) {
     return !operator==(e1, e2);
+  }
+
+  //
+  // Iteration interface
+  //
+
+  // Constant iterator over monomials
+  class const_iterator;
+
+  inline const_iterator begin() const noexcept {
+    return const_iterator(monomials_.begin());
+  }
+  inline const_iterator cbegin() const noexcept {
+    return const_iterator(monomials_.cbegin());
+  }
+
+  inline const_iterator end() const noexcept {
+    return const_iterator(monomials_.end());
+  }
+  inline const_iterator cend() const noexcept {
+    return const_iterator(monomials_.cend());
   }
 
   //
@@ -776,6 +798,70 @@ private:
       }
     }
     return res;
+  }
+};
+
+// Constant iterator over monomials
+template<typename ScalarType, typename... IndexTypes>
+class expression<ScalarType, IndexTypes...>::const_iterator {
+
+  using map_it = typename monomials_map_t::const_iterator;
+  map_it m_it_;
+
+public:
+
+  struct value_type {
+    monomial_t const& monomial;
+    ScalarType const& coeff;
+    value_type(monomial_t const& m, ScalarType const& c)
+      : monomial(m), coeff(c) {}
+  };
+
+  using iterator_category = std::bidirectional_iterator_tag;
+  using difference_type = std::ptrdiff_t;
+  using pointer = std::unique_ptr<value_type>;
+  using reference = value_type;
+
+  explicit const_iterator(map_it const& m_it) : m_it_(m_it) {}
+
+  const_iterator() = default;
+  const_iterator(const_iterator const&) = default;
+  const_iterator(const_iterator&&) noexcept = default;
+  const_iterator& operator=(const_iterator const&) = default;
+  const_iterator& operator=(const_iterator&&) noexcept = default;
+
+  // Increments
+  const_iterator& operator++() { ++m_it_; return *this;}
+  const_iterator operator++(int) {
+    const_iterator retval = *this;
+    ++(*this);
+    return retval;
+  }
+
+  // Decrements
+  const_iterator& operator--() { --m_it_; return *this;}
+  const_iterator operator--(int) {
+    const_iterator retval = *this;
+    --(*this);
+    return retval;
+  }
+
+  // Equality
+  bool operator==(const_iterator const& it) const {return m_it_ == it.m_it_;}
+  bool operator!=(const_iterator const& it) const {return !(*this == it);}
+
+  // Dereference
+  reference operator*() const { return {m_it_->first, m_it_->second}; }
+  pointer operator->() const {
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+    using std::make_unique;
+#endif
+    return make_unique<value_type>(m_it_->first, m_it_->second);
+  }
+
+  // swap()
+  friend void swap(const_iterator& lhs, const_iterator& rhs) {
+    std::swap(lhs.m_it_, rhs.m_it_);
   }
 };
 
