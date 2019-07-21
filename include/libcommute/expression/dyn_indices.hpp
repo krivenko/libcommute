@@ -23,7 +23,7 @@
 #endif
 
 namespace libcommute {
-namespace dyn {
+namespace dynamic_indices {
 
 //
 // Dynamic sequence of indices
@@ -90,7 +90,7 @@ public:
 // Dynamic sequence of integer/string indices
 using dyn_indices = dyn_indices_generic<int, std::string>;
 
-} // namespace dyn
+} // namespace libcommute::dynamic_indices
 } // namespace libcommute
 
 #endif

@@ -68,6 +68,7 @@ void check_generator_spin_commute(std::vector<GenType*> const& v) {
 }
 
 TEST_CASE("Algebra generators", "[generator]") {
+  using namespace static_indices;
 
   // Setup
   using gen_type = generator<std::string, int>;

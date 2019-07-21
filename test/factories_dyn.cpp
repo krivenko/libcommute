@@ -15,11 +15,12 @@
 
 #include "int_complex.hpp"
 
-#include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/factories_dyn.hpp>
 
 using namespace libcommute;
+using namespace libcommute::dynamic_indices;
 
-using monomial_t = monomial<int, std::string>;
+using monomial_t = monomial<dyn_indices>;
 
 template<typename E, typename S, typename... Generators>
 void check_monomial(E const& expr, S ref_coeff, Generators&&... generators) {
@@ -32,7 +33,7 @@ void check_monomial(E const& expr, S ref_coeff, Generators&&... generators) {
 
 TEST_CASE("Factory functions", "[factories]") {
 
-  using namespace static_indices;
+  using namespace dynamic_indices;
 
   SECTION("int_complex") {
     SECTION("fermion") {

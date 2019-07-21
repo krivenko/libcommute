@@ -21,6 +21,7 @@
 #include <libcommute/expression/factories.hpp>
 
 using namespace libcommute;
+using namespace static_indices;
 
 TEST_CASE("Expression with static indices", "[expression]") {
   SECTION("Constructors") {

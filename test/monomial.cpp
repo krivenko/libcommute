@@ -43,6 +43,8 @@ template<typename V> void check_less_greater(V const& v) {
 
 TEST_CASE("Monomials", "[monomial]") {
 
+  using namespace static_indices;
+
   // Setup
   using gen_type = generator<std::string, int>;
   using mon_type = monomial<std::string, int>;

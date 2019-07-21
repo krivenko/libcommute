@@ -25,6 +25,7 @@
 #include <string>
 
 using namespace libcommute;
+using namespace static_indices;
 
 TEST_CASE("Compound assignment/multiplication", "[mul_assign]") {
   SECTION("double") {

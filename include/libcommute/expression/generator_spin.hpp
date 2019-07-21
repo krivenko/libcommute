@@ -166,6 +166,14 @@ protected:
   }
 };
 
+// Check if generator belongs to the spin algebra
+template<typename... IndexTypes>
+inline bool is_spin(generator<IndexTypes...> const& gen) {
+  return gen.algebra_id() == SPIN_ALGEBRA_ID;
+}
+
+namespace static_indices {
+
 // Convenience factory functions
 template<typename... IndexTypes>
 inline generator_spin<c_str_to_string_t<IndexTypes>...>
@@ -179,18 +187,14 @@ make_spin(double spin, spin_component c, IndexTypes&&... indices) {
   return {spin, c, std::forward<IndexTypes>(indices)...};
 }
 
-// Check if generator belongs to the spin algebra
-template<typename... IndexTypes>
-inline bool is_spin(generator<IndexTypes...> const& gen) {
-  return gen.algebra_id() == SPIN_ALGEBRA_ID;
-}
-
+} // namespace libcommute::static_indices
 } // namespace libcommute
 
 #if __cplusplus >= 201703L
 #include "dyn_indices.hpp"
+
 namespace libcommute {
-namespace dyn {
+namespace dynamic_indices {
 
 // Convenience factory functions for dynamic indices
 template<typename... IndexTypes>
@@ -205,7 +209,7 @@ make_spin(double spin, spin_component c, IndexTypes&&... indices) {
   return {spin, c, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 
-} // namespace dyn
+} // namespace libcommute::dynamic_indices
 } // namespace libcommute
 #endif
 

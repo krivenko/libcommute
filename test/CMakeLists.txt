@@ -37,7 +37,7 @@ endforeach()
 # C++17-only tests
 if("cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
   message(STATUS "Enabling C++17-only tests")
-  foreach(t dyn_indices generator_dyn)
+  foreach(t dyn_indices generator_dyn factories_dyn)
     set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
     add_executable(${t} ${s})
     target_compile_features(${t} PRIVATE cxx_std_17)

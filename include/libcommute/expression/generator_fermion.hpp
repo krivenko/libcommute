@@ -116,6 +116,14 @@ protected:
   }
 };
 
+// Check if generator belongs to the fermionic algebra
+template<typename... IndexTypes>
+inline bool is_fermion(generator<IndexTypes...> const& gen) {
+  return gen.algebra_id() == FERMION_ALGEBRA_ID;
+}
+
+namespace static_indices {
+
 // Convenience factory function
 template<typename... IndexTypes>
 inline generator_fermion<c_str_to_string_t<IndexTypes>...>
@@ -123,18 +131,14 @@ make_fermion(bool dagger, IndexTypes&&... indices) {
   return {dagger, std::forward<IndexTypes>(indices)...};
 }
 
-// Check if generator belongs to the fermionic algebra
-template<typename... IndexTypes>
-inline bool is_fermion(generator<IndexTypes...> const& gen) {
-  return gen.algebra_id() == FERMION_ALGEBRA_ID;
-}
-
+} // namespace libcommute::static_indices
 } // namespace libcommute
 
 #if __cplusplus >= 201703L
 #include "dyn_indices.hpp"
+
 namespace libcommute {
-namespace dyn {
+namespace dynamic_indices {
 
 // Convenience factory functions for dynamic indices
 template<typename... IndexTypes>
@@ -143,7 +147,7 @@ make_fermion(bool dagger, IndexTypes&&... indices) {
   return {dagger, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 
-} // namespace dyn
+} // namespace libcommute::dynamic_indices
 } // namespace libcommute
 #endif
 

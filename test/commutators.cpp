@@ -24,6 +24,8 @@ using namespace libcommute;
 
 template<typename ScalarType> void make_commutators_test_case() {
 
+  using namespace static_indices;
+
   using S = ScalarType;
   using expr_t = expression<ScalarType, int>;
 

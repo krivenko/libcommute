@@ -26,6 +26,7 @@
 // C++17-only headers
 #if __cplusplus >= 201703L
 #include "expression/dyn_indices.hpp"
+#include "expression/factories_dyn.hpp"
 #endif
 
 #endif

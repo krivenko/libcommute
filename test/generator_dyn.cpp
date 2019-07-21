@@ -68,50 +68,51 @@ void check_generator_spin_commute(std::vector<GenType*> const& v) {
 }
 
 TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
+  using namespace dynamic_indices;
 
   // Setup
-  using gen_type = generator<dyn::dyn_indices>;
+  using gen_type = generator<dyn_indices>;
 
   // Fermionic generators
-  auto Cdag_dn = dyn::make_fermion(true, "dn", 0);
-  auto Cdag_up = dyn::make_fermion(true, "up", 0);
-  auto C_up = dyn::make_fermion(false, "up", 0);
-  auto C_dn = dyn::make_fermion(false, "dn", 0);
+  auto Cdag_dn = make_fermion(true, "dn", 0);
+  auto Cdag_up = make_fermion(true, "up", 0);
+  auto C_up = make_fermion(false, "up", 0);
+  auto C_dn = make_fermion(false, "dn", 0);
   std::vector<gen_type*> fermion_ops = {&Cdag_dn,&Cdag_up,&C_up,&C_dn};
 
   // Bosonic generators
-  auto Adag_x = dyn::make_boson(true, "x");
-  auto Adag_y = dyn::make_boson(true, "y");
-  auto A_y = dyn::make_boson(false, "y");
-  auto A_x = dyn::make_boson(false, "x");
+  auto Adag_x = make_boson(true, "x");
+  auto Adag_y = make_boson(true, "y");
+  auto A_y = make_boson(false, "y");
+  auto A_x = make_boson(false, "x");
   std::vector<gen_type*> boson_ops = {&Adag_x,&Adag_y,&A_y,&A_x};
 
   // Spin-1/2 algebra generators
-  auto Sp_i = dyn::make_spin(spin_component::plus, 1);
-  auto Sm_i = dyn::make_spin(spin_component::minus, 1);
-  auto Sz_i = dyn::make_spin(spin_component::z, 1);
-  auto Sp_j = dyn::make_spin(spin_component::plus, 2);
-  auto Sm_j = dyn::make_spin(spin_component::minus, 2);
-  auto Sz_j = dyn::make_spin(spin_component::z, 2);
+  auto Sp_i = make_spin(spin_component::plus, 1);
+  auto Sm_i = make_spin(spin_component::minus, 1);
+  auto Sz_i = make_spin(spin_component::z, 1);
+  auto Sp_j = make_spin(spin_component::plus, 2);
+  auto Sm_j = make_spin(spin_component::minus, 2);
+  auto Sz_j = make_spin(spin_component::z, 2);
   std::vector<gen_type*> spin_ops = {&Sp_i,&Sm_i,&Sz_i,&Sp_j,&Sm_j,&Sz_j};
 
   // Spin-1 algebra generators
-  auto S1p_i = dyn::make_spin(1, spin_component::plus, 1);
-  auto S1m_i = dyn::make_spin(1, spin_component::minus, 1);
-  auto S1z_i = dyn::make_spin(1, spin_component::z, 1);
-  auto S1p_j = dyn::make_spin(1, spin_component::plus, 2);
-  auto S1m_j = dyn::make_spin(1, spin_component::minus, 2);
-  auto S1z_j = dyn::make_spin(1, spin_component::z, 2);
+  auto S1p_i = make_spin(1, spin_component::plus, 1);
+  auto S1m_i = make_spin(1, spin_component::minus, 1);
+  auto S1z_i = make_spin(1, spin_component::z, 1);
+  auto S1p_j = make_spin(1, spin_component::plus, 2);
+  auto S1m_j = make_spin(1, spin_component::minus, 2);
+  auto S1z_j = make_spin(1, spin_component::z, 2);
   std::vector<gen_type*> spin1_ops = {&S1p_i,&S1m_i,&S1z_i,
                                       &S1p_j,&S1m_j,&S1z_j};
 
   // Spin-3/2 algebra generators
-  auto S32p_i = dyn::make_spin(3.0/2, spin_component::plus, 1);
-  auto S32m_i = dyn::make_spin(3.0/2, spin_component::minus, 1);
-  auto S32z_i = dyn::make_spin(3.0/2, spin_component::z, 1);
-  auto S32p_j = dyn::make_spin(3.0/2, spin_component::plus, 2);
-  auto S32m_j = dyn::make_spin(3.0/2, spin_component::minus, 2);
-  auto S32z_j = dyn::make_spin(3.0/2, spin_component::z, 2);
+  auto S32p_i = make_spin(3.0/2, spin_component::plus, 1);
+  auto S32m_i = make_spin(3.0/2, spin_component::minus, 1);
+  auto S32z_i = make_spin(3.0/2, spin_component::z, 1);
+  auto S32p_j = make_spin(3.0/2, spin_component::plus, 2);
+  auto S32m_j = make_spin(3.0/2, spin_component::minus, 2);
+  auto S32z_j = make_spin(3.0/2, spin_component::z, 2);
   std::vector<gen_type*> spin32_ops = {&S32p_i,&S32m_i,&S32z_i,
                                        &S32p_j,&S32m_j,&S32z_j};
 
@@ -181,7 +182,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     for(auto * op : spin_ops) {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
 
-      auto spin_gen_p = dynamic_cast<generator_spin<dyn::dyn_indices>*>(op);
+      auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       CHECK((spin_gen_p->component() == spin_component::z ||
             (op->nilpotent_power() == 2)));
     }
@@ -209,7 +210,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     for(auto * op : spin1_ops) {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
 
-      auto spin_gen_p = dynamic_cast<generator_spin<dyn::dyn_indices>*>(op);
+      auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       CHECK((spin_gen_p->component() == spin_component::z ||
             (op->nilpotent_power() == 3)));
     }
@@ -237,7 +238,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     for(auto * op : spin32_ops) {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
 
-      auto spin_gen_p = dynamic_cast<generator_spin<dyn::dyn_indices>*>(op);
+      auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       CHECK((spin_gen_p->component() == spin_component::z ||
             (op->nilpotent_power() == 4)));
     }

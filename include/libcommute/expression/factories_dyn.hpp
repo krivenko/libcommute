@@ -10,9 +10,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_FACTORIES_HPP_
-#define LIBCOMMUTE_FACTORIES_HPP_
+#ifndef LIBCOMMUTE_DYN_FACTORIES_HPP_
+#define LIBCOMMUTE_DYN_FACTORIES_HPP_
 
+#if __cplusplus < 201703L
+#error "This header file requires a C++-17 compliant compiler"
+#endif
+
+#include "dyn_indices.hpp"
 #include "expression.hpp"
 #include "generator_fermion.hpp"
 #include "generator_boson.hpp"
@@ -23,19 +28,19 @@
 #include <utility>
 
 //
-// Factory functions for `expression<ScalarType, IndexTypes...>`
+// Factory functions for `expression<ScalarType, dyn_indices>`
 //
 
 namespace libcommute {
-namespace static_indices {
+namespace dynamic_indices {
 
 #define INDICES std::forward<IndexTypes>(indices)...
 #define DEFINE_FACTORY(NAME, ...)                                         \
 template<typename ScalarType, typename... IndexTypes>                     \
 inline                                                                    \
-expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
+expression<ScalarType, dyn_indices>                                       \
 NAME(IndexTypes... indices) {                                             \
-  using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
+  using ret_t = expression<ScalarType, dyn_indices>;                      \
   return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
                typename ret_t::monomial_t(__VA_ARGS__)                    \
   );                                                                      \
@@ -44,10 +49,10 @@ NAME(IndexTypes... indices) {                                             \
 #define DEFINE_FACTORY_SPIN(NAME, ...)                                    \
 template<int Multiplicity, typename ScalarType, typename... IndexTypes>   \
 inline                                                                    \
-expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
+expression<ScalarType, dyn_indices>                                       \
 NAME(IndexTypes... indices) {                                             \
   static_assert(Multiplicity >= 2, "Invalid multiplicity");               \
-  using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
+  using ret_t = expression<ScalarType, dyn_indices>;                      \
   return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
                typename ret_t::monomial_t(__VA_ARGS__)                    \
   );                                                                      \
@@ -55,17 +60,17 @@ NAME(IndexTypes... indices) {                                             \
 
 #define DEFINE_FACTORY_SCALAR_TYPE(NAME, S)                             \
 template<typename... IndexTypes>                                        \
-inline expression<S, c_str_to_string_t<IndexTypes>...>                  \
+inline expression<S, dyn_indices>                                       \
 NAME(IndexTypes... indices) {                                           \
-  using libcommute::static_indices::NAME;                               \
+  using libcommute::dynamic_indices::NAME;                              \
   return NAME<S>(INDICES);                                              \
 }
 
 #define DEFINE_FACTORY_SPIN_SCALAR_TYPE(NAME, S)                        \
 template<int Multiplicity, typename... IndexTypes>                      \
-inline expression<S, c_str_to_string_t<IndexTypes>...>                  \
+inline expression<S, dyn_indices>                                       \
 NAME(IndexTypes... indices) {                                           \
-  using libcommute::static_indices::NAME;                               \
+  using libcommute::dynamic_indices::NAME;                              \
   return NAME<Multiplicity, S>(INDICES);                                \
 }
 
@@ -132,7 +137,7 @@ DEFINE_FACTORY_SCALAR_TYPE(S_z, double)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_p, double)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_m, double)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_z, double)
-} // namespace libcommute::static_indices::real
+} // namespace libcommute::dynamic_indices::real
 
 //
 // Specializations for ScalarType = std::complex<double>
@@ -153,15 +158,15 @@ DEFINE_FACTORY_SCALAR_TYPE(S_z, std::complex<double>)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_p, std::complex<double>)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_m, std::complex<double>)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_z, std::complex<double>)
-} // namespace libcommute::static_indices::complex
-
-} // namespace libcommute::static_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices::complex
 
 #undef DEFINE_FACTORY
 #undef DEFINE_FACTORY_SPIN
 #undef DEFINE_FACTORY_SCALAR_TYPE
 #undef DEFINE_FACTORY_SPIN_SCALAR_TYPE
 #undef INDICES
+
+} // namespace libcommute::dynamic_indices
+} // namespace libcommute
 
 #endif

@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 
-using namespace libcommute::dyn;
+using namespace libcommute::dynamic_indices;
 
 template<typename V> void check_equality(V const& v) {
   for(size_t i1 = 0; i1 < v.size(); ++i1) {

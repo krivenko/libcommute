@@ -23,6 +23,7 @@
 #include <string>
 
 using namespace libcommute;
+using namespace static_indices;
 
 TEST_CASE("Compound assignment/addition", "[plus_assign]") {
   SECTION("double") {
