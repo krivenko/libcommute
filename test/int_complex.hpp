@@ -75,7 +75,7 @@ struct int_complex {
   }
 };
 
-std::ostream & operator<<(std::ostream & os, int_complex const& c) {
+inline std::ostream & operator<<(std::ostream & os, int_complex const& c) {
   return os << "{" << c.re << "," << c.im << "}";
 }
 
