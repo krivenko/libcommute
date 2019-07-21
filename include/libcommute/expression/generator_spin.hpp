@@ -108,6 +108,14 @@ public:
   inline int spin() const { return (multiplicity_-1)/2; }
   inline spin_component component() const { return c_; }
 
+  // Replace this generator by its Hermitian conjugate
+  virtual void conj() override {
+    if(c_ == spin_component::plus)
+      c_ = spin_component::minus;
+    else if(c_ == spin_component::minus)
+      c_ = spin_component::plus;
+  }
+
 protected:
   // Multiplicity, 2S+1
   int multiplicity_;

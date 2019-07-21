@@ -172,4 +172,14 @@ TEST_CASE("Expression with static indices", "[expression]") {
       CHECK(val.coeff == ref_coeffs[n]);
     }
   }
+
+  SECTION("conj()") {
+    using namespace complex;
+    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
+                3.0 * a(0, "x") + std::complex<double>(0,2) * a_dag(0, "y");
+    auto ref = 4.0 * c_dag(2, "dn") * c(1, "up") + 1.0 +
+               3.0 * a_dag(0, "x") + std::complex<double>(0,-2) * a(0, "y");
+
+    CHECK(conj(expr) == ref);
+  }
 }

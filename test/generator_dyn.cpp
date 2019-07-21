@@ -67,6 +67,16 @@ void check_generator_spin_commute(std::vector<GenType*> const& v) {
   }
 }
 
+template<typename V>
+void check_conj(V const& v, std::initializer_list<int> ref) {
+  int n = 0;
+  for(auto ref_it = ref.begin(); ref_it != ref.end(); ++ref_it, ++n) {
+    auto g = v[n]->clone();
+    g->conj();
+    CHECK(*g == *v[*ref_it]);
+  }
+}
+
 TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   using namespace dynamic_indices;
 
@@ -141,6 +151,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       }
     }
 
+    check_conj(fermion_ops, {3, 2, 1, 0});
+
     CHECK_THAT(Cdag_dn, Prints<gen_type>("C+(dn,0)"));
     CHECK_THAT(Cdag_up, Prints<gen_type>("C+(up,0)"));
     CHECK_THAT(C_up, Prints<gen_type>("C(up,0)"));
@@ -172,6 +184,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       }
     }
 
+    check_conj(boson_ops, {3, 2, 1, 0});
+
     CHECK_THAT(Adag_x, Prints<gen_type>("A+(x)"));
     CHECK_THAT(Adag_y, Prints<gen_type>("A+(y)"));
     CHECK_THAT(A_y, Prints<gen_type>("A(y)"));
@@ -197,6 +211,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     }
 
     check_generator_spin_commute(spin_ops);
+
+    check_conj(spin_ops, {1, 0, 2, 4, 3, 5});
 
     CHECK_THAT(Sp_i, Prints<gen_type>("S+(1)"));
     CHECK_THAT(Sm_i, Prints<gen_type>("S-(1)"));
@@ -226,6 +242,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
     check_generator_spin_commute(spin1_ops);
 
+    check_conj(spin1_ops, {1, 0, 2, 4, 3, 5});
+
     CHECK_THAT(S1p_i, Prints<gen_type>("S1+(1)"));
     CHECK_THAT(S1m_i, Prints<gen_type>("S1-(1)"));
     CHECK_THAT(S1z_i, Prints<gen_type>("S1z(1)"));
@@ -253,6 +271,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     }
 
     check_generator_spin_commute(spin32_ops);
+
+    check_conj(spin32_ops, {1, 0, 2, 4, 3, 5});
 
     CHECK_THAT(S32p_i, Prints<gen_type>("S3/2+(1)"));
     CHECK_THAT(S32m_i, Prints<gen_type>("S3/2-(1)"));

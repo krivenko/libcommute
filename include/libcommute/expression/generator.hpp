@@ -89,6 +89,9 @@ public:
                          linear_function<std::unique_ptr<generator>> & f) const
                          = 0;
 
+  // Replace this generator by its Hermitian conjugate
+  virtual void conj() = 0;
+
   // Stream output
   friend std::ostream & operator<<(std::ostream & os, generator const& g) {
     return g.print(os);

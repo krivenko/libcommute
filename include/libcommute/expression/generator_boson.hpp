@@ -78,6 +78,9 @@ public:
   // Accessor
   inline int dagger() const { return dagger_; }
 
+  // Replace this generator by its Hermitian conjugate
+  virtual void conj() override { dagger_ = !dagger_; }
+
 protected:
   // Creation or annihilation operator?
   bool dagger_;

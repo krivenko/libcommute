@@ -164,6 +164,19 @@ TEST_CASE("Monomials", "[monomial]") {
     CHECK(mon_type(Cdag_dn, S1p_k, S1p_k, S1p_k, A_y).is_vanishing());
   }
 
+  SECTION("conj()") {
+    mon_type m0{};
+    CHECK(conj(m0).size() == 0);
+
+    mon_type m4(Cdag_dn, A_y, Sp_i, S1z_j);
+    auto m4_conj = conj(m4);
+    CHECK(m4_conj.size() == 4);
+    CHECK(m4_conj[0] == make_spin(1, spin_component::z, "j", 0));
+    CHECK(m4_conj[1] == make_spin(spin_component::minus, "i", 0));
+    CHECK(m4_conj[2] == make_boson(true, "y", 0));
+    CHECK(m4_conj[3] == make_fermion(false, "dn", 0));
+  }
+
   SECTION("const_iterator") {
     mon_type m0{};
     CHECK(m0.begin() == m0.end());

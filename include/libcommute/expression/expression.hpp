@@ -167,6 +167,17 @@ public:
     return res;
   }
 
+  // Hermitian conjugate
+  friend expression conj(expression const& expr) {
+    expression res;
+    for(auto const& m : expr.monomials_) {
+      auto val = scalar_traits<ScalarType>::conj(m.second);
+      if(!scalar_traits<ScalarType>::is_zero(val))
+        normalize_and_store(conj(m.first), val, res.monomials_);
+    }
+    return res;
+  }
+
   //
   // Arithmetics
   //

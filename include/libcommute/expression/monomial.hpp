@@ -182,6 +182,18 @@ public:
     std::swap(generators_[n1], generators_[n2]);
   }
 
+  // Hermitian conjugate
+  friend monomial conj(monomial const& m) {
+    monomial res;
+    res.generators_.reserve(m.size());
+    for(auto it = m.generators_.rbegin(); it != m.generators_.rend(); ++it) {
+      auto g = (*it)->clone();
+      g->conj();
+      res.generators_.emplace_back(std::move(g));
+    }
+    return res;
+  }
+
   // Check if monomial is vanishing due to presence of nilpotent generators
   bool is_vanishing() const {
     if(empty()) return false;
