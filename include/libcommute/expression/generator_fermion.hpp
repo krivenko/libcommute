@@ -34,6 +34,7 @@ template<typename... IndexTypes>
 class generator_fermion : public generator<IndexTypes...> {
 
   using base = generator<IndexTypes...>;
+  using linear_function_t = typename base::linear_function_t;
 
 public:
 
@@ -63,9 +64,7 @@ public:
   virtual int nilpotent_power() const override { return 2; }
 
   // c = -1, f(g) = \delta(g1, g2)
-  virtual double
-  commute(base const& g2,
-          linear_function<std::unique_ptr<base>> & f) const override {
+  virtual double commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
     f.const_term = (this->indices_ == g2_.indices_ &&
@@ -78,8 +77,18 @@ public:
   // Accessor
   inline int dagger() const { return dagger_; }
 
-  // Replace this generator by its Hermitian conjugate
-  virtual void conj() override { dagger_ = !dagger_; }
+  // Return the Hermitian conjugate of this generator via f
+  virtual void conj(linear_function_t & f) const override {
+    f.const_term = 0;
+    f.terms.clear();
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+    using std::make_unique;
+#endif
+    f.terms.emplace_back(
+      make_unique<generator_fermion>(!dagger_, base::indices_),
+      1
+    );
+  }
 
 protected:
   // Creation or annihilation operator?

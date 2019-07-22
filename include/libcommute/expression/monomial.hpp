@@ -84,6 +84,11 @@ public:
     for(auto p : generators) generators_.emplace_back(p->clone());
   }
 
+  // Construct from a list of smart pointers to generators
+  monomial(std::initializer_list<gen_ptr_type> generators) {
+    for(auto const& p : generators) generators_.emplace_back(p->clone());
+  }
+
   // Value semantics
   monomial(monomial const& m) {
     generators_.reserve(m.generators_.size());
@@ -124,6 +129,23 @@ public:
   }
   inline const_iterator cend() const noexcept {
     return const_iterator(generators_.cend());
+  }
+
+  // Reverse iterator
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+  inline const_reverse_iterator rbegin() const noexcept {
+    return const_reverse_iterator(generators_.rbegin());
+  }
+  inline const_reverse_iterator crbegin() const noexcept {
+    return const_reverse_iterator(generators_.crbegin());
+  }
+
+  inline const_reverse_iterator rend() const noexcept {
+    return const_reverse_iterator(generators_.rend());
+  }
+  inline const_reverse_iterator crend() const noexcept {
+    return const_reverse_iterator(generators_.crend());
   }
 
   // Element access
@@ -180,18 +202,6 @@ public:
     assert(n1 < size());
     assert(n2 < size());
     std::swap(generators_[n1], generators_[n2]);
-  }
-
-  // Hermitian conjugate
-  friend monomial conj(monomial const& m) {
-    monomial res;
-    res.generators_.reserve(m.size());
-    for(auto it = m.generators_.rbegin(); it != m.generators_.rend(); ++it) {
-      auto g = (*it)->clone();
-      g->conj();
-      res.generators_.emplace_back(std::move(g));
-    }
-    return res;
   }
 
   // Check if monomial is vanishing due to presence of nilpotent generators

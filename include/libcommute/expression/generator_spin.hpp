@@ -37,6 +37,7 @@ template<typename... IndexTypes>
 class generator_spin : public generator<IndexTypes...> {
 
   using base = generator<IndexTypes...>;
+  using linear_function_t = typename base::linear_function_t;
 
 public:
 
@@ -79,9 +80,7 @@ public:
   //  S_- * S_+ = S_+ * S_- - 2*S_z
   //  S_z * S_+ = S_+ * S_z + S_+
   //  S_z * S_- = S_- * S_z - S_-
-  virtual double
-  commute(base const& g2,
-          linear_function<std::unique_ptr<base>> & f) const override {
+  virtual double commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
     f.const_term = 0;
@@ -108,12 +107,20 @@ public:
   inline int spin() const { return (multiplicity_-1)/2; }
   inline spin_component component() const { return c_; }
 
-  // Replace this generator by its Hermitian conjugate
-  virtual void conj() override {
-    if(c_ == spin_component::plus)
-      c_ = spin_component::minus;
-    else if(c_ == spin_component::minus)
-      c_ = spin_component::plus;
+  // Return the Hermitian conjugate of this generator via f
+  virtual void conj(linear_function_t & f) const override {
+    f.const_term = 0;
+    f.terms.clear();
+    spin_component new_c = (c_ == spin_component::z ? spin_component::z :
+    (c_ == spin_component::plus ? spin_component::minus : spin_component::plus)
+    );
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+    using std::make_unique;
+#endif
+    f.terms.emplace_back(
+      make_unique<generator_spin>((multiplicity_-1)/2.0, new_c, base::indices_),
+      1
+    );
   }
 
 protected:

@@ -21,6 +21,9 @@
 #include <vector>
 
 using namespace libcommute;
+using namespace dynamic_indices;
+
+using gen_type = generator<dyn_indices>;
 
 template<typename V> void check_equality(V const& v) {
   for(size_t i1 = 0; i1 < v.size(); ++i1) {
@@ -69,19 +72,20 @@ void check_generator_spin_commute(std::vector<GenType*> const& v) {
 
 template<typename V>
 void check_conj(V const& v, std::initializer_list<int> ref) {
+  gen_type::linear_function_t f;
   int n = 0;
   for(auto ref_it = ref.begin(); ref_it != ref.end(); ++ref_it, ++n) {
-    auto g = v[n]->clone();
-    g->conj();
-    CHECK(*g == *v[*ref_it]);
+    v[n]->conj(f);
+    CHECK(f.const_term == 0);
+    CHECK(f.terms.size() == 1);
+    CHECK(*f.terms[0].first == *v[*ref_it]);
+    CHECK(f.terms[0].second == 1);
   }
 }
 
 TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
-  using namespace dynamic_indices;
 
   // Setup
-  using gen_type = generator<dyn_indices>;
 
   // Fermionic generators
   auto Cdag_dn = make_fermion(true, "dn", 0);

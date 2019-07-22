@@ -94,6 +94,21 @@ public:
     if(!scalar_traits<S>::is_zero(x)) monomials_.emplace(monomial, x);
   }
 
+private:
+
+  // Internal: Construct from a linear function of generators
+  expression(typename monomial_t::generator_type::linear_function_t const& f) {
+    if(!scalar_traits<ScalarType>::is_zero(f.const_term))
+      monomials_.emplace(monomial_t{}, f.const_term);
+    for(auto const& g : f.terms) {
+      auto v = scalar_traits<ScalarType>::make_const(g.second);
+      if(!scalar_traits<ScalarType>::is_zero(v))
+        *this += expression(v, monomial_t({g.first->clone()}));
+    }
+  }
+
+public:
+
   template<typename S>
   expression& operator=(expression<S, IndexTypes...> const& x) {
     static_assert(std::is_constructible<scalar_type, S>::value,
@@ -114,6 +129,9 @@ public:
 
   // Number of monomials
   inline size_t size() const { return monomials_.size(); }
+
+  // Set expression to zero
+  inline void clear() { monomials_.clear(); }
 
   // Equality
   inline friend bool operator==(expression const& e1, expression const& e2) {
@@ -170,10 +188,18 @@ public:
   // Hermitian conjugate
   friend expression conj(expression const& expr) {
     expression res;
+    expression m_contrib;
+    typename monomial_t::generator_type::linear_function_t f;
     for(auto const& m : expr.monomials_) {
-      auto val = scalar_traits<ScalarType>::conj(m.second);
-      if(!scalar_traits<ScalarType>::is_zero(val))
-        normalize_and_store(conj(m.first), val, res.monomials_);
+      auto coeff = scalar_traits<ScalarType>::conj(m.second);
+      if(!scalar_traits<ScalarType>::is_zero(coeff)) {
+        m_contrib = expression(coeff);
+        for(auto m_it = m.first.rbegin(); m_it != m.first.rend(); ++m_it) {
+          (*m_it).conj(f);
+          m_contrib *= expression(f);
+        }
+      }
+      res += m_contrib;
     }
     return res;
   }

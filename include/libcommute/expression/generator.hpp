@@ -33,6 +33,9 @@ public:
 
   using index_types = std::tuple<IndexTypes...>;
 
+  // Linear combination of generators
+  using linear_function_t = linear_function<std::unique_ptr<generator>>;
+
   template<typename... Args>
   generator(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
   generator() = delete;
@@ -85,12 +88,10 @@ public:
   // Given a pair g1 = *this and g2, commute() must return c and write
   // f(g) into its second argument. For the sake of optimization, it is
   // required that g1 > g2.
-  virtual double commute(generator const& g2,
-                         linear_function<std::unique_ptr<generator>> & f) const
-                         = 0;
+  virtual double commute(generator const& g2, linear_function_t & f) const = 0;
 
-  // Replace this generator by its Hermitian conjugate
-  virtual void conj() = 0;
+  // Return the Hermitian conjugate of this generator via f
+  virtual void conj(linear_function_t & f) const = 0;
 
   // Stream output
   friend std::ostream & operator<<(std::ostream & os, generator const& g) {

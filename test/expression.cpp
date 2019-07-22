@@ -49,6 +49,9 @@ TEST_CASE("Expression with static indices", "[expression]") {
     expr_real<int, std::string> expr_monomial(3, mon);
     CHECK_THAT(expr_monomial,
                Prints<decltype(expr_monomial)>("3*C+(1,up)C(2,dn)"));
+
+    expr_monomial.clear();
+    CHECK(expr_monomial.size() == 0);
   }
 
   SECTION("Assignment") {
