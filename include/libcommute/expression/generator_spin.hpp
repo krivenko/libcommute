@@ -140,7 +140,8 @@ protected:
   virtual bool equal(base const& g) const override {
     auto const& b_g =  dynamic_cast<generator_spin const&>(g);
     return multiplicity_ == b_g.multiplicity_ &&
-                      c_ == b_g.c_ && this->indices_ == b_g.indices_;
+                      c_ == b_g.c_ &&
+                      base::equal(g);
   }
 
   // Ordering
@@ -150,8 +151,8 @@ protected:
     //          S3/2+_1 < S3/2-_1 < S3/2z_1 < S3/2+_2 < S3/2-_2 < S3/2z_2
     if(this->multiplicity_ != s_g.multiplicity_)
       return (this->multiplicity_ < s_g.multiplicity_);
-    else if(this->indices_ != s_g.indices_)
-      return (this->indices_ < s_g.indices_);
+    else if(!base::equal(g))
+      return base::less(g);
     else
       return this->c_ < s_g.c_;
   }
@@ -161,8 +162,8 @@ protected:
     //          S1/2z_2 > S1/2-_2 > S1/2+_2 > S1/2z_1 > S1/2-_1 > S1/2+_1
     if(this->multiplicity_ != s_g.multiplicity_)
       return (this->multiplicity_ > s_g.multiplicity_);
-    if(this->indices_ != s_g.indices_)
-      return (this->indices_ > s_g.indices_);
+    if(!base::equal(g))
+      return base::greater(g);
     else
       return this->c_ > s_g.c_;
   }

@@ -15,8 +15,6 @@
 
 #include <libcommute/expression/expression.hpp>
 
-#include <cmath>
-
 //
 // Implement algebra of 4-dimensional \Gamma-matrices
 //
@@ -101,13 +99,6 @@ protected:
       return (this->gamma_index_ > f_g.gamma_index_);
     else
       return this->indices_ > f_g.indices_;
-  }
-
-  // Print to stream
-  virtual std::ostream & print(std::ostream & os) const override {
-    os << "Gamma^" << (this->gamma_index_) << "(";
-    print_tuple(os, this->indices_);
-    return os << ")";
   }
 };
 

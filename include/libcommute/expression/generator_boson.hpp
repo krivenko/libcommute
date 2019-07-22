@@ -99,7 +99,7 @@ protected:
   // Check two generators of the same algebra for equality
   virtual bool equal(base const& g) const override {
     auto const& b_g =  dynamic_cast<generator_boson const&>(g);
-    return dagger_ == b_g.dagger_ && this->indices_ == b_g.indices_;
+    return dagger_ == b_g.dagger_ && base::equal(g);
   }
 
   // Ordering
@@ -109,8 +109,7 @@ protected:
     if(this->dagger_ != b_g.dagger_)
       return (this->dagger_ > b_g.dagger_);
     else
-      return this->dagger_ ? this->indices_ < b_g.indices_ :
-                             this->indices_ > b_g.indices_;
+      return this->dagger_ ? base::less(g) : base::greater(g);
   }
   virtual bool greater(base const& g) const override {
     auto const& b_g =  dynamic_cast<generator_boson const&>(g);
@@ -118,8 +117,7 @@ protected:
     if(this->dagger_ != b_g.dagger_)
       return (this->dagger_ < b_g.dagger_);
     else
-      return this->dagger_ ? this->indices_ > b_g.indices_ :
-                             this->indices_ < b_g.indices_;
+      return this->dagger_ ? base::greater(g) : base::less(g);
   }
 
   // Print to stream

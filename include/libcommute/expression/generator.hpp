@@ -93,7 +93,11 @@ public:
   virtual double commute(generator const& g2, linear_function_t & f) const = 0;
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t & f) const = 0;
+  virtual void conj(linear_function_t & f) const {
+    f.const_term = 0;
+    f.terms.clear();
+    f.terms.emplace_back(clone(), 1.0);
+  }
 
   // Stream output
   friend std::ostream & operator<<(std::ostream & os, generator const& g) {
@@ -105,12 +109,22 @@ protected:
   index_types indices_;
 
   // Check two generators of the same algebra for equality
-  virtual bool equal(generator const& g) const = 0;
+  virtual bool equal(generator const& g) const {
+    return indices_ == g.indices_;
+  }
   // Ordering
-  virtual bool less(generator const& g) const = 0;
-  virtual bool greater(generator const& g) const = 0;
+  virtual bool less(generator const& g) const {
+    return indices_ < g.indices_;
+  }
+  virtual bool greater(generator const& g) const {
+    return indices_ > g.indices_;
+  }
   // Print to stream
-  virtual std::ostream & print(std::ostream & os) const = 0;
+  virtual std::ostream & print(std::ostream & os) const {
+    os << "g(";
+    print_tuple(os, this->indices_);
+    return os << ")";
+  }
 };
 
 // Check if g1 and g2 belong to the same algebra
