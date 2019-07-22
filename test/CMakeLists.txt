@@ -25,6 +25,7 @@ set(TESTS
   expression.const.multiplication
   hc
   commutators
+  gamma
 )
 
 # Build C++ unit tests

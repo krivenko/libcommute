@@ -101,6 +101,13 @@ TEST_CASE("Monomials", "[monomial]") {
     check_less_greater(monomials);
   }
 
+  SECTION("is_sorted()") {
+    CHECK(mon_type().is_sorted());
+    CHECK(mon_type(S1z_j, S1z_j, S1z_j, S1z_j).is_sorted());
+    CHECK_FALSE(mon_type(S1z_j, A_y, S1z_j, A_y).is_sorted());
+    CHECK(mon_type(A_y, A_y, S1z_j, S1z_j).is_sorted());
+  }
+
   SECTION("Copy and assignment") {
     auto m1 = mon_type(Cdag_dn, A_y, Sp_i, S1z_j);
     auto m2 = mon_type(S1z_j, S1z_j);
@@ -154,17 +161,51 @@ TEST_CASE("Monomials", "[monomial]") {
     CHECK(m4[3] == S1z_j);
   }
 
-  SECTION("is_vanishing()") {
-    CHECK_FALSE(mon_type().is_vanishing());
-    CHECK_FALSE(mon_type(Sp_i).is_vanishing());
-    CHECK_FALSE(mon_type(Cdag_dn, A_y, Cdag_dn, S1z_j).is_vanishing());
-    CHECK(mon_type(A_y, Cdag_dn, Cdag_dn, S1z_j).is_vanishing());
-    CHECK_FALSE(mon_type(Cdag_dn, A_y, A_y, S1z_j).is_vanishing());
-    CHECK_FALSE(mon_type(Cdag_dn, A_y, A_y, S1z_j).is_vanishing());
+  SECTION("collapse_powers()") {
+    mon_type m0;
+    CHECK(m0.collapse_powers() == 1);
 
-    auto S1p_k = make_spin(1, spin_component::plus, "k", 0);
-    CHECK_FALSE(mon_type(Cdag_dn, S1p_k, S1p_k, A_y).is_vanishing());
-    CHECK(mon_type(Cdag_dn, S1p_k, S1p_k, S1p_k, A_y).is_vanishing());
+    CHECK(mon_type(Cdag_dn, Cdag_dn, A_y, S1z_j).collapse_powers() == 0);
+
+    auto Cdag1 = make_fermion(true, "x", 1);
+    auto Cdag2 = make_fermion(true, "x", 2);
+    auto Cdag3 = make_fermion(true, "x", 3);
+
+    CHECK(mon_type(Cdag1, Cdag1, Cdag2, Cdag3).collapse_powers() == 0);
+    CHECK(mon_type(Cdag1, Cdag2, Cdag2, Cdag3).collapse_powers() == 0);
+    CHECK(mon_type(Cdag1, Cdag2, Cdag3, Cdag3).collapse_powers() == 0);
+
+    SECTION("spin-1/2") {
+      auto Sz = make_spin(spin_component::z, "i", 0);
+      mon_type m1(Sz);
+      CHECK(m1.collapse_powers() == 1);
+      CHECK(m1 == mon_type(Sz));
+      mon_type m2(Sz, Sz);
+      CHECK(m2.collapse_powers() == 0.25);
+      CHECK(m2 == mon_type());
+      mon_type m3(Sz, Sz, Sz);
+      CHECK(m3.collapse_powers() == 0.25);
+      CHECK(m3 == mon_type(Sz));
+      mon_type m4(Sz, Sz, Sz, Sz);
+      CHECK(m4.collapse_powers() == 0.0625);
+      CHECK(m4 == mon_type());
+    }
+
+    SECTION("spin-1") {
+      auto Sz = make_spin(1, spin_component::z, "i", 0);
+      mon_type m1(Sz);
+      CHECK(m1.collapse_powers() == 1);
+      CHECK(m1 == mon_type(Sz));
+      mon_type m2(Sz, Sz);
+      CHECK(m2.collapse_powers() == 1);
+      CHECK(m2 == mon_type(Sz, Sz));
+      mon_type m3(Sz, Sz, Sz);
+      CHECK(m3.collapse_powers() == 1);
+      CHECK(m3 == mon_type(Sz, Sz, Sz));
+      mon_type m4(Sz, Sz, Sz, Sz);
+      CHECK(m4.collapse_powers() == 1);
+      CHECK(m4 == mon_type(Sz, Sz, Sz, Sz));
+    }
   }
 
   SECTION("const_iterator") {

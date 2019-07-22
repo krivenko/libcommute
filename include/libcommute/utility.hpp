@@ -167,6 +167,7 @@ template<typename... T>
 void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
   detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
 }
+void print_tuple(std::ostream & os, std::tuple<> const& t) {}
 
 //
 // Multilinear function of basis objects

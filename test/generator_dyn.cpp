@@ -133,7 +133,10 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   SECTION("fermion") {
     for(auto * op : fermion_ops) {
       CHECK(op->algebra_id() == FERMION_ALGEBRA_ID);
-      CHECK(op->nilpotent_power() == 2);
+      CHECK(op->has_constant_power(1).first == false);
+      CHECK(op->has_constant_power(2) == std::make_pair(true, .0));
+      CHECK(op->has_constant_power(3) == std::make_pair(true, .0));
+      CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
     }
 
     check_equality(fermion_ops);
@@ -166,7 +169,10 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
   SECTION("boson") {
     for(auto * op : boson_ops) {
       CHECK(op->algebra_id() == BOSON_ALGEBRA_ID);
-      CHECK(op->nilpotent_power() == -1);
+      CHECK(op->has_constant_power(1).first == false);
+      CHECK(op->has_constant_power(2).first == false);
+      CHECK(op->has_constant_power(3).first == false);
+      CHECK(op->has_constant_power(4).first == false);
     }
 
     check_equality(boson_ops);
@@ -201,8 +207,17 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
 
       auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
-      CHECK((spin_gen_p->component() == spin_component::z ||
-            (op->nilpotent_power() == 2)));
+      if(spin_gen_p->component() == spin_component::z) {
+        CHECK(op->has_constant_power(1).first == false);
+        CHECK(op->has_constant_power(2) == std::make_pair(true, 0.25));
+        CHECK(op->has_constant_power(3).first == false);
+        CHECK(op->has_constant_power(4) == std::make_pair(true, 0.0625));
+      } else {
+        CHECK(op->has_constant_power(1).first == false);
+        CHECK(op->has_constant_power(2) == std::make_pair(true, .0));
+        CHECK(op->has_constant_power(3) == std::make_pair(true, .0));
+        CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+      }
     }
 
     check_equality(spin_ops);
@@ -231,8 +246,17 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
 
       auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
-      CHECK((spin_gen_p->component() == spin_component::z ||
-            (op->nilpotent_power() == 3)));
+      if(spin_gen_p->component() == spin_component::z) {
+        CHECK(op->has_constant_power(1).first == false);
+        CHECK(op->has_constant_power(2).first == false);
+        CHECK(op->has_constant_power(3).first == false);
+        CHECK(op->has_constant_power(4).first == false);
+      } else {
+        CHECK(op->has_constant_power(1).first == false);
+        CHECK(op->has_constant_power(2).first == false);
+        CHECK(op->has_constant_power(3) == std::make_pair(true, .0));
+        CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+      }
     }
 
     check_equality(spin1_ops);
@@ -261,8 +285,17 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
 
       auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
-      CHECK((spin_gen_p->component() == spin_component::z ||
-            (op->nilpotent_power() == 4)));
+      if(spin_gen_p->component() == spin_component::z) {
+        CHECK(op->has_constant_power(1).first == false);
+        CHECK(op->has_constant_power(2).first == false);
+        CHECK(op->has_constant_power(3).first == false);
+        CHECK(op->has_constant_power(4).first == false);
+      } else {
+        CHECK(op->has_constant_power(1).first == false);
+        CHECK(op->has_constant_power(2).first == false);
+        CHECK(op->has_constant_power(3).first == false);
+        CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+      }
     }
 
     check_equality(spin32_ops);

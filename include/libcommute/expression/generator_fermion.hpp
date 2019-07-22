@@ -45,7 +45,6 @@ public:
   template<typename... Args>
   generator_fermion(bool dagger, Args&&... indices) :
     base(std::forward<Args>(indices)...), dagger_(dagger) {}
-  generator_fermion() = delete;
   generator_fermion(generator_fermion const&) = default;
   generator_fermion(generator_fermion&&) noexcept = default;
   generator_fermion& operator=(generator_fermion const&) = default;
@@ -61,7 +60,9 @@ public:
   }
 
   // A square of C^+/C is vanising
-  virtual int nilpotent_power() const override { return 2; }
+  virtual std::pair<bool, double> has_constant_power(int power) const override {
+    return std::make_pair(power >= 2, 0);
+  }
 
   // c = -1, f(g) = \delta(g1, g2)
   virtual double commute(base const& g2, linear_function_t & f) const override {

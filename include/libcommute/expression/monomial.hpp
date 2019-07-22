@@ -187,6 +187,9 @@ public:
     }
   }
 
+  // Is this monomial sorted?
+  inline bool is_sorted() const { return std::is_sorted(begin(), end()); }
+
   // Concatenate monomials, generators and ranges specified
   // by a pair of monomial iterators
   template<typename... PartTypes>
@@ -204,21 +207,39 @@ public:
     std::swap(generators_[n1], generators_[n2]);
   }
 
-  // Check if monomial is vanishing due to presence of nilpotent generators
-  bool is_vanishing() const {
-    if(empty()) return false;
+  // Try to simplify higher powers of generators in this monomial assuming
+  // that it is sorted. This procedure can result in gaining an additional
+  // prefactor, which will be returned.
+  double collapse_powers() {
+    assert(is_sorted());
+
+    monomial res;
+    double coeff = 1;
+
+    if(empty()) return coeff;
     auto it = begin(), end_it = end();
     auto next_it = it + 1;
     int power = 1;
     for(;it != end_it; ++it, ++next_it) {
       if(next_it == end_it || *next_it != *it) {
-        int np = it->nilpotent_power();
-        if(np > 0 && power >= np) return true;
+        for(int i = 0; i < power; ++i)
+          res.generators_.emplace_back(it->clone());
         power = 1;
-      } else
+      } else {
         ++power;
+        auto hcp = it->has_constant_power(power);
+        if(hcp.first) {
+          if(hcp.second == 0) // This monomial is zero
+            return 0;
+          else {
+            power = 0;
+            coeff *= hcp.second;
+          }
+        }
+      }
     }
-    return false;
+    std::swap(*this, res);
+    return coeff;
   }
 
   // Print to stream

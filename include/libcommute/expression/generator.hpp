@@ -38,7 +38,6 @@ public:
 
   template<typename... Args>
   generator(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
-  generator() = delete;
   generator(generator const&) = default;
   generator(generator&&) noexcept = default;
   generator& operator=(generator const&) = default;
@@ -74,8 +73,11 @@ public:
   // Accessor
   inline index_types const& indices() const { return indices_; }
 
-  // Return a positive integer n, if the n-th power of generator is zero
-  virtual int nilpotent_power() const = 0;
+  // Is the given power of this generator constant,
+  // and if yes, what this constant is?
+  virtual std::pair<bool, double> has_constant_power(int power) const {
+    return std::make_pair(false, 0);
+  }
 
   // We assume that any pair of generators g1 and g2 satisfy
   //

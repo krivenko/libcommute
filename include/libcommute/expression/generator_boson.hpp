@@ -45,7 +45,6 @@ public:
   template<typename... Args>
   generator_boson(bool dagger, Args&&... indices) :
     base(std::forward<Args>(indices)...), dagger_(dagger) {}
-  generator_boson() = delete;
   generator_boson(generator_boson const&) = default;
   generator_boson(generator_boson&&) noexcept = default;
   generator_boson& operator=(generator_boson const&) = default;
@@ -61,7 +60,9 @@ public:
   }
 
   // Any power of this generator can be non-vanising
-  virtual int nilpotent_power() const override { return -1; }
+  virtual std::pair<bool, double> has_constant_power(int power) const override {
+    return std::make_pair(false, 0);
+  }
 
   // c = 1, f(g) = \delta(g1, g2)
   virtual double

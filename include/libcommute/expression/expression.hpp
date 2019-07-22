@@ -623,7 +623,8 @@ private:
           generator_t& cur_gen = m[n];
 
           // Product m[n-1]*m[n] is effectively zero, quiting early.
-          if(prev_gen == cur_gen && cur_gen.nilpotent_power() == 2)
+          if(prev_gen == cur_gen &&
+             cur_gen.has_constant_power(2) == std::make_pair(true, .0))
             return;
 
           if(prev_gen > cur_gen) { // Reordering is needed
@@ -660,9 +661,12 @@ private:
       // Check that coefficient in front of this monomial is not zero
       if(scalar_traits<ScalarType>::is_zero(coeff)) return;
 
-      // Check that monomial is not vanishing due to some generators being
-      // nilpotent.
-      if(m.is_vanishing()) return;
+      // Simplify higher powers of generators
+      double c = m.collapse_powers();
+      if(c == 0)
+        return;
+      else
+        coeff *= scalar_traits<ScalarType>::make_const(c);
     }
 
     // Insert the result

@@ -55,7 +55,6 @@ public:
       assert(2*spin == int(spin*2));
     }
 
-  generator_spin() = delete;
   generator_spin(generator_spin const&) = default;
   generator_spin(generator_spin&&) noexcept = default;
   generator_spin& operator=(generator_spin const&) = default;
@@ -71,8 +70,15 @@ public:
   }
 
   // Raising and lowering operators are nilpotent
-  virtual int nilpotent_power() const override {
-    return c_ == spin_component::z ? -1 : multiplicity_;
+  virtual std::pair<bool, double> has_constant_power(int power) const override {
+    if(c_ == spin_component::z) {
+      if(multiplicity_ == 2 && power > 0 && (power%2) == 0)
+        return std::make_pair(true, double(1) / (std::uint64_t(1) << power));
+      else
+        return std::make_pair(false, 0);
+    } else {
+      return std::make_pair(power >= multiplicity_, 0);
+    }
   }
 
   // Generators with different indices or multiplicities commute.
