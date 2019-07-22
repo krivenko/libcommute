@@ -56,9 +56,11 @@ TEST_CASE("Expression with static indices", "[expression]") {
 
   SECTION("Assignment") {
     expr_real<int, std::string> expr_const(2);
-    expr_real<int, std::string> expr0;
+    expr_real<int, std::string> expr0, expr1;
     expr0 = expr_const;
     CHECK_THAT(expr0, Prints<decltype(expr0)>("2"));
+    expr1 = std::move(expr_const);
+    CHECK_THAT(expr1, Prints<decltype(expr1)>("2"));
   }
 
   SECTION("Unary minus") {
