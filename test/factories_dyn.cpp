@@ -14,6 +14,7 @@
 #include "catch2/catch.hpp"
 
 #include "int_complex.hpp"
+#include "utility.hpp"
 
 #include <libcommute/expression/factories_dyn.hpp>
 
@@ -252,5 +253,15 @@ TEST_CASE("Factory functions", "[factories]") {
                      c1,
                      make_spin(3.0/2, spin_component::z, 0, "x"));
     }
+  }
+
+  SECTION("Mixed indices") {
+    using namespace real;
+
+    auto expr = c_dag(0, "up")*c(1, "dn") +
+                a_dag("x") * n() + a("y") * n() + S_p()*S_m();
+    CHECK_THAT(expr, Prints<decltype(expr)>(
+      "1*C+(0,up)C(1,dn) + 1*S+()S-() + 1*C+()C()A+(x) + 1*C+()C()A(y)")
+    );
   }
 }
