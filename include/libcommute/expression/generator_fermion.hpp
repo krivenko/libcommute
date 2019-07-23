@@ -82,11 +82,7 @@ public:
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif
-    f.set(0,
-          std::make_pair(make_unique<generator_fermion>(!dagger_,
-                                                        base::indices_),
-                         1)
-         );
+    f.set(0, make_unique<generator_fermion>(!dagger_, base::indices_), 1);
   }
 
 protected:

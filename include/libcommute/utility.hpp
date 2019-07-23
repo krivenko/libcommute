@@ -80,6 +80,8 @@ template<typename T> struct linear_function {
   linear_function(double const_term) : const_term(const_term) {}
   template<typename... Args>
   linear_function(double const_term, Args&&... args) : const_term(const_term) {
+    static_assert(sizeof...(Args)%2 == 0,
+                  "This constructor requires an odd number of arguments");
     construct_impl(std::forward<Args>(args)...);
   }
 
@@ -102,14 +104,14 @@ template<typename T> struct linear_function {
 
 private:
 
-  template<typename Head, typename... Tail>
-  void construct_impl(Head&& arg, Tail&&... tail) {
-    terms.emplace_back(std::forward<Head>(arg));
+  template<typename T1, typename T2, typename... Tail>
+  void construct_impl(T1&& arg1, T2&& arg2, Tail&&... tail) {
+    terms.emplace_back(std::forward<T1>(arg1), std::forward<T2>(arg2));
     construct_impl(std::forward<Tail>(tail)...);
   }
-  template<typename Head>
-  void construct_impl(Head&& arg) {
-    terms.emplace_back(std::forward<Head>(arg));
+  template<typename T1, typename T2>
+  void construct_impl(T1&& arg1, T2&& arg2) {
+    terms.emplace_back(std::forward<T1>(arg1), std::forward<T2>(arg2));
   }
 };
 

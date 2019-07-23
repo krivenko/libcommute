@@ -94,7 +94,7 @@ public:
 
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const {
-    f.set(0, std::make_pair(clone(), 1.0));
+    f.set(0, clone(), 1.0);
   }
 
   // Stream output
@@ -133,8 +133,7 @@ double commute(generator<IndexTypes...> const& g1,
                linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
   // ** Generators of different algebras always commute **
   if(g1.algebra_id() != g2.algebra_id()) {
-    f.const_term = 0;
-    f.terms.clear();
+    f.set(0);
     return 1;
   } else {
     return g1.commute(g2, f);

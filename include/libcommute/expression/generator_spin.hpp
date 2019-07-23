@@ -93,12 +93,12 @@ public:
     if(base::equal(g2) && this->multiplicity_ == g2_.multiplicity_) {
       if(c_ == spin_component::z) {
         if(g2_.c_ == spin_component::plus) {
-          f.set(0, std::make_pair(g2_.clone(), 1));
+          f.set(0, g2_.clone(), 1);
         } else { /// g2.c_ == spin_component::minus
-          f.set(0, std::make_pair(g2_.clone(), -1));
+          f.set(0, g2_.clone(), -1);
         }
       } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
-        f.set(0, std::make_pair(g2_.clone(), -2));
+        f.set(0, g2_.clone(), -2);
         dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
           spin_component::z;
       }
@@ -120,11 +120,8 @@ public:
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif
-    f.set(0, std::make_pair(make_unique<generator_spin>((multiplicity_-1)/2.0,
-                                                        new_c,
-                                                        base::indices_),
-                            1)
-    );
+    double spin = (multiplicity_-1)/2.0;
+    f.set(0, make_unique<generator_spin>(spin, new_c, base::indices_), 1);
   }
 
 protected:

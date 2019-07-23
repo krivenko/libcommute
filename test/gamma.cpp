@@ -68,9 +68,7 @@ public:
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian
   virtual void conj(linear_function_t & f) const override {
-    f.const_term = 0;
-    f.terms.clear();
-    f.terms.emplace_back(clone(), gamma_index_ == 0 ? 1 : -1);
+    f.set(0, clone(), gamma_index_ == 0 ? 1 : -1);
   }
 
 protected:
@@ -79,24 +77,24 @@ protected:
 
   // Check two generators of the same algebra for equality
   virtual bool equal(base const& g) const override {
-    auto const& f_g =  dynamic_cast<generator_gamma const&>(g);
-    return gamma_index_ == f_g.gamma_index_ && this->indices_ == f_g.indices_;
+    auto const& g_g =  dynamic_cast<generator_gamma const&>(g);
+    return gamma_index_ == g_g.gamma_index_ && base::equal(g);
   }
 
   // Ordering
   virtual bool less(base const& g) const override {
-    auto const& f_g =  dynamic_cast<generator_gamma const&>(g);
-    if(this->gamma_index_ != f_g.gamma_index_)
-      return (this->gamma_index_ < f_g.gamma_index_);
+    auto const& g_g =  dynamic_cast<generator_gamma const&>(g);
+    if(this->gamma_index_ != g_g.gamma_index_)
+      return (this->gamma_index_ < g_g.gamma_index_);
     else
-      return this->indices_ < f_g.indices_;
+      return base::less(g);
   }
   virtual bool greater(base const& g) const override {
-    auto const& f_g =  dynamic_cast<generator_gamma const&>(g);
-    if(this->gamma_index_ != f_g.gamma_index_)
-      return (this->gamma_index_ > f_g.gamma_index_);
+    auto const& g_g =  dynamic_cast<generator_gamma const&>(g);
+    if(this->gamma_index_ != g_g.gamma_index_)
+      return (this->gamma_index_ > g_g.gamma_index_);
     else
-      return this->indices_ > f_g.indices_;
+      return base::greater(g);
   }
 };
 
