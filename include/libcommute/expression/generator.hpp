@@ -94,9 +94,7 @@ public:
 
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const {
-    f.const_term = 0;
-    f.terms.clear();
-    f.terms.emplace_back(clone(), 1.0);
+    f.set(0, std::make_pair(clone(), 1.0));
   }
 
   // Stream output

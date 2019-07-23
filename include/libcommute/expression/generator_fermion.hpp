@@ -69,10 +69,8 @@ public:
   virtual double commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
-    f.const_term = (this->indices_ == g2_.indices_ &&
-                    dagger_ != g2_.dagger_) ?
-                    1 : 0;
-    f.terms.clear();
+    double const_term = (base::equal(g2) && dagger_ != g2_.dagger_) ? 1 : 0;
+    f.set(const_term);
     return -1;
   }
 
@@ -81,15 +79,14 @@ public:
 
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const override {
-    f.const_term = 0;
-    f.terms.clear();
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif
-    f.terms.emplace_back(
-      make_unique<generator_fermion>(!dagger_, base::indices_),
-      1
-    );
+    f.set(0,
+          std::make_pair(make_unique<generator_fermion>(!dagger_,
+                                                        base::indices_),
+                         1)
+         );
   }
 
 protected:

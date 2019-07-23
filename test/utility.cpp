@@ -49,6 +49,10 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   linear_function<std::string> f0;
   CHECK(f0.terms.empty());
 
+  linear_function<std::string> f1(3.0);
+  CHECK(f1.const_term == 3.0);
+  CHECK(f1.terms.empty());
+
   linear_function<std::string> f(4.0,
                                  std::make_pair(std::string("obj1"), 2.0),
                                  std::make_pair(std::string("obj2"), 3.0));
@@ -64,4 +68,8 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f.terms.size() == 1);
   CHECK(f.terms[0].first == std::string("obj3"));
   CHECK(f.terms[0].second == 4.0);
+
+  f.set(6.0);
+  CHECK(f.const_term == 6.0);
+  CHECK(f.terms.empty());
 }

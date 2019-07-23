@@ -77,6 +77,7 @@ void print_tuple(std::ostream & os, std::tuple<> const& t) {}
 template<typename T> struct linear_function {
 
   linear_function() = default;
+  linear_function(double const_term) : const_term(const_term) {}
   template<typename... Args>
   linear_function(double const_term, Args&&... args) : const_term(const_term) {
     construct_impl(std::forward<Args>(args)...);
@@ -88,6 +89,10 @@ template<typename T> struct linear_function {
     this->const_term = const_term;
     terms.clear();
     construct_impl(std::forward<Args>(args)...);
+  }
+  void set(double const_term) {
+    this->const_term = const_term;
+    terms.clear();
   }
 
   // Constant term

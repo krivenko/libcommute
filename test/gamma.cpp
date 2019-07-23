@@ -61,10 +61,8 @@ public:
   virtual double commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_gamma const&>(g2);
-    bool diag = this->indices_ == g2_.indices_ &&
-                gamma_index_ == g2_.gamma_index_;
-    f.const_term = double(diag) * (gamma_index_ == 0 ? 2 : -2);
-    f.terms.clear();
+    bool diag = base::equal(g2) && gamma_index_ == g2_.gamma_index_;
+    f.set(diag * (gamma_index_ == 0 ? 2 : -2));
     return -1;
   }
 
