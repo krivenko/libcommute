@@ -43,3 +43,25 @@ TEST_CASE("print_tuple()", "[print_tuple]") {
   print_tuple(ss, t);
   CHECK(ss.str() == "5,Hello, World!,1.2");
 }
+
+TEST_CASE("linear_function<T>", "[linear_function]") {
+
+  linear_function<std::string> f0;
+  CHECK(f0.terms.empty());
+
+  linear_function<std::string> f(4.0,
+                                 std::make_pair(std::string("obj1"), 2.0),
+                                 std::make_pair(std::string("obj2"), 3.0));
+  CHECK(f.const_term == 4.0);
+  CHECK(f.terms.size() == 2);
+  CHECK(f.terms[0].first == std::string("obj1"));
+  CHECK(f.terms[0].second == 2.0);
+  CHECK(f.terms[1].first == std::string("obj2"));
+  CHECK(f.terms[1].second == 3.0);
+
+  f.set(5.0, std::make_pair(std::string("obj3"), 4.0));
+  CHECK(f.const_term == 5.0);
+  CHECK(f.terms.size() == 1);
+  CHECK(f.terms[0].first == std::string("obj3"));
+  CHECK(f.terms[0].second == 4.0);
+}

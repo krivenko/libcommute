@@ -75,10 +75,37 @@ void print_tuple(std::ostream & os, std::tuple<> const& t) {}
 //
 
 template<typename T> struct linear_function {
+
+  linear_function() = default;
+  template<typename... Args>
+  linear_function(double const_term, Args&&... args) : const_term(const_term) {
+    construct_impl(std::forward<Args>(args)...);
+  }
+
+  // Reset contents
+  template<typename... Args>
+  void set(double const_term, Args&&... args) {
+    this->const_term = const_term;
+    terms.clear();
+    construct_impl(std::forward<Args>(args)...);
+  }
+
   // Constant term
   double const_term;
   // Basis objects and their respective coefficients
   std::vector<std::pair<T, double>> terms;
+
+private:
+
+  template<typename Head, typename... Tail>
+  void construct_impl(Head&& arg, Tail&&... tail) {
+    terms.emplace_back(std::forward<Head>(arg));
+    construct_impl(std::forward<Tail>(tail)...);
+  }
+  template<typename Head>
+  void construct_impl(Head&& arg) {
+    terms.emplace_back(std::forward<Head>(arg));
+  }
 };
 
 } // namespace libcommute
