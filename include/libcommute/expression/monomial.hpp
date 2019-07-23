@@ -14,7 +14,8 @@
 #define LIBCOMMUTE_MONOMIAL_HPP_
 
 #include "generator.hpp"
-#include "../utility"
+#include "../metafunctions.hpp"
+#include "../utility.hpp"
 
 #include <algorithm>
 #include <initializer_list>

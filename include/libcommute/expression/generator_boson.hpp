@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_GENERATOR_BOSON_HPP_
 
 #include "generator.hpp"
+#include "../metafunctions.hpp"
 #include "../utility.hpp"
 
 #include <iostream>

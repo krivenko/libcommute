@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_GENERATOR_FERMION_HPP_
 
 #include "generator.hpp"
+#include "../metafunctions.hpp"
 #include "../utility.hpp"
 
 #include <iostream>
