@@ -1,0 +1,45 @@
+/*******************************************************************************
+ *
+ * This file is part of libcommute, a C++11/14/17 header-only library allowing
+ * to manipulate polynomial expressions with quantum-mechanical operators.
+ *
+ * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ ******************************************************************************/
+
+#include "catch2/catch.hpp"
+
+#include <libcommute/utility.hpp>
+
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <type_traits>
+
+using namespace libcommute;
+
+TEST_CASE("c_str_to_string_t<T> metafunction", "[c_str_to_string_t]") {
+  CHECK(std::is_same<c_str_to_string_t<int>, int>::value);
+  CHECK(std::is_same<c_str_to_string_t<double>, double>::value);
+  CHECK(std::is_same<c_str_to_string_t<std::string>, std::string>::value);
+  CHECK(std::is_same<c_str_to_string_t<void>, void>::value);
+  CHECK(std::is_same<c_str_to_string_t<decltype("Hello, world!")>,
+                     std::string>::value);
+}
+
+TEST_CASE("print_tuple()", "[print_tuple]") {
+  std::stringstream ss;
+
+  std::tuple<> t0;
+  print_tuple(ss, t0);
+  CHECK(ss.str() == "");
+
+  ss.str().clear();
+  std::tuple<int, std::string, double> t(5, "Hello, World!", 1.2);
+  print_tuple(ss, t);
+  CHECK(ss.str() == "5,Hello, World!,1.2");
+}

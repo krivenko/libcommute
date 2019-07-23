@@ -12,6 +12,8 @@
 add_library(catch2 OBJECT catch2/catch2-main.cpp)
 
 set(TESTS
+  utility
+  metafunctions
   generator
   monomial
   scalar_traits
