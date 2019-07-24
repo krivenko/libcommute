@@ -70,18 +70,6 @@ public:
     return make_unique<generator_spin>(*this);
   }
 
-  // Raising and lowering operators are nilpotent
-  virtual std::pair<bool, double> has_constant_power(int power) const override {
-    if(c_ == spin_component::z) {
-      if(multiplicity_ == 2 && power > 0 && (power%2) == 0)
-        return std::make_pair(true, double(1) / (std::uint64_t(1) << power));
-      else
-        return std::make_pair(false, 0);
-    } else {
-      return std::make_pair(power >= multiplicity_, 0);
-    }
-  }
-
   // Generators with different indices or multiplicities commute.
   // Same indices and multiplicity:
   //  S_- * S_+ = S_+ * S_- - 2*S_z
@@ -105,6 +93,25 @@ public:
     } else
       f.set(0);
     return 1;
+  }
+
+  // For S=1/2, even powers of S_z are constant
+  virtual bool collapse_power(int power, linear_function_t & f) const override {
+    assert(power >= 2);
+    if(multiplicity_ == 2 && c_ == spin_component::z) {
+      if(power%2 == 0)
+        f.set(double(1) / (std::uint64_t(1) << power));
+      else
+        f.set(0, clone(), double(1) / (std::uint64_t(1) << power-1));
+      return true;
+    } else
+      return false;
+  }
+
+  // Raising and lowering operators are nilpotent
+  virtual bool has_vanishing_power(int power) const override {
+    assert(power >= 2);
+    return c_ != spin_component::z && power >= multiplicity_;
   }
 
   // Accessors

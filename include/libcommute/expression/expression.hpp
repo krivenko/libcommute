@@ -92,7 +92,8 @@ public:
   explicit expression(S const& x, monomial_t const& monomial) {
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
-    if(!scalar_traits<S>::is_zero(x)) monomials_.emplace(monomial, x);
+    if(!scalar_traits<S>::is_zero(x))
+      normalize_and_store(monomial_t(monomial), x, monomials_);
   }
 
 private:
@@ -602,6 +603,20 @@ private:
   // Multiplication
   //
 
+  // Store monomial in a map while taking care of possible collisions
+  static void store_monomial(monomial_t&& m,
+                             scalar_type coeff,
+                             monomials_map_t& target) {
+    bool is_new_monomial;
+    typename monomials_map_t::iterator it;
+    std::tie(it, is_new_monomial) = target.emplace(m, coeff);
+    if(!is_new_monomial) {
+      it->second = it->second + coeff;
+      if(scalar_traits<ScalarType>::is_zero(it->second))
+        target.erase(it);
+    }
+  }
+
   // Normalize a monomial and store in a map
   static void normalize_and_store(monomial_t&& m,
                                   scalar_type coeff,
@@ -624,8 +639,7 @@ private:
           generator_t& cur_gen = m[n];
 
           // Product m[n-1]*m[n] is effectively zero, quiting early.
-          if(prev_gen == cur_gen &&
-             cur_gen.has_constant_power(2) == std::make_pair(true, .0))
+          if(prev_gen == cur_gen && cur_gen.has_vanishing_power(2))
             return;
 
           if(prev_gen > cur_gen) { // Reordering is needed
@@ -661,23 +675,58 @@ private:
 
       // Check that coefficient in front of this monomial is not zero
       if(scalar_traits<ScalarType>::is_zero(coeff)) return;
-
-      // Simplify higher powers of generators
-      double c = m.collapse_powers();
-      if(c == 0)
-        return;
-      else
-        coeff *= scalar_traits<ScalarType>::make_const(c);
     }
 
-    // Insert the result
-    bool is_new_monomial;
-    typename monomials_map_t::iterator it;
-    std::tie(it, is_new_monomial) = target.emplace(m, coeff);
-    if(!is_new_monomial) {
-      it->second = it->second + coeff;
-      if(scalar_traits<ScalarType>::is_zero(it->second))
-        target.erase(it);
+    // Store the result
+    collapse_powers_and_store(std::move(m), coeff, target);
+  }
+
+  static void collapse_powers_and_store(monomial_t&& m,
+                                        scalar_type coeff,
+                                        monomials_map_t& target) {
+    if(m.empty()) {
+      store_monomial(std::move(m), coeff, target);
+      return;
+    }
+
+    linear_function<std::unique_ptr<generator<IndexTypes...>>> f;
+    auto it = m.begin(), end_it = m.end();
+    auto next_it = it + 1;
+    int power = 1;
+    for(;it != end_it; ++it, ++next_it) {
+      if(next_it == end_it) {
+        store_monomial(std::move(m), coeff, target);
+        return;
+      } else {
+        if(*next_it == *it) {
+          ++power;
+          if(it->has_vanishing_power(power)) return;
+          if(it->collapse_power(power, f)) {
+            auto v = scalar_traits<ScalarType>::make_const(f.const_term);
+            if(!scalar_traits<ScalarType>::is_zero(v))
+              collapse_powers_and_store(concatenate(
+                                        std::make_pair(m.begin(), it-power+2),
+                                        std::make_pair(next_it+1, end_it)
+                                        ),
+                                        coeff * v,
+                                        target);
+            for(auto const& g : f.terms) {
+              v = scalar_traits<ScalarType>::make_const(g.second);
+              if(!scalar_traits<ScalarType>::is_zero(v))
+                normalize_and_store(concatenate(
+                                      std::make_pair(m.begin(), it-power+2),
+                                      *g.first,
+                                      std::make_pair(next_it+1, end_it)
+                                    ),
+                                    coeff * v,
+                                    target);
+            }
+            return;
+          }
+        } else {
+          power = 1;
+        }
+      }
     }
   }
 

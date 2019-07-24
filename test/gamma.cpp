@@ -47,23 +47,33 @@ public:
     return make_unique<generator_gamma>(*this);
   }
 
-  // (\Gamma^0)^2 = I_4
-  // (\Gamma^k)^2 = -I_4 for k=1,2,3
-  virtual std::pair<bool, double> has_constant_power(int power) const {
-    if(power%2 == 0) {
-      return std::make_pair(true, gamma_index_==0 ? 1. : std::pow(-1, power/2));
-    } else {
-      return std::make_pair(false, 0);
-    }
-  }
-
-  // c = -1, f(g) = \delta(g1, g2)
+  // c = -1, f(g) = 2\eta(g1, g2)
   virtual double commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_gamma const&>(g2);
     bool diag = base::equal(g2) && gamma_index_ == g2_.gamma_index_;
     f.set(diag * (gamma_index_ == 0 ? 2 : -2));
     return -1;
+  }
+
+  // (\Gamma^0)^2 = I_4
+  // (\Gamma^k)^2 = -I_4 for k=1,2,3
+  virtual bool collapse_power(int power, linear_function_t & f) const override {
+    assert(power >= 2);
+    auto coeff = [this](int p) {
+      return gamma_index_==0 ? 1. : std::pow(-1, p/2);
+    };
+    if(power%2 == 0) {
+      f.set(coeff(power));
+    } else {
+      f.set(0, clone(), coeff(power-1));
+    }
+    return true;
+  }
+
+  virtual bool has_vanishing_power(int power) const {
+    assert(power >= 2);
+    return false;
   }
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian

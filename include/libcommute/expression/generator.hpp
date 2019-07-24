@@ -73,12 +73,6 @@ public:
   // Accessor
   inline index_types const& indices() const { return indices_; }
 
-  // Is the given power of this generator constant,
-  // and if yes, what this constant is?
-  virtual std::pair<bool, double> has_constant_power(int power) const {
-    return std::make_pair(false, 0);
-  }
-
   // We assume that any pair of generators g1 and g2 satisfy
   //
   // g1 * g2 = c * g2 * g1 + f(g),
@@ -91,6 +85,21 @@ public:
   // f(g) into its second argument. For the sake of optimization, it is
   // required that g1 > g2.
   virtual double commute(generator const& g2, linear_function_t & f) const = 0;
+
+  // If the given power of this generator can be represented as a linear
+  // function of generators, return true and write the linear function into f.
+  // The power must be greater than one.
+  virtual bool collapse_power(int power, linear_function_t & f) const {
+    assert(power >= 2);
+    return false;
+  }
+
+  // Does the given power of this generator vanish?
+  // The power must be greater than one.
+  virtual bool has_vanishing_power(int power) const {
+    assert(power >= 2);
+    return false;
+  }
 
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const {

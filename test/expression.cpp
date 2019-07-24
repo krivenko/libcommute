@@ -17,6 +17,7 @@
 #include "utility.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
 
@@ -52,6 +53,32 @@ TEST_CASE("Expression with static indices", "[expression]") {
 
     expr_monomial.clear();
     CHECK(expr_monomial.size() == 0);
+
+    SECTION("S_z products") {
+      using namespace real;
+      monomial<int> mon_sz(
+        make_fermion(true, 1),
+        make_spin(spin_component::z, 1),
+        make_spin(spin_component::z, 1),
+        make_spin(spin_component::z, 1),
+        make_spin(spin_component::z, 1),
+        make_fermion(true, 2),
+        make_spin(spin_component::z, 2),
+        make_spin(spin_component::z, 2),
+        make_spin(spin_component::z, 2),
+        make_spin(spin_component::z, 2),
+        make_spin(spin_component::z, 3),
+        make_spin(spin_component::z, 3),
+        make_spin(spin_component::z, 3),
+        make_fermion(true, 4),
+        make_spin(spin_component::z, 4),
+        make_spin(spin_component::z, 4),
+        make_spin(spin_component::z, 4)
+      );
+      expr_real<int> expr_sz(1.0, mon_sz);
+      CHECK(expr_sz == c_dag(1)*0.25*0.25*c_dag(2)*0.25*0.25*
+                       0.25*S_z(3)*c_dag(4)*0.25*S_z(4));
+    }
   }
 
   SECTION("Assignment") {
@@ -186,5 +213,17 @@ TEST_CASE("Expression with static indices", "[expression]") {
                3.0 * a_dag(0, "x") + std::complex<double>(0,-2) * a(0, "y");
 
     CHECK(conj(expr) == ref);
+  }
+
+  SECTION("Powers of S_z") {
+    using namespace real;
+    expr_real<> sum;
+    for(int n = 1; n <= 11; ++n) {
+      auto p = c_dag();
+      for(int i = 0; i < n; ++i) p *= S_z();
+      p *= a();
+      sum += p;
+    }
+    CHECK(sum == (c_dag()*(341.0/1024 + (1365.0/1024)*S_z())*a()));
   }
 }

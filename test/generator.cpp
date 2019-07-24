@@ -131,13 +131,17 @@ TEST_CASE("Algebra generators", "[generator]") {
   std::vector<gen_type*> spin32_ops = {&S32p_i,&S32m_i,&S32z_i,
                                        &S32p_j,&S32m_j,&S32z_j};
 
+  gen_type::linear_function_t lin_f;
+
   SECTION("fermion") {
     for(auto * op : fermion_ops) {
       CHECK(op->algebra_id() == FERMION_ALGEBRA_ID);
-      CHECK(op->has_constant_power(1).first == false);
-      CHECK(op->has_constant_power(2) == std::make_pair(true, .0));
-      CHECK(op->has_constant_power(3) == std::make_pair(true, .0));
-      CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+      CHECK(op->has_vanishing_power(2));
+      CHECK(op->has_vanishing_power(3));
+      CHECK(op->has_vanishing_power(4));
+      CHECK_FALSE(op->collapse_power(2, lin_f));
+      CHECK_FALSE(op->collapse_power(3, lin_f));
+      CHECK_FALSE(op->collapse_power(4, lin_f));
     }
 
     check_equality(fermion_ops);
@@ -170,10 +174,12 @@ TEST_CASE("Algebra generators", "[generator]") {
   SECTION("boson") {
     for(auto * op : boson_ops) {
       CHECK(op->algebra_id() == BOSON_ALGEBRA_ID);
-      CHECK(op->has_constant_power(1).first == false);
-      CHECK(op->has_constant_power(2).first == false);
-      CHECK(op->has_constant_power(3).first == false);
-      CHECK(op->has_constant_power(4).first == false);
+      CHECK_FALSE(op->has_vanishing_power(2));
+      CHECK_FALSE(op->has_vanishing_power(3));
+      CHECK_FALSE(op->has_vanishing_power(4));
+      CHECK_FALSE(op->collapse_power(2, lin_f));
+      CHECK_FALSE(op->collapse_power(3, lin_f));
+      CHECK_FALSE(op->collapse_power(4, lin_f));
     }
 
     check_equality(boson_ops);
@@ -209,15 +215,29 @@ TEST_CASE("Algebra generators", "[generator]") {
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
-        CHECK(op->has_constant_power(1).first == false);
-        CHECK(op->has_constant_power(2) == std::make_pair(true, 0.25));
-        CHECK(op->has_constant_power(3).first == false);
-        CHECK(op->has_constant_power(4) == std::make_pair(true, 0.0625));
+        CHECK_FALSE(op->has_vanishing_power(2));
+        CHECK_FALSE(op->has_vanishing_power(3));
+        CHECK_FALSE(op->has_vanishing_power(4));
+
+        CHECK(op->collapse_power(2, lin_f));
+        CHECK(lin_f.const_term == 0.25);
+        CHECK(lin_f.terms.empty());
+        CHECK(op->collapse_power(3, lin_f));
+        CHECK(lin_f.const_term == 0);
+        CHECK(lin_f.terms.size() == 1);
+        CHECK(*lin_f.terms[0].first == *op);
+        CHECK(lin_f.terms[0].second == 0.25);
+        CHECK(op->collapse_power(4, lin_f));
+        CHECK(lin_f.const_term == 0.0625);
+        CHECK(lin_f.terms.empty());
       } else {
-        CHECK(op->has_constant_power(1).first == false);
-        CHECK(op->has_constant_power(2) == std::make_pair(true, .0));
-        CHECK(op->has_constant_power(3) == std::make_pair(true, .0));
-        CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+        CHECK(op->has_vanishing_power(2));
+        CHECK(op->has_vanishing_power(3));
+        CHECK(op->has_vanishing_power(4));
+
+        CHECK_FALSE(op->collapse_power(2, lin_f));
+        CHECK_FALSE(op->collapse_power(3, lin_f));
+        CHECK_FALSE(op->collapse_power(4, lin_f));
       }
     }
 
@@ -248,15 +268,21 @@ TEST_CASE("Algebra generators", "[generator]") {
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
-        CHECK(op->has_constant_power(1).first == false);
-        CHECK(op->has_constant_power(2).first == false);
-        CHECK(op->has_constant_power(3).first == false);
-        CHECK(op->has_constant_power(4).first == false);
+        CHECK_FALSE(op->has_vanishing_power(2));
+        CHECK_FALSE(op->has_vanishing_power(3));
+        CHECK_FALSE(op->has_vanishing_power(4));
+
+        CHECK_FALSE(op->collapse_power(2, lin_f));
+        CHECK_FALSE(op->collapse_power(3, lin_f));
+        CHECK_FALSE(op->collapse_power(4, lin_f));
       } else {
-        CHECK(op->has_constant_power(1).first == false);
-        CHECK(op->has_constant_power(2).first == false);
-        CHECK(op->has_constant_power(3) == std::make_pair(true, .0));
-        CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+        CHECK_FALSE(op->has_vanishing_power(2));
+        CHECK(op->has_vanishing_power(3));
+        CHECK(op->has_vanishing_power(4));
+
+        CHECK_FALSE(op->collapse_power(2, lin_f));
+        CHECK_FALSE(op->collapse_power(3, lin_f));
+        CHECK_FALSE(op->collapse_power(4, lin_f));
       }
     }
 
@@ -287,15 +313,21 @@ TEST_CASE("Algebra generators", "[generator]") {
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
-        CHECK(op->has_constant_power(1).first == false);
-        CHECK(op->has_constant_power(2).first == false);
-        CHECK(op->has_constant_power(3).first == false);
-        CHECK(op->has_constant_power(4).first == false);
+        CHECK_FALSE(op->has_vanishing_power(2));
+        CHECK_FALSE(op->has_vanishing_power(3));
+        CHECK_FALSE(op->has_vanishing_power(4));
+
+        CHECK_FALSE(op->collapse_power(2, lin_f));
+        CHECK_FALSE(op->collapse_power(3, lin_f));
+        CHECK_FALSE(op->collapse_power(4, lin_f));
       } else {
-        CHECK(op->has_constant_power(1).first == false);
-        CHECK(op->has_constant_power(2).first == false);
-        CHECK(op->has_constant_power(3).first == false);
-        CHECK(op->has_constant_power(4) == std::make_pair(true, .0));
+        CHECK_FALSE(op->has_vanishing_power(2));
+        CHECK_FALSE(op->has_vanishing_power(3));
+        CHECK(op->has_vanishing_power(4));
+
+        CHECK_FALSE(op->collapse_power(2, lin_f));
+        CHECK_FALSE(op->collapse_power(3, lin_f));
+        CHECK_FALSE(op->collapse_power(4, lin_f));
       }
     }
 

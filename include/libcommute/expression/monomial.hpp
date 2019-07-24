@@ -208,41 +208,6 @@ public:
     std::swap(generators_[n1], generators_[n2]);
   }
 
-  // Try to simplify higher powers of generators in this monomial assuming
-  // that it is sorted. This procedure can result in gaining an additional
-  // prefactor, which will be returned.
-  double collapse_powers() {
-    assert(is_sorted());
-
-    monomial res;
-    double coeff = 1;
-
-    if(empty()) return coeff;
-    auto it = begin(), end_it = end();
-    auto next_it = it + 1;
-    int power = 1;
-    for(;it != end_it; ++it, ++next_it) {
-      if(next_it == end_it || *next_it != *it) {
-        for(int i = 0; i < power; ++i)
-          res.generators_.emplace_back(it->clone());
-        power = 1;
-      } else {
-        ++power;
-        auto hcp = it->has_constant_power(power);
-        if(hcp.first) {
-          if(hcp.second == 0) // This monomial is zero
-            return 0;
-          else {
-            power = 0;
-            coeff *= hcp.second;
-          }
-        }
-      }
-    }
-    std::swap(*this, res);
-    return coeff;
-  }
-
   // Print to stream
   friend std::ostream& operator<<(std::ostream& os, monomial const& m) {
     auto it = m.begin(), end_it = m.end();

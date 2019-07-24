@@ -60,19 +60,25 @@ public:
     return make_unique<generator_boson>(*this);
   }
 
-  // Any power of this generator can be non-vanising
-  virtual std::pair<bool, double> has_constant_power(int power) const override {
-    return std::make_pair(false, 0);
-  }
-
   // c = 1, f(g) = \delta(g1, g2)
   virtual double
   commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_boson const&>(g2);
-    double const_term = (base::equal(g2) && dagger_ != g2_.dagger_) ? 1 : 0;
-    f.set(const_term);
+    double delta = base::equal(g2) && dagger_ != g2_.dagger_;
+    f.set(delta);
     return 1;
+  }
+
+  virtual bool collapse_power(int power, linear_function_t &) const override {
+    assert(power >= 2);
+    return false;
+  }
+
+  // Any power of this generator can be non-vanising
+  virtual bool has_vanishing_power(int power) const override {
+    assert(power >= 2);
+    return false;
   }
 
   // Accessor
