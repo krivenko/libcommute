@@ -28,6 +28,7 @@ set(TESTS
   hc
   commutators
   gamma
+  qoperator
 )
 
 # Build C++ unit tests
