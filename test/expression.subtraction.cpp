@@ -14,7 +14,7 @@
 #include "catch2/catch.hpp"
 
 #include "int_complex.hpp"
-#include "utility.hpp"
+#include "print_matcher.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_boson.hpp>

@@ -12,7 +12,9 @@
  ******************************************************************************/
 
 #include "catch2/catch.hpp"
-#include "utility.hpp"
+
+#include "print_matcher.hpp"
+#include "check_ordering.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_boson.hpp>
@@ -24,24 +26,6 @@
 using namespace libcommute;
 
 using gen_type = generator<std::string, int>;
-
-template<typename V> void check_equality(V const& v) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
-      CHECK((*v[i1] == *v[i2]) == (i1 == i2));
-      CHECK((*v[i1] != *v[i2]) == (i1 != i2));
-    }
-  }
-}
-
-template<typename V> void check_less_greater(V const& v) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
-      CHECK((*v[i1] < *v[i2]) == (i1 < i2));
-      CHECK((*v[i1] > *v[i2]) == (i1 > i2));
-    }
-  }
-}
 
 template<typename GenType>
 void check_generator_spin_commute(std::vector<GenType*> const& v) {

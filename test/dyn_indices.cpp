@@ -12,7 +12,9 @@
  ******************************************************************************/
 
 #include "catch2/catch.hpp"
-#include "utility.hpp"
+
+#include "check_ordering.hpp"
+#include "print_matcher.hpp"
 
 #include <libcommute/expression/dyn_indices.hpp>
 
@@ -20,24 +22,6 @@
 #include <vector>
 
 using namespace libcommute::dynamic_indices;
-
-template<typename V> void check_equality(V const& v) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
-      CHECK((v[i1] == v[i2]) == (i1 == i2));
-      CHECK((v[i1] != v[i2]) == (i1 != i2));
-    }
-  }
-}
-
-template<typename V> void check_less_greater(V const& v) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
-      CHECK((v[i1] < v[i2]) == (i1 < i2));
-      CHECK((v[i1] > v[i2]) == (i1 > i2));
-    }
-  }
-}
 
 TEST_CASE("Dynamic indices", "[dyn_indices]") {
 

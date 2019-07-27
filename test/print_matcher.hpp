@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
 
-#ifndef LIBCOMMUTE_TEST_UTILITY_HPP_
-#define LIBCOMMUTE_TEST_UTILITY_HPP_
+#ifndef LIBCOMMUTE_TEST_PRINT_MATCHER_HPP_
+#define LIBCOMMUTE_TEST_PRINT_MATCHER_HPP_
 
 #include "catch2/catch.hpp"
 

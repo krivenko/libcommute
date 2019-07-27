@@ -14,6 +14,7 @@
 #include "catch2/catch.hpp"
 
 #include "int_complex.hpp"
+#include "print_matcher.hpp"
 
 #include <libcommute/expression/factories.hpp>
 
