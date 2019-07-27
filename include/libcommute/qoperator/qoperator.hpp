@@ -27,8 +27,7 @@ namespace libcommute {
 //    { v[std::size_t{}] };
 //};
 
-// Quantum-mechanical operator acting on a state, i.e. a matrix representation
-// of a polynomial expression.
+// Quantum-mechanical operator acting on a state
 template<typename ScalarType, typename... IndexTypes>
 class qoperator {
 
@@ -50,29 +49,41 @@ public:
 
   // Apply operator to state and return the resulting state.
   template<typename StateVector>
-  StateVector operator*(StateVector const& sv) {
+  StateVector operator()(StateVector const& sv) {
+    // TODO
+  }
+
+  // Apply operator to state `in` and return the resulting state via `out`.
+  template<typename StateVector>
+  void operator()(StateVector const& in, StateVector & out) {
     // TODO
   }
 
   // Apply operator to state and return the resulting state.
+  template<typename StateVector>
+  inline StateVector operator*(StateVector const& sv) {
+    return operator()(sv);
+  }
+
+  // Apply operator to state and return the resulting state.
   //
-  // When called with extra arguments, coefficients in front of monomials of
-  // the corresponding polynomial expression are invoked with the `coeff_args`
-  // as arguments to produce the actual coefficient values.
+  // Coefficients in front of monomials of the corresponding polynomial
+  // expression are invoked with the `coeff_args` as arguments to produce
+  // the actual coefficient values.
   template<typename StateVector, typename... CoeffArgs>
-  StateVector operator()(StateVector const& sv, CoeffArgs&&... coeff_args) {
+  StateVector apply_at(StateVector const& sv, CoeffArgs&&... coeff_args) {
     // TODO
   }
 
   // Apply operator to state `in` and return the resulting state via `out`.
   //
-  // When called with extra arguments, coefficients in front of monomials of
-  // the corresponding polynomial expression are invoked with the `coeff_args`
-  // as arguments to produce the actual coefficient values.
+  // Coefficients in front of monomials of the corresponding polynomial
+  // expression are invoked with the `coeff_args` as arguments to produce
+  // the actual coefficient values.
   template<typename StateVector, typename... CoeffArgs>
-  StateVector operator()(StateVector const& in,
-                         StateVector & out,
-                         CoeffArgs&&... coeff_args) {
+  void apply_inplace_at(StateVector const& in,
+                        StateVector & out,
+                        CoeffArgs&&... coeff_args) {
     // TODO
   }
 };

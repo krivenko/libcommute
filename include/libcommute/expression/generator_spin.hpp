@@ -140,7 +140,7 @@ protected:
 
   // Check two generators of the same algebra for equality
   virtual bool equal(base const& g) const override {
-    auto const& b_g =  dynamic_cast<generator_spin const&>(g);
+    auto const& b_g = dynamic_cast<generator_spin const&>(g);
     return multiplicity_ == b_g.multiplicity_ &&
                       c_ == b_g.c_ &&
                       base::equal(g);
@@ -148,7 +148,7 @@ protected:
 
   // Ordering
   virtual bool less(base const& g) const override {
-    auto const& s_g =  dynamic_cast<generator_spin const&>(g);
+    auto const& s_g = dynamic_cast<generator_spin const&>(g);
     // Example: S1/2+_1 < S1/2-_1 < S1/2z_1 < S1/2+_2 < S1/2-_2 < S1/2z_2 <
     //          S3/2+_1 < S3/2-_1 < S3/2z_1 < S3/2+_2 < S3/2-_2 < S3/2z_2
     if(this->multiplicity_ != s_g.multiplicity_)
@@ -159,7 +159,7 @@ protected:
       return this->c_ < s_g.c_;
   }
   virtual bool greater(base const& g) const override {
-    auto const& s_g =  dynamic_cast<generator_spin const&>(g);
+    auto const& s_g = dynamic_cast<generator_spin const&>(g);
     // Example: S3/2z_2 > S3/2-_2 > S3/2+_2 > S3/2z_1 > S3/2-_1 > S3/2+_1 >
     //          S1/2z_2 > S1/2-_2 > S1/2+_2 > S1/2z_1 > S1/2-_1 > S1/2+_1
     if(this->multiplicity_ != s_g.multiplicity_)
