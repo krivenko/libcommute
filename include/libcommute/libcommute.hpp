@@ -22,6 +22,10 @@
 #include "expression/generator_spin.hpp"
 #include "expression/expression.hpp"
 #include "expression/factories.hpp"
+#include "qoperator/basis_space_fermion.hpp"
+#include "qoperator/basis_space_boson.hpp"
+#include "qoperator/basis_space_spin.hpp"
+#include "qoperator/qoperator.hpp"
 
 // C++17-only headers
 #if __cplusplus >= 201703L

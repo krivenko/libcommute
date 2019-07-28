@@ -43,6 +43,20 @@ template<typename T>
 using c_str_to_string_t = typename c_str_to_string<T>::type;
 
 //
+// Check that all Types... are derived from Base
+//
+template<typename Base, typename T, typename... Tail>
+struct all_derived_from {
+  using T_ = typename std::remove_reference<T>::type;
+  static constexpr bool value =
+    std::is_base_of<Base, T_>::value && all_derived_from<Base, Tail...>::value;
+};
+template<typename Base, typename T> struct all_derived_from<Base, T> {
+  using T_ = typename std::remove_reference<T>::type;
+  static constexpr bool value = std::is_base_of<Base, T_>::value;
+};
+
+//
 // Print an std::tuple to an output stream as a comma-separated list
 //
 

@@ -29,6 +29,7 @@ set(TESTS
   commutators
   gamma
   basis_space
+  hilbert_space
   qoperator
 )
 

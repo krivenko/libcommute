@@ -35,8 +35,8 @@ public:
 
   // Value symantics
   basis_space() = delete;
-  template<typename... Args>
-  basis_space(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
+  basis_space(IndexTypes const&... indices) : indices_(indices...) {}
+  basis_space(IndexTypes&&... indices) : indices_(std::move(indices)...) {}
   basis_space(basis_space const&) = default;
   basis_space(basis_space&&) noexcept = default;
   basis_space& operator=(basis_space const&) = default;

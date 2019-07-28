@@ -29,9 +29,6 @@ class basis_space_boson : public basis_space<IndexTypes...> {
 
   using base = basis_space<IndexTypes...>;
 
-  // This space is spanned by bosonic states |0>, |1>, ..., |2^{n_bits}-1>
-  int n_bits_;
-
 public:
 
   // Value symantics
@@ -39,7 +36,6 @@ public:
   template<typename... Args>
   basis_space_boson(int n_bits, Args&&... indices)
     : base(std::forward<Args>(indices)...), n_bits_(n_bits) {
-    assert(n_bits > 0);
   }
   basis_space_boson(basis_space_boson const&) = default;
   basis_space_boson(basis_space_boson&&) noexcept = default;
@@ -60,6 +56,11 @@ public:
   // The minimal number of binary digits needed to represent any state
   // in this basis space
   virtual int n_bits() const override { return n_bits_; }
+
+protected:
+
+  // This space is spanned by bosonic states |0>, |1>, ..., |2^{n_bits}-1>
+  int n_bits_;
 };
 
 namespace static_indices {

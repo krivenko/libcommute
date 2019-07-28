@@ -71,7 +71,7 @@ protected:
   // exceed multiplicity of the respective spin algebra.
   int n_bits_;
 
-  // Check two generators of the same algebra for equality
+  // Equality
   virtual bool equal(base const& bs) const override {
     auto const& bs_s = dynamic_cast<basis_space_spin const&>(bs);
     return this->multiplicity_ == bs_s.multiplicity_ && base::equal(bs);

@@ -30,27 +30,27 @@ TEST_CASE("Basis Hilbert space", "[basis_space]") {
 
   // Setup
 
-  // Fermionic generators
+  // Fermionic basis spaces
   auto bs_f_dn = make_space_fermion("dn", 0);
   auto bs_f_up = make_space_fermion("up", 0);
   std::vector<bs_type*> fermion_bs = {&bs_f_dn,&bs_f_up};
 
-  // Bosonic generators
+  // Bosonic basis spaces (4 bits)
   auto bs_b_x = make_space_boson(4, "x", 0);
   auto bs_b_y = make_space_boson(4, "y", 0);
   std::vector<bs_type*> boson_bs = {&bs_b_x,&bs_b_y};
 
-  // Spin-1/2 algebra generators
+  // Spin-1/2 algebra basis spaces
   auto bs_s_i = make_space_spin(0.5, "i", 0);
   auto bs_s_j = make_space_spin(0.5, "j", 0);
   std::vector<bs_type*> spin_bs = {&bs_s_i,&bs_s_j};
 
-  // Spin-1 algebra generators
+  // Spin-1 algebra basis spaces
   auto bs_s1_i = make_space_spin(1.0, "i", 0);
   auto bs_s1_j = make_space_spin(1.0, "j", 0);
   std::vector<bs_type*> spin1_bs = {&bs_s1_i,&bs_s1_j};
 
-  // Spin-3/2 algebra generators
+  // Spin-3/2 algebra basis spaces
   auto bs_s32_i = make_space_spin(3.0/2, "i", 0);
   auto bs_s32_j = make_space_spin(3.0/2, "j", 0);
   std::vector<bs_type*> spin32_bs = {&bs_s32_i,&bs_s32_j};

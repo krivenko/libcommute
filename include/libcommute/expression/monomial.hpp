@@ -50,17 +50,9 @@ class monomial {
   void constructor_impl() {}
 
   // Check if all provided types are derived from generator<IndexTypes...>
-  template<typename T, typename... Tail> struct all_are_generators {
-    using T_ = typename std::remove_reference<T>::type;
-    static constexpr bool value =
-      std::is_base_of<generator<IndexTypes...>, T_>::value &&
-      all_are_generators<Tail...>::value;
-  };
-  template<typename T> struct all_are_generators<T> {
-    using T_ = typename std::remove_reference<T>::type;
-    static constexpr bool value =
-      std::is_base_of<generator<IndexTypes...>, T_>::value;
-  };
+  template<typename... Types>
+  using all_are_generators = all_derived_from<generator<IndexTypes...>,
+                                              Types...>;
 
 public:
 
