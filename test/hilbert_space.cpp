@@ -162,18 +162,22 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     };
 
     check_hs(bs_s32_i, 1, 2, 0, 1);
+    hs.add(bs_s32_j);
+    check_hs(bs_s32_j, 2, 4, 2, 3);
+    hs.add(bs_s1_j);
+    check_hs(bs_s1_j, 3, 6, 4, 5);
+    hs.add(bs_s_i);
+    check_hs(bs_s_i, 4, 7, 6, 6);
+    hs.add(bs_s_j);
+    check_hs(bs_s_j, 5, 8, 7, 7);
+    hs.add(bs_b_x);
+    check_hs(bs_b_x, 6, 12, 8, 11);
+    hs.add(bs_f_dn);
+    check_hs(bs_f_dn, 7, 13, 12, 12);
+    hs.add(bs_f_up);
+    check_hs(bs_f_up, 8, 14, 13, 13);
 
-    // TODO
-    //hs.add(bs_s32_j);
-
-    // hs_type hs(bs_s32_i, bs_s32_j,
-    //            bs_s1_j,
-    //            bs_s_i, bs_s_j,
-    //            bs_b_x,
-    //            bs_f_dn, bs_f_up
-    //           );
-    // TODO: add(&&)
-    // TODO: hs_type::basis_space_exists
+    CHECK_THROWS_AS(hs.add(bs_s_j), hs_type::basis_space_exists);
   }
 
   SECTION("Construction from expression") {

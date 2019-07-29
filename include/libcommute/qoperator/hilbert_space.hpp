@@ -47,23 +47,11 @@ public:
 
   // Helper method for one of constructors
   template<typename BSType1, typename... BSTypesTail>
-  inline void add_impl(BSType1 && bs, BSTypesTail&&... more_bs) {
-    using bs1_t = typename std::remove_reference<BSType1>::type;
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
-
-    int n_bits = bs.n_bits();
-    auto r = basis_spaces_.emplace(make_unique<bs1_t>(bs),
-                                   std::make_pair(bit_range_end_ + 1,
-                                                  bit_range_end_ + n_bits)
-                                  );
-    if(!r.second) throw basis_space_exists(bs);
-
-    bit_range_end_ += n_bits;
-    add_impl(std::forward<BSTypesTail>(more_bs)...);
+  inline void constructor_impl(BSType1&& bs, BSTypesTail&&... more_bs) {
+    add(std::forward<BSType1>(bs));
+    constructor_impl(std::forward<BSTypesTail>(more_bs)...);
   }
-  void add_impl() {}
+  void constructor_impl() {}
 
   // Check if all provided types are derived from generator<IndexTypes...>
   template<typename... Types>
@@ -100,7 +88,7 @@ public:
               all_are_basis_spaces<Args...>::value>::type
            >
   explicit hilbert_space(Args&&... args) {
-    add_impl(std::forward<Args>(args)...);
+    constructor_impl(std::forward<Args>(args)...);
   }
 
   // Collect all generators found in `expr` and add all respective basis spaces
@@ -158,8 +146,15 @@ public:
   }
 
   // Append a new basis space to the ordered product
-  void add(basis_space_t const& bs) { add_impl(bs); }
-  void add(basis_space_t && bs) { add_impl(std::move(bs));  }
+  void add(basis_space_t const& bs) {
+    int n_bits = bs.n_bits();
+    auto r = basis_spaces_.emplace(bs.clone(),
+                                   std::make_pair(bit_range_end_ + 1,
+                                                  bit_range_end_ + n_bits)
+                                  );
+    if(!r.second) throw basis_space_exists(bs);
+    bit_range_end_ += n_bits;
+  }
 
   // Is a given basis space found in this Hilbert space
   bool has(basis_space_t const& bs) const {
