@@ -13,7 +13,8 @@
 #ifndef LIBCOMMUTE_BASIS_SPACE_FERMION_HPP_
 #define LIBCOMMUTE_BASIS_SPACE_FERMION_HPP_
 
-#include "../expression/generator_fermion.hpp"
+#include "../expression/algebra_ids.hpp"
+#include "../metafunctions.hpp"
 #include "../utility.hpp"
 
 #include "basis_space.hpp"

@@ -15,12 +15,15 @@
 
 #include "../utility.hpp"
 
+#include <stdexcept>
 #include <iostream>
 #include <memory>
 #include <tuple>
 #include <utility>
 
 namespace libcommute {
+
+template<typename... IndexTypes> class basis_space;
 
 //
 // Abstract algebra generator
@@ -104,6 +107,20 @@ public:
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const {
     f.set(0, clone(), 1.0);
+  }
+
+  // Algebra generators can act in vector (Hilbert) spaces. This method allows
+  // to associate generators with their respective vector spaces. It is possible
+  // to return a 0-dimensional Hilbert space that signals that extra information
+  // would be required to construct a valid Hilbert space instead.
+  // E.g., bosonic Hilbert spaces are formally infinite-dimensional and must
+  // be constructed explicitly so that their dimension cutoff is set by user.
+  //
+  // Derived generators do not have to override this method as long
+  // as they are not used to construct Hilbert spaces.
+  virtual std::unique_ptr<basis_space<IndexTypes...>> make_basis_space() const {
+    throw std::logic_error("make_basis_space() is not implemented "
+                           "by this generator type");
   }
 
   // Stream output

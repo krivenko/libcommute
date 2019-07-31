@@ -13,6 +13,7 @@
 
 #include "catch2/catch.hpp"
 
+#include <libcommute/expression/factories.hpp>
 #include <libcommute/qoperator/basis_space_fermion.hpp>
 #include <libcommute/qoperator/basis_space_boson.hpp>
 #include <libcommute/qoperator/basis_space_spin.hpp>
@@ -181,7 +182,44 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   }
 
   SECTION("Construction from expression") {
-    // TODO
-  }
+    using namespace real;
 
+    auto expr = 2.0 * S_p<4>("i", 0) * S_m<4>("j", 0) +
+                5.0 * n("up", 0) * n("dn", 0);
+
+    hs_type hs1(expr);
+    CHECK(hs1.size() == 4);
+    CHECK(hs1.total_n_bits() == 6);
+    CHECK(hs1.has(bs_s32_i));
+    CHECK(hs1.bit_range(bs_s32_i) == std::make_pair(0, 1));
+    CHECK(hs1.has(bs_s32_j));
+    CHECK(hs1.bit_range(bs_s32_j) == std::make_pair(2, 3));
+    CHECK(hs1.has(bs_f_dn));
+    CHECK(hs1.bit_range(bs_f_dn) == std::make_pair(4, 4));
+    CHECK(hs1.has(bs_f_up));
+    CHECK(hs1.bit_range(bs_f_up) == std::make_pair(5, 5));
+
+    expr += a_dag("x", 0) + a("y", 0);
+    CHECK_THROWS_AS(hs_type(expr), hs_type::no_default_basis_space);
+
+    hs_type hs2;
+    hs2.add(bs_b_x);
+    hs2.add(bs_b_y);
+
+    hs_type hs3(expr, hs2);
+    CHECK(hs3.size() == 6);
+    CHECK(hs3.total_n_bits() == 14);
+    CHECK(hs3.has(bs_b_x));
+    CHECK(hs3.bit_range(bs_b_x) == std::make_pair(0, 3));
+    CHECK(hs3.has(bs_b_y));
+    CHECK(hs3.bit_range(bs_b_y) == std::make_pair(4, 7));
+    CHECK(hs3.has(bs_s32_i));
+    CHECK(hs3.bit_range(bs_s32_i) == std::make_pair(8, 9));
+    CHECK(hs3.has(bs_s32_j));
+    CHECK(hs3.bit_range(bs_s32_j) == std::make_pair(10, 11));
+    CHECK(hs3.has(bs_f_dn));
+    CHECK(hs3.bit_range(bs_f_dn) == std::make_pair(12, 12));
+    CHECK(hs3.has(bs_f_up));
+    CHECK(hs3.bit_range(bs_f_up) == std::make_pair(13, 13));
+  }
 }

@@ -13,7 +13,9 @@
 #ifndef LIBCOMMUTE_GENERATOR_FERMION_HPP_
 #define LIBCOMMUTE_GENERATOR_FERMION_HPP_
 
+#include "algebra_ids.hpp"
 #include "generator.hpp"
+#include "../qoperator/basis_space_fermion.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -23,9 +25,6 @@
 #include <utility>
 
 namespace libcommute {
-
-// ID of the fermionic algebra
-static constexpr int FERMION_ALGEBRA_ID = -3;
 
 //
 // Generator of the fermionic algebra
@@ -89,6 +88,15 @@ public:
     using std::make_unique;
 #endif
     f.set(0, make_unique<generator_fermion>(!dagger_, base::indices_), 1);
+  }
+
+  // Make a basis space for fermions
+  virtual std::unique_ptr<basis_space<IndexTypes...>>
+  make_basis_space() const override {
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+    using std::make_unique;
+#endif
+    return make_unique<basis_space_fermion<IndexTypes...>>(base::indices_);
   }
 
 protected:

@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_BASIS_SPACE_SPIN_HPP_
 #define LIBCOMMUTE_BASIS_SPACE_SPIN_HPP_
 
-#include "../expression/generator_spin.hpp"
+#include "../metafunctions.hpp"
 #include "../utility.hpp"
 
 #include "basis_space.hpp"

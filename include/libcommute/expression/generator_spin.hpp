@@ -13,7 +13,9 @@
 #ifndef LIBCOMMUTE_GENERATOR_SPIN_HPP_
 #define LIBCOMMUTE_GENERATOR_SPIN_HPP_
 
+#include "algebra_ids.hpp"
 #include "generator.hpp"
+#include "../qoperator/basis_space_spin.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -23,9 +25,6 @@
 #include <utility>
 
 namespace libcommute {
-
-// ID of the spin/angular momentum algebra
-static constexpr int SPIN_ALGEBRA_ID = -1;
 
 //
 // Generator of the spin algebra
@@ -129,6 +128,16 @@ public:
 #endif
     double spin = (multiplicity_-1)/2.0;
     f.set(0, make_unique<generator_spin>(spin, new_c, base::indices_), 1);
+  }
+
+  // Make a basis space for spins
+  virtual std::unique_ptr<basis_space<IndexTypes...>>
+  make_basis_space() const override {
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+    using std::make_unique;
+#endif
+    double spin = (multiplicity_-1)/2.0;
+    return make_unique<basis_space_spin<IndexTypes...>>(spin, base::indices_);
   }
 
 protected:
