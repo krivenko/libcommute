@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_QOPERATOR_HPP_
 
 #include <libcommute/expression/expression.hpp>
+#include "hilbert_space.hpp"
 
 #include <utility>
 
@@ -34,12 +35,15 @@ class qoperator {
 public:
 
   using expression_type = expression<ScalarType, IndexTypes...>;
+  using hilbert_space_type = hilbert_space<IndexTypes...>;
 
   qoperator() = delete;
   qoperator(expression_type const& expr) {
     // TODO
   }
-  // TODO: fine-tuned constructor(s)
+  qoperator(expression_type const& expr, hilbert_space_type const& hs) {
+    // TODO
+  }
 
   // Value semantics
   qoperator(qoperator const&) = default;

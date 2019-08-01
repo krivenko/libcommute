@@ -127,26 +127,26 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs.size() == 8);
     CHECK(hs.total_n_bits() == 14);
 
-    CHECK(hs.has(bs_s32_i));
-    CHECK(hs.bit_range(bs_s32_i) == std::make_pair(0, 1));
-    CHECK(hs.has(bs_s32_j));
-    CHECK(hs.bit_range(bs_s32_j) == std::make_pair(2, 3));
-    CHECK_FALSE(hs.has(bs_s1_i));
-    CHECK_THROWS_AS(hs.bit_range(bs_s1_i), hs_type::basis_space_not_found);
-    CHECK(hs.has(bs_s1_j));
-    CHECK(hs.bit_range(bs_s1_j) == std::make_pair(4, 5));
+    CHECK(hs.has(bs_f_dn));
+    CHECK(hs.bit_range(bs_f_dn) == std::make_pair(0, 0));
+    CHECK(hs.has(bs_f_up));
+    CHECK(hs.bit_range(bs_f_up) == std::make_pair(1, 1));
+    CHECK(hs.has(bs_b_x));
+    CHECK(hs.bit_range(bs_b_x) == std::make_pair(2, 5));
+    CHECK_FALSE(hs.has(bs_b_y));
+    CHECK_THROWS_AS(hs.bit_range(bs_b_y), hs_type::basis_space_not_found);
     CHECK(hs.has(bs_s_i));
     CHECK(hs.bit_range(bs_s_i) == std::make_pair(6, 6));
     CHECK(hs.has(bs_s_j));
     CHECK(hs.bit_range(bs_s_j) == std::make_pair(7, 7));
-    CHECK(hs.has(bs_b_x));
-    CHECK(hs.bit_range(bs_b_x) == std::make_pair(8, 11));
-    CHECK_FALSE(hs.has(bs_b_y));
-    CHECK_THROWS_AS(hs.bit_range(bs_b_y), hs_type::basis_space_not_found);
-    CHECK(hs.has(bs_f_dn));
-    CHECK(hs.bit_range(bs_f_dn) == std::make_pair(12, 12));
-    CHECK(hs.has(bs_f_up));
-    CHECK(hs.bit_range(bs_f_up) == std::make_pair(13, 13));
+    CHECK_FALSE(hs.has(bs_s1_i));
+    CHECK_THROWS_AS(hs.bit_range(bs_s1_i), hs_type::basis_space_not_found);
+    CHECK(hs.has(bs_s1_j));
+    CHECK(hs.bit_range(bs_s1_j) == std::make_pair(8, 9));
+    CHECK(hs.has(bs_s32_i));
+    CHECK(hs.bit_range(bs_s32_i) == std::make_pair(10, 11));
+    CHECK(hs.has(bs_s32_j));
+    CHECK(hs.bit_range(bs_s32_j) == std::make_pair(12, 13));
   }
 
   SECTION("add()") {
@@ -166,19 +166,28 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs.add(bs_s32_j);
     check_hs(bs_s32_j, 2, 4, 2, 3);
     hs.add(bs_s1_j);
-    check_hs(bs_s1_j, 3, 6, 4, 5);
+    check_hs(bs_s1_j, 3, 6, 0, 1);
     hs.add(bs_s_i);
-    check_hs(bs_s_i, 4, 7, 6, 6);
+    check_hs(bs_s_i, 4, 7, 0, 0);
     hs.add(bs_s_j);
-    check_hs(bs_s_j, 5, 8, 7, 7);
+    check_hs(bs_s_j, 5, 8, 1, 1);
     hs.add(bs_b_x);
-    check_hs(bs_b_x, 6, 12, 8, 11);
+    check_hs(bs_b_x, 6, 12, 0, 3);
     hs.add(bs_f_dn);
-    check_hs(bs_f_dn, 7, 13, 12, 12);
+    check_hs(bs_f_dn, 7, 13, 0, 0);
     hs.add(bs_f_up);
-    check_hs(bs_f_up, 8, 14, 13, 13);
+    check_hs(bs_f_up, 8, 14, 1, 1);
 
     CHECK_THROWS_AS(hs.add(bs_s_j), hs_type::basis_space_exists);
+
+    check_hs(bs_f_dn, 8, 14, 0, 0);
+    check_hs(bs_f_up, 8, 14, 1, 1);
+    check_hs(bs_b_x, 8, 14, 2, 5);
+    check_hs(bs_s_i, 8, 14, 6, 6);
+    check_hs(bs_s_j, 8, 14, 7, 7);
+    check_hs(bs_s1_j, 8, 14, 8, 9);
+    check_hs(bs_s32_i, 8, 14, 10, 11);
+    check_hs(bs_s32_j, 8, 14, 12, 13);
   }
 
   SECTION("Construction from expression") {
@@ -190,14 +199,14 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs_type hs1(expr);
     CHECK(hs1.size() == 4);
     CHECK(hs1.total_n_bits() == 6);
-    CHECK(hs1.has(bs_s32_i));
-    CHECK(hs1.bit_range(bs_s32_i) == std::make_pair(0, 1));
-    CHECK(hs1.has(bs_s32_j));
-    CHECK(hs1.bit_range(bs_s32_j) == std::make_pair(2, 3));
     CHECK(hs1.has(bs_f_dn));
-    CHECK(hs1.bit_range(bs_f_dn) == std::make_pair(4, 4));
+    CHECK(hs1.bit_range(bs_f_dn) == std::make_pair(0, 0));
     CHECK(hs1.has(bs_f_up));
-    CHECK(hs1.bit_range(bs_f_up) == std::make_pair(5, 5));
+    CHECK(hs1.bit_range(bs_f_up) == std::make_pair(1, 1));
+    CHECK(hs1.has(bs_s32_i));
+    CHECK(hs1.bit_range(bs_s32_i) == std::make_pair(2, 3));
+    CHECK(hs1.has(bs_s32_j));
+    CHECK(hs1.bit_range(bs_s32_j) == std::make_pair(4, 5));
 
     expr += a_dag("x", 0) + a("y", 0);
     CHECK_THROWS_AS(hs_type(expr), hs_type::no_default_basis_space);
@@ -209,17 +218,17 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs_type hs3(expr, hs2);
     CHECK(hs3.size() == 6);
     CHECK(hs3.total_n_bits() == 14);
-    CHECK(hs3.has(bs_b_x));
-    CHECK(hs3.bit_range(bs_b_x) == std::make_pair(0, 3));
-    CHECK(hs3.has(bs_b_y));
-    CHECK(hs3.bit_range(bs_b_y) == std::make_pair(4, 7));
-    CHECK(hs3.has(bs_s32_i));
-    CHECK(hs3.bit_range(bs_s32_i) == std::make_pair(8, 9));
-    CHECK(hs3.has(bs_s32_j));
-    CHECK(hs3.bit_range(bs_s32_j) == std::make_pair(10, 11));
     CHECK(hs3.has(bs_f_dn));
-    CHECK(hs3.bit_range(bs_f_dn) == std::make_pair(12, 12));
+    CHECK(hs3.bit_range(bs_f_dn) == std::make_pair(0, 0));
     CHECK(hs3.has(bs_f_up));
-    CHECK(hs3.bit_range(bs_f_up) == std::make_pair(13, 13));
+    CHECK(hs3.bit_range(bs_f_up) == std::make_pair(1, 1));
+    CHECK(hs3.has(bs_b_x));
+    CHECK(hs3.bit_range(bs_b_x) == std::make_pair(2, 5));
+    CHECK(hs3.has(bs_b_y));
+    CHECK(hs3.bit_range(bs_b_y) == std::make_pair(6, 9));
+    CHECK(hs3.has(bs_s32_i));
+    CHECK(hs3.bit_range(bs_s32_i) == std::make_pair(10, 11));
+    CHECK(hs3.has(bs_s32_j));
+    CHECK(hs3.bit_range(bs_s32_j) == std::make_pair(12, 13));
   }
 }

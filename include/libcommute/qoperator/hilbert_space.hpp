@@ -28,6 +28,9 @@
 
 namespace libcommute {
 
+// Range of bits in a bit string, [start;end]
+using bit_range_t = std::pair<int, int>;
+
 //
 // Hilbert space as the ordered product of base spaces
 //
@@ -116,16 +119,13 @@ public:
       for(auto const& g : m.monomial) {
         bs_ptr_type bs = g.make_basis_space();
         int n_bits = bs->n_bits();
-        auto r = basis_spaces_.emplace(std::move(bs),
-                                       std::make_pair(bit_range_end_ + 1,
-                                                      bit_range_end_ + n_bits)
-                                      );
+        auto r = basis_spaces_.emplace(std::move(bs), bit_range_t(0, 0));
         if(r.second) {
           if(n_bits == 0) throw no_default_basis_space(g);
-          bit_range_end_ += n_bits;
         }
       }
     }
+    recompute_bit_ranges();
   }
 
   // Value semantics
@@ -171,12 +171,9 @@ public:
   // Append a new basis space to the ordered product
   void add(basis_space_t const& bs) {
     int n_bits = bs.n_bits();
-    auto r = basis_spaces_.emplace(bs.clone(),
-                                   std::make_pair(bit_range_end_ + 1,
-                                                  bit_range_end_ + n_bits)
-                                  );
+    auto r = basis_spaces_.emplace(bs.clone(), bit_range_t(0, 0));
     if(!r.second) throw basis_space_exists(bs);
-    bit_range_end_ += n_bits;
+    recompute_bit_ranges();
   }
 
   // Is a given basis space found in this Hilbert space
@@ -185,7 +182,7 @@ public:
   }
 
   // Bit range spanned by a basis space
-  std::pair<int, int> bit_range(basis_space_t const& bs) const {
+  bit_range_t bit_range(basis_space_t const& bs) const {
     auto it = basis_spaces_.find(bs.clone());
     if(it == basis_spaces_.end())
       throw basis_space_not_found(bs);
@@ -202,8 +199,18 @@ public:
 
 private:
 
+  // Recompute bit ranges in basis_spaces_
+  void recompute_bit_ranges() {
+    bit_range_end_ = -1;
+    for(auto & bs : basis_spaces_) {
+      int n_bits = bs.first->n_bits();
+      bs.second = bit_range_t(bit_range_end_ + 1, bit_range_end_ + n_bits);
+      bit_range_end_ += n_bits;
+    }
+  }
+
   // List of base spaces in the product and their corresponding bit ranges
-  std::map<bs_ptr_type, std::pair<int, int>, less> basis_spaces_;
+  std::map<bs_ptr_type, bit_range_t, less> basis_spaces_;
 
   // End of the bit range spanned by this Hilbert space
   int bit_range_end_ = -1;
