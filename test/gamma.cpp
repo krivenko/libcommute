@@ -21,10 +21,9 @@
 
 namespace libcommute {
 
-template<typename... IndexTypes>
-class generator_gamma : public generator<IndexTypes...> {
+class generator_gamma : public generator<int> {
 
-  using base = generator<IndexTypes...>;
+  using base = generator<int>;
   using linear_function_t = typename base::linear_function_t;
 
 public:
@@ -33,9 +32,7 @@ public:
   virtual int algebra_id() const override { return 0; }
 
   // Value semantics
-  template<typename... Args>
-  generator_gamma(int gamma_index, Args&&... indices) :
-    base(std::forward<Args>(indices)...), gamma_index_(gamma_index) {}
+  generator_gamma(int index) : base(index) {}
   generator_gamma(generator_gamma const&) = default;
   generator_gamma(generator_gamma&&) noexcept = default;
   generator_gamma& operator=(generator_gamma const&) = default;
@@ -50,9 +47,8 @@ public:
   // c = -1, f(g) = 2\eta(g1, g2)
   virtual double commute(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
-    auto const& g2_ = dynamic_cast<generator_gamma const&>(g2);
-    bool diag = base::equal(g2) && gamma_index_ == g2_.gamma_index_;
-    f.set(diag * (gamma_index_ == 0 ? 2 : -2));
+    bool diag = base::equal(g2);
+    f.set(diag * (std::get<0>(indices_) == 0 ? 2 : -2));
     return -1;
   }
 
@@ -61,7 +57,7 @@ public:
   virtual bool collapse_power(int power, linear_function_t & f) const override {
     assert(power >= 2);
     auto coeff = [this](int p) {
-      return gamma_index_==0 ? 1. : std::pow(-1, p/2);
+      return std::get<0>(indices_) == 0 ? 1. : std::pow(-1, p/2);
     };
     if(power%2 == 0) {
       f.set(coeff(power));
@@ -78,33 +74,7 @@ public:
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian
   virtual void conj(linear_function_t & f) const override {
-    f.set(0, clone(), gamma_index_ == 0 ? 1 : -1);
-  }
-
-protected:
-  // 0, 1, 2 or 3
-  int gamma_index_;
-
-  // Check two generators of the same algebra for equality
-  virtual bool equal(base const& g) const override {
-    auto const& g_g =  dynamic_cast<generator_gamma const&>(g);
-    return gamma_index_ == g_g.gamma_index_ && base::equal(g);
-  }
-
-  // Ordering
-  virtual bool less(base const& g) const override {
-    auto const& g_g =  dynamic_cast<generator_gamma const&>(g);
-    if(this->gamma_index_ != g_g.gamma_index_)
-      return (this->gamma_index_ < g_g.gamma_index_);
-    else
-      return base::less(g);
-  }
-  virtual bool greater(base const& g) const override {
-    auto const& g_g =  dynamic_cast<generator_gamma const&>(g);
-    if(this->gamma_index_ != g_g.gamma_index_)
-      return (this->gamma_index_ > g_g.gamma_index_);
-    else
-      return base::greater(g);
+    f.set(0, clone(), std::get<0>(indices_) == 0 ? 1 : -1);
   }
 };
 
@@ -113,8 +83,8 @@ protected:
 using namespace libcommute;
 
 TEST_CASE("Gamma matrices", "[gamma]") {
-  using mon_type = monomial<>;
-  using expr_type = expression<std::complex<double>>;
+  using mon_type = monomial<int>;
+  using expr_type = expression<std::complex<double>, int>;
   std::complex<double> I(0,1);
 
   // Metric
@@ -125,9 +95,9 @@ TEST_CASE("Gamma matrices", "[gamma]") {
   std::vector<expr_type> Gamma; // Gamma matrices
   std::vector<expr_type> Gammac; // Covariant Gamma matrices
   for(int mu : {0, 1, 2, 3}) {
-    Gamma.emplace_back(expr_type(1.0, mon_type(generator_gamma<>(mu))));
+    Gamma.emplace_back(expr_type(1.0, mon_type(generator_gamma(mu))));
     Gammac.emplace_back(expr_type(eta(mu, mu),
-                                  mon_type(generator_gamma<>(mu))));
+                                  mon_type(generator_gamma(mu))));
   }
 
   SECTION("Commutation relations") {
