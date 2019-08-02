@@ -72,11 +72,3 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f.const_term == 6.0);
   CHECK(f.terms.empty());
 }
-
-TEST_CASE("zeros_like() for std::vector", "[zeros_like]") {
-  auto v1 = zeros_like(std::vector<double>{1, 2, 3});
-  CHECK(v1 == std::vector<double>{0, 0, 0});
-
-  auto v2 = zeros_like(std::vector<std::complex<double>>{1, 2, 3});
-  CHECK(v2 == std::vector<std::complex<double>>{0, 0, 0});
-}

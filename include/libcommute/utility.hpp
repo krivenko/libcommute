@@ -129,12 +129,6 @@ private:
   }
 };
 
-// Overload of zeros_like() for STL vectors
-template<typename T>
-std::vector<T> zeros_like(std::vector<T> const& v) {
-  return std::vector<T>(v.size(), T{});
-}
-
 } // namespace libcommute
 
 #endif
