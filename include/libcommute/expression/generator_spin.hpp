@@ -13,9 +13,8 @@
 #ifndef LIBCOMMUTE_GENERATOR_SPIN_HPP_
 #define LIBCOMMUTE_GENERATOR_SPIN_HPP_
 
-#include "algebra_ids.hpp"
 #include "generator.hpp"
-#include "../qoperator/basis_space_spin.hpp"
+#include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -115,7 +114,7 @@ public:
 
   // Accessors
   inline int multiplicity() const { return multiplicity_; }
-  inline int spin() const { return (multiplicity_-1)/2; }
+  inline double spin() const { return (multiplicity_-1)/2.0; }
   inline spin_component component() const { return c_; }
 
   // Return the Hermitian conjugate of this generator via f
@@ -128,16 +127,6 @@ public:
 #endif
     double spin = (multiplicity_-1)/2.0;
     f.set(0, make_unique<generator_spin>(spin, new_c, base::indices_), 1);
-  }
-
-  // Make a basis space for spins
-  virtual std::unique_ptr<basis_space<IndexTypes...>>
-  make_basis_space() const override {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
-    double spin = (multiplicity_-1)/2.0;
-    return make_unique<basis_space_spin<IndexTypes...>>(spin, base::indices_);
   }
 
 protected:

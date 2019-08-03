@@ -209,26 +209,25 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs1.bit_range(bs_s32_j) == std::make_pair(4, 5));
 
     expr += a_dag("x", 0) + a("y", 0);
-    CHECK_THROWS_AS(hs_type(expr), hs_type::no_default_basis_space);
 
-    hs_type hs2;
-    hs2.add(bs_b_x);
-    hs2.add(bs_b_y);
+    using ex_type =
+      default_bs_constructor::construction_failure<std::string, int>;
+    CHECK_THROWS_AS(hs_type(expr), ex_type);
 
-    hs_type hs3(expr, hs2);
-    CHECK(hs3.size() == 6);
-    CHECK(hs3.total_n_bits() == 14);
-    CHECK(hs3.has(bs_f_dn));
-    CHECK(hs3.bit_range(bs_f_dn) == std::make_pair(0, 0));
-    CHECK(hs3.has(bs_f_up));
-    CHECK(hs3.bit_range(bs_f_up) == std::make_pair(1, 1));
-    CHECK(hs3.has(bs_b_x));
-    CHECK(hs3.bit_range(bs_b_x) == std::make_pair(2, 5));
-    CHECK(hs3.has(bs_b_y));
-    CHECK(hs3.bit_range(bs_b_y) == std::make_pair(6, 9));
-    CHECK(hs3.has(bs_s32_i));
-    CHECK(hs3.bit_range(bs_s32_i) == std::make_pair(10, 11));
-    CHECK(hs3.has(bs_s32_j));
-    CHECK(hs3.bit_range(bs_s32_j) == std::make_pair(12, 13));
+    hs_type hs2(expr, boson_bs_constructor(4));
+    CHECK(hs2.size() == 6);
+    CHECK(hs2.total_n_bits() == 14);
+    CHECK(hs2.has(bs_f_dn));
+    CHECK(hs2.bit_range(bs_f_dn) == std::make_pair(0, 0));
+    CHECK(hs2.has(bs_f_up));
+    CHECK(hs2.bit_range(bs_f_up) == std::make_pair(1, 1));
+    CHECK(hs2.has(bs_b_x));
+    CHECK(hs2.bit_range(bs_b_x) == std::make_pair(2, 5));
+    CHECK(hs2.has(bs_b_y));
+    CHECK(hs2.bit_range(bs_b_y) == std::make_pair(6, 9));
+    CHECK(hs2.has(bs_s32_i));
+    CHECK(hs2.bit_range(bs_s32_i) == std::make_pair(10, 11));
+    CHECK(hs2.has(bs_s32_j));
+    CHECK(hs2.bit_range(bs_s32_j) == std::make_pair(12, 13));
   }
 }

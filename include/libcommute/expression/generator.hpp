@@ -109,20 +109,6 @@ public:
     f.set(0, clone(), 1.0);
   }
 
-  // Algebra generators can act in vector (Hilbert) spaces. This method allows
-  // to associate generators with their respective vector spaces. It is possible
-  // to return a 0-dimensional Hilbert space that signals that extra information
-  // would be required to construct a valid Hilbert space instead.
-  // E.g., bosonic Hilbert spaces are formally infinite-dimensional and must
-  // be constructed explicitly so that their dimension cutoff is set by user.
-  //
-  // Derived generators do not have to override this method as long
-  // as they are not used to construct Hilbert spaces.
-  virtual std::unique_ptr<basis_space<IndexTypes...>> make_basis_space() const {
-    throw std::logic_error("make_basis_space() is not implemented "
-                           "by this generator type");
-  }
-
   // Stream output
   friend std::ostream & operator<<(std::ostream & os, generator const& g) {
     return g.print(os);

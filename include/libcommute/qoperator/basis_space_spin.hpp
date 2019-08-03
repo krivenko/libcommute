@@ -13,6 +13,7 @@
 #ifndef LIBCOMMUTE_BASIS_SPACE_SPIN_HPP_
 #define LIBCOMMUTE_BASIS_SPACE_SPIN_HPP_
 
+#include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 

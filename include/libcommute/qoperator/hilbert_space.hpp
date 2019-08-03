@@ -14,13 +14,13 @@
 #define LIBCOMMUTE_HILBERT_SPACE_HPP_
 
 #include "basis_space.hpp"
+#include "bs_constructor.hpp"
 #include "../expression/expression.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
 #include <algorithm>
 #include <map>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -84,20 +84,6 @@ public:
     {}
   };
 
-  struct no_default_basis_space : public std::runtime_error {
-    std::unique_ptr<generator<IndexTypes...>> generator_ptr;
-    inline static std::string make_what(generator<IndexTypes...> const& g) {
-      std::stringstream ss;
-      ss << "Generator " << g << " has no default basis_space "
-            "associated with it. You have to provide a basis_space manually";
-      return ss.str();
-    }
-    no_default_basis_space(generator<IndexTypes...> const& g) :
-      std::runtime_error(make_what(g)),
-      generator_ptr(g.clone())
-    {}
-  };
-
   // Construct empty space
   hilbert_space() = default;
 
@@ -110,19 +96,15 @@ public:
     constructor_impl(std::forward<Args>(args)...);
   }
 
-  // Copy all basis spaces from `hs` and append those associated with
-  // all generators found in `expr` and missing from `hs`.
-  template<typename ScalarType>
+  // Inspect polynomial expression `expr` and collect basis spaces
+  // associated to every algebra generator found in `expr`. Construction
+  // of basis spaces is performed by `bs_constr` functor.
+  template<typename ScalarType, typename BSConstructor = default_bs_constructor>
   hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
-                hilbert_space const& hs = {}) : hilbert_space(hs) {
+                BSConstructor&& bs_constr = {}) {
     for(auto const& m : expr) {
       for(auto const& g : m.monomial) {
-        bs_ptr_type bs = g.make_basis_space();
-        int n_bits = bs->n_bits();
-        auto r = basis_spaces_.emplace(std::move(bs), bit_range_t(0, 0));
-        if(r.second) {
-          if(n_bits == 0) throw no_default_basis_space(g);
-        }
+        basis_spaces_.emplace(bs_constr(g), bit_range_t(0, 0));
       }
     }
     recompute_bit_ranges();

@@ -222,6 +222,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
         CHECK_FALSE(op->collapse_power(3, lin_f));
         CHECK_FALSE(op->collapse_power(4, lin_f));
       }
+      CHECK(spin_gen_p->spin() == 0.5);
+      CHECK(spin_gen_p->multiplicity() == 2);
     }
 
     check_equality(spin_ops);
@@ -267,6 +269,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
         CHECK_FALSE(op->collapse_power(3, lin_f));
         CHECK_FALSE(op->collapse_power(4, lin_f));
       }
+      CHECK(spin_gen_p->spin() == 1.0);
+      CHECK(spin_gen_p->multiplicity() == 3);
     }
 
     check_equality(spin1_ops);
@@ -312,6 +316,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
         CHECK_FALSE(op->collapse_power(3, lin_f));
         CHECK_FALSE(op->collapse_power(4, lin_f));
       }
+      CHECK(spin_gen_p->spin() == 1.5);
+      CHECK(spin_gen_p->multiplicity() == 4);
     }
 
     check_equality(spin32_ops);

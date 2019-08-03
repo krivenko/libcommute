@@ -13,9 +13,8 @@
 #ifndef LIBCOMMUTE_GENERATOR_BOSON_HPP_
 #define LIBCOMMUTE_GENERATOR_BOSON_HPP_
 
-#include "algebra_ids.hpp"
 #include "generator.hpp"
-#include "../qoperator/basis_space_boson.hpp"
+#include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -89,15 +88,6 @@ public:
     using std::make_unique;
 #endif
     f.set(0, make_unique<generator_boson>(!dagger_, base::indices_), 1);
-  }
-
-  // Make a basis space for bosons
-  virtual std::unique_ptr<basis_space<IndexTypes...>>
-  make_basis_space() const override {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
-    return make_unique<basis_space_boson<IndexTypes...>>(0, base::indices_);
   }
 
 protected:
