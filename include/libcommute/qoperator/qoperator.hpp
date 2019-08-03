@@ -15,18 +15,13 @@
 
 #include <libcommute/expression/expression.hpp>
 #include "hilbert_space.hpp"
+#include "monomial_action.hpp"
+#include "../utility.hpp"
 
 #include <utility>
+#include <vector>
 
 namespace libcommute {
-
-// qoperator is a quantum-mechanical operator that acts on a state vector.
-// The following C++20 concept describes a valid state vector type.
-//template<typename T>
-//concept StateVector = requires(T v) {
-//    { v.size() } -> std::convertible_to<std::size_t>;
-//    { v[std::size_t{}] };
-//};
 
 // Quantum-mechanical operator acting on a state
 template<typename ScalarType, typename... IndexTypes>
@@ -53,14 +48,18 @@ public:
 
   // Apply operator to state and return the resulting state.
   template<typename StateVector>
-  StateVector operator()(StateVector const& sv) {
-    // TODO
+  inline StateVector operator()(StateVector const& sv) {
+    StateVector res = zeros_like(sv);
+    apply_impl(sv, res);
+    return res;
   }
 
-  // Apply operator to state `in` and return the resulting state via `out`.
+  // Apply operator to state `src` and return the resulting state via `dst`.
   template<typename StateVector>
-  void operator()(StateVector const& in, StateVector & out) {
-    // TODO
+  inline void operator()(StateVector const& src, StateVector & dst) {
+    assert(src.size() == dst.size());
+    set_zeros(dst);
+    apply_impl(src, dst);
   }
 
   // Apply operator to state and return the resulting state.
@@ -72,24 +71,44 @@ public:
   // Apply operator to state and return the resulting state.
   //
   // Coefficients in front of monomials of the corresponding polynomial
-  // expression are invoked with the `coeff_args` as arguments to produce
+  // expression are invoked with the `args` as arguments to produce
   // the actual coefficient values.
   template<typename StateVector, typename... CoeffArgs>
-  StateVector apply_at(StateVector const& sv, CoeffArgs&&... coeff_args) {
-    // TODO
+  inline StateVector apply_at(StateVector const& sv, CoeffArgs&&... args) {
+    StateVector res = zeros_like(sv);
+    apply_at_impl(sv, res, std::forward<CoeffArgs>(args)...);
+    return res;
   }
 
-  // Apply operator to state `in` and return the resulting state via `out`.
+  // Apply operator to state `src` and return the resulting state via `dst`.
   //
   // Coefficients in front of monomials of the corresponding polynomial
   // expression are invoked with the `coeff_args` as arguments to produce
   // the actual coefficient values.
   template<typename StateVector, typename... CoeffArgs>
-  void apply_inplace_at(StateVector const& in,
-                        StateVector & out,
-                        CoeffArgs&&... coeff_args) {
+  inline void apply_inplace_at(StateVector const& src,
+                               StateVector & dst,
+                               CoeffArgs&&... args) {
+    set_zeros(dst);
+    apply_at_impl(src, dst, std::forward<CoeffArgs>(args)...);
+  }
+
+private:
+
+  // Implemetation details of 'apply' methods.
+  template<typename StateVector>
+  inline void apply_impl(StateVector const& src, StateVector & dst) {
     // TODO
   }
+
+  template<typename StateVector, typename... CoeffArgs>
+  inline void apply_at_impl(StateVector const& src,
+                            StateVector & dst,
+                            CoeffArgs&&... args) {
+    // TODO
+  }
+
+  std::vector<monomial_action> m_actions_;
 };
 
 // Factory function for qoperator

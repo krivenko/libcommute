@@ -142,9 +142,9 @@ public:
     bit_range_end_ = hs.bit_range_end_;
     basis_spaces_.clear();
     for(auto const& bs : hs.basis_spaces_) {
-      auto r = basis_spaces_.emplace_hint(basis_spaces_.end(),
-                                          bs.first->clone(),
-                                          bs.second);
+      basis_spaces_.emplace_hint(basis_spaces_.end(),
+                                 bs.first->clone(),
+                                 bs.second);
     }
     return *this;
   }
@@ -170,7 +170,6 @@ public:
 
   // Append a new basis space to the ordered product
   void add(basis_space_t const& bs) {
-    int n_bits = bs.n_bits();
     auto r = basis_spaces_.emplace(bs.clone(), bit_range_t(0, 0));
     if(!r.second) throw basis_space_exists(bs);
     recompute_bit_ranges();
@@ -216,6 +215,6 @@ private:
   int bit_range_end_ = -1;
 };
 
-}
+} // namespace libcommute
 
 #endif

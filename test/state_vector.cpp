@@ -38,8 +38,8 @@ TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
     CHECK(get_element(v, 1) == 2);
     get_element(v, 1) = 4;
     CHECK(get_element(v, 1) == 4);
-    CHECK(zeros_like(v) == std::vector<double>{0, 0, 0});
+    CHECK(zeros_like(v) == std::vector<std::complex<double>>{0, 0, 0});
     set_seros(v);
-    CHECK(v == std::vector<double>{0, 0, 0});
+    CHECK(v == std::vector<std::complex<double>>{0, 0, 0});
   }
 }
