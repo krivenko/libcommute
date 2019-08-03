@@ -22,6 +22,8 @@ TEST_CASE("Quantum-mechanical operator", "[qoperator]") {
   using namespace static_indices::real;
 
   auto expr = c_dag(1, "up") * c(2, "dn");
-  auto qop = make_qoperator(expr);
+  auto hs = make_hilbert_space(expr);
+  auto qop = make_qoperator(expr, hs);
 
+  // TODO
 }

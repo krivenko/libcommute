@@ -28,33 +28,30 @@
 namespace libcommute {
 
 //
-// Functor to construct basis spaces associated with algebra generators.
-// This CRTP-base class only knows how to construct spaces for fermions and
-// spins. It calls the `construct()` method of the derived class when another
-// algebra ID is met.
+// Functors to construct basis spaces associated with algebra generators.
 //
 
-template<typename Derived> class bs_constructor {
+// Exception: Cannot construct a basis space
+template<typename... IndexTypes>
+struct bs_construction_failure : public std::runtime_error {
+  std::unique_ptr<generator<IndexTypes...>> generator_ptr;
+  inline static std::string make_what(generator<IndexTypes...> const& g) {
+    std::stringstream ss;
+    ss << "Cannot construct basis space associated with algebra generator "
+       << g;
+    return ss.str();
+  }
+  bs_construction_failure(generator<IndexTypes...> const& g) :
+    std::runtime_error(make_what(g)),
+    generator_ptr(g.clone())
+  {}
+};
 
-public:
-
-  // Cannot construct a basis space
-  template<typename... IndexTypes>
-  struct construction_failure : public std::runtime_error {
-    std::unique_ptr<generator<IndexTypes...>> generator_ptr;
-    inline static std::string make_what(generator<IndexTypes...> const& g) {
-      std::stringstream ss;
-      ss << "Cannot construct basis space associated with generator " << g;
-      return ss.str();
-    }
-    construction_failure(generator<IndexTypes...> const& g) :
-      std::runtime_error(make_what(g)),
-      generator_ptr(g.clone())
-    {}
-  };
-
-  template<typename... IndexTypes>
-  std::unique_ptr<basis_space<IndexTypes...>>
+//
+// This basis space constructor can handle only fermionic and spin generators
+//
+struct default_bs_constructor {
+  template<typename... IndexTypes> std::unique_ptr<basis_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
@@ -68,46 +65,33 @@ public:
         return make_unique<basis_space_spin<IndexTypes...>>(spin, g.indices());
       };
       default:
-        return static_cast<Derived const&>(*this).construct(g);
+        throw bs_construction_failure<IndexTypes...>(g);
     }
   }
 };
 
 //
-// Always fails for unknown algebra IDs (including BOSON_ALGEBRA_ID)
+// Constructs all bosonic spaces with equal dimensions
 //
-class default_bs_constructor : public bs_constructor<default_bs_constructor> {
-public:
-  template<typename... IndexTypes>
-  std::unique_ptr<basis_space<IndexTypes...>>
-  construct(generator<IndexTypes...> const& g) const {
-    throw construction_failure<IndexTypes...>(g);
-  }
-};
-
-//
-// Constructs all bosonic spaces with the same dimension.
-//
-class boson_bs_constructor : public bs_constructor<boson_bs_constructor> {
+class bs_constructor_boson : public default_bs_constructor {
 
   int bits_per_boson_;
 
 public:
 
-  boson_bs_constructor(int bits_per_boson) : bits_per_boson_(bits_per_boson) {}
+  bs_constructor_boson(int bits_per_boson) : bits_per_boson_(bits_per_boson) {}
 
   template<typename... IndexTypes>
   std::unique_ptr<basis_space<IndexTypes...>>
-  construct(generator<IndexTypes...> const& g) const {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
+  operator()(generator<IndexTypes...> const& g) const {
     if(g.algebra_id() == BOSON_ALGEBRA_ID) {
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+      using std::make_unique;
+#endif
       return make_unique<basis_space_boson<IndexTypes...>>(bits_per_boson_,
                                                            g.indices());
-    } else {
-      throw construction_failure<IndexTypes...>(g);
-    }
+    } else
+      return default_bs_constructor::operator()(g);
   }
 };
 

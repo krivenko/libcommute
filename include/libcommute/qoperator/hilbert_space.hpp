@@ -197,6 +197,17 @@ private:
   int bit_range_end_ = -1;
 };
 
+// Convenience factory function
+template<typename ScalarType,
+         typename... IndexTypes,
+         typename BSConstructor = default_bs_constructor>
+hilbert_space<IndexTypes...>
+make_hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
+                   BSConstructor&& bs_constr = {}) {
+  return hilbert_space<IndexTypes...>(expr,
+                                      std::forward<BSConstructor>(bs_constr));
+}
+
 } // namespace libcommute
 
 #endif

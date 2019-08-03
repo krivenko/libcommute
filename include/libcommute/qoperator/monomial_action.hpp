@@ -13,12 +13,35 @@
 #ifndef LIBCOMMUTE_MONOMIAL_ACTION_HPP_
 #define LIBCOMMUTE_MONOMIAL_ACTION_HPP_
 
+#include "hilbert_space.hpp"
+#include "../expression/monomial.hpp"
+
 namespace libcommute {
 
 // Action of a monomial on a quantum state vector
-class monomial_action {
+// TODO
 
+class default_monomial_action {
+public:
 
+  template<typename ScalarType, typename... IndexTypes>
+  default_monomial_action(monomial<IndexTypes...> const& m,
+                          ScalarType&& coeff,
+                          hilbert_space<IndexTypes...> const& hs) {
+    // TODO
+  }
+
+  template<typename StateVector>
+  inline void act(StateVector const& src, StateVector & dst) {
+    // TODO
+  }
+
+  template<typename StateVector, typename... CoeffArgs>
+  inline void act_at(StateVector const& src,
+                     StateVector & dst,
+                     CoeffArgs&&... args) {
+    // TODO
+  }
 
 };
 
