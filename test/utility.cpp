@@ -32,6 +32,53 @@ TEST_CASE("c_str_to_string_t<T> metafunction", "[c_str_to_string_t]") {
                      std::string>::value);
 }
 
+TEST_CASE("all_derived_from<Base, Types...> metafunction",
+          "[all_derived_from]") {
+  class my_class : public std::string {};
+
+  CHECK_FALSE(all_derived_from<std::string>::value);
+  CHECK_FALSE(all_derived_from<std::string, int>::value);
+  CHECK(all_derived_from<std::string, std::string>::value);
+  CHECK(all_derived_from<std::string, my_class>::value);
+  CHECK_FALSE(all_derived_from<std::string, int, double>::value);
+  CHECK_FALSE(all_derived_from<std::string, int, std::string>::value);
+  CHECK_FALSE(all_derived_from<std::string, int, my_class>::value);
+  CHECK_FALSE(all_derived_from<std::string, std::string, double>::value);
+  CHECK(all_derived_from<std::string, std::string, std::string>::value);
+  CHECK(all_derived_from<std::string, std::string, my_class>::value);
+  CHECK_FALSE(all_derived_from<std::string, my_class, double>::value);
+  CHECK(all_derived_from<std::string, my_class, std::string>::value);
+  CHECK(all_derived_from<std::string, my_class, my_class>::value);
+}
+
+TEST_CASE("not_in_type_list<T, TypeList...> metafunction",
+          "[not_in_type_list]") {
+  CHECK(not_in_type_list<int>::value);
+  CHECK_FALSE(not_in_type_list<int, int>::value);
+  CHECK(not_in_type_list<int, double>::value);
+  CHECK_FALSE(not_in_type_list<int, int, double>::value);
+  CHECK_FALSE(not_in_type_list<int, int, int>::value);
+  CHECK_FALSE(not_in_type_list<int, double, int>::value);
+  CHECK(not_in_type_list<int, double, double>::value);
+}
+
+TEST_CASE("all_types_different<T...> metafunction", "[all_types_different]") {
+  CHECK(all_types_different<>::value);
+  CHECK(all_types_different<int>::value);
+  CHECK_FALSE(all_types_different<int, int>::value);
+  CHECK(all_types_different<int, double>::value);
+  CHECK(all_types_different<double, int>::value);
+  CHECK_FALSE(all_types_different<int, int, int>::value);
+  CHECK_FALSE(all_types_different<int, int, double>::value);
+  CHECK_FALSE(all_types_different<int, double, int>::value);
+  CHECK_FALSE(all_types_different<int, double, double>::value);
+  CHECK_FALSE(all_types_different<double, int, int>::value);
+  CHECK_FALSE(all_types_different<double, int, double>::value);
+  CHECK_FALSE(all_types_different<double, double, int>::value);
+  CHECK_FALSE(all_types_different<double, double, double>::value);
+  CHECK(all_types_different<int, double, std::string>::value);
+}
+
 TEST_CASE("print_tuple()", "[print_tuple]") {
   std::stringstream ss;
 

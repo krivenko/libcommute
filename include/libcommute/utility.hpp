@@ -45,16 +45,69 @@ using c_str_to_string_t = typename c_str_to_string<T>::type;
 //
 // Check that all Types... are derived from Base
 //
+
+namespace detail {
+
 template<typename Base, typename T, typename... Tail>
-struct all_derived_from {
+struct all_derived_from_impl {
   using T_ = typename std::remove_reference<T>::type;
-  static constexpr bool value =
-    std::is_base_of<Base, T_>::value && all_derived_from<Base, Tail...>::value;
+  static constexpr bool value = std::is_base_of<Base, T_>::value &&
+                                all_derived_from_impl<Base, Tail...>::value;
 };
-template<typename Base, typename T> struct all_derived_from<Base, T> {
+template<typename Base, typename T> struct all_derived_from_impl<Base, T> {
   using T_ = typename std::remove_reference<T>::type;
   static constexpr bool value = std::is_base_of<Base, T_>::value;
 };
+
+} // namespace libcommute::detail
+
+template<typename Base, typename... Types>
+struct all_derived_from : detail::all_derived_from_impl<Base, Types...> {};
+template<typename Base> struct all_derived_from<Base> : std::false_type {};
+
+//
+// Check that T is not in TypeList
+//
+
+namespace detail {
+
+template<typename T, typename TypeListHead, typename... TypeListTail>
+struct not_in_type_list_impl {
+  static constexpr bool value = (!std::is_same<T, TypeListHead>::value) &&
+                               not_in_type_list_impl<T, TypeListTail...>::value;
+};
+template<typename T, typename TypeListHead>
+struct not_in_type_list_impl<T, TypeListHead> {
+  static constexpr bool value = !std::is_same<T, TypeListHead>::value;
+};
+
+} // namespace libcommute::detail
+
+template<typename T, typename... TypeList>
+struct not_in_type_list : detail::not_in_type_list_impl<T, TypeList...> {};
+template<typename T> struct not_in_type_list<T> : std::true_type {};
+
+//
+// Check that all types in T... are different
+//
+
+namespace detail {
+
+template<typename T, typename Head, typename... Tail>
+struct all_types_different_impl {
+  static constexpr bool value = not_in_type_list<T, Head, Tail...>::value &&
+                                not_in_type_list<Head, Tail...>::value;
+};
+template<typename T, typename Head> struct all_types_different_impl<T, Head> {
+  static constexpr bool value = !std::is_same<T, Head>::value;
+};
+
+} // namespace libcommute::detail
+
+template<typename... T>
+struct all_types_different : detail::all_types_different_impl<T...> {};
+template<typename T> struct all_types_different<T> : std::true_type {};
+template<> struct all_types_different<> : std::true_type {};
 
 //
 // Print an std::tuple to an output stream as a comma-separated list
