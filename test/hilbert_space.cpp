@@ -214,7 +214,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     using ex_type = bs_construction_failure<std::string, int>;
     CHECK_THROWS_AS(hs_type(expr), ex_type);
 
-    hs_type hs2(expr, bs_constructor_boson(4));
+    hs_type hs2(expr, boson_bs_constructor(4));
     CHECK(hs2.size() == 6);
     CHECK(hs2.total_n_bits() == 14);
     CHECK(hs2.has(bs_f_dn));
@@ -229,6 +229,6 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs2.bit_range(bs_s32_i) == std::make_pair(10, 11));
     CHECK(hs2.has(bs_s32_j));
     CHECK(hs2.bit_range(bs_s32_j) == std::make_pair(12, 13));
-    CHECK(make_hilbert_space(expr, bs_constructor_boson(4)) == hs2);
+    CHECK(make_hilbert_space(expr, boson_bs_constructor(4)) == hs2);
   }
 }

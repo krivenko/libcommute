@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_BASIS_SPACE_SPIN_HPP_
 #define LIBCOMMUTE_BASIS_SPACE_SPIN_HPP_
 
-#include "../algebra_ids.hpp"
+#include "../algebra_tags.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -57,7 +57,7 @@ public:
   }
 
   // ID of the algebra this basis space is associated with
-  virtual int algebra_id() const override { return SPIN_ALGEBRA_ID; }
+  virtual int algebra_id() const override { return spin::algebra_id(); }
 
   // The minimal number of binary digits needed to represent any state
   // in this basis space

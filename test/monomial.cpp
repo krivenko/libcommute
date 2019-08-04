@@ -163,7 +163,7 @@ TEST_CASE("Monomials", "[monomial]") {
 
     auto it = m4.begin();
     REQUIRE(*it == Cdag_dn);
-    REQUIRE(it->algebra_id() == FERMION_ALGEBRA_ID);
+    REQUIRE(it->algebra_id() == fermion::algebra_id());
     REQUIRE(it[2] == Sp_i);
 
     CHECK(*(it + 1) == A_y);

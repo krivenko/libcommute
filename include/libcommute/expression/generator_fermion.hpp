@@ -14,7 +14,7 @@
 #define LIBCOMMUTE_GENERATOR_FERMION_HPP_
 
 #include "generator.hpp"
-#include "../algebra_ids.hpp"
+#include "../algebra_tags.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -38,7 +38,7 @@ class generator_fermion : public generator<IndexTypes...> {
 public:
 
   // Get ID of the algebra this generator belongs to
-  virtual int algebra_id() const override { return FERMION_ALGEBRA_ID; }
+  virtual int algebra_id() const override { return fermion::algebra_id(); }
 
   // Value semantics
   template<typename... Args>
@@ -128,7 +128,7 @@ protected:
 // Check if generator belongs to the fermionic algebra
 template<typename... IndexTypes>
 inline bool is_fermion(generator<IndexTypes...> const& gen) {
-  return gen.algebra_id() == FERMION_ALGEBRA_ID;
+  return gen.algebra_id() == fermion::algebra_id();
 }
 
 namespace static_indices {

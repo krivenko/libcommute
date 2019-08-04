@@ -118,7 +118,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
   SECTION("fermion") {
     for(auto * op : fermion_ops) {
-      CHECK(op->algebra_id() == FERMION_ALGEBRA_ID);
+      CHECK(op->algebra_id() == fermion::algebra_id());
       CHECK(op->has_vanishing_power(2));
       CHECK(op->has_vanishing_power(3));
       CHECK(op->has_vanishing_power(4));
@@ -156,7 +156,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
   SECTION("boson") {
     for(auto * op : boson_ops) {
-      CHECK(op->algebra_id() == BOSON_ALGEBRA_ID);
+      CHECK(op->algebra_id() == boson::algebra_id());
       CHECK_FALSE(op->has_vanishing_power(2));
       CHECK_FALSE(op->has_vanishing_power(3));
       CHECK_FALSE(op->has_vanishing_power(4));
@@ -194,7 +194,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
   SECTION("spin-1/2") {
     for(auto * op : spin_ops) {
-      CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
+      CHECK(op->algebra_id() == spin::algebra_id());
 
       auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
@@ -249,7 +249,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
   SECTION("spin-1") {
     for(auto * op : spin1_ops) {
-      CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
+      CHECK(op->algebra_id() == spin::algebra_id());
 
       auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
@@ -296,7 +296,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
   SECTION("spin-3/2") {
     for(auto * op : spin32_ops) {
-      CHECK(op->algebra_id() == SPIN_ALGEBRA_ID);
+      CHECK(op->algebra_id() == spin::algebra_id());
 
       auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       if(spin_gen_p->component() == spin_component::z) {

@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_ALGEBRA_IDS_HPP_
-#define LIBCOMMUTE_ALGEBRA_IDS_HPP_
+#ifndef LIBCOMMUTE_ALGEBRA_TAGS_HPP_
+#define LIBCOMMUTE_ALGEBRA_TAGS_HPP_
 
 #include <iostream>
 #include <memory>
@@ -21,15 +21,12 @@
 namespace libcommute {
 
 //
-// Predefined algebra IDs
+// Predefined algebra tag types and respective algebra IDs
 //
 
-// ID of the fermionic algebra
-static constexpr int FERMION_ALGEBRA_ID = -3;
-// ID of the bosonic algebra
-static constexpr int BOSON_ALGEBRA_ID = -2;
-// ID of the spin/angular momentum algebra
-static constexpr int SPIN_ALGEBRA_ID = -1;
+struct fermion { static constexpr int algebra_id() { return -3; } };
+struct boson { static constexpr int algebra_id() { return -2; } };
+struct spin { static constexpr int algebra_id() { return -1; } };
 
 } // namespace libcommute
 

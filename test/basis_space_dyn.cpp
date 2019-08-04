@@ -57,7 +57,7 @@ TEST_CASE("Basis Hilbert space", "[basis_space]") {
 
   SECTION("fermion") {
     for(auto * bs : fermion_bs) {
-      CHECK(bs->algebra_id() == FERMION_ALGEBRA_ID);
+      CHECK(bs->algebra_id() == fermion::algebra_id());
       CHECK(bs->n_bits() == 1);
     }
     check_equality(fermion_bs);
@@ -66,7 +66,7 @@ TEST_CASE("Basis Hilbert space", "[basis_space]") {
 
   SECTION("boson") {
     for(auto * bs : boson_bs) {
-      CHECK(bs->algebra_id() == BOSON_ALGEBRA_ID);
+      CHECK(bs->algebra_id() == boson::algebra_id());
       CHECK(bs->n_bits() == 4);
     }
     check_equality(boson_bs);
@@ -75,7 +75,7 @@ TEST_CASE("Basis Hilbert space", "[basis_space]") {
 
   SECTION("spin-1/2") {
     for(auto * bs : spin_bs) {
-      CHECK(bs->algebra_id() == SPIN_ALGEBRA_ID);
+      CHECK(bs->algebra_id() == spin::algebra_id());
       CHECK(bs->n_bits() == 1);
     }
     check_equality(spin_bs);
@@ -84,7 +84,7 @@ TEST_CASE("Basis Hilbert space", "[basis_space]") {
 
   SECTION("spin-1") {
     for(auto * bs : spin1_bs) {
-      CHECK(bs->algebra_id() == SPIN_ALGEBRA_ID);
+      CHECK(bs->algebra_id() == spin::algebra_id());
       CHECK(bs->n_bits() == 2);
     }
     check_equality(spin1_bs);
@@ -93,7 +93,7 @@ TEST_CASE("Basis Hilbert space", "[basis_space]") {
 
   SECTION("spin-3/2") {
     for(auto * bs : spin32_bs) {
-      CHECK(bs->algebra_id() == SPIN_ALGEBRA_ID);
+      CHECK(bs->algebra_id() == spin::algebra_id());
       CHECK(bs->n_bits() == 2);
     }
     check_equality(spin32_bs);

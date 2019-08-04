@@ -14,7 +14,7 @@
 #define LIBCOMMUTE_GENERATOR_BOSON_HPP_
 
 #include "generator.hpp"
-#include "../algebra_ids.hpp"
+#include "../algebra_tags.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -38,7 +38,7 @@ class generator_boson : public generator<IndexTypes...> {
 public:
 
   // Get ID of the algebra this generator belongs to
-  virtual int algebra_id() const override { return BOSON_ALGEBRA_ID; }
+  virtual int algebra_id() const override { return boson::algebra_id(); }
 
   // Value semantics
   template<typename... Args>
@@ -129,7 +129,7 @@ protected:
 // Check if generator belongs to the bosonic algebra
 template<typename... IndexTypes>
 inline bool is_boson(generator<IndexTypes...> const& gen) {
-  return gen.algebra_id() == BOSON_ALGEBRA_ID;
+  return gen.algebra_id() == boson::algebra_id();
 }
 
 namespace static_indices {
