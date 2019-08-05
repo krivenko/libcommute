@@ -14,7 +14,7 @@
 #ifndef LIBCOMMUTE_TEST_INT_COMPLEX_HPP_
 #define LIBCOMMUTE_TEST_INT_COMPLEX_HPP_
 
-#include <libcommute/expression/scalar_traits.hpp>
+#include <libcommute/scalar_traits.hpp>
 
 #include <iostream>
 

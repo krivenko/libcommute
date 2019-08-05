@@ -15,7 +15,7 @@
 
 #include "generator.hpp"
 #include "monomial.hpp"
-#include "scalar_traits.hpp"
+#include "../scalar_traits.hpp"
 #include "../utility.hpp"
 #include "../metafunctions.hpp"
 

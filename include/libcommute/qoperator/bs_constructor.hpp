@@ -25,6 +25,7 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 namespace libcommute {
@@ -124,7 +125,7 @@ template<typename... AlgebraTags>
 class bs_constructor : public detail::bs_constructor_impl<AlgebraTags...> {
 
   static_assert(all_types_different<AlgebraTags...>::value,
-                "All algebra tags have to be different");
+                "All algebra tags must be different");
 
   using base = detail::bs_constructor_impl<AlgebraTags...>;
 

@@ -15,7 +15,7 @@
 
 #include "int_complex.hpp"
 
-#include <libcommute/expression/scalar_traits.hpp>
+#include <libcommute/scalar_traits.hpp>
 
 #include <complex>
 #include <type_traits>

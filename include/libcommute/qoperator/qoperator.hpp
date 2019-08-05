@@ -13,9 +13,13 @@
 #ifndef LIBCOMMUTE_QOPERATOR_HPP_
 #define LIBCOMMUTE_QOPERATOR_HPP_
 
-#include <libcommute/expression/expression.hpp>
+#include "../expression/expression.hpp"
 #include "hilbert_space.hpp"
-#include "monomial_action.hpp"
+#include "monomial_action_fermion.hpp"
+#include "monomial_action_boson.hpp"
+#include "monomial_action_spin.hpp"
+#include "state_vector.hpp"
+#include "../scalar_traits.hpp"
 #include "../utility.hpp"
 
 #include <utility>
@@ -24,18 +28,26 @@
 namespace libcommute {
 
 // Quantum-mechanical operator acting in a Hilbert space
-// TODO: take a list of algebra tag types instead of MonomialAction
-template<typename MonomialAction> class qoperator {
+template<typename ScalarType, typename... AlgebraTags>
+class qoperator {
+
+  using monomial_action_t = monomial_action<AlgebraTags...>;
 
 public:
 
+  using scalar_type = ScalarType;
+
   qoperator() = delete;
 
-  template<typename ScalarType, typename... IndexTypes>
-  qoperator(expression<ScalarType, IndexTypes...> const& expr,
+  template<typename... IndexTypes>
+  qoperator(expression<scalar_type, IndexTypes...> const& expr,
             hilbert_space<IndexTypes...> const& hs) {
     for(auto const& m : expr) {
-      m_actions_.emplace_back(m.monomial, m.coeff, hs);
+      m_actions_.emplace_back(
+        monomial_action_t(std::make_pair(m.monomial.begin(), m.monomial.end()),
+                          hs),
+        m.coeff
+      );
     }
   }
 
@@ -94,29 +106,52 @@ public:
 
 private:
 
-  // Implemetation details of 'act_*' methods.
+  // Implementation details of 'act_*' methods.
   template<typename StateVector>
   inline void act_impl(StateVector const& src, StateVector & dst) {
-    for(auto const& ma : m_actions_) ma.act(src, dst);
+    sv_index_type out_index;
+    double coeff;
+    foreach(src, [&,this](sv_index_type in_index,
+                          element_type<StateVector> const& a) {
+      for(auto const& ma : m_actions_) {
+        coeff = 1;
+        bool nonzero = ma.first.act(in_index, out_index, coeff);
+        if(nonzero)
+          update_add_element(dst, out_index,
+                             ma.second *
+                             scalar_traits<scalar_type>::make_const(coeff) * a);
+      }
+    });
   }
 
   template<typename StateVector, typename... CoeffArgs>
   inline void act_at_impl(StateVector const& src,
                           StateVector & dst,
                           CoeffArgs&&... args) {
-    for(auto const& ma : m_actions_)
-      ma.act(src, dst, std::forward<CoeffArgs>(args)...);
+    sv_index_type out_index;
+    double coeff;
+    foreach(src, [&,this](sv_index_type in_index,
+                          element_type<StateVector> const& a) {
+      for(auto const& ma : m_actions_) {
+        coeff = 1;
+        bool nonzero = ma.first.act(in_index, out_index, coeff);
+        if(nonzero)
+          update_add_element(dst, out_index,
+                             ma.second(std::forward<CoeffArgs>(args)...) *
+                             scalar_traits<scalar_type>::make_const(coeff) * a);
+      }
+    });
   }
 
-  std::vector<MonomialAction> m_actions_;
+  std::vector<std::pair<monomial_action_t, scalar_type>> m_actions_;
 };
 
 // Factory function for qoperator
 template<typename ScalarType, typename... IndexTypes>
-qoperator<default_monomial_action>
+qoperator<ScalarType, fermion, boson, spin>
 make_qoperator(expression<ScalarType, IndexTypes...> const& expr,
                hilbert_space<IndexTypes...> const& hs) {
-  return qoperator<default_monomial_action>(expr, hs);
+  return qoperator<ScalarType, fermion, boson, spin>(expr, hs);
 }
 
 } // namespace libcommute

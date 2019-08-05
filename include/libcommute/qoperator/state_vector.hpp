@@ -13,49 +13,78 @@
 #ifndef LIBCOMMUTE_STATE_VECTOR_HPP_
 #define LIBCOMMUTE_STATE_VECTOR_HPP_
 
-#include "../expressions/scalar_traits.hpp"
+#include "../scalar_traits.hpp"
 
-#include <vector>
-
-// qoperator is a quantum-mechanical operator that acts on a state vector.
-// The following C++20 concept describes a valid state vector type.
-//template<typename T>
-//concept StateVector = requires(T v) {
-//  { get_size(v) } -> std::convertible_to<std::uint64_t>;
-//  { get_element(v, std::uint64_t{}) };
-//  { zeros_like(v) } -> T;
-//  { set_zeros(v) } -> T;
-//};
+#include <cstdint>
+#include <type_traits>
+#include <utility>
 
 namespace libcommute {
 
+// Type of index into a state vector
+using sv_index_type = std::uint64_t;
+
 //
-// Functions implementing StateVector interface for std::vector<T>
+// Default (unoptimal) implementation of StateVector interface
 //
 
-template<typename T>
-std::uint64_t get_size(std::vector<T> const& v) {
-  return v.size();
+// Get element type of a StateVector object
+template<typename StateVector>
+using element_type = decltype(std::declval<StateVector>()[0]);
+
+// Get size of a StateVector object (Hilbert space dimension)
+template<typename StateVector>
+inline sv_index_type get_size(StateVector const& sv) {
+  return sv.size();
 }
 
-template<typename T>
-T const& get_element(std::vector<T> const& v, std::uint64_t n) {
-  return v[n];
+// Get n-th state amplitude stored in a StateVector object
+template<typename StateVector>
+inline auto get_element(StateVector const& sv, sv_index_type n)
+  -> element_type<StateVector> const& {
+  return sv[n];
 }
 
-template<typename T>
-T & get_element(std::vector<T> & v, std::uint64_t n) {
-  return v[n];
+// Add a constant to the n-th state amplitude stored in a StateVector object
+template<typename StateVector, typename T>
+inline void update_add_element(StateVector & sv, sv_index_type n, T&& value) {
+  sv[n] += value;
 }
 
-template<typename T>
-std::vector<T> zeros_like(std::vector<T> const& v) {
-  return std::vector<T>(v.size(), scalar_traits<T>::make_const(0));
+// Create a StateVector object of the same size as `sv`,
+// with all amplitudes set to zero
+template<typename StateVector>
+StateVector zeros_like(StateVector const& sv) {
+  StateVector res(get_size(sv));
+  set_zeros(res);
+  return res;
 }
 
-template<typename T>
-void set_zeros(std::vector<T> & v) {
-  std::fill(v.begin(), v.end(), scalar_traits<T>::make_const(0));
+// Set all amplitudes stored in a StateVector object to zero
+template<typename StateVector>
+inline void set_zeros(StateVector & sv) {
+  sv_index_type size = get_size(sv);
+  using T = element_type<StateVector>;
+  for(sv_index_type n = 0; n < size; ++n)
+    sv[n] = scalar_traits<T>::make_const(0);
+}
+
+// Apply functor `f` to all index/non-zero amplitude pairs
+// in a StateVector object
+template<typename StateVector, typename Functor>
+inline void foreach(StateVector const& sv, Functor&& f) {
+  sv_index_type size = get_size(sv);
+  using T = element_type<StateVector>;
+  for(sv_index_type n = 0; n < size; ++n) {
+    auto a = get_element(sv, n);
+    if(scalar_traits<T>::is_zero(a))
+      continue;
+    else
+      f(n, a);
+  }
 }
 
 } // namespace libcommute
+
+#endif
+

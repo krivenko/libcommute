@@ -124,6 +124,8 @@ public:
     return const_iterator(generators_.cend());
   }
 
+  using range_type = std::pair<const_iterator, const_iterator>;
+
   // Reverse iterator
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
@@ -230,7 +232,7 @@ private:
   static size_t monomial_part_size(monomial const& m) { return m.size(); }
   // Size of a range within a monomial
   static size_t
-  monomial_part_size(std::pair<const_iterator, const_iterator> const& range) {
+  monomial_part_size(range_type const& range) {
     return std::distance(range.first, range.second);
   }
 
@@ -256,7 +258,7 @@ private:
       generators_.emplace_back(g->clone());
   }
   // Append generators from a monomial range
-  void append_generators(std::pair<const_iterator, const_iterator> const& r) {
+  void append_generators(range_type const& r) {
     for(auto it = r.first; it != r.second; ++it)
       generators_.emplace_back(it->clone());
   }

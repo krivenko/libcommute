@@ -18,6 +18,7 @@
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <tuple>

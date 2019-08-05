@@ -22,7 +22,7 @@
 #include "generator_fermion.hpp"
 #include "generator_boson.hpp"
 #include "generator_spin.hpp"
-#include "scalar_traits.hpp"
+#include "../scalar_traits.hpp"
 #include "../utility.hpp"
 
 #include <utility>
