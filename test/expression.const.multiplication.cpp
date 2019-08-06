@@ -84,7 +84,6 @@ TEST_CASE("Multiplication", "[mul]") {
   SECTION("double and complex") {
     auto expr_r = real::c_dag(1, "up");
     using ref_t = expression<std::complex<double>, int, std::string>;
-    const std::complex<double> Id(1,0);
     const std::complex<double> I(0,1);
 
     // Result type

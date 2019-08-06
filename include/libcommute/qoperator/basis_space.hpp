@@ -41,6 +41,7 @@ public:
   basis_space(basis_space&&) noexcept = default;
   basis_space& operator=(basis_space const&) = default;
   basis_space& operator=(basis_space&&) noexcept = default;
+  virtual ~basis_space() {}
 
   // Make a smart pointer that manages a copy of this basis space
   virtual std::unique_ptr<basis_space> clone() const = 0;

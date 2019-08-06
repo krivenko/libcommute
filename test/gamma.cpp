@@ -70,7 +70,7 @@ public:
     return true;
   }
 
-  virtual bool has_vanishing_power(int power) const {
+  virtual bool has_vanishing_power(int power) const override {
     assert(power >= 2);
     return false;
   }

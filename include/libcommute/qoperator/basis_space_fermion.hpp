@@ -43,7 +43,7 @@ public:
   basis_space_fermion& operator=(basis_space_fermion&&) noexcept = default;
 
   // Make a smart pointer that manages a copy of this basis space
-  virtual std::unique_ptr<base> clone() const {
+  virtual std::unique_ptr<base> clone() const override {
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif

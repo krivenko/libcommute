@@ -101,7 +101,7 @@ public:
       if(power%2 == 0)
         f.set(double(1) / (std::uint64_t(1) << power));
       else
-        f.set(0, clone(), double(1) / (std::uint64_t(1) << power-1));
+        f.set(0, clone(), double(1) / (std::uint64_t(1) << (power-1)));
       return true;
     } else
       return false;
