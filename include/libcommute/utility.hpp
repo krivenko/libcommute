@@ -88,28 +88,6 @@ struct not_in_type_list : detail::not_in_type_list_impl<T, TypeList...> {};
 template<typename T> struct not_in_type_list<T> : std::true_type {};
 
 //
-// Check that all types in T... are different
-//
-
-namespace detail {
-
-template<typename T, typename Head, typename... Tail>
-struct all_types_different_impl {
-  static constexpr bool value = not_in_type_list<T, Head, Tail...>::value &&
-                                not_in_type_list<Head, Tail...>::value;
-};
-template<typename T, typename Head> struct all_types_different_impl<T, Head> {
-  static constexpr bool value = !std::is_same<T, Head>::value;
-};
-
-} // namespace libcommute::detail
-
-template<typename... T>
-struct all_types_different : detail::all_types_different_impl<T...> {};
-template<typename T> struct all_types_different<T> : std::true_type {};
-template<> struct all_types_different<> : std::true_type {};
-
-//
 // Print an std::tuple to an output stream as a comma-separated list
 //
 

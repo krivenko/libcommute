@@ -13,6 +13,7 @@
 
 #include "catch2/catch.hpp"
 
+#include <libcommute/algebra_tags.hpp>
 #include <libcommute/expression/expression.hpp>
 
 //
@@ -28,8 +29,10 @@ class generator_gamma : public generator<int> {
 
 public:
 
-  // 0 is the lowest algebra ID available to user-defined algebras
-  virtual int algebra_id() const override { return 0; }
+  // Use the lowest algebra ID available to user-defined algebras
+  virtual int algebra_id() const override {
+    return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
+  }
 
   // Value semantics
   generator_gamma(int index) : base(index) {}

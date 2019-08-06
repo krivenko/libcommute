@@ -124,8 +124,10 @@ public:
 template<typename... AlgebraTags>
 class bs_constructor : public detail::bs_constructor_impl<AlgebraTags...> {
 
-  static_assert(all_types_different<AlgebraTags...>::value,
-                "All algebra tags must be different");
+  static_assert(sizeof...(AlgebraTags) > 0,
+                "There must be at least one algebra tag");
+  static_assert(algebra_tags_ordered<AlgebraTags...>::value,
+                "Algebra tags must be ordered according to their IDs");
 
   using base = detail::bs_constructor_impl<AlgebraTags...>;
 

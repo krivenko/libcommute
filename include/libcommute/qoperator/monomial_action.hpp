@@ -15,8 +15,13 @@
 
 #include "hilbert_space.hpp"
 #include "state_vector.hpp"
+#include "../expression/generator.hpp"
 #include "../expression/monomial.hpp"
 #include "../utility.hpp"
+
+#include <memory>
+#include <sstream>
+#include <stdexcept>
 
 //
 // Action of a monomial on a basis state
@@ -29,6 +34,24 @@
 // [1] https://en.wikipedia.org/wiki/Generalized_permutation_matrix
 
 namespace libcommute {
+
+//
+// Exception: Cannot construct a basis space
+//
+template<typename... IndexTypes>
+struct unknown_generator : public std::runtime_error {
+  std::unique_ptr<generator<IndexTypes...>> generator_ptr;
+  inline static std::string make_what(generator<IndexTypes...> const& g) {
+    std::stringstream ss;
+    ss << "Action of generator " << g << " on a state vector is unknown";
+    return ss.str();
+  }
+  unknown_generator(generator<IndexTypes...> const& g) :
+    std::runtime_error(make_what(g)),
+    generator_ptr(g.clone())
+  {}
+};
+
 
 template<typename... AlgebraTags> class monomial_action;
 
@@ -47,7 +70,22 @@ class monomial_action_impl : public monomial_action<AlgebraTag1>,
   template<typename... IndexTypes>
   static monomial_range_t<IndexTypes...>
   find_algebra_monomial_subrange(monomial_range_t<IndexTypes...> & m_range) {
-    // TODO
+    if(m_range.first == m_range.second)
+      return m_range;
+
+    auto res_range = std::make_pair(m_range.first, m_range.first);
+
+    for(auto it = m_range.first; it != m_range.second; ++it) {
+      if(it->algebra_id() < AlgebraTag1::algebra_id())
+        throw unknown_generator<IndexTypes...>(*it);
+      else if(it->algebra_id() == AlgebraTag1::algebra_id()) {
+        ++res_range.second;
+        ++m_range.first;
+      } else // it->algebra_id() > AlgebraTag1::algebra_id()
+        break;
+    }
+
+    return res_range;
   }
 
 public:
@@ -93,8 +131,8 @@ public:
 template<typename... AlgebraTags>
 class monomial_action : public detail::monomial_action_impl<AlgebraTags...> {
 
-  static_assert(all_types_different<AlgebraTags...>::value,
-                "All algebra tags must be different");
+  static_assert(algebra_tags_ordered<AlgebraTags...>::value,
+                "Algebra tags must be ordered according to their IDs");
 
   using base = detail::monomial_action_impl<AlgebraTags...>;
 
@@ -104,6 +142,27 @@ public:
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs)
     : base(m_range, hs) {
+  }
+};
+
+// Specialization for the case when no algebra tags have been provided
+template<> class monomial_action<> {
+
+public:
+
+  template<typename... IndexTypes>
+  monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
+                  hilbert_space<IndexTypes...> const& hs) {
+    // Without algebra tags, we support only the constant monomial
+    if(m_range.first != m_range.second)
+      throw unknown_generator<IndexTypes...>(*m_range.first);
+  }
+
+  inline bool act(sv_index_type in_index,
+                  sv_index_type & out_index,
+                  double & coeff) {
+    out_index = in_index;
+    return true;
   }
 };
 

@@ -62,23 +62,6 @@ TEST_CASE("not_in_type_list<T, TypeList...> metafunction",
   CHECK(not_in_type_list<int, double, double>::value);
 }
 
-TEST_CASE("all_types_different<T...> metafunction", "[all_types_different]") {
-  CHECK(all_types_different<>::value);
-  CHECK(all_types_different<int>::value);
-  CHECK_FALSE(all_types_different<int, int>::value);
-  CHECK(all_types_different<int, double>::value);
-  CHECK(all_types_different<double, int>::value);
-  CHECK_FALSE(all_types_different<int, int, int>::value);
-  CHECK_FALSE(all_types_different<int, int, double>::value);
-  CHECK_FALSE(all_types_different<int, double, int>::value);
-  CHECK_FALSE(all_types_different<int, double, double>::value);
-  CHECK_FALSE(all_types_different<double, int, int>::value);
-  CHECK_FALSE(all_types_different<double, int, double>::value);
-  CHECK_FALSE(all_types_different<double, double, int>::value);
-  CHECK_FALSE(all_types_different<double, double, double>::value);
-  CHECK(all_types_different<int, double, std::string>::value);
-}
-
 TEST_CASE("print_tuple()", "[print_tuple]") {
   std::stringstream ss;
 

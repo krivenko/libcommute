@@ -131,7 +131,7 @@ protected:
   }
   // Print to stream
   virtual std::ostream & print(std::ostream & os) const {
-    os << "g(";
+    os << "g^" << algebra_id() << "(";
     print_tuple(os, this->indices_);
     return os << ")";
   }
