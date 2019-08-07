@@ -231,4 +231,23 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs2.bit_range(bs_s32_j) == std::make_pair(12, 13));
     CHECK(make_hilbert_space(expr, boson_bs_constructor(4)) == hs2);
   }
+
+  SECTION("Very big Hilbert space") {
+    hs_type hs1;
+    for(int i = 0; i < 32; ++i)
+      hs1.add(make_space_spin(3.0/2, "s", i));
+
+    using ex_type = hs_type::hilbert_space_too_big;
+    CHECK_THROWS_AS(hs1.add(make_space_spin(3.0/2, "s", 32)), ex_type);
+
+    using namespace real;
+
+    auto expr = expression<double, std::string, int>(1);
+    for(int i = 0; i < 32; ++i) expr *= S_p<4>("s", i);
+    hs_type hs2(expr);
+    CHECK(hs2.total_n_bits() == 64);
+
+    expr *= S_p<4>("s", 32);
+    CHECK_THROWS_AS(hs_type(expr), ex_type);
+  }
 }

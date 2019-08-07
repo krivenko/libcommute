@@ -13,6 +13,8 @@
 #ifndef LIBCOMMUTE_UTILITY_HPP_
 #define LIBCOMMUTE_UTILITY_HPP_
 
+#include "metafunctions.hpp"
+
 #include <iostream>
 #include <memory>
 #include <string>
@@ -32,7 +34,7 @@ namespace libcommute {
 // mapped to std::string.
 //
 
-template<typename T> struct c_str_to_string { using type = T; };
+template<typename T> struct c_str_to_string { using type = remove_cvref_t<T>; };
 template<size_t N> struct c_str_to_string<const char (&)[N]> {
   using type = std::string;
 };

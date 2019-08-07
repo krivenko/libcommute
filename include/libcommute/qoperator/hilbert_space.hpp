@@ -15,11 +15,13 @@
 
 #include "basis_space.hpp"
 #include "bs_constructor.hpp"
+#include "state_vector.hpp"
 #include "../expression/expression.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
 #include <algorithm>
+#include <limits>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -40,6 +42,10 @@ class hilbert_space {
 
   using basis_space_t = basis_space<IndexTypes...>;
   using bs_ptr_type = std::unique_ptr<basis_space_t>;
+
+  // Size of a Hilbert space must be representable by an integer with
+  // at most this number of bits.
+  static constexpr int max_n_bits = std::numeric_limits<sv_index_type>::digits;
 
 public:
 
@@ -81,6 +87,17 @@ public:
     basis_space_not_found(basis_space_t const& bs) :
       std::runtime_error("Basis space not found"),
       basis_space_ptr(bs.clone())
+    {}
+  };
+
+  struct hilbert_space_too_big : public std::runtime_error {
+    int n_bits;
+    hilbert_space_too_big(int n_bits) :
+      std::runtime_error("Hilbert space size is not representable "
+                         "by a " + std::to_string(max_n_bits) +
+                         "-bit integer (n_bits = " +
+                         std::to_string(n_bits) + ")"),
+      n_bits(n_bits)
     {}
   };
 
@@ -188,6 +205,8 @@ private:
       bs.second = bit_range_t(bit_range_end_ + 1, bit_range_end_ + n_bits);
       bit_range_end_ += n_bits;
     }
+    if(bit_range_end_ >= max_n_bits)
+      throw hilbert_space_too_big(bit_range_end_ + 1);
   }
 
   // List of base spaces in the product and their corresponding bit ranges
