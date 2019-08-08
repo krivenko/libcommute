@@ -153,7 +153,7 @@ public:
   template<typename... IndexTypes>
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs) {
-    // Without algebra tags, we support only the constant monomial
+    // Without algebra tags, we support only the constant (empty) monomial
     if(m_range.first != m_range.second)
       throw unknown_generator<IndexTypes...>(*m_range.first);
   }

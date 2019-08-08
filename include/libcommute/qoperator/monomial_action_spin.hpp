@@ -32,7 +32,12 @@ public:
   template<typename... IndexTypes>
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs) {
-    if(m_range.first == m_range.second) return;
+    for(auto it = m_range.first; it != m_range.second; ++it) {
+      if(it->algebra_id() != spin::algebra_id())
+        throw unknown_generator<IndexTypes...>(*it);
+
+      // TODO
+    }
 
     // TODO
   }

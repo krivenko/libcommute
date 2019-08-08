@@ -30,6 +30,7 @@ set(TESTS
   gamma
   basis_space
   hilbert_space
+  monomial_action
   qoperator
 )
 
