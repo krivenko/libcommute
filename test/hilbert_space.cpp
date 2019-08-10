@@ -126,6 +126,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
               );
     CHECK(hs.size() == 8);
     CHECK(hs.total_n_bits() == 14);
+    CHECK(hs.algebra_bit_range(fermion::algebra_id()) == std::make_pair(0, 1));
+    CHECK(hs.algebra_bit_range(boson::algebra_id()) == std::make_pair(2, 5));
+    CHECK(hs.algebra_bit_range(spin::algebra_id()) == std::make_pair(6, 13));
 
     CHECK(hs.has(bs_f_dn));
     CHECK(hs.bit_range(bs_f_dn) == std::make_pair(0, 0));
@@ -155,39 +158,68 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     auto check_hs = [&hs](bs_type const& bs,
                           int size,
                           int total_n_bits,
-                          int b, int e) {
+                          int b, int e,
+                          int fermion_b, int fermion_e,
+                          int boson_b, int boson_e,
+                          int spin_b, int spin_e
+                         ) {
       CHECK(hs.size() == size);
       CHECK(hs.total_n_bits() == total_n_bits);
       CHECK(hs.has(bs));
       CHECK(hs.bit_range(bs) == std::make_pair(b, e));
+
+      if(fermion_b != -1) {
+        auto ref_range = std::make_pair(fermion_b, fermion_e);
+        CHECK(hs.algebra_bit_range(fermion::algebra_id()) == ref_range);
+      } else {
+        CHECK_THROWS_AS(hs.algebra_bit_range(fermion::algebra_id()),
+                        std::runtime_error);
+      }
+      if(boson_b != -1) {
+        auto ref_range = std::make_pair(boson_b, boson_e);
+        CHECK(hs.algebra_bit_range(boson::algebra_id()) == ref_range);
+      } else {
+        CHECK_THROWS_AS(hs.algebra_bit_range(boson::algebra_id()),
+                        std::runtime_error);
+      }
+      if(spin_b != -1) {
+        auto ref_range = std::make_pair(spin_b, spin_e);
+        CHECK(hs.algebra_bit_range(spin::algebra_id()) == ref_range);
+      } else {
+        CHECK_THROWS_AS(hs.algebra_bit_range(spin::algebra_id()),
+                        std::runtime_error);
+      }
     };
 
-    check_hs(bs_s32_i, 1, 2, 0, 1);
+    check_hs(bs_s32_i, 1, 2, 0, 1, -1, -1, -1, -1, 0, 1);
     hs.add(bs_s32_j);
-    check_hs(bs_s32_j, 2, 4, 2, 3);
+    check_hs(bs_s32_j, 2, 4, 2, 3, -1, -1, -1, -1, 0, 3);
     hs.add(bs_s1_j);
-    check_hs(bs_s1_j, 3, 6, 0, 1);
+    check_hs(bs_s1_j, 3, 6, 0, 1, -1, -1, -1, -1, 0, 5);
     hs.add(bs_s_i);
-    check_hs(bs_s_i, 4, 7, 0, 0);
+    check_hs(bs_s_i, 4, 7, 0, 0, -1, -1, -1, -1, 0, 6);
     hs.add(bs_s_j);
-    check_hs(bs_s_j, 5, 8, 1, 1);
+    check_hs(bs_s_j, 5, 8, 1, 1, -1, -1, -1, -1, 0, 7);
     hs.add(bs_b_x);
-    check_hs(bs_b_x, 6, 12, 0, 3);
+    check_hs(bs_b_x, 6, 12, 0, 3, -1, -1, 0, 3, 4, 11);
     hs.add(bs_f_dn);
-    check_hs(bs_f_dn, 7, 13, 0, 0);
+    check_hs(bs_f_dn, 7, 13, 0, 0, 0, 0, 1, 4, 5, 12);
     hs.add(bs_f_up);
-    check_hs(bs_f_up, 8, 14, 1, 1);
+    check_hs(bs_f_up, 8, 14, 1, 1, 0, 1, 2, 5, 6, 13);
 
     CHECK_THROWS_AS(hs.add(bs_s_j), hs_type::basis_space_exists);
 
-    check_hs(bs_f_dn, 8, 14, 0, 0);
-    check_hs(bs_f_up, 8, 14, 1, 1);
-    check_hs(bs_b_x, 8, 14, 2, 5);
-    check_hs(bs_s_i, 8, 14, 6, 6);
-    check_hs(bs_s_j, 8, 14, 7, 7);
-    check_hs(bs_s1_j, 8, 14, 8, 9);
-    check_hs(bs_s32_i, 8, 14, 10, 11);
-    check_hs(bs_s32_j, 8, 14, 12, 13);
+    check_hs(bs_f_dn, 8, 14, 0, 0, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_f_up, 8, 14, 1, 1, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_b_x, 8, 14, 2, 5, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_s_i, 8, 14, 6, 6, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_s_j, 8, 14, 7, 7, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_s1_j, 8, 14, 8, 9, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_s32_i, 8, 14, 10, 11, 0, 1, 2, 5, 6, 13);
+    check_hs(bs_s32_j, 8, 14, 12, 13, 0, 1, 2, 5, 6, 13);
+    CHECK(hs.algebra_bit_range(fermion::algebra_id()) == std::make_pair(0, 1));
+    CHECK(hs.algebra_bit_range(boson::algebra_id()) == std::make_pair(2, 5));
+    CHECK(hs.algebra_bit_range(spin::algebra_id()) == std::make_pair(6, 13));
   }
 
   SECTION("Construction from expression") {

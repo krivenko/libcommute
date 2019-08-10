@@ -13,9 +13,10 @@
 #ifndef LIBCOMMUTE_MONOMIAL_ACTION_SPIN_HPP_
 #define LIBCOMMUTE_MONOMIAL_ACTION_SPIN_HPP_
 
+#include "basis_space_spin.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
-#include "../algebra_tags.hpp"
+#include "../expression/generator_spin.hpp"
 
 //
 // Action of a monomial comprised of spin algebra generators

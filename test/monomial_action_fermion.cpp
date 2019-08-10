@@ -1,0 +1,141 @@
+/*******************************************************************************
+ *
+ * This file is part of libcommute, a C++11/14/17 header-only library allowing
+ * to manipulate polynomial expressions with quantum-mechanical operators.
+ *
+ * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ ******************************************************************************/
+
+#include "catch2/catch.hpp"
+
+#include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/monomial.hpp>
+#include <libcommute/qoperator/hilbert_space.hpp>
+#include <libcommute/qoperator/monomial_action.hpp>
+#include <libcommute/qoperator/monomial_action_fermion.hpp>
+
+#include "./monomial_action.hpp"
+
+#include <algorithm>
+#include <bitset>
+#include <utility>
+#include <vector>
+
+using namespace libcommute;
+
+TEST_CASE("Action of a fermionic monomial on an index",
+          "[monomial_action_fermion]") {
+
+  using namespace static_indices;
+
+  using mon_type = monomial<int>;
+  using hs_type = hilbert_space<int>;
+  using mock_bs_type = basis_space_padding<int>;
+  using ma_type = monomial_action<fermion>;
+
+  constexpr int n_ops = 4;
+  constexpr int n_mock_spaces = 2;
+  constexpr int pad_bits = 2*n_mock_spaces;
+
+  std::vector<generator_fermion<int>> gens;
+  for(int i = 0; i < n_ops; ++i) {
+    gens.emplace_back(true, i);
+    gens.emplace_back(false, i);
+  }
+
+  auto ref_c_dag_c_action = [](generator<int> const& g,
+                              sv_index_type in_index,
+                              sv_index_type & out_index,
+                              double & coeff) {
+    int ind = std::get<0>(g.indices());
+    bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
+    std::bitset<n_ops + pad_bits> in(in_index);
+    if(dagger && in.test(ind + pad_bits)) return false;
+    if(!dagger && !in.test(ind + pad_bits)) return false;
+    // Count particles
+    int n = 0;
+    for(int i = 0; i < ind; ++i) n += in[i + pad_bits];
+    out_index = dagger ? in.set(ind + pad_bits).to_ulong() :
+                         in.reset(ind + pad_bits).to_ulong();
+    coeff *= (n%2 == 0 ? 1 : -1);
+    return true;
+  };
+
+  hs_type hs;
+  for(int i = 0; i < n_mock_spaces; ++i) hs.add(mock_bs_type(i));
+  for(int i = 0; i < n_ops; ++i) hs.add(make_space_fermion(i));
+
+  std::vector<sv_index_type> in_index_list(1 << n_ops);
+  std::iota(in_index_list.begin(), in_index_list.end(), (1 << pad_bits)-1);
+
+  SECTION("No operators") {
+    mon_type mon;
+    ma_type ma(std::make_pair(mon.begin(), mon.end()), hs);
+    for(auto in_index : in_index_list) {
+      double coeff = 2;
+      sv_index_type out_index;
+      bool nonzero = ma.act(in_index, out_index, coeff);
+      CHECK(nonzero);
+      CHECK(out_index == in_index);
+      CHECK(coeff == 2);
+    }
+  }
+  SECTION("1 operator") {
+    for(int i = 0; i < gens.size(); ++i) {
+      mon_type mon(gens[i]);
+      check_monomial_action<ma_type>(mon,
+                                     hs,
+                                     ref_c_dag_c_action,
+                                     in_index_list);
+    }
+  }
+  SECTION("2 operators") {
+    for(int i = 0; i < gens.size(); ++i) {
+      for(int j = 0; j < gens.size(); ++j) {
+        if(!(gens[i] < gens[j])) continue;
+        mon_type mon(gens[i], gens[j]);
+        check_monomial_action<ma_type>(mon,
+                                       hs,
+                                       ref_c_dag_c_action,
+                                       in_index_list);
+      }
+    }
+  }
+  SECTION("3 operators") {
+    for(int i = 0; i < gens.size(); ++i) {
+      for(int j = 0; j < gens.size(); ++j) {
+        for(int k = 0; k < gens.size(); ++k) {
+          if(!(gens[i] < gens[j]) || !(gens[j] < gens[k])) continue;
+          mon_type mon(gens[i], gens[j], gens[k]);
+          check_monomial_action<ma_type>(mon,
+                                         hs,
+                                         ref_c_dag_c_action,
+                                         in_index_list);
+        }
+      }
+    }
+  }
+  SECTION("4 operators") {
+    for(int i = 0; i < gens.size(); ++i) {
+      for(int j = 0; j < gens.size(); ++j) {
+        for(int k = 0; k < gens.size(); ++k) {
+          for(int l = 0; l < gens.size(); ++l) {
+            if(!(gens[i] < gens[j]) ||
+               !(gens[j] < gens[k]) ||
+               !(gens[k] < gens[l])) continue;
+            mon_type mon(gens[i], gens[j], gens[k], gens[l]);
+            check_monomial_action<ma_type>(mon,
+                                           hs,
+                                           ref_c_dag_c_action,
+                                           in_index_list);
+          }
+        }
+      }
+    }
+  }
+}

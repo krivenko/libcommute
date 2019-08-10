@@ -188,6 +188,17 @@ public:
       return it->second;
   }
 
+  // Bit range spanned by an algebra
+  bit_range_t const& algebra_bit_range(int algebra_id) const {
+    auto it = algebra_bit_ranges_.find(algebra_id);
+    if(it == algebra_bit_ranges_.end())
+      throw std::runtime_error(
+        "No basis spaces with algebra ID " + std::to_string(algebra_id)
+      );
+    else
+      return it->second;
+  }
+
   // Number of basis spaces
   size_t size() const { return basis_spaces_.size(); }
 
@@ -199,10 +210,24 @@ private:
 
   // Recompute bit ranges in basis_spaces_
   void recompute_bit_ranges() {
+    algebra_bit_ranges_.clear();
     bit_range_end_ = -1;
     for(auto & bs : basis_spaces_) {
       int n_bits = bs.first->n_bits();
-      bs.second = bit_range_t(bit_range_end_ + 1, bit_range_end_ + n_bits);
+      bit_range_t range(bit_range_end_ + 1, bit_range_end_ + n_bits);
+      bs.second = range;
+
+      int algebra_id = bs.first->algebra_id();
+      auto algebra_range_it = algebra_bit_ranges_.find(algebra_id);
+      if(algebra_range_it == algebra_bit_ranges_.end())
+        algebra_bit_ranges_.emplace(algebra_id, range);
+      else {
+        if(range.first < algebra_range_it->second.first)
+          algebra_range_it->second.first = range.first;
+        if(range.second > algebra_range_it->second.second)
+          algebra_range_it->second.second = range.second;
+      }
+
       bit_range_end_ += n_bits;
     }
     if(bit_range_end_ >= max_n_bits)
@@ -211,6 +236,9 @@ private:
 
   // List of base spaces in the product and their corresponding bit ranges
   std::map<bs_ptr_type, bit_range_t, less> basis_spaces_;
+
+  // Bit ranges spanned by all basis spaces associated with the same algebra
+  std::map<int, bit_range_t> algebra_bit_ranges_;
 
   // End of the bit range spanned by this Hilbert space
   int bit_range_end_ = -1;

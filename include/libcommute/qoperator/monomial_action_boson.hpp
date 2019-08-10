@@ -15,7 +15,7 @@
 
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
-#include "../algebra_tags.hpp"
+#include "../expression/generator_boson.hpp"
 
 //
 // Action of a monomial comprised of bosonic algebra generators

@@ -17,17 +17,22 @@
 #include <libcommute/expression/generator_boson.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
+#include <libcommute/qoperator/basis_space_fermion.hpp>
+#include <libcommute/qoperator/basis_space_boson.hpp>
+#include <libcommute/qoperator/basis_space_spin.hpp>
 #include <libcommute/qoperator/hilbert_space.hpp>
-#include <libcommute/qoperator/monomial_action.hpp>
 #include <libcommute/qoperator/monomial_action_fermion.hpp>
 #include <libcommute/qoperator/monomial_action_boson.hpp>
 #include <libcommute/qoperator/monomial_action_spin.hpp>
 
-#include <vector>
+#include "./monomial_action.hpp"
+
+#include <string>
+#include <utility>
 
 using namespace libcommute;
 
-TEST_CASE("Action of a monomial on a state vector", "[monomial_action]") {
+TEST_CASE("Different algebra tags", "[monomial_action_tags]") {
 
   using mon_type = monomial<std::string, int>;
   using hs_type = hilbert_space<std::string, int>;

@@ -100,8 +100,8 @@ public:
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
                   double & coeff) {
-    if(base_head::act(in_index, out_index, coeff))
-      return base_tail::act(in_index, out_index, coeff);
+    return base_head::act(in_index, out_index, coeff) &&
+           base_tail::act(sv_index_type(out_index), out_index, coeff);
   }
 };
 

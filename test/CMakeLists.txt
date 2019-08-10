@@ -31,6 +31,7 @@ set(TESTS
   basis_space
   hilbert_space
   monomial_action
+  monomial_action_fermion
   qoperator
 )
 
