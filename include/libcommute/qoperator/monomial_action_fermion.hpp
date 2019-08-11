@@ -13,6 +13,7 @@
 #ifndef LIBCOMMUTE_MONOMIAL_ACTION_FERMION_HPP_
 #define LIBCOMMUTE_MONOMIAL_ACTION_FERMION_HPP_
 
+#include "basis_space_fermion.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
 #include "state_vector.hpp"

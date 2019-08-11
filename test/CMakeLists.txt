@@ -32,6 +32,7 @@ set(TESTS
   hilbert_space
   monomial_action
   monomial_action_fermion
+  monomial_action_boson
   qoperator
 )
 

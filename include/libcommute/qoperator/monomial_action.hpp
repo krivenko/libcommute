@@ -43,7 +43,7 @@ struct unknown_generator : public std::runtime_error {
   std::unique_ptr<generator<IndexTypes...>> generator_ptr;
   inline static std::string make_what(generator<IndexTypes...> const& g) {
     std::stringstream ss;
-    ss << "Action of generator " << g << " on a state vector is unknown";
+    ss << "Action of generator " << g << " on a state vector is undefined";
     return ss.str();
   }
   unknown_generator(generator<IndexTypes...> const& g) :

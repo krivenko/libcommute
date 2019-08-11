@@ -13,21 +13,23 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/generator_boson.hpp>
 #include <libcommute/expression/monomial.hpp>
 #include <libcommute/qoperator/hilbert_space.hpp>
 #include <libcommute/qoperator/monomial_action.hpp>
-#include <libcommute/qoperator/monomial_action_fermion.hpp>
+#include <libcommute/qoperator/monomial_action_boson.hpp>
 
 #include "./monomial_action.hpp"
 
+#include <algorithm>
 #include <bitset>
+#include <cmath>
 #include <utility>
 #include <vector>
 
 using namespace libcommute;
 
-TEST_CASE("Action of a fermionic monomial on an index",
+TEST_CASE("Action of a bosonic monomial on an index",
           "[monomial_action_fermion]") {
 
   using namespace static_indices;
@@ -35,41 +37,67 @@ TEST_CASE("Action of a fermionic monomial on an index",
   using mon_type = monomial<int>;
   using hs_type = hilbert_space<int>;
   using mock_bs_type = basis_space_padding<int>;
-  using ma_type = monomial_action<fermion>;
+  using ma_type = monomial_action<boson>;
 
-  constexpr int n_ops = 4;
+  constexpr int n_ops = 3;
+  constexpr int n_op_bits = 6;
   constexpr int n_mock_spaces = 2;
   constexpr int n_pad_bits = 2*n_mock_spaces;
+  constexpr int total_n_bits = n_op_bits + n_pad_bits;
 
-  std::vector<generator_fermion<int>> gens;
+  std::vector<generator_boson<int>> gens;
   for(int i = 0; i < n_ops; ++i) {
     gens.emplace_back(true, i);
     gens.emplace_back(false, i);
   }
 
-  auto ref_c_dag_c_action = [](generator<int> const& g,
-                              sv_index_type in_index,
-                              sv_index_type & out_index,
-                              double & coeff) {
+  hs_type hs;
+  for(int i = 0; i < n_mock_spaces; ++i) hs.add(mock_bs_type(i));
+  std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 7}, {8, 9}};
+  for(int i = 0; i < n_ops; ++i) {
+    int n_bits = bit_ranges[i].second - bit_ranges[i].first + 1;
+    hs.add(make_space_boson(n_bits, i));
+  }
+
+  auto ref_a_dag_a_action = [&](generator<int> const& g,
+                                sv_index_type in_index,
+                                sv_index_type & out_index,
+                                double & coeff) {
     int ind = std::get<0>(g.indices());
-    bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
-    std::bitset<n_ops + n_pad_bits> in_bitset(in_index);
-    if(dagger && in_bitset.test(ind + n_pad_bits)) return false;
-    if(!dagger && !in_bitset.test(ind + n_pad_bits)) return false;
-    // Count particles
+    bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
+
+    auto const& bit_range = bit_ranges[ind];
+    int n_bits = bit_range.second - bit_range.first + 1;
+    int n_max = (1 << n_bits) - 1;
+
+    std::bitset<total_n_bits> in_bitset(in_index);
+
     int n = 0;
-    for(int i = 0; i < ind; ++i) n += in_bitset[i + n_pad_bits];
-    out_index = dagger ? in_bitset.set(ind + n_pad_bits).to_ulong() :
-                         in_bitset.reset(ind + n_pad_bits).to_ulong();
-    coeff *= (n%2 == 0 ? 1 : -1);
+    for(int i = 0; i < n_bits; ++i) {
+      n += in_bitset.test(bit_range.first + i) * (1 << i);
+    }
+
+    if(dagger) {
+      ++n;
+      if(n > n_max) return false;
+      coeff *= std::sqrt(n);
+    } else {
+      --n;
+      if(n < 0) return false;
+      coeff *= std::sqrt(n+1);
+    }
+
+    std::bitset<total_n_bits> out_bitset(in_index);
+    std::bitset<total_n_bits> n_bitset((unsigned int)n);
+    for(int i = 0; i < n_bits; ++i) {
+      out_bitset[bit_range.first + i] = n_bitset[i];
+    }
+    out_index = out_bitset.to_ulong();
+
     return true;
   };
 
-  hs_type hs;
-  for(int i = 0; i < n_mock_spaces; ++i) hs.add(mock_bs_type(i));
-  for(int i = 0; i < n_ops; ++i) hs.add(make_space_fermion(i));
-
-  std::vector<sv_index_type> in_index_list(1 << n_ops);
+  std::vector<sv_index_type> in_index_list(1 << n_op_bits);
   for(int i = 0; i < in_index_list.size(); i++)
     in_index_list[i] = (i << n_pad_bits) + (1 << n_pad_bits) - 1;
 
@@ -90,7 +118,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
       mon_type mon(gens[i]);
       check_monomial_action<ma_type>(mon,
                                      hs,
-                                     ref_c_dag_c_action,
+                                     ref_a_dag_a_action,
                                      in_index_list);
     }
   }
@@ -101,7 +129,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
         mon_type mon(gens[i], gens[j]);
         check_monomial_action<ma_type>(mon,
                                        hs,
-                                       ref_c_dag_c_action,
+                                       ref_a_dag_a_action,
                                        in_index_list);
       }
     }
@@ -114,7 +142,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
           mon_type mon(gens[i], gens[j], gens[k]);
           check_monomial_action<ma_type>(mon,
                                          hs,
-                                         ref_c_dag_c_action,
+                                         ref_a_dag_a_action,
                                          in_index_list);
         }
       }
@@ -131,7 +159,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
             mon_type mon(gens[i], gens[j], gens[k], gens[l]);
             check_monomial_action<ma_type>(mon,
                                            hs,
-                                           ref_c_dag_c_action,
+                                           ref_a_dag_a_action,
                                            in_index_list);
           }
         }

@@ -75,7 +75,7 @@ TEST_CASE("Different algebra tags", "[monomial_action_tags]") {
       );
 
       mon_type m2{make_fermion(true, "dn", 0),
-                  make_boson(false, "y", 0),
+                  make_boson(false, "x", 0),
                   make_spin(spin_component::plus, "i", 0)};
       auto m2_range = std::make_pair(m2.begin(), m2.end());
 
