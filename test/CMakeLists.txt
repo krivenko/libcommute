@@ -33,6 +33,7 @@ set(TESTS
   monomial_action
   monomial_action_fermion
   monomial_action_boson
+  monomial_action_spin
   qoperator
 )
 

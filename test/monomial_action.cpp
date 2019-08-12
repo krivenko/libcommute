@@ -68,7 +68,7 @@ TEST_CASE("Different algebra tags", "[monomial_action_tags]") {
 
     SECTION("Non-constant monomial") {
       mon_type m1{make_fermion(true, "dn", 0),
-                  make_spin(spin_component::plus, "i", 0)};
+                  make_spin(1, spin_component::plus, "i", 0)};
 
       CHECK_NOTHROW(monomial_action<fermion, spin>(
         std::make_pair(m1.begin(), m1.end()), hs)
@@ -76,7 +76,7 @@ TEST_CASE("Different algebra tags", "[monomial_action_tags]") {
 
       mon_type m2{make_fermion(true, "dn", 0),
                   make_boson(false, "x", 0),
-                  make_spin(spin_component::plus, "i", 0)};
+                  make_spin(1, spin_component::plus, "i", 0)};
       auto m2_range = std::make_pair(m2.begin(), m2.end());
 
       using ex_type = unknown_generator<std::string, int>;

@@ -20,6 +20,7 @@
 #include "../expression/generator_boson.hpp"
 
 #include <cmath>
+#include <cstdint>
 #include <vector>
 
 //
@@ -50,7 +51,7 @@ template<> class monomial_action<boson> {
     sv_index_type n_max;
 
     // n_change * (1 << shift)
-    int64_t state_change;
+    std::int64_t state_change;
   };
 
   // List of single-boson updates
@@ -82,7 +83,7 @@ public:
 
     int power = 1;
     for(;it != end_it; ++it, ++next_it) {
-      if(it->algebra_id() != boson::algebra_id())
+      if(!is_boson(*it))
         throw unknown_generator<IndexTypes...>(*it);
 
       if(next_it == end_it || *next_it != *it) {
@@ -106,8 +107,8 @@ public:
         bool dagger =
           dynamic_cast<generator_boson<IndexTypes...> const&>(*it).dagger();
 
-        int64_t n_change = dagger ? power : -power;
-        int64_t state_change = n_change * (int64_t(1) << bit_range.first);
+        std::int64_t n_change = dagger ? power : -power;
+        std::int64_t state_change = n_change * (std::int64_t(1) << shift);
 
         updates_.emplace_back(single_boson_update_t{
           shift,

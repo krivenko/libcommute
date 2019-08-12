@@ -13,11 +13,11 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
 #include <libcommute/qoperator/hilbert_space.hpp>
 #include <libcommute/qoperator/monomial_action.hpp>
-#include <libcommute/qoperator/monomial_action_boson.hpp>
+#include <libcommute/qoperator/monomial_action_spin.hpp>
 
 #include "./monomial_action.hpp"
 
@@ -29,66 +29,76 @@
 
 using namespace libcommute;
 
-TEST_CASE("Action of a bosonic monomial on an index",
-          "[monomial_action_fermion]") {
+TEST_CASE("Action of a spin monomial on an index",
+          "[monomial_action_spin]") {
 
   using namespace static_indices;
 
   using mon_type = monomial<int>;
   using hs_type = hilbert_space<int>;
   using mock_bs_type = basis_space_padding<int>;
-  using ma_type = monomial_action<boson>;
+  using ma_type = monomial_action<spin>;
 
-  constexpr int n_ops = 3;
-  constexpr int n_op_bits = 6;
+  constexpr int n_op_bits = 5;
   constexpr int n_mock_spaces = 2;
   constexpr int n_pad_bits = 2*n_mock_spaces;
   constexpr int total_n_bits = n_op_bits + n_pad_bits;
 
-  std::vector<generator_boson<int>> gens;
-  for(int i = 0; i < n_ops; ++i) {
-    gens.emplace_back(true, i);
-    gens.emplace_back(false, i);
-  }
+  std::vector<generator_spin<int>> gens;
+  gens.emplace_back(0.5, spin_component::plus, 0);
+  gens.emplace_back(0.5, spin_component::minus, 0);
+  gens.emplace_back(0.5, spin_component::z, 0);
+  gens.emplace_back(1.0, spin_component::plus, 1);
+  gens.emplace_back(1.0, spin_component::minus, 1);
+  gens.emplace_back(1.0, spin_component::z, 1);
+  gens.emplace_back(1.5, spin_component::plus, 2);
+  gens.emplace_back(1.5, spin_component::minus, 2);
+  gens.emplace_back(1.5, spin_component::z, 2);
 
   hs_type hs;
   for(int i = 0; i < n_mock_spaces; ++i) hs.add(mock_bs_type(i));
-  std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 7}, {8, 9}};
-  for(int i = 0; i < n_ops; ++i) {
-    int n_bits = bit_ranges[i].second - bit_ranges[i].first + 1;
-    hs.add(make_space_boson(n_bits, i));
-  }
+  std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 6}, {7, 8}};
+  hs.add(make_space_spin(0.5, 0));
+  hs.add(make_space_spin(1.0, 1));
+  hs.add(make_space_spin(1.5, 2));
 
-  auto ref_a_dag_a_action = [&](generator<int> const& g,
-                                sv_index_type in_index,
-                                sv_index_type & out_index,
-                                double & coeff) {
+  auto ref_spin_action = [&](generator<int> const& g,
+                             sv_index_type in_index,
+                             sv_index_type & out_index,
+                             double & coeff) {
     int ind = std::get<0>(g.indices());
-    bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
+    double s = dynamic_cast<generator_spin<int> const&>(g).spin();
+    spin_component c = dynamic_cast<generator_spin<int> const&>(g).component();
 
     auto const& bit_range = bit_ranges[ind];
     int n_bits = bit_range.second - bit_range.first + 1;
-    int n_max = (1 << n_bits) - 1;
 
     std::bitset<total_n_bits> in_bitset(in_index);
 
-    int n = 0;
+    double m = -s;
     for(int i = 0; i < n_bits; ++i) {
-      n += in_bitset.test(bit_range.first + i) * (1 << i);
+      m += in_bitset.test(bit_range.first + i) << i;
     }
 
-    if(dagger) {
-      ++n;
-      if(n > n_max) return false;
-      coeff *= std::sqrt(n);
-    } else {
-      --n;
-      if(n < 0) return false;
-      coeff *= std::sqrt(n+1);
+    switch(c) {
+      case plus:
+        m += 1;
+        if(m > s) return false;
+        coeff *= std::sqrt(s*(s+1) - (m-1)*m);
+        break;
+      case minus:
+        m -= 1;
+        if(m < -s) return false;
+        coeff *= std::sqrt(s*(s+1) - (m+1)*m);
+        break;
+      case z:
+        if(m == 0) return false;
+        coeff *= m;
+        break;
     }
 
     std::bitset<total_n_bits> out_bitset(in_index);
-    std::bitset<total_n_bits> n_bitset((unsigned int)n);
+    std::bitset<total_n_bits> n_bitset((unsigned int)(m + s));
     for(int i = 0; i < n_bits; ++i) {
       out_bitset[bit_range.first + i] = n_bitset[i];
     }
@@ -97,9 +107,18 @@ TEST_CASE("Action of a bosonic monomial on an index",
     return true;
   };
 
-  std::vector<sv_index_type> in_index_list(1 << n_op_bits);
-  for(int i = 0; i < in_index_list.size(); i++)
-    in_index_list[i] = (i << n_pad_bits) + (1 << n_pad_bits) - 1;
+  std::vector<sv_index_type> in_index_list;
+  for(sv_index_type n12 : {0, 1}) {
+    for(sv_index_type n1 : {0, 1, 2}) {
+      for(sv_index_type n32 : {0, 1, 2, 3}) {
+        sv_index_type index = (1 << n_pad_bits) - 1;
+        index += n12 << n_pad_bits;
+        index += n1 << (n_pad_bits + 1);
+        index += n32 << (n_pad_bits + 3);
+        in_index_list.push_back(index);
+      }
+    }
+  }
 
   SECTION("No operators") {
     mon_type mon;
@@ -118,7 +137,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
       mon_type mon(gens[i]);
       check_monomial_action<ma_type>(mon,
                                      hs,
-                                     ref_a_dag_a_action,
+                                     ref_spin_action,
                                      in_index_list);
     }
   }
@@ -129,7 +148,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
         mon_type mon(gens[i], gens[j]);
         check_monomial_action<ma_type>(mon,
                                        hs,
-                                       ref_a_dag_a_action,
+                                       ref_spin_action,
                                        in_index_list);
       }
     }
@@ -142,7 +161,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
           mon_type mon(gens[i], gens[j], gens[k]);
           check_monomial_action<ma_type>(mon,
                                          hs,
-                                         ref_a_dag_a_action,
+                                         ref_spin_action,
                                          in_index_list);
         }
       }
@@ -159,7 +178,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
             mon_type mon(gens[i], gens[j], gens[k], gens[l]);
             check_monomial_action<ma_type>(mon,
                                            hs,
-                                           ref_a_dag_a_action,
+                                           ref_spin_action,
                                            in_index_list);
           }
         }
