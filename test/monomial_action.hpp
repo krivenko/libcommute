@@ -90,7 +90,7 @@ void check_monomial_action(monomial<IndexTypes...> const& mon,
     CHECK(nonzero == nonzero_ref);
     if(nonzero_ref != false) {
       CHECK(out_index == out_index_ref);
-      CHECK(coeff == coeff_ref);
+      CHECK_THAT(coeff, Catch::WithinAbs(coeff_ref, 1e-10));
     }
   }
 }

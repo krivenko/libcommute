@@ -86,6 +86,7 @@ namespace dynamic_indices {
 template<typename... IndexTypes>
 inline basis_space_boson<dyn_indices>
 make_space_boson(int n_bits, IndexTypes&&... indices) {
+  assert(n_bits > 0);
   return {n_bits, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 

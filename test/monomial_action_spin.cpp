@@ -36,12 +36,12 @@ TEST_CASE("Action of a spin monomial on an index",
 
   using mon_type = monomial<int>;
   using hs_type = hilbert_space<int>;
-  using mock_bs_type = basis_space_padding<int>;
+  using pad_bs_type = basis_space_padding<int>;
   using ma_type = monomial_action<spin>;
 
   constexpr int n_op_bits = 5;
-  constexpr int n_mock_spaces = 2;
-  constexpr int n_pad_bits = 2*n_mock_spaces;
+  constexpr int n_pad_spaces = 2;
+  constexpr int n_pad_bits = 2*n_pad_spaces;
   constexpr int total_n_bits = n_op_bits + n_pad_bits;
 
   std::vector<generator_spin<int>> gens;
@@ -56,7 +56,7 @@ TEST_CASE("Action of a spin monomial on an index",
   gens.emplace_back(1.5, spin_component::z, 2);
 
   hs_type hs;
-  for(int i = 0; i < n_mock_spaces; ++i) hs.add(mock_bs_type(i));
+  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_bs_type(i));
   std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 6}, {7, 8}};
   hs.add(make_space_spin(0.5, 0));
   hs.add(make_space_spin(1.0, 1));

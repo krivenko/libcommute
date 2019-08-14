@@ -1,7 +1,6 @@
 TODO list
 =========
 
-* Finish monomial_action unit test.
 * split qoperator class into qoperator_base, qoperator and parametric_qoperator.
 * qoperator unit test.
 * qoperator_gamma unit test.

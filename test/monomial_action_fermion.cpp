@@ -34,12 +34,12 @@ TEST_CASE("Action of a fermionic monomial on an index",
 
   using mon_type = monomial<int>;
   using hs_type = hilbert_space<int>;
-  using mock_bs_type = basis_space_padding<int>;
+  using pad_bs_type = basis_space_padding<int>;
   using ma_type = monomial_action<fermion>;
 
   constexpr int n_ops = 4;
-  constexpr int n_mock_spaces = 2;
-  constexpr int n_pad_bits = 2*n_mock_spaces;
+  constexpr int n_pad_spaces = 2;
+  constexpr int n_pad_bits = 2*n_pad_spaces;
 
   std::vector<generator_fermion<int>> gens;
   for(int i = 0; i < n_ops; ++i) {
@@ -66,7 +66,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
   };
 
   hs_type hs;
-  for(int i = 0; i < n_mock_spaces; ++i) hs.add(mock_bs_type(i));
+  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_bs_type(i));
   for(int i = 0; i < n_ops; ++i) hs.add(make_space_fermion(i));
 
   std::vector<sv_index_type> in_index_list(1 << n_ops);
