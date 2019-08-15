@@ -134,7 +134,7 @@ public:
 
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) {
+                  double & coeff) const {
 
     if(vanishing_) return false;
 

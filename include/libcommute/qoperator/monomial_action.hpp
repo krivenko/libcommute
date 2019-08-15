@@ -99,7 +99,7 @@ public:
 
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) {
+                  double & coeff) const {
     return base_head::act(in_index, out_index, coeff) &&
            base_tail::act(sv_index_type(out_index), out_index, coeff);
   }
@@ -121,7 +121,7 @@ public:
 
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) {
+                  double & coeff) const {
     return base::act(in_index, out_index, coeff);
   }
 };
@@ -160,7 +160,7 @@ public:
 
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) {
+                  double & coeff) const {
     out_index = in_index;
     return true;
   }

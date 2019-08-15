@@ -13,6 +13,7 @@
 #ifndef LIBCOMMUTE_STATE_VECTOR_HPP_
 #define LIBCOMMUTE_STATE_VECTOR_HPP_
 
+#include "../metafunctions.hpp"
 #include "../scalar_traits.hpp"
 
 #include <cstdint>
@@ -30,7 +31,7 @@ using sv_index_type = std::uint64_t;
 
 // Get element type of a StateVector object
 template<typename StateVector>
-using element_type = decltype(std::declval<StateVector>()[0]);
+using element_type = remove_cvref_t<decltype(std::declval<StateVector>()[0])>;
 
 // Get size of a StateVector object (Hilbert space dimension)
 template<typename StateVector>
@@ -51,15 +52,6 @@ inline void update_add_element(StateVector & sv, sv_index_type n, T&& value) {
   sv[n] += value;
 }
 
-// Create a StateVector object of the same size as `sv`,
-// with all amplitudes set to zero
-template<typename StateVector>
-StateVector zeros_like(StateVector const& sv) {
-  StateVector res(get_size(sv));
-  set_zeros(res);
-  return res;
-}
-
 // Set all amplitudes stored in a StateVector object to zero
 template<typename StateVector>
 inline void set_zeros(StateVector & sv) {
@@ -67,6 +59,15 @@ inline void set_zeros(StateVector & sv) {
   using T = element_type<StateVector>;
   for(sv_index_type n = 0; n < size; ++n)
     sv[n] = scalar_traits<T>::make_const(0);
+}
+
+// Create a StateVector object of the same size as `sv`,
+// with all amplitudes set to zero
+template<typename StateVector>
+StateVector zeros_like(StateVector const& sv) {
+  StateVector res(get_size(sv));
+  set_zeros(res);
+  return res;
 }
 
 // Apply functor `f` to all index/non-zero amplitude pairs

@@ -16,6 +16,7 @@
 
 #include <libcommute/scalar_traits.hpp>
 
+#include <complex>
 #include <iostream>
 
 //
@@ -72,6 +73,11 @@ struct int_complex {
   friend int_complex operator*(int n, int_complex c) {return c*n;}
   friend int_complex operator*(int_complex c1, int_complex c2) {
     return {c1.re*c2.re - c1.im*c2.im, c1.re*c2.im + c1.im*c2.re};
+  }
+
+  int operator()(int m) const { return re*m; }
+  int_complex operator()(int m1, int m2) const {
+    return {(m1+m2)*re, (m1-m2)*im};
   }
 };
 
