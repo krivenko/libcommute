@@ -348,7 +348,6 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
                          gens[j]->clone(),
                          gens[k]->clone(),
                          gens[l]->clone()};
-            std::cout << mon << std::endl;
             check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
           }
         }

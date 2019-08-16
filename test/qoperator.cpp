@@ -62,12 +62,12 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
     CHECK(out == state_vector{0, 3, 0, 3});
 
     CHECK(qop2(in) == state_vector{3, -3, 0, 0});
-    CHECK(qop2 *in == state_vector{3, -3, 0, 0});
+    CHECK(qop2 * in == state_vector{3, -3, 0, 0});
     qop2(in, out);
     CHECK(out == state_vector{3, -3, 0, 0});
 
     CHECK(qop(in) == state_vector{-6, 12, 0, 6});
-    CHECK(qop *in == state_vector{-6, 12, 0, 6});
+    CHECK(qop * in == state_vector{-6, 12, 0, 6});
     qop(in, out);
     CHECK(out == state_vector{-6, 12, 0, 6});
 

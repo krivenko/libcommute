@@ -83,15 +83,15 @@ public:
           break;
         case 1:
           coeff *= std::array<double, 4>{-1,-1,1,1}[out_index];
-          out_index = std::array<sv_index_type,4>{3,2,1,0}[out_index];
+          out_index = std::array<sv_index_type, 4>{3,2,1,0}[out_index];
           break;
         case 2:
           coeff *= std::array<std::complex<double>, 4>{-I,I,I,-I}[out_index];
-          out_index = std::array<sv_index_type,4>{3,2,1,0}[out_index];
+          out_index = std::array<sv_index_type, 4>{3,2,1,0}[out_index];
           break;
         case 3:
           coeff *= std::array<std::complex<double>, 4>{-1,1,1,-1}[out_index];
-          out_index = std::array<sv_index_type,4>{2,3,0,1}[out_index];
+          out_index = std::array<sv_index_type, 4>{2,3,0,1}[out_index];
           break;
       }
     }
