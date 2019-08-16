@@ -126,9 +126,10 @@ public:
       sqr_roots_[n] = std::sqrt(double(n));
   }
 
+  template<typename ScalarType>
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) const {
+                  ScalarType & coeff) const {
 
     out_index = in_index;
     for(int b = updates_.size() - 1; b >= 0; --b) {

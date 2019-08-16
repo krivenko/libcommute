@@ -114,16 +114,13 @@ private:
   template<typename StateVector>
   inline void act_impl(StateVector const& src, StateVector & dst) const {
     sv_index_type out_index;
-    double coeff;
     foreach(src, [&,this](sv_index_type in_index,
                           element_type<StateVector> const& a) {
       for(auto const& ma : this->m_actions_) {
-        coeff = 1;
+        auto coeff = scalar_traits<ScalarType>::make_const(1);
         bool nonzero = ma.first.act(in_index, out_index, coeff);
         if(nonzero)
-          update_add_element(dst, out_index,
-                             ma.second *
-                             scalar_traits<ScalarType>::make_const(coeff) * a);
+          update_add_element(dst, out_index, ma.second * coeff * a);
       }
     });
   }
@@ -207,19 +204,15 @@ private:
 
     // Apply monomials
     sv_index_type out_index;
-    double coeff;
     foreach(src, [&,this](sv_index_type in_index,
                           element_type<StateVector> const& a) {
       for(size_t n = 0; n < base::m_actions_.size(); ++n) {
-        coeff = 1;
+        auto coeff = scalar_traits<ScalarType>::make_const(1);
         bool nz = base::m_actions_[n].first.act(in_index, out_index, coeff);
         if(nz) {
           auto eval_coeff_ptr =
             static_cast<evaluated_coeff_t*>(evaluated_coeffs_[n].get());
-          update_add_element(dst, out_index,
-            (*eval_coeff_ptr) *
-            scalar_traits<ScalarType>::make_const(coeff) * a
-          );
+          update_add_element(dst, out_index, (*eval_coeff_ptr) * coeff * a);
         }
       }
     });

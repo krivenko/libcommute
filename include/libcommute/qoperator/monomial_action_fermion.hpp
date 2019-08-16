@@ -73,9 +73,10 @@ public:
     annihilation_count_mask = compute_count_mask(annihilation_set_bits, range);
   }
 
+  template<typename ScalarType>
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) const {
+                  ScalarType & coeff) const {
     // Fermions
     if ((in_index & annihilation_mask) != annihilation_mask)
       return false; // Zero after acting with the annihilation operators

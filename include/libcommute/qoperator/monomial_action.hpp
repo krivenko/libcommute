@@ -97,9 +97,10 @@ public:
       base_tail(m_range, hs) {
   }
 
+  template<typename ScalarType>
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) const {
+                  ScalarType & coeff) const {
     return base_head::act(in_index, out_index, coeff) &&
            base_tail::act(sv_index_type(out_index), out_index, coeff);
   }
@@ -119,9 +120,10 @@ public:
     : base(m_range, hs) {
   }
 
+  template<typename ScalarType>
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) const {
+                  ScalarType & coeff) const {
     return base::act(in_index, out_index, coeff);
   }
 };
@@ -158,9 +160,10 @@ public:
       throw unknown_generator<IndexTypes...>(*m_range.first);
   }
 
+  template<typename ScalarType>
   inline bool act(sv_index_type in_index,
                   sv_index_type & out_index,
-                  double & coeff) const {
+                  ScalarType & coeff) const {
     out_index = in_index;
     return true;
   }

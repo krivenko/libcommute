@@ -35,6 +35,7 @@ set(TESTS
   monomial_action_boson
   monomial_action_spin
   qoperator
+  qoperator_gamma
 )
 
 # Build C++ unit tests
