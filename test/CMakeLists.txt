@@ -36,6 +36,7 @@ set(TESTS
   monomial_action_spin
   qoperator
   qoperator_gamma
+  disjoint_sets
 )
 
 # Build C++ unit tests
