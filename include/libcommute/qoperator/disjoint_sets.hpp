@@ -26,7 +26,6 @@ namespace libcommute {
 //
 
 class disjoint_sets {
-
   mutable std::vector<std::size_t> parents_;
   std::vector<std::size_t> ranks_;
   std::size_t n_sets_;
@@ -104,6 +103,24 @@ public:
     std::size_t x_root = find_root(x);
     std::size_t y_root = find_root(y);
     return x_root != y_root ? root_union(x_root, y_root) : x_root;
+  }
+
+  // Compress all sets (make every element represented by its parent)
+  void compress_sets() {
+    for(std::size_t x : parents_) find_root(x);
+  }
+
+  // Normalize all sets (make every representative be the smallest in its set)
+  void normalize_sets() {
+    for(std::size_t x = 0; x < size(); ++x) {
+      std::size_t p = parents_[x];
+      if(x > p || parents_[p] != p)
+        parents_[x] = parents_[p];
+      else {
+        parents_[p] = x;
+        parents_[x] = x;
+      }
+    }
   }
 };
 

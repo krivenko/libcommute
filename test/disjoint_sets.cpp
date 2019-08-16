@@ -17,6 +17,8 @@
 
 using namespace libcommute;
 
+#include <iostream>
+
 TEST_CASE("Disjoint sets data structure", "[disjoint_sets]") {
 
   disjoint_sets ds(10);
@@ -62,5 +64,14 @@ TEST_CASE("Disjoint sets data structure", "[disjoint_sets]") {
     std::size_t root2 = ds.find_root(2);
     CHECK(ds.root_union(root1, root2) == 8);
     CHECK(ds.set_union(5, 6) == 8);
+  }
+
+  SECTION("normalize_sets()") {
+    ds.set_union(4, 7);
+    ds.set_union(7, 1);
+    CHECK(ds.find_root(7) == 4);
+    ds.compress_sets();
+    ds.normalize_sets();
+    CHECK(ds.find_root(7) == 1);
   }
 }
