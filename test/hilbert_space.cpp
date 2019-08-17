@@ -74,6 +74,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs_type hs_empty;
     CHECK(hs_empty.size() == 0);
     CHECK(hs_empty.total_n_bits() == 0);
+    CHECK(hs_empty.dim() == 1);
 
     hs_type hs1(bs_s32_i, bs_s32_j,
                 bs_s1_i, bs_s1_j,
@@ -83,6 +84,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
                );
     CHECK(hs1.size() == 10);
     CHECK(hs1.total_n_bits() == 20);
+    CHECK(hs1.dim() == 1048576);
 
     hs_type hs2(hs1);
     CHECK(hs2 == hs1);
@@ -126,6 +128,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
               );
     CHECK(hs.size() == 8);
     CHECK(hs.total_n_bits() == 14);
+    CHECK(hs.dim() == 16384);
     CHECK(hs.algebra_bit_range(fermion::algebra_id()) == std::make_pair(0, 1));
     CHECK(hs.algebra_bit_range(boson::algebra_id()) == std::make_pair(2, 5));
     CHECK(hs.algebra_bit_range(spin::algebra_id()) == std::make_pair(6, 13));
@@ -165,6 +168,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
                          ) {
       CHECK(hs.size() == size);
       CHECK(hs.total_n_bits() == total_n_bits);
+      CHECK(hs.dim() == 1 << total_n_bits);
       CHECK(hs.has(bs));
       CHECK(hs.bit_range(bs) == std::make_pair(b, e));
 
@@ -231,6 +235,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs_type hs1(expr);
     CHECK(hs1.size() == 4);
     CHECK(hs1.total_n_bits() == 6);
+    CHECK(hs1.dim() == 64);
     CHECK(hs1.has(bs_f_dn));
     CHECK(hs1.bit_range(bs_f_dn) == std::make_pair(0, 0));
     CHECK(hs1.has(bs_f_up));
@@ -241,6 +246,12 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs1.bit_range(bs_s32_j) == std::make_pair(4, 5));
     CHECK(make_hilbert_space(expr) == hs1);
 
+    SECTION("foreach()") {
+      size_t count = 0;
+      foreach(hs1, [&count](int i) { count += i; });
+      CHECK(count == 2016);
+    }
+
     expr += a_dag("x", 0) + a("y", 0);
 
     using ex_type = bs_construction_failure<std::string, int>;
@@ -249,6 +260,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs_type hs2(expr, boson_bs_constructor(4));
     CHECK(hs2.size() == 6);
     CHECK(hs2.total_n_bits() == 14);
+    CHECK(hs2.dim() == 16384);
     CHECK(hs2.has(bs_f_dn));
     CHECK(hs2.bit_range(bs_f_dn) == std::make_pair(0, 0));
     CHECK(hs2.has(bs_f_up));

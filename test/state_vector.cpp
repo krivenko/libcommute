@@ -15,6 +15,8 @@
 
 #include <libcommute/qoperator/state_vector.hpp>
 
+#include <type_traits>
+
 using namespace libcommute;
 
 TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
@@ -22,24 +24,39 @@ TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
   SECTION("real") {
     std::vector<double> v{1, 2, 3};
 
+    CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
     CHECK(get_size(v) == 3);
     CHECK(get_element(v, 1) == 2);
-    get_element(v, 1) = 4;
-    CHECK(get_element(v, 1) == 4);
+    update_add_element(v, 1, 4);
+    CHECK(get_element(v, 1) == 6);
     CHECK(zeros_like(v) == std::vector<double>{0, 0, 0});
-    set_seros(v);
+    set_zeros(v);
     CHECK(v == std::vector<double>{0, 0, 0});
+
+    SECTION("foreach()") {
+      std::vector<double> v{1, 2, 0, 4};
+      foreach(v, [](int i, double a) { CHECK(i + 1 == a); });
+    }
   }
 
   SECTION("complex") {
     std::vector<std::complex<double>> v{1, 2, 3};
 
+    CHECK(std::is_same<element_type_t<decltype(v)>,
+          std::complex<double>>::value);
     CHECK(get_size(v) == 3);
-    CHECK(get_element(v, 1) == 2);
-    get_element(v, 1) = 4;
-    CHECK(get_element(v, 1) == 4);
+    CHECK(get_element(v, 1) == 2.0);
+    update_add_element(v, 1, 4);
+    CHECK(get_element(v, 1) == 6.0);
     CHECK(zeros_like(v) == std::vector<std::complex<double>>{0, 0, 0});
-    set_seros(v);
+    set_zeros(v);
     CHECK(v == std::vector<std::complex<double>>{0, 0, 0});
+
+    SECTION("foreach()") {
+      std::vector<std::complex<double>> v{1, 2, 0, 4};
+      foreach(v, [](int i, std::complex<double> a) {
+        CHECK(double(i + 1) == a);
+      });
+    }
   }
 }

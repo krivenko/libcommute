@@ -26,6 +26,7 @@
 #include "qoperator/basis_space_boson.hpp"
 #include "qoperator/basis_space_spin.hpp"
 #include "qoperator/qoperator.hpp"
+#include "qoperator/space_partition.hpp"
 
 // C++17-only headers
 #if __cplusplus >= 201703L

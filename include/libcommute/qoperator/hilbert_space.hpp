@@ -206,6 +206,20 @@ public:
   // in this Hilbert space
   int total_n_bits() const { return bit_range_end_ + 1; }
 
+  // Dimension of this Hilbert space
+  size_t dim() const { return size_t(1) << total_n_bits(); }
+  friend size_t get_dim(hilbert_space const& hs) { return hs.dim(); }
+
+  // Apply functor `f` to all basis state indices
+  template<typename Functor>
+  inline friend void foreach(hilbert_space const& hs, Functor&& f) {
+  sv_index_type dim = hs.dim();
+  for(sv_index_type index = 0; index < dim; ++index) {
+    f(index);
+  }
+}
+
+
 private:
 
   // Recompute bit ranges in basis_spaces_

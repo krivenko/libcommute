@@ -28,6 +28,7 @@ set(TESTS
   hc
   commutators
   gamma
+  state_vector
   basis_space
   hilbert_space
   monomial_action
@@ -37,6 +38,8 @@ set(TESTS
   qoperator
   qoperator_gamma
   disjoint_sets
+  sparse_state_vector
+  space_partition
 )
 
 # Build C++ unit tests
