@@ -74,21 +74,20 @@ public:
   }
 
   template<typename ScalarType>
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
     // Fermions
-    if ((in_index & annihilation_mask) != annihilation_mask)
+    if ((index & annihilation_mask) != annihilation_mask)
       return false; // Zero after acting with the annihilation operators
 
-    sv_index_type inter_index = in_index & ~annihilation_mask;
+    sv_index_type inter_index = index & ~annihilation_mask;
 
     if (((inter_index ^ creation_mask) & creation_mask) != creation_mask)
       return false; // Zero after acting with the creation operators
 
-    out_index = ~(~inter_index & ~creation_mask);
+    index = ~(~inter_index & ~creation_mask);
     bool minus = parity_number_of_bits((inter_index & annihilation_count_mask) ^
-                                       (out_index & creation_count_mask)
+                                       (index & creation_count_mask)
                                       );
     if(minus) coeff *= -1;
     return true;

@@ -50,14 +50,12 @@ public:
 template<typename RefGenAction, typename... IndexTypes>
 bool ref_monomial_action(monomial<IndexTypes...> const& mon,
                          RefGenAction const& ga,
-                         sv_index_type in_index,
-                         sv_index_type & out_index,
+                         sv_index_type & index,
                          double & coeff
                          ) {
   for(auto it = mon.rbegin(); it != mon.rend(); ++it) {
-    bool nonzero = ga(*it, in_index, out_index, coeff);
+    bool nonzero = ga(*it, index, coeff);
     if(!nonzero) return false;
-    in_index = out_index;
   }
   return true;
 }
@@ -75,15 +73,14 @@ void check_monomial_action(monomial<IndexTypes...> const& mon,
 
   for(auto in_index : in_index_list) {
     double coeff = 2;
-    sv_index_type out_index;
-    bool nonzero = ma.act(in_index, out_index, coeff);
+    sv_index_type out_index = in_index;
+    bool nonzero = ma.act(out_index, coeff);
 
     // Reference
     double coeff_ref = 2;
-    sv_index_type out_index_ref;
+    sv_index_type out_index_ref = in_index;
     bool nonzero_ref = ref_monomial_action(mon,
                                            ga,
-                                           in_index,
                                            out_index_ref,
                                            coeff_ref);
     // Checks

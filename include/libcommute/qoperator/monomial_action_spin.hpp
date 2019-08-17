@@ -127,27 +127,25 @@ public:
   }
 
   template<typename ScalarType>
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
 
-    out_index = in_index;
     for(int b = updates_.size() - 1; b >= 0; --b) {
       auto const& update = updates_[b];
-      std::int64_t n = (out_index >> update.shift) & update.mask;
+      std::int64_t n = (index >> update.shift) & update.mask;
       switch(update.c) {
         case plus: {
           if(n + update.power > update.s2) return false;
           for(int d = 0; d < update.power; ++d)
             coeff *= sqr_root((update.s2 - (n+d))*(n+d + 1));
-          out_index += update.power << update.shift;
+          index += update.power << update.shift;
         }
         break;
         case minus: {
           if(n - std::int64_t(update.power) < 0) return false;
           for(int d = 0; d < update.power; ++d)
             coeff *= sqr_root((update.s2 - (n-d) + 1)*(n-d));
-          out_index -= update.power << update.shift;
+          index -= update.power << update.shift;
         }
         break;
         case z: {

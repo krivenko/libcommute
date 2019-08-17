@@ -133,17 +133,15 @@ public:
   }
 
   template<typename ScalarType>
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
 
     if(vanishing_) return false;
 
-    out_index = in_index;
     for(int b = updates_.size() - 1; b >= 0; --b) {
       auto const& update = updates_[b];
 
-      int64_t n_part = (out_index >> update.shift) & update.mask;
+      int64_t n_part = (index >> update.shift) & update.mask;
       int64_t new_n_part = n_part + update.n_change;
       if(new_n_part < 0 || new_n_part > update.n_max) return false;
 
@@ -154,7 +152,7 @@ public:
         for(int d = 0; d <= -update.n_change-1; ++d)
           coeff *= sqr_root(n_part - d);
       }
-      out_index += update.state_change;
+      index += update.state_change;
     }
     return true;
   }

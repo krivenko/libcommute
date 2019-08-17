@@ -55,7 +55,8 @@ TEST_CASE("Different algebra tags", "[monomial_action_tags]") {
       sv_index_type out_index;
       double coeff = 10;
       for(sv_index_type in_index = 0; in_index < (1 << 7); ++in_index) {
-        bool r = ma.act(in_index, out_index, coeff);
+        out_index = in_index;
+        bool r = ma.act(out_index, coeff);
         CHECK(r);
         CHECK(out_index == in_index);
         CHECK(coeff == 10);
@@ -146,27 +147,25 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
 
   // Fermions
   auto ref_c_dag_c_action = [](generator<int> const& g,
-                              sv_index_type in_index,
-                              sv_index_type & out_index,
+                              sv_index_type & index,
                               double & coeff) {
     int ind = std::get<0>(g.indices());
     bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
-    std::bitset<total_n_bits> in_bitset(in_index);
+    std::bitset<total_n_bits> in_bitset(index);
     if(dagger && in_bitset.test(ind)) return false;
     if(!dagger && !in_bitset.test(ind)) return false;
 
     int n = 0;
     for(int i = 0; i < ind; ++i) n += in_bitset[i];
-    out_index = dagger ? in_bitset.set(ind).to_ulong() :
-                         in_bitset.reset(ind).to_ulong();
+    index = dagger ? in_bitset.set(ind).to_ulong() :
+                     in_bitset.reset(ind).to_ulong();
     coeff *= (n%2 == 0 ? 1 : -1);
     return true;
   };
 
   // Bosons
   auto ref_a_dag_a_action = [&](generator<int> const& g,
-                              sv_index_type in_index,
-                              sv_index_type & out_index,
+                              sv_index_type & index,
                               double & coeff) {
     int ind = std::get<0>(g.indices());
     bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
@@ -177,7 +176,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     int n_bits = bit_range.second - bit_range.first + 1;
     int n_max = (1 << n_bits) - 1;
 
-    std::bitset<total_n_bits> in_bitset(in_index);
+    std::bitset<total_n_bits> in_bitset(index);
 
     int n = 0;
     for(int i = 0; i < n_bits; ++i) {
@@ -194,20 +193,19 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
       coeff *= std::sqrt(n+1);
     }
 
-    std::bitset<total_n_bits> out_bitset(in_index);
+    std::bitset<total_n_bits> out_bitset(index);
     std::bitset<total_n_bits> n_bitset((unsigned int)n);
     for(int i = 0; i < n_bits; ++i) {
       out_bitset[bit_range.first + i] = n_bitset[i];
     }
-    out_index = out_bitset.to_ulong();
+    index = out_bitset.to_ulong();
 
     return true;
   };
 
   // Spins
   auto ref_spin_action = [&](generator<int> const& g,
-                             sv_index_type in_index,
-                             sv_index_type & out_index,
+                             sv_index_type & index,
                              double & coeff) {
     int ind = std::get<0>(g.indices());
     double s = dynamic_cast<generator_spin<int> const&>(g).spin();
@@ -218,7 +216,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     auto const& bit_range = bit_ranges[ind];
     int n_bits = bit_range.second - bit_range.first + 1;
 
-    std::bitset<total_n_bits> in_bitset(in_index);
+    std::bitset<total_n_bits> in_bitset(index);
 
     double m = -s;
     for(int i = 0; i < n_bits; ++i) {
@@ -242,12 +240,12 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
         break;
     }
 
-    std::bitset<total_n_bits> out_bitset(in_index);
+    std::bitset<total_n_bits> out_bitset(index);
     std::bitset<total_n_bits> n_bitset((unsigned int)(m + s));
     for(int i = 0; i < n_bits; ++i) {
       out_bitset[bit_range.first + i] = n_bitset[i];
     }
-    out_index = out_bitset.to_ulong();
+    index = out_bitset.to_ulong();
 
     return true;
   };
@@ -255,16 +253,15 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
   // General case
 
   auto ref_action = [&](generator<int> const& g,
-                        sv_index_type in_index,
-                        sv_index_type & out_index,
+                        sv_index_type & index,
                         double & coeff) {
     switch(g.algebra_id()) {
       case fermion::algebra_id():
-        return ref_c_dag_c_action(g, in_index, out_index, coeff);
+        return ref_c_dag_c_action(g, index, coeff);
       case boson::algebra_id():
-        return ref_a_dag_a_action(g, in_index, out_index, coeff);
+        return ref_a_dag_a_action(g, index, coeff);
       case spin::algebra_id():
-        return ref_spin_action(g, in_index, out_index, coeff);
+        return ref_spin_action(g, index, coeff);
     }
     return false;
   };
@@ -303,8 +300,8 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     ma_type ma(std::make_pair(mon.begin(), mon.end()), hs);
     for(auto in_index : in_index_list) {
       double coeff = 2;
-      sv_index_type out_index;
-      bool nonzero = ma.act(in_index, out_index, coeff);
+      sv_index_type out_index = in_index;
+      bool nonzero = ma.act(out_index, coeff);
       CHECK(nonzero);
       CHECK(out_index == in_index);
       CHECK(coeff == 2);

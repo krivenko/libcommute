@@ -60,8 +60,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
   }
 
   auto ref_a_dag_a_action = [&](generator<int> const& g,
-                                sv_index_type in_index,
-                                sv_index_type & out_index,
+                                sv_index_type & index,
                                 double & coeff) {
     int ind = std::get<0>(g.indices());
     bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
@@ -70,7 +69,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
     int n_bits = bit_range.second - bit_range.first + 1;
     int n_max = (1 << n_bits) - 1;
 
-    std::bitset<total_n_bits> in_bitset(in_index);
+    std::bitset<total_n_bits> in_bitset(index);
 
     int n = 0;
     for(int i = 0; i < n_bits; ++i) {
@@ -87,12 +86,12 @@ TEST_CASE("Action of a bosonic monomial on an index",
       coeff *= std::sqrt(n+1);
     }
 
-    std::bitset<total_n_bits> out_bitset(in_index);
+    std::bitset<total_n_bits> out_bitset(index);
     std::bitset<total_n_bits> n_bitset((unsigned int)n);
     for(int i = 0; i < n_bits; ++i) {
       out_bitset[bit_range.first + i] = n_bitset[i];
     }
-    out_index = out_bitset.to_ulong();
+    index = out_bitset.to_ulong();
 
     return true;
   };
@@ -106,8 +105,8 @@ TEST_CASE("Action of a bosonic monomial on an index",
     ma_type ma(std::make_pair(mon.begin(), mon.end()), hs);
     for(auto in_index : in_index_list) {
       double coeff = 2;
-      sv_index_type out_index;
-      bool nonzero = ma.act(in_index, out_index, coeff);
+      sv_index_type out_index = in_index;
+      bool nonzero = ma.act(out_index, coeff);
       CHECK(nonzero);
       CHECK(out_index == in_index);
       CHECK(coeff == 2);

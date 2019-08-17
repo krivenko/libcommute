@@ -98,11 +98,9 @@ public:
   }
 
   template<typename ScalarType>
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
-    return base_head::act(in_index, out_index, coeff) &&
-           base_tail::act(sv_index_type(out_index), out_index, coeff);
+    return base_head::act(index, coeff) && base_tail::act(index, coeff);
   }
 };
 
@@ -121,10 +119,9 @@ public:
   }
 
   template<typename ScalarType>
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
-    return base::act(in_index, out_index, coeff);
+    return base::act(index, coeff);
   }
 };
 
@@ -161,10 +158,8 @@ public:
   }
 
   template<typename ScalarType>
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
-    out_index = in_index;
     return true;
   }
 };

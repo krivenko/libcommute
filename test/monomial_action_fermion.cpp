@@ -48,19 +48,18 @@ TEST_CASE("Action of a fermionic monomial on an index",
   }
 
   auto ref_c_dag_c_action = [](generator<int> const& g,
-                              sv_index_type in_index,
-                              sv_index_type & out_index,
+                              sv_index_type & index,
                               double & coeff) {
     int ind = std::get<0>(g.indices());
     bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
-    std::bitset<n_ops + n_pad_bits> in_bitset(in_index);
+    std::bitset<n_ops + n_pad_bits> in_bitset(index);
     if(dagger && in_bitset.test(ind + n_pad_bits)) return false;
     if(!dagger && !in_bitset.test(ind + n_pad_bits)) return false;
     // Count particles
     int n = 0;
     for(int i = 0; i < ind; ++i) n += in_bitset[i + n_pad_bits];
-    out_index = dagger ? in_bitset.set(ind + n_pad_bits).to_ulong() :
-                         in_bitset.reset(ind + n_pad_bits).to_ulong();
+    index = dagger ? in_bitset.set(ind + n_pad_bits).to_ulong() :
+                     in_bitset.reset(ind + n_pad_bits).to_ulong();
     coeff *= (n%2 == 0 ? 1 : -1);
     return true;
   };
@@ -78,8 +77,8 @@ TEST_CASE("Action of a fermionic monomial on an index",
     ma_type ma(std::make_pair(mon.begin(), mon.end()), hs);
     for(auto in_index : in_index_list) {
       double coeff = 2;
-      sv_index_type out_index;
-      bool nonzero = ma.act(in_index, out_index, coeff);
+      sv_index_type out_index = in_index;
+      bool nonzero = ma.act(out_index, coeff);
       CHECK(nonzero);
       CHECK(out_index == in_index);
       CHECK(coeff == 2);

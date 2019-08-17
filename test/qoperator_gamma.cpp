@@ -72,26 +72,24 @@ public:
     std::reverse(index_sequence.begin(), index_sequence.end());
   }
 
-  inline bool act(sv_index_type in_index,
-                  sv_index_type & out_index,
+  inline bool act(sv_index_type & index,
                   std::complex<double> & coeff) const {
-    out_index = in_index;
-    for(int index : index_sequence) {
-      switch(index) {
+    for(int i : index_sequence) {
+      switch(i) {
         case 0:
-          coeff *= std::array<double, 4>{1,1,-1,-1}[out_index];
+          coeff *= std::array<double, 4>{1,1,-1,-1}[index];
           break;
         case 1:
-          coeff *= std::array<double, 4>{-1,-1,1,1}[out_index];
-          out_index = std::array<sv_index_type, 4>{3,2,1,0}[out_index];
+          coeff *= std::array<double, 4>{-1,-1,1,1}[index];
+          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
           break;
         case 2:
-          coeff *= std::array<std::complex<double>, 4>{-I,I,I,-I}[out_index];
-          out_index = std::array<sv_index_type, 4>{3,2,1,0}[out_index];
+          coeff *= std::array<std::complex<double>, 4>{-I,I,I,-I}[index];
+          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
           break;
         case 3:
-          coeff *= std::array<std::complex<double>, 4>{-1,1,1,-1}[out_index];
-          out_index = std::array<sv_index_type, 4>{2,3,0,1}[out_index];
+          coeff *= std::array<std::complex<double>, 4>{-1,1,1,-1}[index];
+          index = std::array<sv_index_type, 4>{2,3,0,1}[index];
           break;
       }
     }
