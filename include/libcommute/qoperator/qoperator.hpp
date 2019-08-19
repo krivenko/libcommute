@@ -42,7 +42,7 @@ public:
 
   using scalar_type = ScalarType;
 
-  qoperator_base() = delete;
+  qoperator_base() = default;
 
   template<typename... IndexTypes>
   qoperator_base(expression<scalar_type, IndexTypes...> const& expr,
@@ -54,6 +54,12 @@ public:
         m.coeff
       );
     }
+  }
+
+  // Add monomial to the list of actions
+  void add_monomial_action(monomial_action_t const& ma,
+                           scalar_type const& coeff) {
+    m_actions_.emplace_back(ma, coeff);
   }
 
   // Value semantics
@@ -164,6 +170,13 @@ public:
     return res;
   }
 
+  template<typename... CoeffArgs>
+#ifndef LIBCOMMUTE_NO_STD_INVOKE_RESULT
+  using evaluated_coeff_t = std::invoke_result_t<ScalarType, CoeffArgs...>;
+#else
+  using evaluated_coeff_t = invoke_result_t<ScalarType, CoeffArgs...>;
+#endif
+
   // Act on state `src` and return the resulting state via `dst`.
   //
   // Coefficients in front of monomials of the corresponding polynomial
@@ -177,6 +190,22 @@ public:
     act_impl(src, dst, std::forward<CoeffArgs>(args)...);
   }
 
+  // Transfrom this parametric operator into the non-parametric form
+  //
+  // Coefficients in front of monomials of the corresponding polynomial
+  // expression are invoked with the `args` as arguments to produce
+  // the output coefficient values.
+  template<typename... CoeffArgs>
+  inline qoperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...>
+  at(CoeffArgs&&... args) const {
+    qoperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...> qop;
+    for(auto const& m : base::m_actions_) {
+      qop.add_monomial_action(m.first,
+                              m.second(std::forward<CoeffArgs>(args)...));
+    }
+    return qop;
+  }
+
 private:
 
   // Type-erased preallocated container for evaluated values of monomial
@@ -188,16 +217,11 @@ private:
   inline void act_impl(StateVector const& src,
                        StateVector & dst,
                        CoeffArgs&&... args) const {
-
-#ifndef LIBCOMMUTE_NO_STD_INVOKE_RESULT
-    using evaluated_coeff_t = std::invoke_result_t<ScalarType, CoeffArgs...>;
-#else
-    using evaluated_coeff_t = invoke_result_t<ScalarType, CoeffArgs...>;
-#endif
+    using eval_coeff_t = evaluated_coeff_t<CoeffArgs...>;
 
     // Evaluate coefficients
     for(size_t n = 0; n < base::m_actions_.size(); ++n) {
-      evaluated_coeffs_[n].reset(new evaluated_coeff_t(
+      evaluated_coeffs_[n].reset(new eval_coeff_t(
         base::m_actions_[n].second(std::forward<CoeffArgs>(args)...))
       );
     }
@@ -211,7 +235,7 @@ private:
         bool nz = base::m_actions_[n].first.act(index, coeff);
         if(nz) {
           auto eval_coeff_ptr =
-            static_cast<evaluated_coeff_t*>(evaluated_coeffs_[n].get());
+            static_cast<eval_coeff_t*>(evaluated_coeffs_[n].get());
           update_add_element(dst, index, (*eval_coeff_ptr) * coeff * a);
         }
       }

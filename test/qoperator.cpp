@@ -173,6 +173,18 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
     CHECK(out == state_vector{15, -15, 0, 0});
     qop(in, out, 5);
     CHECK(out == state_vector{-30, 60, 0, 30});
+
+    SECTION("at()") {
+      auto qop1at = qop1.at(5);
+      qop1at(in, out);
+      CHECK(out == state_vector{0, 15, 0, 15});
+      auto qop2at = qop2.at(5);
+      qop2at(in, out);
+      CHECK(out == state_vector{15, -15, 0, 0});
+      auto qopat = qop.at(5);
+      qopat(in, out);
+      CHECK(out == state_vector{-30, 60, 0, 30});
+    }
   }
 
   SECTION("2 arguments") {
@@ -185,5 +197,17 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
     CHECK(out == state_vector{30, -30, 0, 0});
     qop(in, out, 5, 5);
     CHECK(out == state_vector{-60, 120, 0, 60});
+
+    SECTION("at()") {
+      auto qop1at = qop1.at(5, 5);
+      qop1at(in, out);
+      CHECK(out == state_vector{0, 30, 0, 30});
+      auto qop2at = qop2.at(5, 5);
+      qop2at(in, out);
+      CHECK(out == state_vector{30, -30, 0, 0});
+      auto qopat = qop.at(5, 5);
+      qopat(in, out);
+      CHECK(out == state_vector{-60, 120, 0, 60});
+    }
   }
 }
