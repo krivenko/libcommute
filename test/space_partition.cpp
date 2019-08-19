@@ -16,6 +16,8 @@
 #include <libcommute/expression/factories.hpp>
 #include <libcommute/qoperator/space_partition.hpp>
 
+#include <algorithm>
+#include <cmath>
 #include <set>
 #include <string>
 #include <vector>
@@ -156,7 +158,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
   }
 
   SECTION("Matrix elements") {
-    space_partition::matrix_elements_type<double> matrix_elements;
+    matrix_elements_map<double> matrix_elements;
     auto sp = space_partition(Hop, hs, matrix_elements);
 
     struct melem_t {
@@ -302,5 +304,56 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
     };
 
     CHECK(melem == ref_melem);
+  }
+
+  SECTION("merge_subspaces()") {
+
+    auto sp = space_partition(Hop, hs);
+
+    std::vector<decltype(Hop)> Cd, C, all_ops;
+    for(std::string spin : {"dn", "up"}) {
+      for(int o = 0; o < n_orbs; ++o) {
+        Cd.emplace_back(c_dag(spin, o), hs);
+        C.emplace_back(c(spin, o), hs);
+
+        all_ops.emplace_back(Cd.back());
+        all_ops.emplace_back(C.back());
+
+        sp.merge_subspaces(Cd.back(), C.back(), hs);
+      }
+    }
+
+    // Calculated classification of states
+    std::vector<std::set<sv_index_type>> v_cl(sp.n_subspaces());
+    foreach(sp, [&](int i, int subspace) { v_cl[subspace].insert(i); });
+    std::set<std::set<sv_index_type>> cl{v_cl.cbegin(), v_cl.cend()};
+
+    std::vector<double> in_state(sp.dim());
+
+    for(auto const& op : all_ops) {
+      for(auto const& i_sp : cl) {
+        std::set<sv_index_type> f_sp;
+        for(auto i : i_sp) {
+          in_state[i] = 1.0;
+          auto out_state = op(in_state);
+          foreach(out_state, [&f_sp](sv_index_type f, double a) {
+            if(std::abs(a) < 1e-10) return;
+            f_sp.insert(f);
+          });
+          in_state[i] = 0;
+        }
+
+        // op maps i_sp onto zero
+        if(f_sp.size() == 0) continue;
+
+        // Check if op maps i_sp to only one subspace
+        int n = 0;
+        for(auto const& f_sp_ref : cl) {
+          if(std::includes(f_sp_ref.cbegin(), f_sp_ref.cend(),
+                           f_sp.cbegin(), f_sp.cend())) ++n;
+        }
+        CHECK(n == 1);
+      }
+    }
   }
 }
