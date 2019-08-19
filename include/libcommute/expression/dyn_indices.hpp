@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_DYN_INDICES_HPP_
-#define LIBCOMMUTE_DYN_INDICES_HPP_
+#ifndef LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
+#define LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
 
 #include <string>
 #include <utility>

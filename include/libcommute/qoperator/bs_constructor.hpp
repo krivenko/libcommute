@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_BS_CONSTRUCTOR_HPP_
-#define LIBCOMMUTE_BS_CONSTRUCTOR_HPP_
+#ifndef LIBCOMMUTE_QOPERATOR_BS_CONSTRUCTOR_HPP_
+#define LIBCOMMUTE_QOPERATOR_BS_CONSTRUCTOR_HPP_
 
 #include "basis_space.hpp"
 #include "basis_space_fermion.hpp"

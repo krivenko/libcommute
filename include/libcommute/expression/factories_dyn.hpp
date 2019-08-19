@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_DYN_FACTORIES_HPP_
-#define LIBCOMMUTE_DYN_FACTORIES_HPP_
+#ifndef LIBCOMMUTE_EXPRESSION_DYN_FACTORIES_HPP_
+#define LIBCOMMUTE_EXPRESSION_DYN_FACTORIES_HPP_
 
 #if __cplusplus < 201703L
 #error "This header file requires a C++-17 compliant compiler"

@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_BASIS_SPACE_FERMION_HPP_
-#define LIBCOMMUTE_BASIS_SPACE_FERMION_HPP_
+#ifndef LIBCOMMUTE_QOPERATOR_BASIS_SPACE_FERMION_HPP_
+#define LIBCOMMUTE_QOPERATOR_BASIS_SPACE_FERMION_HPP_
 
 #include "../algebra_tags.hpp"
 #include "../metafunctions.hpp"

@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_GENERATOR_HPP_
-#define LIBCOMMUTE_GENERATOR_HPP_
+#ifndef LIBCOMMUTE_EXPRESSION_GENERATOR_HPP_
+#define LIBCOMMUTE_EXPRESSION_GENERATOR_HPP_
 
 #include "../utility.hpp"
 

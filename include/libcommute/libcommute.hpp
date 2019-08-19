@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_HPP_
-#define LIBCOMMUTE_HPP_
+#ifndef LIBCOMMUTE_LIBCOMMUTE_HPP_
+#define LIBCOMMUTE_LIBCOMMUTE_HPP_
 
 //
 // Main header of libcommute

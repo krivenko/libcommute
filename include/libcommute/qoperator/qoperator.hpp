@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_HPP_
-#define LIBCOMMUTE_QOPERATOR_HPP_
+#ifndef LIBCOMMUTE_QOPERATOR_QOPERATOR_HPP_
+#define LIBCOMMUTE_QOPERATOR_QOPERATOR_HPP_
 
 #include "../expression/expression.hpp"
 #include "hilbert_space.hpp"

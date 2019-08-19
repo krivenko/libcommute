@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_MONOMIAL_ACTION_FERMION_HPP_
-#define LIBCOMMUTE_MONOMIAL_ACTION_FERMION_HPP_
+#ifndef LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
+#define LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
 
 #include "basis_space_fermion.hpp"
 #include "hilbert_space.hpp"
