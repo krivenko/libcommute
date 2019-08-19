@@ -17,6 +17,8 @@
 // Main header of libcommute
 //
 
+#include "version.hpp"
+
 #include "expression/generator_fermion.hpp"
 #include "expression/generator_boson.hpp"
 #include "expression/generator_spin.hpp"
