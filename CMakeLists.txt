@@ -40,6 +40,29 @@ target_include_directories(libcommute INTERFACE
   $<INSTALL_INTERFACE:include>
 )
 
+# Write config version file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/libcommuteConfigVersion.cmake"
+  VERSION ${LIBCOMMUTE_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+# Install CMake files
+install(TARGETS libcommute
+  EXPORT libcommuteTargets
+  PUBLIC_HEADER DESTINATION include COMPONENT Development
+)
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/cmake/libcommuteConfig.cmake.in"
+  "${PROJECT_BINARY_DIR}/libcommuteConfig.cmake"
+  INSTALL_DESTINATION lib/cmake
+)
+install(EXPORT libcommuteTargets DESTINATION lib/cmake)
+install(FILES "${PROJECT_BINARY_DIR}/libcommuteConfigVersion.cmake"
+              "${PROJECT_BINARY_DIR}/libcommuteConfig.cmake"
+        DESTINATION lib/cmake)
+
 # Build unit tests
 if(Tests)
   enable_testing()
