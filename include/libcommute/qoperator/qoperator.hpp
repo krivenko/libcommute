@@ -102,10 +102,11 @@ public:
 
   // Act on state `src` and return the resulting state via `dst`.
   template<typename SrcStateVector, typename DstStateVector>
-  inline void operator()(SrcStateVector const& src, DstStateVector & dst) const {
+  inline void operator()(SrcStateVector && src, DstStateVector && dst) const {
     assert(get_size(src) == get_size(dst));
     set_zeros(dst);
-    act_impl(src, dst);
+    act_impl(std::forward<SrcStateVector>(src),
+             std::forward<DstStateVector>(dst));
   }
 
   // Act on state and return the resulting state.
@@ -118,9 +119,10 @@ private:
 
   // Implementation details of operator()
   template<typename SrcStateVector, typename DstStateVector>
-  inline void act_impl(SrcStateVector const& src, DstStateVector & dst) const {
-    foreach(src, [&,this](sv_index_type in_index,
-                          element_type_t<SrcStateVector> const& a) {
+  inline void act_impl(SrcStateVector && src, DstStateVector && dst) const {
+    foreach(src,
+            [&,this](sv_index_type in_index,
+                     element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
       for(auto const& ma : this->m_actions_) {
         sv_index_type index = in_index;
         auto coeff = scalar_traits<ScalarType>::make_const(1);
