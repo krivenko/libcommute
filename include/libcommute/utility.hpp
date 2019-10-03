@@ -112,10 +112,10 @@ template<> struct print_tuple_impl<0> {
 } // namespace libcommute::detail
 
 template<typename... T>
-void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
+inline void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
   detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
 }
-void print_tuple(std::ostream & os, std::tuple<> const& t) {}
+inline void print_tuple(std::ostream & os, std::tuple<> const& t) {}
 
 //
 // Linear function of basis objects
