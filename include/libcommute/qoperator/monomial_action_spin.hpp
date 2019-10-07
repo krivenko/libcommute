@@ -117,13 +117,15 @@ public:
         ++power;
     }
 
-    sqr_roots_size = std::min(
-      sqr_roots_size,
-      sv_index_type(LIBCOMMUTE_SPIN_MAX_NUM_PRECOMPUTED_SQRT)
-    );
-    sqr_roots_.resize(sqr_roots_size);
-    for(int n = 0; n < sqr_roots_size; ++n)
-      sqr_roots_[n] = std::sqrt(double(n));
+    if(!updates_.empty()) {
+      sqr_roots_size = std::min(
+        sqr_roots_size,
+        sv_index_type(LIBCOMMUTE_SPIN_MAX_NUM_PRECOMPUTED_SQRT)
+      );
+      sqr_roots_.resize(sqr_roots_size);
+      for(int n = 0; n < sqr_roots_size; ++n)
+        sqr_roots_[n] = std::sqrt(double(n));
+    }
   }
 
   template<typename ScalarType>

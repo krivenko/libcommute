@@ -30,6 +30,8 @@ namespace libcommute {
 
 template<> class monomial_action<fermion> {
 
+  // Is this monomial a constant?
+  bool is_const = false;
   // Bit masks used to change bits
   sv_index_type annihilation_mask = 0;
   sv_index_type creation_mask = 0;
@@ -42,6 +44,11 @@ public:
   template<typename... IndexTypes>
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs) {
+
+    if(m_range.second == m_range.first) {
+      is_const = true;
+      return;
+    }
 
     std::vector<int> creation_set_bits;
     std::vector<int> annihilation_set_bits;
@@ -76,6 +83,9 @@ public:
   template<typename ScalarType>
   inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
+
+    if(is_const) return true;
+
     // Fermions
     if ((index & annihilation_mask) != annihilation_mask)
       return false; // Zero after acting with the annihilation operators
