@@ -46,7 +46,7 @@ inline sv_index_type get_size(StateVector const& sv) {
 // Get n-th state amplitude stored in a StateVector object
 template<typename StateVector>
 inline auto get_element(StateVector const& sv, sv_index_type n)
-  -> element_type_t<StateVector> const& {
+  -> decltype(sv[n]) {
   return sv[n];
 }
 
@@ -81,7 +81,8 @@ inline void foreach(StateVector const& sv, Functor&& f) {
   sv_index_type size = get_size(sv);
   using T = element_type_t<StateVector>;
   for(sv_index_type n = 0; n < size; ++n) {
-    auto a = get_element(sv, n);
+    // Emulate decltype(auto)
+    decltype(get_element(sv, n)) a = get_element(sv, n);
     if(scalar_traits<T>::is_zero(a))
       continue;
     else
