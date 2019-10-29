@@ -23,7 +23,6 @@
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
-#include <memory>
 #include <utility>
 #include <vector>
 
@@ -150,7 +149,7 @@ public:
   template<typename... IndexTypes>
   parametric_qoperator(expression<ScalarType, IndexTypes...> const& expr,
                        hilbert_space<IndexTypes...> const& hs)
-    : base(expr, hs), evaluated_coeffs_(base::m_actions_.size()) {
+    : base(expr, hs) {
   }
 
   // Value semantics
@@ -168,7 +167,9 @@ public:
   inline StateVector
   operator()(StateVector const& sv, CoeffArgs&&... args) const {
     StateVector res = zeros_like(sv);
-    act_impl(sv, res, std::forward<CoeffArgs>(args)...);
+    std::vector<evaluated_coeff_t<CoeffArgs...>> evaluated_coeffs;
+    evaluated_coeffs.reserve(base::m_actions_.size());
+    act_impl(sv, res, evaluated_coeffs, std::forward<CoeffArgs>(args)...);
     return res;
   }
 
@@ -189,10 +190,30 @@ public:
                          StateVector & dst,
                          CoeffArgs&&... args) const {
     set_zeros(dst);
-    act_impl(src, dst, std::forward<CoeffArgs>(args)...);
+    std::vector<evaluated_coeff_t<CoeffArgs...>> evaluated_coeffs;
+    evaluated_coeffs.reserve(base::m_actions_.size());
+    act_impl(src, dst, evaluated_coeffs, std::forward<CoeffArgs>(args)...);
   }
 
-  // Transfrom this parametric operator into the non-parametric form
+  // Act on state `src` and return the resulting state via `dst`.
+  //
+  // Coefficients in front of monomials of the corresponding polynomial
+  // expression are invoked with the `coeff_args` as arguments to produce
+  // the actual coefficient values. This method does not allocate memory
+  // to store those values and stores them in `evaluated_coeffs` instead.
+  template<typename StateVector, typename... CoeffArgs>
+  inline void act_and_store_coeffs(
+    StateVector const& src,
+    StateVector & dst,
+    std::vector<evaluated_coeff_t<CoeffArgs...>> & evaluated_coeffs,
+    CoeffArgs&&... args) const {
+
+    set_zeros(dst);
+    evaluated_coeffs.clear();
+    act_impl(src, dst, evaluated_coeffs, std::forward<CoeffArgs>(args)...);
+  }
+
+  // Transform this parametric operator into the non-parametric form
   //
   // Coefficients in front of monomials of the corresponding polynomial
   // expression are invoked with the `args` as arguments to produce
@@ -210,23 +231,17 @@ public:
 
 private:
 
-  // Type-erased preallocated container for evaluated values of monomial
-  // coefficients
-  mutable std::vector<std::shared_ptr<void>> evaluated_coeffs_;
-
   // Implementation details of operator()
   template<typename StateVector, typename... CoeffArgs>
-  inline void act_impl(StateVector const& src,
-                       StateVector & dst,
-                       CoeffArgs&&... args) const {
-    using eval_coeff_t = evaluated_coeff_t<CoeffArgs...>;
+  inline void act_impl(
+    StateVector const& src,
+    StateVector & dst,
+    std::vector<evaluated_coeff_t<CoeffArgs...>> & evaluated_coeffs,
+    CoeffArgs&&... args) const {
 
     // Evaluate coefficients
-    for(size_t n = 0; n < base::m_actions_.size(); ++n) {
-      evaluated_coeffs_[n].reset(new eval_coeff_t(
-        base::m_actions_[n].second(std::forward<CoeffArgs>(args)...))
-      );
-    }
+    for(auto const& a : base::m_actions_)
+      evaluated_coeffs.emplace_back(a.second(std::forward<CoeffArgs>(args)...));
 
     // Apply monomials
     foreach(src, [&,this](sv_index_type in_index,
@@ -236,9 +251,7 @@ private:
         auto coeff = scalar_traits<ScalarType>::make_const(1);
         bool nz = base::m_actions_[n].first.act(index, coeff);
         if(nz) {
-          auto eval_coeff_ptr =
-            static_cast<eval_coeff_t*>(evaluated_coeffs_[n].get());
-          update_add_element(dst, index, (*eval_coeff_ptr) * coeff * a);
+          update_add_element(dst, index, evaluated_coeffs[n] * coeff * a);
         }
       }
     });

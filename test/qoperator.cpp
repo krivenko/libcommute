@@ -174,6 +174,23 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
     qop(in, out, 5);
     CHECK(out == state_vector{-30, 60, 0, 30});
 
+    SECTION("act_and_store_coeffs()") {
+      std::vector<int> coeffs1, coeffs2, coeffs;
+      coeffs1.reserve(1);
+      coeffs2.reserve(1);
+      coeffs.reserve(2);
+
+      qop1.act_and_store_coeffs(in, out, coeffs1, 5);
+      CHECK(coeffs1 == std::vector<int>{15});
+      CHECK(out == state_vector{0, 15, 0, 15});
+      qop2.act_and_store_coeffs(in, out, coeffs2, 5);
+      CHECK(coeffs2 == std::vector<int>{15});
+      CHECK(out == state_vector{15, -15, 0, 0});
+      qop.act_and_store_coeffs(in, out, coeffs, 5);
+      CHECK(coeffs == std::vector<int>{30, -30});
+      CHECK(out == state_vector{-30, 60, 0, 30});
+    }
+
     SECTION("at()") {
       auto qop1at = qop1.at(5);
       qop1at(in, out);
@@ -197,6 +214,23 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
     CHECK(out == state_vector{30, -30, 0, 0});
     qop(in, out, 5, 5);
     CHECK(out == state_vector{-60, 120, 0, 60});
+
+    SECTION("act_and_store_coeffs()") {
+      std::vector<int_complex> coeffs1, coeffs2, coeffs;
+      coeffs1.reserve(1);
+      coeffs2.reserve(1);
+      coeffs.reserve(2);
+
+      qop1.act_and_store_coeffs(in, out, coeffs1, 5, 5);
+      CHECK(coeffs1 == std::vector<int_complex>{{30, 0}});
+      CHECK(out == state_vector{0, 30, 0, 30});
+      qop2.act_and_store_coeffs(in, out, coeffs2, 5, 5);
+      CHECK(coeffs2 == std::vector<int_complex>{{30, 0}});
+      CHECK(out == state_vector{30, -30, 0, 0});
+      qop.act_and_store_coeffs(in, out, coeffs, 5, 5);
+      CHECK(coeffs == std::vector<int_complex>{{60, 0}, {-60, 0}});
+      CHECK(out == state_vector{-60, 120, 0, 60});
+    }
 
     SECTION("at()") {
       auto qop1at = qop1.at(5, 5);
