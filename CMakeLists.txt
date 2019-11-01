@@ -22,12 +22,13 @@ message(STATUS "Configuring ${PROJECT_NAME} version ${PROJECT_VERSION}")
 
 # Prohibit in-source builds
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(FATAL_ERROR "In-source builds are not allowed. Please make a separate build directory.")
+  message(FATAL_ERROR "In-source builds are not allowed. "
+                      "Please make a separate build directory.")
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
 # CMake options
-option(Tests "Build unit tests" ON)
-option(Examples "Build examples" ON)
+option(TESTS "Build unit tests" ON)
+option(EXAMPLES "Build examples" ON)
 
 # Install C++ headers
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include
@@ -64,14 +65,14 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommuteConfigVersion.cmake"
         DESTINATION lib/cmake)
 
 # Build unit tests
-if(Tests)
+if(TESTS)
   enable_testing()
   message(STATUS "Building unit tests")
   add_subdirectory(test)
-endif(Tests)
+endif(TESTS)
 
 # Build examples
-if(Examples)
+if(EXAMPLES)
   message(STATUS "Building examples")
   add_subdirectory(example)
-endif(Examples)
+endif(EXAMPLES)
