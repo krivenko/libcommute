@@ -13,6 +13,7 @@
 #ifndef LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
 #define LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
 
+#include <iostream>
 #include <string>
 #include <utility>
 #include <variant>
@@ -32,12 +33,20 @@ namespace dynamic_indices {
 //
 
 template<typename... IndexTypes> class dyn_indices_generic {
-  std::vector<std::variant<IndexTypes...>> indices_;
+
+public:
+
+  using indices_t = std::vector<std::variant<IndexTypes...>>;
+
+private:
+
+  indices_t indices_;
 
 public:
 
   // Value semantics
   dyn_indices_generic() = default;
+  dyn_indices_generic(indices_t indices) : indices_(std::move(indices)) {}
 
   template<typename... Args> dyn_indices_generic(Args&&... args) {
     (indices_.emplace_back(std::forward<Args>(args)), ...);
@@ -47,6 +56,9 @@ public:
   dyn_indices_generic(dyn_indices_generic&&) noexcept = default;
   dyn_indices_generic& operator=(dyn_indices_generic const&) = default;
   dyn_indices_generic& operator=(dyn_indices_generic&&) noexcept = default;
+
+  // Index sequence length
+  size_t size() const { return indices_.size(); }
 
   // Equality
   inline friend bool operator==(dyn_indices_generic const& ind1,
@@ -72,6 +84,11 @@ public:
       return ind1.indices_.size() > ind2.indices_.size();
     else
       return ind1.indices_ > ind2.indices_;
+  }
+
+  // Reference to underlying sequence
+  explicit operator indices_t const& () const {
+    return indices_;
   }
 
   // Stream output
