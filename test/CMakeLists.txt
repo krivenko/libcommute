@@ -36,7 +36,7 @@ set(TESTS
   monomial_action_boson
   monomial_action_spin
   qoperator
-  qoperator_gamma
+  gamma.qoperator
   disjoint_sets
   sparse_state_vector
   space_partition
@@ -57,9 +57,9 @@ set(CXX17_TESTS
   basis_space_dyn
 )
 
-# C++17-only tests
+# C++17 tests
 if("cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
-  message(STATUS "Enabling C++17-only tests")
+  message(STATUS "Enabling C++17 tests")
   foreach(t ${CXX17_TESTS})
     set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
     add_executable(${t} ${s})
@@ -68,5 +68,5 @@ if("cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
     add_test(NAME ${t} COMMAND ${t})
   endforeach()
 else()
-  message(STATUS "Disabling C++17-only tests")
+  message(STATUS "Disabling C++17 tests")
 endif()
