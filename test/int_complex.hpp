@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- * This file is part of libcommute, a C++11/14/17 header-only library allowing
- * to manipulate polynomial expressions with quantum-mechanical operators.
+ * This file is part of libcommute, a quantum operator algebra DSL and
+ * exact diagonalization toolkit for C++11/14/17.
  *
  * Copyright (C) 2016-2019 Igor Krivenko <igor.s.krivenko@gmail.com>
  *
@@ -10,7 +10,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-
 #ifndef LIBCOMMUTE_TEST_INT_COMPLEX_HPP_
 #define LIBCOMMUTE_TEST_INT_COMPLEX_HPP_
 
