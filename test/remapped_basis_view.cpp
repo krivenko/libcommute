@@ -18,10 +18,31 @@
 #include <libcommute/qoperator/remapped_basis_view.hpp>
 
 #include <map>
+#include <set>
 #include <vector>
 #include <unordered_map>
 
 using namespace libcommute;
+
+template<typename Key, typename Value>
+void check_equal_maps_up_to_value_permutation(
+  std::unordered_map<Key, Value> const& m1,
+  std::unordered_map<Key, Value> const& m2
+)
+{
+  std::set<Key> keys1, keys2;
+  std::set<Value> values1, values2;
+  for(auto const& p : m1) {
+    keys1.emplace(p.first);
+    values1.emplace(p.second);
+  }
+  for(auto const& p : m2) {
+    keys2.emplace(p.first);
+    values2.emplace(p.second);
+  }
+  CHECK(keys1 == keys2);
+  CHECK(values2 == values2);
+}
 
 TEST_CASE("Basis-remapped view of a state vector",
           "[remapped_basis_view]") {
@@ -45,14 +66,15 @@ TEST_CASE("Basis-remapped view of a state vector",
   REQUIRE(hs.bit_range(make_space_fermion("up", 1)) == std::make_pair(2, 2));
   REQUIRE(hs.bit_range(make_space_fermion("up", 2)) == std::make_pair(3, 3));
 
-  // Map all basis states with 2 electrons so that their indices are contiguous
-  std::unordered_map<sv_index_type, sv_index_type> map;
   // 3 = 1 + 2 -> |dn>_1 |dn>_2
   // 5 = 1 + 4 -> |dn>_1 |up>_1
   // 6 = 2 + 4 -> |dn>_2 |up>_1
   // 9 = 1 + 8 -> |dn>_1 |up>_2
   // 10 = 2 + 8 -> |dn>_2 |up>_2
   // 12 = 4 + 8 -> |up>_1 |up>_2
+
+  // Map all basis states with 2 electrons so that their indices are contiguous
+  std::unordered_map<sv_index_type, sv_index_type> map;
   for(auto i : {3, 5, 6, 9, 10, 12}) map[i] = map.size();
   REQUIRE(map.size() == 6);
 
@@ -136,6 +158,97 @@ TEST_CASE("Basis-remapped view of a state vector",
           remapped_basis_view<state_vector, false>(out, map)
       );
       CHECK(out == state_vector{0, -2, 0, 0, 2, 0});
+    }
+  }
+
+  SECTION("basis_remapper") {
+    state_vector st{1, 1, 1, 1, 1, 1};
+
+    SECTION("basis_state_indices") {
+      std::vector<sv_index_type> basis_indices{3, 5, 6, 9, 10, 12};
+      basis_remapper remapper(basis_indices);
+      SECTION("const") {
+        auto view = remapper.make_const_view(st);
+        CHECK(view.map == map);
+      }
+      SECTION("non-const") {
+        auto view = remapper.make_view(st);
+        CHECK(view.map == map);
+      }
+    }
+
+    SECTION("O|vac>") {
+      auto P = c_dag("dn", 1) * c_dag("dn", 2) +
+               c_dag("dn", 1) * c_dag("up", 1) +
+               c_dag("dn", 2) * c_dag("up", 1) +
+               c_dag("dn", 1) * c_dag("up", 2) +
+               c_dag("dn", 2) * c_dag("up", 2) +
+               c_dag("up", 1) * c_dag("up", 2);
+      basis_remapper remapper(make_qoperator(P, hs), hs);
+      SECTION("const") {
+        auto view = remapper.make_const_view(st);
+        check_equal_maps_up_to_value_permutation(view.map, map);
+      }
+      SECTION("non-const") {
+        auto view = remapper.make_view(st);
+        check_equal_maps_up_to_value_permutation(view.map, map);
+      }
+    }
+
+    SECTION("Compositions") {
+      using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
+
+      basis_remapper remapper_empty(O_list_t{}, hs, 0);
+
+      O_list_t O_list{
+        make_qoperator(c_dag("dn", 1), hs),
+        make_qoperator(c_dag("dn", 2), hs),
+        make_qoperator(c_dag("up", 1), hs),
+        make_qoperator(c_dag("up", 2), hs)
+      };
+
+      basis_remapper remapper_N0(O_list, hs, 0);
+      basis_remapper remapper(O_list, hs, 2);
+
+      SECTION("const") {
+        CHECK(remapper_empty.make_const_view(st).map.size() == 1);
+        CHECK(remapper_empty.make_const_view(st).map.at(0) == 0);
+        CHECK(remapper_N0.make_const_view(st).map.size() == 1);
+        CHECK(remapper_N0.make_const_view(st).map.at(0) == 0);
+
+        auto view = remapper.make_const_view(st);
+        check_equal_maps_up_to_value_permutation(view.map, map);
+      }
+      SECTION("non-const") {
+        CHECK(remapper_empty.make_view(st).map.size() == 1);
+        CHECK(remapper_empty.make_view(st).map.at(0) == 0);
+        CHECK(remapper_N0.make_view(st).map.size() == 1);
+        CHECK(remapper_N0.make_view(st).map.at(0) == 0);
+
+        auto view = remapper.make_view(st);
+        check_equal_maps_up_to_value_permutation(view.map, map);
+      }
+    }
+
+    SECTION("Compositions/bosons") {
+      using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
+
+      auto hs = make_hilbert_space(a_dag(1) + a_dag(2) + a_dag(3) + a_dag(4),
+                                   boson_bs_constructor(4));
+
+      O_list_t O_list{
+        make_qoperator(a_dag(1), hs),
+        make_qoperator(a_dag(2), hs),
+        make_qoperator(a_dag(3), hs),
+        make_qoperator(a_dag(4), hs)
+      };
+
+      std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
+      for(int N = 0; N < 10; ++N) {
+        basis_remapper remapper(O_list, hs, N);
+        auto view = remapper.make_view(st);
+        CHECK(view.map.size() == map_size_ref[N]);
+      }
     }
   }
 }

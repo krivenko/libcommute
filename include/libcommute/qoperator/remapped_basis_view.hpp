@@ -13,11 +13,16 @@
 #ifndef LIBCOMMUTE_QOPERATOR_REMAPPED_BASIS_VIEW_HPP_
 #define LIBCOMMUTE_QOPERATOR_REMAPPED_BASIS_VIEW_HPP_
 
+#include "qoperator.hpp"
+#include "sparse_state_vector.hpp"
 #include "state_vector.hpp"
 
+#include <algorithm>
+#include <iterator>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 //
 // remapped_basis_view partially models the StateVector concept while adapting
@@ -119,6 +124,108 @@ inline void foreach(remapped_basis_view<StateVector, Const> const& view,
       f(p.first, a);
   }
 }
+
+//
+// Factory class for remapped_basis_view
+//
+class basis_remapper {
+
+  std::unordered_map<sv_index_type, sv_index_type> map;
+
+  template<typename... QOperatorParams>
+  void compositions_constructor_impl(
+    std::vector<qoperator<QOperatorParams...>> const& O_list,
+    sparse_state_vector<
+      typename qoperator<QOperatorParams...>::scalar_type
+    > const& st,
+    int m,
+    int sum_n,
+    int N) {
+
+    if(sum_n == N) {
+      foreach(st, [&](
+        sv_index_type out_index,
+        typename qoperator<QOperatorParams...>::scalar_type const&
+      ) {
+        map.emplace(out_index, map.size());
+      });
+    }
+
+    if(m == O_list.size()) return;
+
+    compositions_constructor_impl(O_list, st, m + 1, sum_n, N);
+
+    auto from_st = st;
+    auto to_st = zeros_like(st);
+    for(; sum_n < N; ++sum_n) {
+      O_list[m](from_st, to_st);
+      if(to_st.n_amplitudes() == 0) return;
+      compositions_constructor_impl(O_list, to_st, m + 1, sum_n + 1, N);
+      from_st = to_st;
+    }
+  }
+
+public:
+
+  // Build a mapping from a list of basis states
+  // to their positions within the list
+  basis_remapper(std::vector<sv_index_type> const& basis_state_indices) {
+    std::transform(
+      basis_state_indices.begin(),
+      basis_state_indices.end(),
+      std::inserter(map, map.end()),
+      [this](sv_index_type n) { return std::make_pair(n, map.size()); }
+    );
+  }
+
+  // Build a mapping from a set of all basis states contributing to O|vac>.
+  // Mapped values are assigned continuously but without any specific order.
+  template<typename HSType, typename... QOperatorParams>
+  basis_remapper(qoperator<QOperatorParams...> const& O, HSType const& hs) {
+    using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
+    sv_index_type dim = get_dim(hs);
+    sparse_state_vector<scalar_type> vac(dim);
+    vac.amplitude(0) = 1;
+    auto st =  O(vac);
+    foreach(st, [&](sv_index_type out_index, scalar_type const&) {
+      map.emplace(out_index, map.size());
+    });
+  }
+
+  // Given a list of operators {O_1, O_2, O_3, ... , O_M}, build a mapping
+  // including all basis states contributing to all states
+  // O_1^{n_1} O_2^{n_2} ... O_M^{n_M} |vac>, where n_m >= 0 and
+  // \sum_{m=1}^M n_M = N.
+  // Mapped values are assigned continuously but without any specific order.
+  template<typename HSType, typename... QOperatorParams>
+  basis_remapper(
+    std::vector<qoperator<QOperatorParams...>> const& O_list,
+    HSType const& hs,
+    int N
+  ) {
+    if(N == 0 || O_list.size() == 0) {
+      map.emplace(0, 0);
+      return;
+    }
+    using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
+    sparse_state_vector<scalar_type> vac(get_dim(hs));
+    vac.amplitude(0) = 1;
+    compositions_constructor_impl(O_list, vac, 0, 0, N);
+  }
+
+  // Make a non-constant basis remapping view
+  template<typename StateVector>
+  remapped_basis_view<StateVector, false> make_view(StateVector & sv) const {
+    return remapped_basis_view<StateVector, false>(sv, map);
+  }
+
+  // Make a constant basis remapping view
+  template<typename StateVector>
+  remapped_basis_view<StateVector, true>
+  make_const_view(StateVector const& sv) const {
+    return remapped_basis_view<StateVector, true>(sv, map);
+  }
+};
 
 } // namespace libcommute
 
