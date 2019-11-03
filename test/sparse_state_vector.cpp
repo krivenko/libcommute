@@ -28,7 +28,6 @@ TEST_CASE("Implementation of the StateVector concept based on a sparse storage",
   v.amplitude(2) = 3;
 
   CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
-  CHECK(get_size(v) == 100);
   CHECK(v.n_amplitudes() == 3);
   foreach(v, [](int i, double a) { CHECK(i + 1 == a); });
 

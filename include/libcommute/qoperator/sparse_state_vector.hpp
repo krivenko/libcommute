@@ -33,11 +33,6 @@ public:
   sparse_state_vector() = delete;
   sparse_state_vector(sv_index_type size) : size_(size) {}
 
-  // Dimension of Hilbert space
-  inline friend sv_index_type get_size(sparse_state_vector const& sv) {
-    return sv.size_;
-  }
-
   // Number of non-zero amplitudes
   inline sv_index_type n_amplitudes() const { return data_.size(); }
 

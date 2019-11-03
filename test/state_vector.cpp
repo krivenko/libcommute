@@ -25,7 +25,6 @@ TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
     std::vector<double> v{1, 2, 3};
 
     CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
-    CHECK(get_size(v) == 3);
     CHECK(get_element(v, 1) == 2);
     update_add_element(v, 1, 4);
     CHECK(get_element(v, 1) == 6);
@@ -44,7 +43,6 @@ TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
           std::complex<double>>::value);
-    CHECK(get_size(v) == 3);
     CHECK(get_element(v, 1) == 2.0);
     update_add_element(v, 1, 4);
     CHECK(get_element(v, 1) == 6.0);

@@ -102,7 +102,6 @@ public:
   // Act on state `src` and return the resulting state via `dst`.
   template<typename SrcStateVector, typename DstStateVector>
   inline void operator()(SrcStateVector && src, DstStateVector && dst) const {
-    assert(get_size(src) == get_size(dst));
     set_zeros(dst);
     act_impl(std::forward<SrcStateVector>(src),
              std::forward<DstStateVector>(dst));

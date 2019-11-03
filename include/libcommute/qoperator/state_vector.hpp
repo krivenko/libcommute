@@ -37,12 +37,6 @@ struct element_type {
 template<typename StateVector>
 using element_type_t = typename element_type<StateVector>::type;
 
-// Get size of a StateVector object (Hilbert space dimension)
-template<typename StateVector>
-inline sv_index_type get_size(StateVector const& sv) {
-  return sv.size();
-}
-
 // Get n-th state amplitude stored in a StateVector object
 template<typename StateVector>
 inline auto get_element(StateVector const& sv, sv_index_type n)
@@ -59,7 +53,7 @@ inline void update_add_element(StateVector & sv, sv_index_type n, T&& value) {
 // Set all amplitudes stored in a StateVector object to zero
 template<typename StateVector>
 inline void set_zeros(StateVector & sv) {
-  sv_index_type size = get_size(sv);
+  sv_index_type size = sv.size();
   using T = element_type_t<StateVector>;
   for(sv_index_type n = 0; n < size; ++n)
     sv[n] = scalar_traits<T>::make_const(0);
@@ -69,7 +63,7 @@ inline void set_zeros(StateVector & sv) {
 // with all amplitudes set to zero
 template<typename StateVector>
 StateVector zeros_like(StateVector const& sv) {
-  StateVector res(get_size(sv));
+  StateVector res(sv.size());
   set_zeros(res);
   return res;
 }
@@ -78,7 +72,7 @@ StateVector zeros_like(StateVector const& sv) {
 // in a StateVector object
 template<typename StateVector, typename Functor>
 inline void foreach(StateVector const& sv, Functor&& f) {
-  sv_index_type size = get_size(sv);
+  sv_index_type size = sv.size();
   using T = element_type_t<StateVector>;
   for(sv_index_type n = 0; n < size; ++n) {
     // Emulate decltype(auto)
