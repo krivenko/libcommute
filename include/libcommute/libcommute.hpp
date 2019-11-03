@@ -29,6 +29,7 @@
 #include "qoperator/basis_space_spin.hpp"
 #include "qoperator/qoperator.hpp"
 #include "qoperator/space_partition.hpp"
+#include "qoperator/remapped_basis_view.hpp"
 
 // C++17-only headers
 #if __cplusplus >= 201703L

@@ -40,6 +40,7 @@ set(TESTS
   disjoint_sets
   sparse_state_vector
   space_partition
+  remapped_basis_view
 )
 
 # Build C++ unit tests
