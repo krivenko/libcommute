@@ -29,6 +29,7 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 # CMake options
 option(TESTS "Build unit tests" ON)
 option(EXAMPLES "Build examples" ON)
+option(DOCUMENTATION "Build documentation" OFF)
 
 # Install C++ headers
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include
@@ -69,6 +70,20 @@ configure_file(libcommute.pc.in libcommute.pc @ONLY)
 install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
         DESTINATION share/pkgconfig
 )
+
+# Build documentation
+if(DOCUMENTATION)
+  message(STATUS "Building documentation")
+
+  # Detect Doxygen, Sphinx and Breathe
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+  find_package(Doxygen REQUIRED)
+  find_package(PythonInterp 3 REQUIRED)
+  find_package(Sphinx 2.0.0 REQUIRED)
+  find_package(Breathe 4.13.0 REQUIRED)
+
+  add_subdirectory(doc)
+endif(DOCUMENTATION)
 
 # Build unit tests
 if(TESTS)
