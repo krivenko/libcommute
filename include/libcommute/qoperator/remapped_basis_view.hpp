@@ -130,7 +130,7 @@ inline void foreach(remapped_basis_view<StateVector, Const> const& view,
 //
 class basis_remapper {
 
-  std::unordered_map<sv_index_type, sv_index_type> map;
+  std::unordered_map<sv_index_type, sv_index_type> map_;
 
   template<typename... QOperatorParams>
   void compositions_constructor_impl(
@@ -147,7 +147,7 @@ class basis_remapper {
         sv_index_type out_index,
         typename qoperator<QOperatorParams...>::scalar_type const&
       ) {
-        map.emplace(out_index, map.size());
+        map_.emplace(out_index, map_.size());
       });
     }
 
@@ -173,8 +173,8 @@ public:
     std::transform(
       basis_state_indices.begin(),
       basis_state_indices.end(),
-      std::inserter(map, map.end()),
-      [this](sv_index_type n) { return std::make_pair(n, map.size()); }
+      std::inserter(map_, map_.end()),
+      [this](sv_index_type n) { return std::make_pair(n, map_.size()); }
     );
   }
 
@@ -188,7 +188,7 @@ public:
     vac.amplitude(0) = 1;
     auto st =  O(vac);
     foreach(st, [&](sv_index_type out_index, scalar_type const&) {
-      map.emplace(out_index, map.size());
+      map_.emplace(out_index, map_.size());
     });
   }
 
@@ -204,7 +204,7 @@ public:
     int N
   ) {
     if(N == 0 || O_list.size() == 0) {
-      map.emplace(0, 0);
+      map_.emplace(0, 0);
       return;
     }
     using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
@@ -213,17 +213,20 @@ public:
     compositions_constructor_impl(O_list, vac, 0, 0, N);
   }
 
+  // Number of basis states in the mapping
+  inline sv_index_type size() const { return map_.size(); }
+
   // Make a non-constant basis remapping view
   template<typename StateVector>
   remapped_basis_view<StateVector, false> make_view(StateVector & sv) const {
-    return remapped_basis_view<StateVector, false>(sv, map);
+    return remapped_basis_view<StateVector, false>(sv, map_);
   }
 
   // Make a constant basis remapping view
   template<typename StateVector>
   remapped_basis_view<StateVector, true>
   make_const_view(StateVector const& sv) const {
-    return remapped_basis_view<StateVector, true>(sv, map);
+    return remapped_basis_view<StateVector, true>(sv, map_);
   }
 };
 

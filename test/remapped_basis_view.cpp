@@ -167,6 +167,7 @@ TEST_CASE("Basis-remapped view of a state vector",
     SECTION("basis_state_indices") {
       std::vector<sv_index_type> basis_indices{3, 5, 6, 9, 10, 12};
       basis_remapper remapper(basis_indices);
+      CHECK(remapper.size() == 6);
       SECTION("const") {
         auto view = remapper.make_const_view(st);
         CHECK(view.map == map);
@@ -185,6 +186,7 @@ TEST_CASE("Basis-remapped view of a state vector",
                c_dag("dn", 2) * c_dag("up", 2) +
                c_dag("up", 1) * c_dag("up", 2);
       basis_remapper remapper(make_qoperator(P, hs), hs);
+      CHECK(remapper.size() == 6);
       SECTION("const") {
         auto view = remapper.make_const_view(st);
         check_equal_maps_up_to_value_permutation(view.map, map);
@@ -199,6 +201,7 @@ TEST_CASE("Basis-remapped view of a state vector",
       using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
 
       basis_remapper remapper_empty(O_list_t{}, hs, 0);
+      CHECK(remapper_empty.size() == 1);
 
       O_list_t O_list{
         make_qoperator(c_dag("dn", 1), hs),
@@ -208,6 +211,7 @@ TEST_CASE("Basis-remapped view of a state vector",
       };
 
       basis_remapper remapper_N0(O_list, hs, 0);
+      CHECK(remapper_N0.size() == 1);
       basis_remapper remapper(O_list, hs, 2);
 
       SECTION("const") {
@@ -246,8 +250,7 @@ TEST_CASE("Basis-remapped view of a state vector",
       std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
       for(int N = 0; N < 10; ++N) {
         basis_remapper remapper(O_list, hs, N);
-        auto view = remapper.make_view(st);
-        CHECK(view.map.size() == map_size_ref[N]);
+        CHECK(remapper.size() == map_size_ref[N]);
       }
     }
   }
