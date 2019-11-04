@@ -15,7 +15,7 @@
 
 #include <libcommute/expression/factories.hpp>
 #include <libcommute/qoperator/qoperator.hpp>
-#include <libcommute/qoperator/remapped_basis_view.hpp>
+#include <libcommute/qoperator/mapped_basis_view.hpp>
 
 #include <map>
 #include <set>
@@ -44,8 +44,8 @@ void check_equal_maps_up_to_value_permutation(
   CHECK(values2 == values2);
 }
 
-TEST_CASE("Basis-remapped view of a state vector",
-          "[remapped_basis_view]") {
+TEST_CASE("Basis-mapped view of a state vector",
+          "[mapped_basis_view]") {
 
   using namespace static_indices::real;
   using state_vector = std::vector<double>;
@@ -89,10 +89,10 @@ TEST_CASE("Basis-remapped view of a state vector",
     std::make_pair(12, 10.0)
   };
 
-  SECTION("remapped_basis_view") {
+  SECTION("mapped_basis_view") {
 
     SECTION("const") {
-      auto view = remapped_basis_view<state_vector, true>(st, map);
+      auto view = mapped_basis_view<state_vector, true>(st, map);
 
       CHECK(std::is_same<element_type_t<decltype(view)>, double>::value);
       CHECK(get_element(view, 10) == 4);
@@ -106,7 +106,7 @@ TEST_CASE("Basis-remapped view of a state vector",
     }
 
     SECTION("non-const") {
-      auto view = remapped_basis_view<state_vector>(st, map);
+      auto view = mapped_basis_view<state_vector>(st, map);
 
       CHECK(std::is_same<element_type_t<decltype(view)>, double>::value);
       CHECK(get_element(view, 10) == 4);
@@ -132,14 +132,14 @@ TEST_CASE("Basis-remapped view of a state vector",
       auto Hop = make_qoperator(Hex, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
-      Hop(remapped_basis_view<state_vector, true>(in1, map),
-          remapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<state_vector, true>(in1, map),
+          mapped_basis_view<state_vector, false>(out, map)
       );
       CHECK(out == state_vector{0, 0, 2, 2, 0, 0});
 
       state_vector in2{1, 1, 1, -1, 1, 1};
-      Hop(remapped_basis_view<state_vector, true>(in2, map),
-          remapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<state_vector, true>(in2, map),
+          mapped_basis_view<state_vector, false>(out, map)
       );
       CHECK(out == state_vector{0, 0, -2, 2, 0, 0});
     }
@@ -148,32 +148,32 @@ TEST_CASE("Basis-remapped view of a state vector",
       auto Hop = make_qoperator(Hp, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
-      Hop(remapped_basis_view<state_vector, true>(in1, map),
-          remapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<state_vector, true>(in1, map),
+          mapped_basis_view<state_vector, false>(out, map)
       );
       CHECK(out == state_vector{0, 2, 0, 0, 2, 0});
 
       state_vector in2{1, 1, 1, 1, -1, 1};
-      Hop(remapped_basis_view<state_vector, true>(in2, map),
-          remapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<state_vector, true>(in2, map),
+          mapped_basis_view<state_vector, false>(out, map)
       );
       CHECK(out == state_vector{0, -2, 0, 0, 2, 0});
     }
   }
 
-  SECTION("basis_remapper") {
+  SECTION("basis_mapper") {
     state_vector st{1, 1, 1, 1, 1, 1};
 
     SECTION("basis_state_indices") {
       std::vector<sv_index_type> basis_indices{3, 5, 6, 9, 10, 12};
-      basis_remapper remapper(basis_indices);
-      CHECK(remapper.size() == 6);
+      basis_mapper mapper(basis_indices);
+      CHECK(mapper.size() == 6);
       SECTION("const") {
-        auto view = remapper.make_const_view(st);
+        auto view = mapper.make_const_view(st);
         CHECK(view.map == map);
       }
       SECTION("non-const") {
-        auto view = remapper.make_view(st);
+        auto view = mapper.make_view(st);
         CHECK(view.map == map);
       }
     }
@@ -185,14 +185,14 @@ TEST_CASE("Basis-remapped view of a state vector",
                c_dag("dn", 1) * c_dag("up", 2) +
                c_dag("dn", 2) * c_dag("up", 2) +
                c_dag("up", 1) * c_dag("up", 2);
-      basis_remapper remapper(make_qoperator(P, hs), hs);
-      CHECK(remapper.size() == 6);
+      basis_mapper mapper(make_qoperator(P, hs), hs);
+      CHECK(mapper.size() == 6);
       SECTION("const") {
-        auto view = remapper.make_const_view(st);
+        auto view = mapper.make_const_view(st);
         check_equal_maps_up_to_value_permutation(view.map, map);
       }
       SECTION("non-const") {
-        auto view = remapper.make_view(st);
+        auto view = mapper.make_view(st);
         check_equal_maps_up_to_value_permutation(view.map, map);
       }
     }
@@ -200,8 +200,8 @@ TEST_CASE("Basis-remapped view of a state vector",
     SECTION("Compositions") {
       using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
 
-      basis_remapper remapper_empty(O_list_t{}, hs, 0);
-      CHECK(remapper_empty.size() == 1);
+      basis_mapper mapper_empty(O_list_t{}, hs, 0);
+      CHECK(mapper_empty.size() == 1);
 
       O_list_t O_list{
         make_qoperator(c_dag("dn", 1), hs),
@@ -210,26 +210,26 @@ TEST_CASE("Basis-remapped view of a state vector",
         make_qoperator(c_dag("up", 2), hs)
       };
 
-      basis_remapper remapper_N0(O_list, hs, 0);
-      CHECK(remapper_N0.size() == 1);
-      basis_remapper remapper(O_list, hs, 2);
+      basis_mapper mapper_N0(O_list, hs, 0);
+      CHECK(mapper_N0.size() == 1);
+      basis_mapper mapper(O_list, hs, 2);
 
       SECTION("const") {
-        CHECK(remapper_empty.make_const_view(st).map.size() == 1);
-        CHECK(remapper_empty.make_const_view(st).map.at(0) == 0);
-        CHECK(remapper_N0.make_const_view(st).map.size() == 1);
-        CHECK(remapper_N0.make_const_view(st).map.at(0) == 0);
+        CHECK(mapper_empty.make_const_view(st).map.size() == 1);
+        CHECK(mapper_empty.make_const_view(st).map.at(0) == 0);
+        CHECK(mapper_N0.make_const_view(st).map.size() == 1);
+        CHECK(mapper_N0.make_const_view(st).map.at(0) == 0);
 
-        auto view = remapper.make_const_view(st);
+        auto view = mapper.make_const_view(st);
         check_equal_maps_up_to_value_permutation(view.map, map);
       }
       SECTION("non-const") {
-        CHECK(remapper_empty.make_view(st).map.size() == 1);
-        CHECK(remapper_empty.make_view(st).map.at(0) == 0);
-        CHECK(remapper_N0.make_view(st).map.size() == 1);
-        CHECK(remapper_N0.make_view(st).map.at(0) == 0);
+        CHECK(mapper_empty.make_view(st).map.size() == 1);
+        CHECK(mapper_empty.make_view(st).map.at(0) == 0);
+        CHECK(mapper_N0.make_view(st).map.size() == 1);
+        CHECK(mapper_N0.make_view(st).map.at(0) == 0);
 
-        auto view = remapper.make_view(st);
+        auto view = mapper.make_view(st);
         check_equal_maps_up_to_value_permutation(view.map, map);
       }
     }
@@ -249,8 +249,8 @@ TEST_CASE("Basis-remapped view of a state vector",
 
       std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
       for(int N = 0; N < 10; ++N) {
-        basis_remapper remapper(O_list, hs, N);
-        CHECK(remapper.size() == map_size_ref[N]);
+        basis_mapper mapper(O_list, hs, N);
+        CHECK(mapper.size() == map_size_ref[N]);
       }
     }
   }

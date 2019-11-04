@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_REMAPPED_BASIS_VIEW_HPP_
-#define LIBCOMMUTE_QOPERATOR_REMAPPED_BASIS_VIEW_HPP_
+#ifndef LIBCOMMUTE_QOPERATOR_MAPPED_BASIS_VIEW_HPP_
+#define LIBCOMMUTE_QOPERATOR_MAPPED_BASIS_VIEW_HPP_
 
 #include "qoperator.hpp"
 #include "sparse_state_vector.hpp"
@@ -25,10 +25,10 @@
 #include <vector>
 
 //
-// remapped_basis_view partially models the StateVector concept while adapting
+// mapped_basis_view partially models the StateVector concept while adapting
 // an existing state vector. Such operations as `get_element()` and
 // `update_add_element()` are forwarded to the adapted vector with state
-// indices being translated according to a given map. remapped_basis_view can be
+// indices being translated according to a given map. mapped_basis_view can be
 // used in situations where a qoperator object acts only on a subspace of a full
 // Hilbert space and it is desirable to store vector components only within this
 // subspace.
@@ -37,7 +37,7 @@
 namespace libcommute {
 
 template<typename StateVector, bool Const = false>
-struct remapped_basis_view {
+struct mapped_basis_view {
 
   typename std::conditional<Const,
                             StateVector const&,
@@ -47,23 +47,23 @@ struct remapped_basis_view {
 
   using scalar_type = typename element_type<StateVector>::type;
 
-  remapped_basis_view(decltype(state_vector) sv, map_t const& map)
+  mapped_basis_view(decltype(state_vector) sv, map_t const& map)
     : state_vector(sv), map(map)
   {}
 };
 
 // Get element type of the StateVector object adapted by a given
-// remapped_basis_view object.
+// mapped_basis_view object.
 template<typename StateVector, bool Const>
-struct element_type<remapped_basis_view<StateVector, Const>> {
-  using type = typename remapped_basis_view<StateVector, Const>::scalar_type;
+struct element_type<mapped_basis_view<StateVector, Const>> {
+  using type = typename mapped_basis_view<StateVector, Const>::scalar_type;
 };
 
 // Get state amplitude of the adapted StateVector object at index view.map[n]
 template<typename StateVector, bool Const>
-inline auto get_element(remapped_basis_view<StateVector, Const> const& view,
+inline auto get_element(mapped_basis_view<StateVector, Const> const& view,
                         sv_index_type n)
-  -> typename remapped_basis_view<StateVector, Const>::scalar_type {
+  -> typename mapped_basis_view<StateVector, Const>::scalar_type {
   return get_element(view.state_vector, view.map.at(n));
 }
 
@@ -71,7 +71,7 @@ inline auto get_element(remapped_basis_view<StateVector, Const> const& view,
 // at index view.map[n].
 template<typename StateVector, typename T>
 inline
-void update_add_element(remapped_basis_view<StateVector, false> & view,
+void update_add_element(mapped_basis_view<StateVector, false> & view,
                         sv_index_type n,
                         T&& value) {
   update_add_element(view.state_vector, view.map.at(n), std::forward<T>(value));
@@ -80,7 +80,7 @@ void update_add_element(remapped_basis_view<StateVector, false> & view,
 // update_add_element() is not defined for constant views
 template<typename StateVector, typename T>
 inline
-void update_add_element(remapped_basis_view<StateVector, true> &,
+void update_add_element(mapped_basis_view<StateVector, true> &,
                         sv_index_type,
                         T&&) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
@@ -89,20 +89,20 @@ void update_add_element(remapped_basis_view<StateVector, true> &,
 
 // zeros_like() is not defined for views
 template<typename StateVector, bool Const>
-StateVector zeros_like(remapped_basis_view<StateVector, Const> const&) {
+StateVector zeros_like(mapped_basis_view<StateVector, Const> const&) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "zeros_like() is not supported for views");
 }
 
 // Set all amplitudes stored in the adapted StateVector object to zero
 template<typename StateVector>
-inline void set_zeros(remapped_basis_view<StateVector, false> & view) {
+inline void set_zeros(mapped_basis_view<StateVector, false> & view) {
   set_zeros(view.state_vector);
 }
 
 // set_zeros() is not defined for constant views
 template<typename StateVector>
-inline void set_zeros(remapped_basis_view<StateVector, true> &) {
+inline void set_zeros(mapped_basis_view<StateVector, true> &) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "set_zeros() is not supported for constant views");
 }
@@ -111,7 +111,7 @@ inline void set_zeros(remapped_basis_view<StateVector, true> &) {
 // in the adapted StateVector object. This functions iterates over all values
 // stored in view.map.
 template<typename StateVector, bool Const, typename Functor>
-inline void foreach(remapped_basis_view<StateVector, Const> const& view,
+inline void foreach(mapped_basis_view<StateVector, Const> const& view,
                     Functor&& f) {
   using T = element_type_t<StateVector>;
   for(auto const& p : view.map) {
@@ -126,9 +126,9 @@ inline void foreach(remapped_basis_view<StateVector, Const> const& view,
 }
 
 //
-// Factory class for remapped_basis_view
+// Factory class for mapped_basis_view
 //
-class basis_remapper {
+class basis_mapper {
 
   std::unordered_map<sv_index_type, sv_index_type> map_;
 
@@ -169,7 +169,7 @@ public:
 
   // Build a mapping from a list of basis states
   // to their positions within the list
-  basis_remapper(std::vector<sv_index_type> const& basis_state_indices) {
+  basis_mapper(std::vector<sv_index_type> const& basis_state_indices) {
     std::transform(
       basis_state_indices.begin(),
       basis_state_indices.end(),
@@ -181,7 +181,7 @@ public:
   // Build a mapping from a set of all basis states contributing to O|vac>.
   // Mapped values are assigned continuously but without any specific order.
   template<typename HSType, typename... QOperatorParams>
-  basis_remapper(qoperator<QOperatorParams...> const& O, HSType const& hs) {
+  basis_mapper(qoperator<QOperatorParams...> const& O, HSType const& hs) {
     using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
     sv_index_type dim = get_dim(hs);
     sparse_state_vector<scalar_type> vac(dim);
@@ -198,7 +198,7 @@ public:
   // \sum_{m=1}^M n_M = N.
   // Mapped values are assigned continuously but without any specific order.
   template<typename HSType, typename... QOperatorParams>
-  basis_remapper(
+  basis_mapper(
     std::vector<qoperator<QOperatorParams...>> const& O_list,
     HSType const& hs,
     int N
@@ -216,17 +216,17 @@ public:
   // Number of basis states in the mapping
   inline sv_index_type size() const { return map_.size(); }
 
-  // Make a non-constant basis remapping view
+  // Make a non-constant basis mapping view
   template<typename StateVector>
-  remapped_basis_view<StateVector, false> make_view(StateVector & sv) const {
-    return remapped_basis_view<StateVector, false>(sv, map_);
+  mapped_basis_view<StateVector, false> make_view(StateVector & sv) const {
+    return mapped_basis_view<StateVector, false>(sv, map_);
   }
 
-  // Make a constant basis remapping view
+  // Make a constant basis mapping view
   template<typename StateVector>
-  remapped_basis_view<StateVector, true>
+  mapped_basis_view<StateVector, true>
   make_const_view(StateVector const& sv) const {
-    return remapped_basis_view<StateVector, true>(sv, map_);
+    return mapped_basis_view<StateVector, true>(sv, map_);
   }
 };
 
