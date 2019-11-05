@@ -168,14 +168,10 @@ TEST_CASE("Basis-mapped view of a state vector",
       std::vector<sv_index_type> basis_indices{3, 5, 6, 9, 10, 12};
       basis_mapper mapper(basis_indices);
       CHECK(mapper.size() == 6);
-      SECTION("const") {
-        auto view = mapper.make_const_view(st);
-        CHECK(view.map == map);
-      }
-      SECTION("non-const") {
-        auto view = mapper.make_view(st);
-        CHECK(view.map == map);
-      }
+      CHECK(mapper.map() == map);
+      std::unordered_map<sv_index_type, sv_index_type> inv_map;
+      for(auto i : {3, 5, 6, 9, 10, 12}) inv_map[inv_map.size()] = i;
+      CHECK(mapper.inverse_map() == inv_map);
     }
 
     SECTION("O|vac>") {
@@ -187,14 +183,7 @@ TEST_CASE("Basis-mapped view of a state vector",
                c_dag("up", 1) * c_dag("up", 2);
       basis_mapper mapper(make_qoperator(P, hs), hs);
       CHECK(mapper.size() == 6);
-      SECTION("const") {
-        auto view = mapper.make_const_view(st);
-        check_equal_maps_up_to_value_permutation(view.map, map);
-      }
-      SECTION("non-const") {
-        auto view = mapper.make_view(st);
-        check_equal_maps_up_to_value_permutation(view.map, map);
-      }
+      check_equal_maps_up_to_value_permutation(mapper.map(), map);
     }
 
     SECTION("Compositions") {
@@ -202,6 +191,7 @@ TEST_CASE("Basis-mapped view of a state vector",
 
       basis_mapper mapper_empty(O_list_t{}, hs, 0);
       CHECK(mapper_empty.size() == 1);
+      CHECK(mapper_empty.map().at(0) == 0);
 
       O_list_t O_list{
         make_qoperator(c_dag("dn", 1), hs),
@@ -212,26 +202,10 @@ TEST_CASE("Basis-mapped view of a state vector",
 
       basis_mapper mapper_N0(O_list, hs, 0);
       CHECK(mapper_N0.size() == 1);
+      CHECK(mapper_N0.map().at(0) == 0);
+
       basis_mapper mapper(O_list, hs, 2);
-
-      SECTION("const") {
-        CHECK(mapper_empty.make_const_view(st).map.size() == 1);
-        CHECK(mapper_empty.make_const_view(st).map.at(0) == 0);
-        CHECK(mapper_N0.make_const_view(st).map.size() == 1);
-        CHECK(mapper_N0.make_const_view(st).map.at(0) == 0);
-
-        auto view = mapper.make_const_view(st);
-        check_equal_maps_up_to_value_permutation(view.map, map);
-      }
-      SECTION("non-const") {
-        CHECK(mapper_empty.make_view(st).map.size() == 1);
-        CHECK(mapper_empty.make_view(st).map.at(0) == 0);
-        CHECK(mapper_N0.make_view(st).map.size() == 1);
-        CHECK(mapper_N0.make_view(st).map.at(0) == 0);
-
-        auto view = mapper.make_view(st);
-        check_equal_maps_up_to_value_permutation(view.map, map);
-      }
+      check_equal_maps_up_to_value_permutation(mapper.map(), map);
     }
 
     SECTION("Compositions/bosons") {

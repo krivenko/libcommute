@@ -216,6 +216,27 @@ public:
   // Number of basis states in the mapping
   inline sv_index_type size() const { return map_.size(); }
 
+  // Direct access to the mapping
+  inline std::unordered_map<sv_index_type, sv_index_type> const& map() const {
+    return map_;
+  }
+
+  // Direct access to the inverse mapping (slow!)
+  inline std::unordered_map<sv_index_type, sv_index_type> inverse_map() const {
+    std::unordered_map<sv_index_type, sv_index_type> inv_map;
+    std::transform(
+      map_.begin(),
+      map_.end(),
+      std::inserter(inv_map, inv_map.end()),
+      [](std::pair<sv_index_type, sv_index_type> const& p) {
+        return std::make_pair(p.second, p.first);
+      }
+    );
+    // Check that map_ is actually invertible
+    assert(inv_map.size() == map_.size());
+    return inv_map;
+  }
+
   // Make a non-constant basis mapping view
   template<typename StateVector>
   mapped_basis_view<StateVector, false> make_view(StateVector & sv) const {
