@@ -10,13 +10,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_BS_CONSTRUCTOR_HPP_
-#define LIBCOMMUTE_QOPERATOR_BS_CONSTRUCTOR_HPP_
+#ifndef LIBCOMMUTE_QOPERATOR_ES_CONSTRUCTOR_HPP_
+#define LIBCOMMUTE_QOPERATOR_ES_CONSTRUCTOR_HPP_
 
-#include "basis_space.hpp"
-#include "basis_space_fermion.hpp"
-#include "basis_space_boson.hpp"
-#include "basis_space_spin.hpp"
+#include "elementary_space.hpp"
+#include "elementary_space_fermion.hpp"
+#include "elementary_space_boson.hpp"
+#include "elementary_space_spin.hpp"
 #include "../algebra_tags.hpp"
 #include "../metafunctions.hpp"
 #include "../expression/generator_spin.hpp"
@@ -31,41 +31,41 @@
 namespace libcommute {
 
 //
-// Exception: Cannot construct a basis space
+// Exception: Cannot construct an elementary space
 //
 template<typename... IndexTypes>
-struct bs_construction_failure : public std::runtime_error {
+struct es_construction_failure : public std::runtime_error {
   std::unique_ptr<generator<IndexTypes...>> generator_ptr;
   inline static std::string make_what(generator<IndexTypes...> const& g) {
     std::stringstream ss;
-    ss << "Cannot construct basis space associated with algebra generator "
+    ss << "Cannot construct elementary space associated with algebra generator "
        << g;
     return ss.str();
   }
-  bs_construction_failure(generator<IndexTypes...> const& g) :
+  es_construction_failure(generator<IndexTypes...> const& g) :
     std::runtime_error(make_what(g)),
     generator_ptr(g.clone())
   {}
 };
 
 //
-// Functors to construct basis spaces associated with algebra generators.
+// Functors to construct elementary spaces associated with algebra generators.
 //
 
-template<typename... AlgebraTags> class bs_constructor;
+template<typename... AlgebraTags> class es_constructor;
 
 namespace detail {
 
 template<typename AlgebraTag1, typename... AlgebraTagsTail>
-class bs_constructor_impl : public bs_constructor<AlgebraTag1>,
-                            public bs_constructor_impl<AlgebraTagsTail...> {
+class es_constructor_impl : public es_constructor<AlgebraTag1>,
+                            public es_constructor_impl<AlgebraTagsTail...> {
 
-  using base_head = bs_constructor<AlgebraTag1>;
-  using base_tail = bs_constructor_impl<AlgebraTagsTail...>;
+  using base_head = es_constructor<AlgebraTag1>;
+  using base_tail = es_constructor_impl<AlgebraTagsTail...>;
 
 public:
 
-  bs_constructor_impl() = default;
+  es_constructor_impl() = default;
 
   template<typename Arg1,
            typename... ArgsTail,
@@ -73,7 +73,7 @@ public:
              std::is_constructible<base_head, Arg1>::value,
              void*
            >::type = nullptr>
-  inline bs_constructor_impl(Arg1&& arg1, ArgsTail&&... args_tail)
+  inline es_constructor_impl(Arg1&& arg1, ArgsTail&&... args_tail)
     : base_head(std::forward<Arg1>(arg1)),
       base_tail(std::forward<ArgsTail>(args_tail)...) {}
 
@@ -83,12 +83,12 @@ public:
              !std::is_constructible<base_head, Arg1>::value,
              void*
            >::type = nullptr>
-  inline bs_constructor_impl(Arg1&& arg1, ArgsTail&&... args_tail)
+  inline es_constructor_impl(Arg1&& arg1, ArgsTail&&... args_tail)
     : base_tail(std::forward<Arg1>(arg1),
                 std::forward<ArgsTail>(args_tail)...) {}
 
   template<typename... IndexTypes>
-  inline  std::unique_ptr<basis_space<IndexTypes...>>
+  inline  std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
     if(g.algebra_id() == AlgebraTag1::algebra_id())
       return base_head::operator()(g);
@@ -97,95 +97,95 @@ public:
   }
 };
 
-// Specialization of bs_constructor_impl: end of algebra tag chain
+// Specialization of es_constructor_impl: end of algebra tag chain
 template<typename AlgebraTag>
-class bs_constructor_impl<AlgebraTag> : public bs_constructor<AlgebraTag> {
+class es_constructor_impl<AlgebraTag> : public es_constructor<AlgebraTag> {
 
-  using base = bs_constructor<AlgebraTag>;
+  using base = es_constructor<AlgebraTag>;
 
 public:
 
-  bs_constructor_impl() = default;
+  es_constructor_impl() = default;
   template<typename Arg>
-  inline bs_constructor_impl(Arg&& arg) : base(std::forward<Arg>(arg)) {}
+  inline es_constructor_impl(Arg&& arg) : base(std::forward<Arg>(arg)) {}
 
   template<typename... IndexTypes>
-  inline  std::unique_ptr<basis_space<IndexTypes...>>
+  inline  std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
     if(g.algebra_id() == AlgebraTag::algebra_id())
       return base::operator()(g);
     else
-      throw bs_construction_failure<IndexTypes...>(g);
+      throw es_construction_failure<IndexTypes...>(g);
   }
 };
 
 } // namespace libcommute::detail
 
 template<typename... AlgebraTags>
-class bs_constructor : public detail::bs_constructor_impl<AlgebraTags...> {
+class es_constructor : public detail::es_constructor_impl<AlgebraTags...> {
 
   static_assert(sizeof...(AlgebraTags) > 0,
                 "There must be at least one algebra tag");
   static_assert(algebra_tags_ordered<AlgebraTags...>::value,
                 "Algebra tags must be ordered according to their IDs");
 
-  using base = detail::bs_constructor_impl<AlgebraTags...>;
+  using base = detail::es_constructor_impl<AlgebraTags...>;
 
 public:
 
   template<typename... Args>
-  inline bs_constructor(Args&&... args) : base(std::forward<Args>(args)...) {}
+  inline es_constructor(Args&&... args) : base(std::forward<Args>(args)...) {}
 };
 
 //
-// Basis space constructors for specific algebras
+// Elementary space constructors for specific algebras
 //
 
-template<> class bs_constructor<fermion> {
+template<> class es_constructor<fermion> {
 public:
-  bs_constructor() = default;
+  es_constructor() = default;
 
   template<typename... IndexTypes>
-  inline std::unique_ptr<basis_space<IndexTypes...>>
+  inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif
-    return make_unique<basis_space_fermion<IndexTypes...>>(g.indices());
+    return make_unique<elementary_space_fermion<IndexTypes...>>(g.indices());
   }
 };
 
-template<> class bs_constructor<boson> {
+template<> class es_constructor<boson> {
 
   int bits_per_boson_;
 
 public:
-  bs_constructor() = delete;
-  bs_constructor(int bits_per_boson) : bits_per_boson_(bits_per_boson) {}
+  es_constructor() = delete;
+  es_constructor(int bits_per_boson) : bits_per_boson_(bits_per_boson) {}
 
   template<typename... IndexTypes>
-  inline std::unique_ptr<basis_space<IndexTypes...>>
+  inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif
-    return make_unique<basis_space_boson<IndexTypes...>>(bits_per_boson_,
-                                                         g.indices());
+    return make_unique<elementary_space_boson<IndexTypes...>>(bits_per_boson_,
+                                                              g.indices());
   }
 };
 
-template<> class bs_constructor<spin> {
+template<> class es_constructor<spin> {
 public:
-  bs_constructor() = default;
+  es_constructor() = default;
 
   template<typename... IndexTypes>
-  inline std::unique_ptr<basis_space<IndexTypes...>>
+  inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
 #ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
     using std::make_unique;
 #endif
     double spin = dynamic_cast<generator_spin<IndexTypes...> const&>(g).spin();
-    return make_unique<basis_space_spin<IndexTypes...>>(spin, g.indices());
+    return make_unique<elementary_space_spin<IndexTypes...>>(spin, g.indices());
   }
 };
 
@@ -193,8 +193,8 @@ public:
 // Useful type aliases
 //
 
-using default_bs_constructor = bs_constructor<fermion, spin>;
-using boson_bs_constructor = bs_constructor<fermion, boson, spin>;
+using default_es_constructor = es_constructor<fermion, spin>;
+using boson_es_constructor = es_constructor<fermion, boson, spin>;
 
 } // namespace libcommute
 

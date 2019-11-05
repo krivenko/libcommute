@@ -36,7 +36,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
 
   using mon_type = monomial<int>;
   using hs_type = hilbert_space<int>;
-  using pad_bs_type = basis_space_padding<int>;
+  using pad_es_type = elementary_space_padding<int>;
   using ma_type = monomial_action<boson>;
 
   constexpr int n_ops = 3;
@@ -52,7 +52,7 @@ TEST_CASE("Action of a bosonic monomial on an index",
   }
 
   hs_type hs;
-  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_bs_type(i));
+  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_es_type(i));
   std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 7}, {8, 9}};
   for(int i = 0; i < n_ops; ++i) {
     int n_bits = bit_ranges[i].second - bit_ranges[i].first + 1;

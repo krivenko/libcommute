@@ -13,8 +13,8 @@
 #ifndef LIBCOMMUTE_QOPERATOR_HILBERT_SPACE_HPP_
 #define LIBCOMMUTE_QOPERATOR_HILBERT_SPACE_HPP_
 
-#include "basis_space.hpp"
-#include "bs_constructor.hpp"
+#include "elementary_space.hpp"
+#include "es_constructor.hpp"
 #include "state_vector.hpp"
 #include "../expression/expression.hpp"
 #include "../metafunctions.hpp"
@@ -40,33 +40,31 @@ using bit_range_t = std::pair<int, int>;
 template<typename... IndexTypes>
 class hilbert_space {
 
-  using basis_space_t = basis_space<IndexTypes...>;
-  using bs_ptr_type = std::unique_ptr<basis_space_t>;
+  using elementary_space_t = elementary_space<IndexTypes...>;
+  using es_ptr_type = std::unique_ptr<elementary_space_t>;
 
   // Size of a Hilbert space must be representable by an integer with
   // at most this number of bits.
   static constexpr int max_n_bits = std::numeric_limits<sv_index_type>::digits;
 
-public:
-
-  // Compare two basis_space_t objects wrapped in std::unique_ptr<T>
+  // Compare two elementary_space_t objects wrapped in std::unique_ptr<T>
   struct less {
-    inline bool operator()(bs_ptr_type const& p1, bs_ptr_type const& p2) const {
+    inline bool operator()(es_ptr_type const& p1, es_ptr_type const& p2) const {
       return *p1 < *p2;
     }
   };
 
   // Helper method for one of constructors
-  template<typename BSType1, typename... BSTypesTail>
-  inline void constructor_impl(BSType1&& bs, BSTypesTail&&... more_bs) {
-    add(std::forward<BSType1>(bs));
-    constructor_impl(std::forward<BSTypesTail>(more_bs)...);
+  template<typename ESType1, typename... ESTypesTail>
+  inline void constructor_impl(ESType1&& es, ESTypesTail&&... more_es) {
+    add(std::forward<ESType1>(es));
+    constructor_impl(std::forward<ESTypesTail>(more_es)...);
   }
   void constructor_impl() {}
 
   // Check if all provided types are derived from generator<IndexTypes...>
-  template<typename... Types>
-  using all_are_basis_spaces = all_derived_from<basis_space_t, Types...>;
+  template<typename... Types> using all_are_elementary_spaces
+    = all_derived_from<elementary_space_t, Types...>;
 
 public:
 
@@ -74,19 +72,19 @@ public:
   // Exception types
   //
 
-  struct basis_space_exists : public std::runtime_error {
-    bs_ptr_type basis_space_ptr;
-    basis_space_exists(basis_space_t const& bs) :
-      std::runtime_error("Basis space already exists"),
-      basis_space_ptr(bs.clone())
+  struct elementary_space_exists : public std::runtime_error {
+    es_ptr_type elementary_space_ptr;
+    elementary_space_exists(elementary_space_t const& es) :
+      std::runtime_error("Elementary space already exists"),
+      elementary_space_ptr(es.clone())
     {}
   };
 
-  struct basis_space_not_found : public std::runtime_error {
-    bs_ptr_type basis_space_ptr;
-    basis_space_not_found(basis_space_t const& bs) :
-      std::runtime_error("Basis space not found"),
-      basis_space_ptr(bs.clone())
+  struct elementary_space_not_found : public std::runtime_error {
+    es_ptr_type elementary_space_ptr;
+    elementary_space_not_found(elementary_space_t const& es) :
+      std::runtime_error("Elementary space not found"),
+      elementary_space_ptr(es.clone())
     {}
   };
 
@@ -104,24 +102,24 @@ public:
   // Construct empty space
   hilbert_space() = default;
 
-  // Construct from individual basis spaces
+  // Construct from individual elementary spaces
   template<typename... Args,
            typename = typename std::enable_if<
-              all_are_basis_spaces<Args...>::value>::type
+              all_are_elementary_spaces<Args...>::value>::type
            >
   explicit hilbert_space(Args&&... args) {
     constructor_impl(std::forward<Args>(args)...);
   }
 
-  // Inspect polynomial expression `expr` and collect basis spaces
+  // Inspect polynomial expression `expr` and collect elementary spaces
   // associated to every algebra generator found in `expr`. Construction
-  // of basis spaces is performed by `bs_constr` functor.
-  template<typename ScalarType, typename BSConstructor = default_bs_constructor>
+  // of elementary spaces is performed by `es_constr` functor.
+  template<typename ScalarType, typename ESConstructor = default_es_constructor>
   hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
-                BSConstructor&& bs_constr = {}) {
+                ESConstructor&& es_constr = {}) {
     for(auto const& m : expr) {
       for(auto const& g : m.monomial) {
-        basis_spaces_.emplace(bs_constr(g), bit_range_t(0, 0));
+        elementary_spaces_.emplace(es_constr(g), bit_range_t(0, 0));
       }
     }
     recompute_bit_ranges();
@@ -129,21 +127,21 @@ public:
 
   // Value semantics
   hilbert_space(hilbert_space const& hs) : bit_range_end_(hs.bit_range_end_) {
-    for(auto const& bs : hs.basis_spaces_) {
-      basis_spaces_.emplace_hint(basis_spaces_.end(),
-                                 bs.first->clone(),
-                                 bs.second);
+    for(auto const& es : hs.elementary_spaces_) {
+      elementary_spaces_.emplace_hint(elementary_spaces_.end(),
+                                      es.first->clone(),
+                                      es.second);
     }
 
   }
   hilbert_space(hilbert_space&&) noexcept = default;
   hilbert_space& operator=(hilbert_space const& hs) {
     bit_range_end_ = hs.bit_range_end_;
-    basis_spaces_.clear();
-    for(auto const& bs : hs.basis_spaces_) {
-      basis_spaces_.emplace_hint(basis_spaces_.end(),
-                                 bs.first->clone(),
-                                 bs.second);
+    elementary_spaces_.clear();
+    for(auto const& es : hs.elementary_spaces_) {
+      elementary_spaces_.emplace_hint(elementary_spaces_.end(),
+                                      es.first->clone(),
+                                      es.second);
     }
     return *this;
   }
@@ -152,11 +150,11 @@ public:
   // Equality
   inline friend bool operator==(hilbert_space const& hs1,
                                 hilbert_space const& hs2) {
-    using value_type = typename decltype(basis_spaces_)::value_type;
+    using value_type = typename decltype(elementary_spaces_)::value_type;
     return hs1.size() == hs2.size() &&
-           std::equal(hs1.basis_spaces_.begin(),
-                      hs1.basis_spaces_.end(),
-                      hs2.basis_spaces_.begin(),
+           std::equal(hs1.elementary_spaces_.begin(),
+                      hs1.elementary_spaces_.end(),
+                      hs2.elementary_spaces_.begin(),
                       [](value_type const& v1, value_type const& v2) {
                         return *v1.first == *v2.first && v1.second == v2.second;
                       }
@@ -167,23 +165,23 @@ public:
     return !operator==(hs1, hs2);
   }
 
-  // Append a new basis space to the ordered product
-  void add(basis_space_t const& bs) {
-    auto r = basis_spaces_.emplace(bs.clone(), bit_range_t(0, 0));
-    if(!r.second) throw basis_space_exists(bs);
+  // Append a new elementary space to the ordered product
+  void add(elementary_space_t const& es) {
+    auto r = elementary_spaces_.emplace(es.clone(), bit_range_t(0, 0));
+    if(!r.second) throw elementary_space_exists(es);
     recompute_bit_ranges();
   }
 
-  // Is a given basis space found in this Hilbert space
-  bool has(basis_space_t const& bs) const {
-    return basis_spaces_.count(bs.clone()) == 1;
+  // Is a given elementary space found in this Hilbert space
+  bool has(elementary_space_t const& es) const {
+    return elementary_spaces_.count(es.clone()) == 1;
   }
 
-  // Bit range spanned by a basis space
-  bit_range_t bit_range(basis_space_t const& bs) const {
-    auto it = basis_spaces_.find(bs.clone());
-    if(it == basis_spaces_.end())
-      throw basis_space_not_found(bs);
+  // Bit range spanned by an elementary space
+  bit_range_t bit_range(elementary_space_t const& es) const {
+    auto it = elementary_spaces_.find(es.clone());
+    if(it == elementary_spaces_.end())
+      throw elementary_space_not_found(es);
     else
       return it->second;
   }
@@ -193,14 +191,14 @@ public:
     auto it = algebra_bit_ranges_.find(algebra_id);
     if(it == algebra_bit_ranges_.end())
       throw std::runtime_error(
-        "No basis spaces with algebra ID " + std::to_string(algebra_id)
+        "No elementary spaces with algebra ID " + std::to_string(algebra_id)
       );
     else
       return it->second;
   }
 
-  // Number of basis spaces
-  size_t size() const { return basis_spaces_.size(); }
+  // Number of elementary spaces
+  size_t size() const { return elementary_spaces_.size(); }
 
   // The minimal number of binary digits needed to represent any state
   // in this Hilbert space
@@ -222,16 +220,16 @@ public:
 
 private:
 
-  // Recompute bit ranges in basis_spaces_
+  // Recompute bit ranges in elementary_spaces_
   void recompute_bit_ranges() {
     algebra_bit_ranges_.clear();
     bit_range_end_ = -1;
-    for(auto & bs : basis_spaces_) {
-      int n_bits = bs.first->n_bits();
+    for(auto & es : elementary_spaces_) {
+      int n_bits = es.first->n_bits();
       bit_range_t range(bit_range_end_ + 1, bit_range_end_ + n_bits);
-      bs.second = range;
+      es.second = range;
 
-      int algebra_id = bs.first->algebra_id();
+      int algebra_id = es.first->algebra_id();
       auto algebra_range_it = algebra_bit_ranges_.find(algebra_id);
       if(algebra_range_it == algebra_bit_ranges_.end())
         algebra_bit_ranges_.emplace(algebra_id, range);
@@ -249,9 +247,10 @@ private:
   }
 
   // List of base spaces in the product and their corresponding bit ranges
-  std::map<bs_ptr_type, bit_range_t, less> basis_spaces_;
+  std::map<es_ptr_type, bit_range_t, less> elementary_spaces_;
 
-  // Bit ranges spanned by all basis spaces associated with the same algebra
+  // Bit ranges spanned by all elementary spaces
+  // associated with the same algebra
   std::map<int, bit_range_t> algebra_bit_ranges_;
 
   // End of the bit range spanned by this Hilbert space
@@ -261,12 +260,12 @@ private:
 // Convenience factory function
 template<typename ScalarType,
          typename... IndexTypes,
-         typename BSConstructor = default_bs_constructor>
+         typename ESConstructor = default_es_constructor>
 hilbert_space<IndexTypes...>
 make_hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
-                   BSConstructor&& bs_constr = {}) {
+                   ESConstructor&& es_constr = {}) {
   return hilbert_space<IndexTypes...>(expr,
-                                      std::forward<BSConstructor>(bs_constr));
+                                      std::forward<ESConstructor>(es_constr));
 }
 
 } // namespace libcommute

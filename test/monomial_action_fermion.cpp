@@ -34,7 +34,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
 
   using mon_type = monomial<int>;
   using hs_type = hilbert_space<int>;
-  using pad_bs_type = basis_space_padding<int>;
+  using pad_es_type = elementary_space_padding<int>;
   using ma_type = monomial_action<fermion>;
 
   constexpr int n_ops = 4;
@@ -65,7 +65,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
   };
 
   hs_type hs;
-  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_bs_type(i));
+  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_es_type(i));
   for(int i = 0; i < n_ops; ++i) hs.add(make_space_fermion(i));
 
   std::vector<sv_index_type> in_index_list(1 << n_ops);

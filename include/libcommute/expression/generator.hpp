@@ -23,7 +23,7 @@
 
 namespace libcommute {
 
-template<typename... IndexTypes> class basis_space;
+template<typename... IndexTypes> class elementary_space;
 
 //
 // Abstract algebra generator

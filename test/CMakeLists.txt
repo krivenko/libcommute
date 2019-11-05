@@ -29,7 +29,7 @@ set(TESTS
   commutators
   gamma
   state_vector
-  basis_space
+  elementary_space
   hilbert_space
   monomial_action
   monomial_action_fermion
@@ -55,7 +55,7 @@ set(CXX17_TESTS
   dyn_indices
   generator_dyn
   factories_dyn
-  basis_space_dyn
+  elementary_space_dyn
 )
 
 # C++17 tests

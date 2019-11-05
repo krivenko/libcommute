@@ -17,9 +17,9 @@
 #include <libcommute/expression/generator_boson.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
-#include <libcommute/qoperator/basis_space_fermion.hpp>
-#include <libcommute/qoperator/basis_space_boson.hpp>
-#include <libcommute/qoperator/basis_space_spin.hpp>
+#include <libcommute/qoperator/elementary_space_fermion.hpp>
+#include <libcommute/qoperator/elementary_space_boson.hpp>
+#include <libcommute/qoperator/elementary_space_spin.hpp>
 #include <libcommute/qoperator/hilbert_space.hpp>
 #include <libcommute/qoperator/monomial_action_fermion.hpp>
 #include <libcommute/qoperator/monomial_action_boson.hpp>

@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_SPIN_HPP_
 #define LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_SPIN_HPP_
 
-#include "basis_space_spin.hpp"
+#include "elementary_space_spin.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
 #include "state_vector.hpp"
@@ -91,11 +91,11 @@ public:
         auto const& g = dynamic_cast<generator_spin<IndexTypes...> const&>(*it);
         double spin = g.spin();
 
-        basis_space_spin<IndexTypes...> bs(spin, g.indices());
-        if(!hs.has(bs))
+        elementary_space_spin<IndexTypes...> es(spin, g.indices());
+        if(!hs.has(es))
           throw unknown_generator<IndexTypes...>(g);
 
-        bit_range_t const& bit_range = hs.bit_range(bs);
+        bit_range_t const& bit_range = hs.bit_range(es);
         int shift = bit_range.first;
         int n_bits = bit_range.second - bit_range.first + 1;
 

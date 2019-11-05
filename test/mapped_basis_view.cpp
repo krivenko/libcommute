@@ -212,7 +212,7 @@ TEST_CASE("Basis-mapped view of a state vector",
       using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
 
       auto hs = make_hilbert_space(a_dag(1) + a_dag(2) + a_dag(3) + a_dag(4),
-                                   boson_bs_constructor(4));
+                                   boson_es_constructor(4));
 
       O_list_t O_list{
         make_qoperator(a_dag(1), hs),

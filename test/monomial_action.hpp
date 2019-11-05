@@ -14,7 +14,7 @@
 #define LIBCOMMUTE_TEST_MONOMIAL_ACTION_HPP_
 
 #include <libcommute/expression/monomial.hpp>
-#include <libcommute/qoperator/basis_space.hpp>
+#include <libcommute/qoperator/elementary_space.hpp>
 #include <libcommute/qoperator/hilbert_space.hpp>
 #include <libcommute/qoperator/state_vector.hpp>
 
@@ -24,20 +24,21 @@
 namespace libcommute {
 
 //
-// Padding basis space: used to 'pad' a Hilbert space with unused bits
+// Padding elementary space: used to 'pad' a Hilbert space with unused bits
 //   algebra_id() = fermion::algebra_id()-2
 //   n_bits() = 2
 //
 template<typename... IndexTypes>
-class basis_space_padding : public basis_space<IndexTypes...> {
+class elementary_space_padding : public elementary_space<IndexTypes...> {
 public:
-  basis_space_padding() = delete;
+  elementary_space_padding() = delete;
   template<typename... Args>
-  basis_space_padding(Args&&... indices) :
-    basis_space<IndexTypes...>(std::forward<Args>(indices)...) {}
+  elementary_space_padding(Args&&... indices) :
+    elementary_space<IndexTypes...>(std::forward<Args>(indices)...) {}
 
-  virtual std::unique_ptr<basis_space<IndexTypes...>> clone() const override {
-    return make_unique<basis_space_padding>(*this);
+  virtual std::unique_ptr<elementary_space<IndexTypes...>>
+  clone() const override {
+    return make_unique<elementary_space_padding>(*this);
   }
   virtual int algebra_id() const override { return fermion::algebra_id()-2; }
   virtual int n_bits() const override { return 2; }

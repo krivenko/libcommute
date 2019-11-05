@@ -36,7 +36,7 @@
 namespace libcommute {
 
 //
-// Exception: Cannot construct a basis space
+// Exception: Cannot construct an elementary space
 //
 template<typename... IndexTypes>
 struct unknown_generator : public std::runtime_error {

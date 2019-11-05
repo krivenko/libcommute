@@ -74,13 +74,13 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
   // Quantum operator form of the Hamiltonian
   auto Hop = make_qoperator(H, hs);
 
-  using bs_type = basis_space_fermion<std::string, int>;
-  sv_index_type d0 = 1 << hs.bit_range(bs_type("dn", 0)).first;
-  sv_index_type d1 = 1 << hs.bit_range(bs_type("dn", 1)).first;
-  sv_index_type d2 = 1 << hs.bit_range(bs_type("dn", 2)).first;
-  sv_index_type u0 = 1 << hs.bit_range(bs_type("up", 0)).first;
-  sv_index_type u1 = 1 << hs.bit_range(bs_type("up", 1)).first;
-  sv_index_type u2 = 1 << hs.bit_range(bs_type("up", 2)).first;
+  using es_type = elementary_space_fermion<std::string, int>;
+  sv_index_type d0 = 1 << hs.bit_range(es_type("dn", 0)).first;
+  sv_index_type d1 = 1 << hs.bit_range(es_type("dn", 1)).first;
+  sv_index_type d2 = 1 << hs.bit_range(es_type("dn", 2)).first;
+  sv_index_type u0 = 1 << hs.bit_range(es_type("up", 0)).first;
+  sv_index_type u1 = 1 << hs.bit_range(es_type("up", 1)).first;
+  sv_index_type u2 = 1 << hs.bit_range(es_type("up", 2)).first;
 
   SECTION("space_partition()") {
     auto sp = space_partition(Hop, hs);

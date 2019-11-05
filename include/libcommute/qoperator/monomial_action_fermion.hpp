@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
 #define LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
 
-#include "basis_space_fermion.hpp"
+#include "elementary_space_fermion.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
 #include "state_vector.hpp"
@@ -57,12 +57,12 @@ public:
       if(!is_fermion(*it))
         throw unknown_generator<IndexTypes...>(*it);
 
-      basis_space_fermion<IndexTypes...> bs(it->indices());
-      if(!hs.has(bs))
+      elementary_space_fermion<IndexTypes...> es(it->indices());
+      if(!hs.has(es))
         throw unknown_generator<IndexTypes...>(*it);
 
-      auto br = hs.bit_range(bs);
-      // All fermionic basis spaces are 2-dimensional
+      auto br = hs.bit_range(es);
+      // All fermionic elementary spaces are 2-dimensional
       assert(br.first == br.second);
 
       bool dagger =

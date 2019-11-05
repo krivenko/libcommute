@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_BOSON_HPP_
 #define LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_BOSON_HPP_
 
-#include "basis_space_boson.hpp"
+#include "elementary_space_boson.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
 #include "state_vector.hpp"
@@ -87,11 +87,11 @@ public:
         throw unknown_generator<IndexTypes...>(*it);
 
       if(next_it == end_it || *next_it != *it) {
-        basis_space_boson<IndexTypes...> bs(0, it->indices());
-        if(!hs.has(bs))
+        elementary_space_boson<IndexTypes...> es(0, it->indices());
+        if(!hs.has(es))
           throw unknown_generator<IndexTypes...>(*it);
 
-        bit_range_t const& bit_range = hs.bit_range(bs);
+        bit_range_t const& bit_range = hs.bit_range(es);
         int shift = bit_range.first;
         int n_bits = bit_range.second - bit_range.first + 1;
         sv_index_type n_max = (sv_index_type(1) << n_bits) - 1;
