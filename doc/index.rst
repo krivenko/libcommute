@@ -1,13 +1,11 @@
 Welcome to libcommute's documentation!
-====================================
+======================================
 
-Contents:
+TODO
+~~~~
 
 .. toctree::
    :maxdepth: 2
-
-.. doxygennamespace:: libcommute
-   :members:
 
 Indices and tables
 ==================

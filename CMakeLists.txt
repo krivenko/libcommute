@@ -75,12 +75,11 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
 if(DOCUMENTATION)
   message(STATUS "Building documentation")
 
-  # Detect Doxygen, Sphinx and Breathe
+  # Detect Sphinx and sphinx_rtd_theme
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-  find_package(Doxygen REQUIRED)
   find_package(PythonInterp 3 REQUIRED)
   find_package(Sphinx 2.0.0 REQUIRED)
-  find_package(Breathe 4.13.0 REQUIRED)
+  find_package(SphinxRTDTheme 0.3.0 REQUIRED)
 
   add_subdirectory(doc)
 endif(DOCUMENTATION)

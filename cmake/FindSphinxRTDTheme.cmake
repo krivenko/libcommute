@@ -8,12 +8,5 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-INPUT = "@DOXYGEN_INPUT_DIR@"
-OUTPUT_DIRECTORY = "@DOXYGEN_OUTPUT_DIR@"
-RECURSIVE = YES
-
-OUTPUT_LANGUAGE = "English"
-STRIP_FROM_PATH = "@DOXYGEN_INPUT_DIR@"
-GENERATE_XML = YES
-GENERATE_HTML = NO
-GENERATE_LATEX = NO
+include(cmake/FindPythonModule.cmake)
+FindPythonModule(SphinxRTDTheme sphinx_rtd_theme)
