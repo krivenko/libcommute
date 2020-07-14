@@ -89,6 +89,7 @@ Contents
     :maxdepth: 3
 
     installation
+    usage
     genindex
     search
 

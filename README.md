@@ -31,16 +31,15 @@ Installation
 You will need CMake version 3.8.0 or newer [1] to build examples/unit tests and
 to install *libcommute* so that it can be used from other CMake projects.
 
-Assuming that *libcommute* is to be installed in
-`<libcommute_installation_prefix>`, the installation normally proceeds
-in a few simple steps.
+Assuming that *libcommute* is to be installed in `<LIBCOMMUTE_PREFIX>`,
+the installation normally proceeds in a few simple steps.
 
 ```
 $ git clone https://github.com/krivenko/libcommute.git libcommute.src
 $ mkdir libcommute.build && cd libcommute.build
-$ cmake ../libcommute.src                                 \
-  -DCMAKE_INSTALL_PREFIX=<libcommute_installation_prefix> \
-  -DEXAMPLES=ON                                           \
+$ cmake ../libcommute.src                    \
+  -DCMAKE_INSTALL_PREFIX=<LIBCOMMUTE_PREFIX> \
+  -DEXAMPLES=ON                              \
   -DTESTS=ON
 $ make
 $ make test
@@ -58,13 +57,32 @@ Once *libcommute* is installed, you can use it in your CMake project. Here is
 a minimal example of an application `CMakeLists.txt` file.
 
 ```cmake
-# TODO
+  cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
+
+  project(myproject LANGUAGES CXX)
+
+  # Change the C++ standard to '17' if you plan to use
+  # the dynamic index sequence feature
+  set(CMAKE_CXX_STANDARD 11)
+
+  # LIBCOMMUTE_ROOT is the installation prefix of libcommute
+  set(LIBCOMMUTE_DIR ${LIBCOMMUTE_ROOT}/lib/cmake)
+
+  # Import libcommute target
+  find_package(libcommute 0.4 CONFIG REQUIRED)
+
+  # Build an executable called 'myprog'
+  add_executable(myprog myprog.cpp)
+  target_link_libraries(myprog PRIVATE libcommute)
 ```
 
-Here is how `test.cpp` could look like.
-```c++
-// TODO
-```
+Code example: quantum-mechanical operator DSL
+---------------------------------------------
+TODO
+
+Code example: ED tools
+----------------------
+TODO
 
 Citing
 ------
