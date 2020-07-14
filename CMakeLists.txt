@@ -64,6 +64,12 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommuteConfigVersion.cmake"
               "${PROJECT_BINARY_DIR}/libcommuteConfig.cmake"
         DESTINATION lib/cmake)
 
+# Install pkg-config file
+configure_file(libcommute.pc.in libcommute.pc @ONLY)
+install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
+        DESTINATION share/pkgconfig
+)
+
 # Build unit tests
 if(TESTS)
   enable_testing()
