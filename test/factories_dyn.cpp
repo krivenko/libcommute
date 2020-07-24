@@ -182,6 +182,7 @@ TEST_CASE("Factory functions", "[factories]") {
 
   SECTION("complex") {
     const std::complex<double> c1(1.0);
+    const std::complex<double> I(0, 1.0);
 
     SECTION("fermion") {
       using complex::c_dag;
@@ -214,6 +215,8 @@ TEST_CASE("Factory functions", "[factories]") {
     SECTION("spin-1/2") {
       using complex::S_p;
       using complex::S_m;
+      using complex::S_x;
+      using complex::S_y;
       using complex::S_z;
 
       auto S_p_0_x = S_p(0, "x");
@@ -222,10 +225,15 @@ TEST_CASE("Factory functions", "[factories]") {
       check_monomial(S_m_0_x, c1, make_spin(spin_component::minus, 0, "x"));
       auto S_z_0_x = S_z(0, "x");
       check_monomial(S_z_0_x, c1, make_spin(spin_component::z, 0, "x"));
+
+      CHECK(S_p_0_x == S_x(0, "x") + I * S_y(0, "x"));
+      CHECK(S_m_0_x == S_x(0, "x") - I * S_y(0, "x"));
     }
     SECTION("spin-1") {
       using complex::S_p;
       using complex::S_m;
+      using complex::S_x;
+      using complex::S_y;
       using complex::S_z;
 
       auto S_p_0_x = S_p<3>(0, "x");
@@ -234,10 +242,15 @@ TEST_CASE("Factory functions", "[factories]") {
       check_monomial(S_m_0_x, c1, make_spin(1.0, spin_component::minus, 0, "x"));
       auto S_z_0_x = S_z<3>(0, "x");
       check_monomial(S_z_0_x, c1, make_spin(1.0, spin_component::z, 0, "x"));
+
+      CHECK(S_p_0_x == S_x<3>(0, "x") + I * S_y<3>(0, "x"));
+      CHECK(S_m_0_x == S_x<3>(0, "x") - I * S_y<3>(0, "x"));
     }
     SECTION("spin-3/2") {
       using complex::S_p;
       using complex::S_m;
+      using complex::S_x;
+      using complex::S_y;
       using complex::S_z;
 
       auto S_p_0_x = S_p<4>(0, "x");
@@ -252,6 +265,9 @@ TEST_CASE("Factory functions", "[factories]") {
       check_monomial(S_z_0_x,
                      c1,
                      make_spin(3.0/2, spin_component::z, 0, "x"));
+
+      CHECK(S_p_0_x == S_x<4>(0, "x") + I * S_y<4>(0, "x"));
+      CHECK(S_m_0_x == S_x<4>(0, "x") - I * S_y<4>(0, "x"));
     }
   }
 

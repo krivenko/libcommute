@@ -34,7 +34,7 @@ namespace static_indices {
 template<typename ScalarType, typename... IndexTypes>                     \
 inline                                                                    \
 expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
-NAME(IndexTypes... indices) {                                             \
+NAME(IndexTypes&&... indices) {                                           \
   using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
   return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
                typename ret_t::monomial_t(__VA_ARGS__)                    \
@@ -45,7 +45,7 @@ NAME(IndexTypes... indices) {                                             \
 template<int Multiplicity, typename ScalarType, typename... IndexTypes>   \
 inline                                                                    \
 expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
-NAME(IndexTypes... indices) {                                             \
+NAME(IndexTypes&&... indices) {                                           \
   static_assert(Multiplicity >= 2, "Invalid multiplicity");               \
   using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
   return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
@@ -56,7 +56,7 @@ NAME(IndexTypes... indices) {                                             \
 #define DEFINE_FACTORY_SCALAR_TYPE(NAME, S)                             \
 template<typename... IndexTypes>                                        \
 inline expression<S, c_str_to_string_t<IndexTypes>...>                  \
-NAME(IndexTypes... indices) {                                           \
+NAME(IndexTypes&&... indices) {                                         \
   using libcommute::static_indices::NAME;                               \
   return NAME<S>(INDICES);                                              \
 }
@@ -64,7 +64,7 @@ NAME(IndexTypes... indices) {                                           \
 #define DEFINE_FACTORY_SPIN_SCALAR_TYPE(NAME, S)                        \
 template<int Multiplicity, typename... IndexTypes>                      \
 inline expression<S, c_str_to_string_t<IndexTypes>...>                  \
-NAME(IndexTypes... indices) {                                           \
+NAME(IndexTypes&&... indices) {                                         \
   using libcommute::static_indices::NAME;                               \
   return NAME<Multiplicity, S>(INDICES);                                \
 }
@@ -153,6 +153,35 @@ DEFINE_FACTORY_SCALAR_TYPE(S_z, std::complex<double>)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_p, std::complex<double>)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_m, std::complex<double>)
 DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_z, std::complex<double>)
+
+//
+// In the complex case, we can additionally define S_x and S_y
+//
+
+template<typename... IndexTypes>
+inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
+S_x(IndexTypes&&... indices) {
+  return std::complex<double>(0.5) * (S_p(INDICES) + S_m(INDICES));
+}
+template<typename... IndexTypes>
+inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
+S_y(IndexTypes&&... indices) {
+  return std::complex<double>(0, -0.5) * (S_p(INDICES) - S_m(INDICES));
+}
+
+template<int Multiplicity, typename... IndexTypes>
+inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
+S_x(IndexTypes&&... indices) {
+  return std::complex<double>(0.5) * (S_p<Multiplicity>(INDICES) +
+                                      S_m<Multiplicity>(INDICES));
+}
+template<int Multiplicity, typename... IndexTypes>
+inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
+S_y(IndexTypes&&... indices) {
+  return std::complex<double>(0, -0.5) * (S_p<Multiplicity>(INDICES) -
+                                          S_m<Multiplicity>(INDICES));
+}
+
 } // namespace libcommute::static_indices::complex
 
 } // namespace libcommute::static_indices

@@ -30,6 +30,14 @@ TEST_CASE("c_str_to_string_t<T> metafunction", "[c_str_to_string_t]") {
   CHECK(std::is_same<c_str_to_string_t<void>, void>::value);
   CHECK(std::is_same<c_str_to_string_t<decltype("Hello, world!")>,
                      std::string>::value);
+
+  const char * hw = "Hello, world!";
+  auto & hw_ref = hw;
+  auto const& hw_cref = hw;
+  auto && hw_rref = hw;
+  CHECK(std::is_same<c_str_to_string_t<decltype(hw_ref)>, std::string>::value);
+  CHECK(std::is_same<c_str_to_string_t<decltype(hw_cref)>, std::string>::value);
+  CHECK(std::is_same<c_str_to_string_t<decltype(hw_rref)>, std::string>::value);
 }
 
 TEST_CASE("all_derived_from<Base, Types...> metafunction",

@@ -41,6 +41,15 @@ template<size_t N> struct c_str_to_string<const char (&)[N]> {
 template<> struct c_str_to_string<const char *> {
   using type = std::string;
 };
+template<> struct c_str_to_string<const char *&> {
+  using type = std::string;
+};
+template<> struct c_str_to_string<const char * const&> {
+  using type = std::string;
+};
+template<> struct c_str_to_string<const char *&&> {
+  using type = std::string;
+};
 template<typename T>
 using c_str_to_string_t = typename c_str_to_string<T>::type;
 
