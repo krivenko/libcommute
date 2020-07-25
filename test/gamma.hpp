@@ -17,6 +17,8 @@
 #include <libcommute/algebra_tags.hpp>
 #include <libcommute/expression/generator.hpp>
 
+#include <cassert>
+
 //
 // Implement algebra of 4-dimensional \Gamma-matrices
 //

@@ -20,6 +20,7 @@
 #include "../expression/generator_fermion.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <vector>
 
 //

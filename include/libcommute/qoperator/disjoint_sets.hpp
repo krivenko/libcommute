@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_QOPERATOR_QOPERATOR_DISJOINT_SETS_HPP_
 
 #include <algorithm>
+#include <cassert>
 #include <cstdint>
 #include <numeric>
 #include <utility>

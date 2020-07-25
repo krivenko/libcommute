@@ -17,6 +17,7 @@
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
+#include <cassert>
 #include "elementary_space.hpp"
 
 namespace libcommute {

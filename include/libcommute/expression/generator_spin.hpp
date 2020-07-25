@@ -18,6 +18,7 @@
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
+#include <cassert>
 #include <cstdint>
 #include <iostream>
 #include <memory>

@@ -15,6 +15,7 @@
 
 #include <libcommute/scalar_traits.hpp>
 
+#include <cassert>
 #include <complex>
 #include <iostream>
 

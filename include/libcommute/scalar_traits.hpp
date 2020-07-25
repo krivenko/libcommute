@@ -13,6 +13,7 @@
 #ifndef LIBCOMMUTE_SCALAR_TRAITS_HPP_
 #define LIBCOMMUTE_SCALAR_TRAITS_HPP_
 
+#include <cassert>
 #include <complex>
 #include <limits>
 #include <cmath>

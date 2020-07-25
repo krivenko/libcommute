@@ -16,6 +16,7 @@
 #include "state_vector.hpp"
 #include "../scalar_traits.hpp"
 
+#include <cassert>
 #include <unordered_map>
 
 namespace libcommute {

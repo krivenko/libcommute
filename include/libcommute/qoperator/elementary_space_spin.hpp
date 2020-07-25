@@ -19,6 +19,7 @@
 
 #include "elementary_space.hpp"
 
+#include <cassert>
 #include <cmath>
 
 namespace libcommute {

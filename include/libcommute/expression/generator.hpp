@@ -15,6 +15,7 @@
 
 #include "../utility.hpp"
 
+#include <cassert>
 #include <stdexcept>
 #include <iostream>
 #include <memory>
