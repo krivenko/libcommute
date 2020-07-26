@@ -11,6 +11,7 @@
 set(EXAMPLES
   hubbard_holstein
   exchange_matrix
+  heisenberg_chain
 )
 
 # Build C++11 examples
