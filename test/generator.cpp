@@ -26,29 +26,88 @@
 using namespace libcommute;
 
 using gen_type = generator<std::string, int>;
+using linear_function_t = gen_type::linear_function_t;
 
-template<typename GenType>
-void check_generator_spin_commute(std::vector<GenType*> const& v) {
-  linear_function<std::unique_ptr<GenType>> f;
+// Check if a linear function of generators has only one constant term.
+#define CHECK_LINEAR_FUNCTION_0(NAME, CONST_TERM)                              \
+  CHECK(NAME.const_term == CONST_TERM);                                        \
+  CHECK(NAME.terms.empty());
+
+// Check if a linear function of generators has a constant term and one
+// non-constant term.
+#define CHECK_LINEAR_FUNCTION_1(NAME, CONST_TERM, COEFF, GEN)                  \
+  CHECK(NAME.const_term == CONST_TERM);                                        \
+  CHECK(NAME.terms.size() == 1);                                               \
+  CHECK(*NAME.terms[0].first == GEN);                                          \
+  CHECK(NAME.terms[0].second == COEFF);
+
+void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
+                                    bool one_half = false) {
+  linear_function_t f;
   for(size_t i = 0; i < v.size(); ++i) {
     for(size_t j = i + 1; j < v.size(); ++j) {
-      double c = v[j]->commute(*v[i], f);
-      CHECK(c == 1);
-      CHECK(f.const_term == 0);
-      if(j%3 == 1 && i == j - 1) { // S_- S_+
-        CHECK(f.terms.size() == 1);
-        CHECK(*f.terms[0].first == *v[i + 2]);
-        CHECK(f.terms[0].second == -2);
-      } else if(j%3 == 2 && i == j - 2) { // S_z S_+
-        CHECK(f.terms.size() == 1);
-        CHECK(*f.terms[0].first == *v[i]);
-        CHECK(f.terms[0].second == 1);
-      } else if(j%3 == 2 && i == j - 1) { // S_z S_-
-        CHECK(f.terms.size() == 1);
-        CHECK(*f.terms[0].first == *v[i]);
-        CHECK(f.terms[0].second == -1);
+      double c = v[j]->swap_with(*v[i], f);
+      if(one_half) {
+        if(j%3 == 1 && i == j - 1) { // S_- S_+ = 1/2 - S_z
+          CHECK(c == 0);
+          CHECK_LINEAR_FUNCTION_1(f, 0.5, -1, *v[i + 2]);
+        } else if(j%3 == 2 && i == j - 2) { // S_z S_+ = 1/2 S_+
+          CHECK(c == 0);
+          CHECK_LINEAR_FUNCTION_1(f, 0, 0.5, *v[i]);
+        } else if(j%3 == 2 && i == j - 1) { // S_z S_- = -1/2 S_-
+          CHECK(c == 0);
+          CHECK_LINEAR_FUNCTION_1(f, 0, -0.5, *v[i]);
+        } else {
+          CHECK(c == 1);
+          CHECK_LINEAR_FUNCTION_0(f, 0);
+        }
       } else {
-        CHECK(f.terms.empty());
+        CHECK(c == 1);
+        if(j%3 == 1 && i == j - 1) { // S_- S_+ = S_+ * S_- - 2*S_z
+          CHECK_LINEAR_FUNCTION_1(f, 0, -2, *v[i + 2]);
+        } else if(j%3 == 2 && i == j - 2) { // S_z S_+ = S_+ * S_z + S_+
+          CHECK_LINEAR_FUNCTION_1(f, 0, 1, *v[i]);
+        } else if(j%3 == 2 && i == j - 1) { // S_z S_- = S_- * S_z - S_-
+          CHECK_LINEAR_FUNCTION_1(f, 0, -1, *v[i]);
+        } else {
+          CHECK_LINEAR_FUNCTION_0(f, 0);
+        }
+      }
+    }
+  }
+}
+
+void check_generator_spin_simplify_prod(std::vector<gen_type*> const& v,
+                                        bool one_half = false) {
+  linear_function_t f;
+  for(size_t i = 0; i < v.size(); ++i) {
+    for(size_t j = i; j < v.size(); ++j) {
+      bool c = v[i]->simplify_prod(*v[j], f);
+      if(one_half) {
+        if(i%3 == 0 && j == i) { // S_+ * S_+ = 0
+          CHECK(c);
+          CHECK_LINEAR_FUNCTION_0(f, 0);
+        } else if(i%3 == 1 && j == i) { // S_- * S_- = 0
+          CHECK(c);
+          CHECK_LINEAR_FUNCTION_0(f, 0);
+        } else if(i%3 == 2 && j == i) { // S_z * S_z = 1/4
+          CHECK(c);
+          CHECK_LINEAR_FUNCTION_0(f, 0.25);
+        } else if(i%3 == 0 && j == i + 1) { // S_+ * S_- = 1/2 + S_z
+          CHECK(c);
+          CHECK_LINEAR_FUNCTION_1(f, 0.5, 1, *v[i + 2]);
+        } else if(i%3 == 0 && j == i + 2) { // S_+ * S_z = -1/2 S_+
+          CHECK(c);
+          CHECK_LINEAR_FUNCTION_1(f, 0, -0.5, *v[i]);
+        } else if(i%3 == 1 && j == i + 1) { // S_- * S_z = 1/2 S_-
+          CHECK(c);
+          CHECK_LINEAR_FUNCTION_1(f, 0, 0.5, *v[i]);
+        } else {
+          CHECK_FALSE(c);
+        }
+      } else {
+        // No simplifications for higher spins
+        CHECK_FALSE(c);
       }
     }
   }
@@ -56,14 +115,11 @@ void check_generator_spin_commute(std::vector<GenType*> const& v) {
 
 template<typename V>
 void check_conj(V const& v, std::initializer_list<int> ref) {
-  gen_type::linear_function_t f;
+  linear_function_t f;
   int n = 0;
   for(auto ref_it = ref.begin(); ref_it != ref.end(); ++ref_it, ++n) {
     v[n]->conj(f);
-    CHECK(f.const_term == 0);
-    CHECK(f.terms.size() == 1);
-    CHECK(*f.terms[0].first == *v[*ref_it]);
-    CHECK(f.terms[0].second == 1);
+    CHECK_LINEAR_FUNCTION_1(f, 0, 1, *v[*ref_it]);
   }
 }
 
@@ -115,17 +171,13 @@ TEST_CASE("Algebra generators", "[generator]") {
   std::vector<gen_type*> spin32_ops = {&S32p_i,&S32m_i,&S32z_i,
                                        &S32p_j,&S32m_j,&S32z_j};
 
-  gen_type::linear_function_t lin_f;
+  linear_function_t lin_f;
 
   SECTION("fermion") {
     for(auto * op : fermion_ops) {
       CHECK(op->algebra_id() == fermion::algebra_id());
-      CHECK(op->has_vanishing_power(2));
-      CHECK(op->has_vanishing_power(3));
-      CHECK(op->has_vanishing_power(4));
-      CHECK_FALSE(op->collapse_power(2, lin_f));
-      CHECK_FALSE(op->collapse_power(3, lin_f));
-      CHECK_FALSE(op->collapse_power(4, lin_f));
+      CHECK_FALSE(op->reduce_power(3, lin_f));
+      CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
     check_equality(fermion_ops);
@@ -137,13 +189,12 @@ TEST_CASE("Algebra generators", "[generator]") {
       CHECK_FALSE(is_spin(*g));
     }
 
-    linear_function<std::unique_ptr<gen_type>> f;
+    linear_function_t f;
     for(size_t i = 0; i < fermion_ops.size(); ++i) {
       for(size_t j = i + 1; j < fermion_ops.size(); ++j) {
-        double c = fermion_ops[j]->commute(*fermion_ops[i], f);
+        double c = fermion_ops[j]->swap_with(*fermion_ops[i], f);
         CHECK(c == -1);
-        CHECK(f.terms.empty());
-        CHECK(f.const_term == ((j == 2 && i == 1) || (j == 3 && i == 0)));
+        CHECK_LINEAR_FUNCTION_0(f, ((j == 2 && i == 1) || (j == 3 && i == 0)));
       }
     }
 
@@ -158,12 +209,8 @@ TEST_CASE("Algebra generators", "[generator]") {
   SECTION("boson") {
     for(auto * op : boson_ops) {
       CHECK(op->algebra_id() == boson::algebra_id());
-      CHECK_FALSE(op->has_vanishing_power(2));
-      CHECK_FALSE(op->has_vanishing_power(3));
-      CHECK_FALSE(op->has_vanishing_power(4));
-      CHECK_FALSE(op->collapse_power(2, lin_f));
-      CHECK_FALSE(op->collapse_power(3, lin_f));
-      CHECK_FALSE(op->collapse_power(4, lin_f));
+      CHECK_FALSE(op->reduce_power(3, lin_f));
+      CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
     check_equality(boson_ops);
@@ -175,13 +222,12 @@ TEST_CASE("Algebra generators", "[generator]") {
       CHECK_FALSE(is_spin(*g));
     }
 
-    linear_function<std::unique_ptr<gen_type>> f;
+    linear_function_t f;
     for(size_t i = 0; i < boson_ops.size(); ++i) {
       for(size_t j = i + 1; j < boson_ops.size(); ++j) {
-        double c = boson_ops[j]->commute(*boson_ops[i], f);
+        double c = boson_ops[j]->swap_with(*boson_ops[i], f);
         CHECK(c == 1);
-        CHECK(f.terms.empty());
-        CHECK(f.const_term == ((j == 2 && i == 1) || (j == 3 && i == 0)));
+        CHECK_LINEAR_FUNCTION_0(f, ((j == 2 && i == 1) || (j == 3 && i == 0)));
       }
     }
 
@@ -199,29 +245,13 @@ TEST_CASE("Algebra generators", "[generator]") {
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
-        CHECK_FALSE(op->has_vanishing_power(2));
-        CHECK_FALSE(op->has_vanishing_power(3));
-        CHECK_FALSE(op->has_vanishing_power(4));
-
-        CHECK(op->collapse_power(2, lin_f));
-        CHECK(lin_f.const_term == 0.25);
-        CHECK(lin_f.terms.empty());
-        CHECK(op->collapse_power(3, lin_f));
-        CHECK(lin_f.const_term == 0);
-        CHECK(lin_f.terms.size() == 1);
-        CHECK(*lin_f.terms[0].first == *op);
-        CHECK(lin_f.terms[0].second == 0.25);
-        CHECK(op->collapse_power(4, lin_f));
-        CHECK(lin_f.const_term == 0.0625);
-        CHECK(lin_f.terms.empty());
+        CHECK_FALSE(op->reduce_power(3, lin_f));
+        CHECK_FALSE(op->reduce_power(4, lin_f));
       } else {
-        CHECK(op->has_vanishing_power(2));
-        CHECK(op->has_vanishing_power(3));
-        CHECK(op->has_vanishing_power(4));
-
-        CHECK_FALSE(op->collapse_power(2, lin_f));
-        CHECK_FALSE(op->collapse_power(3, lin_f));
-        CHECK_FALSE(op->collapse_power(4, lin_f));
+        CHECK(op->reduce_power(3, lin_f));
+        CHECK(lin_f.vanishing());
+        CHECK(op->reduce_power(4, lin_f));
+        CHECK(lin_f.vanishing());
       }
       CHECK(spin_gen_p->spin() == 0.5);
       CHECK(spin_gen_p->multiplicity() == 2);
@@ -236,7 +266,8 @@ TEST_CASE("Algebra generators", "[generator]") {
       CHECK(is_spin(*g));
     }
 
-    check_generator_spin_commute(spin_ops);
+    check_generator_spin_swap_with(spin_ops, true);
+    check_generator_spin_simplify_prod(spin_ops, true);
 
     check_conj(spin_ops, {1, 0, 2, 4, 3, 5});
 
@@ -254,21 +285,13 @@ TEST_CASE("Algebra generators", "[generator]") {
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
-        CHECK_FALSE(op->has_vanishing_power(2));
-        CHECK_FALSE(op->has_vanishing_power(3));
-        CHECK_FALSE(op->has_vanishing_power(4));
-
-        CHECK_FALSE(op->collapse_power(2, lin_f));
-        CHECK_FALSE(op->collapse_power(3, lin_f));
-        CHECK_FALSE(op->collapse_power(4, lin_f));
+        CHECK_FALSE(op->reduce_power(3, lin_f));
+        CHECK_FALSE(op->reduce_power(4, lin_f));
       } else {
-        CHECK_FALSE(op->has_vanishing_power(2));
-        CHECK(op->has_vanishing_power(3));
-        CHECK(op->has_vanishing_power(4));
-
-        CHECK_FALSE(op->collapse_power(2, lin_f));
-        CHECK_FALSE(op->collapse_power(3, lin_f));
-        CHECK_FALSE(op->collapse_power(4, lin_f));
+        CHECK(op->reduce_power(3, lin_f));
+        CHECK_LINEAR_FUNCTION_0(lin_f, 0);
+        CHECK(op->reduce_power(4, lin_f));
+        CHECK_LINEAR_FUNCTION_0(lin_f, 0);
       }
       CHECK(spin_gen_p->spin() == 1.0);
       CHECK(spin_gen_p->multiplicity() == 3);
@@ -283,7 +306,8 @@ TEST_CASE("Algebra generators", "[generator]") {
       CHECK(is_spin(*g));
     }
 
-    check_generator_spin_commute(spin1_ops);
+    check_generator_spin_swap_with(spin1_ops);
+    check_generator_spin_simplify_prod(spin1_ops);
 
     check_conj(spin1_ops, {1, 0, 2, 4, 3, 5});
 
@@ -301,21 +325,12 @@ TEST_CASE("Algebra generators", "[generator]") {
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
-        CHECK_FALSE(op->has_vanishing_power(2));
-        CHECK_FALSE(op->has_vanishing_power(3));
-        CHECK_FALSE(op->has_vanishing_power(4));
-
-        CHECK_FALSE(op->collapse_power(2, lin_f));
-        CHECK_FALSE(op->collapse_power(3, lin_f));
-        CHECK_FALSE(op->collapse_power(4, lin_f));
+        CHECK_FALSE(op->reduce_power(3, lin_f));
+        CHECK_FALSE(op->reduce_power(4, lin_f));
       } else {
-        CHECK_FALSE(op->has_vanishing_power(2));
-        CHECK_FALSE(op->has_vanishing_power(3));
-        CHECK(op->has_vanishing_power(4));
-
-        CHECK_FALSE(op->collapse_power(2, lin_f));
-        CHECK_FALSE(op->collapse_power(3, lin_f));
-        CHECK_FALSE(op->collapse_power(4, lin_f));
+        CHECK_FALSE(op->reduce_power(3, lin_f));
+        CHECK(op->reduce_power(4, lin_f));
+        CHECK_LINEAR_FUNCTION_0(lin_f, 0);
       }
       CHECK(spin_gen_p->spin() == 1.5);
       CHECK(spin_gen_p->multiplicity() == 4);
@@ -330,7 +345,8 @@ TEST_CASE("Algebra generators", "[generator]") {
       CHECK(is_spin(*g));
     }
 
-    check_generator_spin_commute(spin32_ops);
+    check_generator_spin_swap_with(spin32_ops);
+    check_generator_spin_simplify_prod(spin32_ops);
 
     check_conj(spin32_ops, {1, 0, 2, 4, 3, 5});
 
@@ -356,14 +372,13 @@ TEST_CASE("Algebra generators", "[generator]") {
     check_less_greater(all_ops);
 
     // Check that generators from different algebras commute
-    linear_function<std::unique_ptr<gen_type>> f;
+    linear_function_t f;
     for(size_t i = 0; i < all_ops.size(); ++i) {
       for(size_t j = i + 1; j < all_ops.size(); ++j) {
-        double c = commute(*all_ops[j], *all_ops[i], f);
+        double c = swap_with(*all_ops[j], *all_ops[i], f);
         if(all_ops[j]->algebra_id() != all_ops[i]->algebra_id()) {
           CHECK(c == 1);
-          CHECK(f.const_term == 0);
-          CHECK(f.terms.empty());
+          CHECK_LINEAR_FUNCTION_0(f, 0);
         }
       }
     }

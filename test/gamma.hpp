@@ -55,7 +55,8 @@ public:
   }
 
   // c = -1, f(g) = 2\eta(g1, g2)
-  virtual double commute(base const& g2, linear_function_t & f) const override {
+  virtual double
+  swap_with(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     bool diag = base::equal(g2);
     f.set(diag * (std::get<0>(indices_) == 0 ? 2 : -2));
@@ -64,22 +65,13 @@ public:
 
   // (\Gamma^0)^2 = I_4
   // (\Gamma^k)^2 = -I_4 for k=1,2,3
-  virtual bool collapse_power(int power, linear_function_t & f) const override {
-    assert(power >= 2);
-    auto coeff = [this](int p) {
-      return std::get<0>(indices_) == 0 ? 1. : std::pow(-1, p/2);
-    };
-    if(power%2 == 0) {
-      f.set(coeff(power));
-    } else {
-      f.set(0, clone(), coeff(power-1));
-    }
-    return true;
-  }
-
-  virtual bool has_vanishing_power(int power) const override {
-    assert(power >= 2);
-    return false;
+  virtual bool
+  simplify_prod(base const& g2, linear_function_t & f) const override {
+    if(*this == g2) {
+      f.set(std::get<0>(indices_) == 0 ? 1 : -1);
+      return true;
+    } else
+      return false;
   }
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian

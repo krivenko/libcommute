@@ -153,8 +153,11 @@ template<typename T> struct linear_function {
     terms.clear();
   }
 
+  // Is this linear function identically zero?
+  bool vanishing() const { return const_term == 0 && terms.empty(); }
+
   // Constant term
-  double const_term;
+  double const_term = 0;
   // Basis objects and their respective coefficients
   std::vector<std::pair<T, double>> terms;
 

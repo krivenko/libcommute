@@ -87,10 +87,12 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
 
   linear_function<std::string> f0;
   CHECK(f0.terms.empty());
+  CHECK(f0.vanishing());
 
   linear_function<std::string> f1(3.0);
   CHECK(f1.const_term == 3.0);
   CHECK(f1.terms.empty());
+  CHECK_FALSE(f1.vanishing());
 
   linear_function<std::string> f(4.0, "obj1", 2.0, "obj2", 3.0);
   CHECK(f.const_term == 4.0);
@@ -99,14 +101,17 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f.terms[0].second == 2.0);
   CHECK(f.terms[1].first == std::string("obj2"));
   CHECK(f.terms[1].second == 3.0);
+  CHECK_FALSE(f.vanishing());
 
   f.set(5.0, "obj3", 4.0);
   CHECK(f.const_term == 5.0);
   CHECK(f.terms.size() == 1);
   CHECK(f.terms[0].first == std::string("obj3"));
   CHECK(f.terms[0].second == 4.0);
+  CHECK_FALSE(f.vanishing());
 
   f.set(6.0);
   CHECK(f.const_term == 6.0);
   CHECK(f.terms.empty());
+  CHECK_FALSE(f.vanishing());
 }

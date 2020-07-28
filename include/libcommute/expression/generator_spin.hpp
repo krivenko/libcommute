@@ -71,46 +71,56 @@ public:
   }
 
   // Generators with different indices or multiplicities commute.
-  // Same indices and multiplicity:
-  //  S_- * S_+ = S_+ * S_- - 2*S_z
-  //  S_z * S_+ = S_+ * S_z + S_+
-  //  S_z * S_- = S_- * S_z - S_-
-  virtual double commute(base const& g2, linear_function_t & f) const override {
+  virtual double
+  swap_with(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
     if(base::equal(g2) && this->multiplicity_ == g2_.multiplicity_) {
-      if(c_ == spin_component::z) {
-        if(g2_.c_ == spin_component::plus) {
-          f.set(0, g2_.clone(), 1);
-        } else { /// g2.c_ == spin_component::minus
-          f.set(0, g2_.clone(), -1);
+      if(this->multiplicity_ == 2)
+        return swap_with_spin_one_half(g2_, f);
+      else
+        return swap_with_higher_spin(g2_, f);
+    } else {
+      f.set(0);
+      return 1;
+    }
+  }
+
+  // Simplifications are possible for S=1/2
+  // S_z * S_z = 1/4
+  // S_+ * S_+ = 0
+  // S_- * S_- = 0
+  // S_+ * S_z = -1/2 S_+
+  // S_- * S_z = 1/2 S_-
+  // S_+ * S_- = 1/2 + S_z
+  virtual bool
+  simplify_prod(base const& g2, linear_function_t & f) const override {
+    assert(!(*this > g2));
+    auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
+    if(!base::equal(g2) || this->multiplicity_ != 2) return false;
+
+    if(this->c_ == g2_.c_) {
+      f.set(this->c_ == spin_component::z ? 0.25 : 0);
+    } else {
+      if(g2_.c_ == spin_component::z) {
+        if(this->c_ == spin_component::plus) {
+          f.set(0, clone(), -0.5);
+        } else { /// c_ == spin_component::minus
+          f.set(0, clone(), 0.5);
         }
-      } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
-        f.set(0, g2_.clone(), -2);
+      } else { // c_ == spin_component::plus && g2.c_ == spin_component::minus
+        f.set(0.5, g2_.clone(), 1);
         dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
           spin_component::z;
       }
-    } else
-      f.set(0);
-    return 1;
+    }
+
+    return true;
   }
 
-  // For S=1/2, even powers of S_z are constant
-  virtual bool collapse_power(int power, linear_function_t & f) const override {
-    assert(power >= 2);
-    if(multiplicity_ == 2 && c_ == spin_component::z) {
-      if(power%2 == 0)
-        f.set(double(1) / (std::uint64_t(1) << power));
-      else
-        f.set(0, clone(), double(1) / (std::uint64_t(1) << (power-1)));
-      return true;
-    } else
-      return false;
-  }
-
-  // Raising and lowering operators are nilpotent
-  virtual bool has_vanishing_power(int power) const override {
-    assert(power >= 2);
+  virtual bool reduce_power(int power, linear_function_t & f) const override {
+    assert(power > 2);
+    // Raising and lowering operators are nilpotent
     return c_ != spin_component::z && power >= multiplicity_;
   }
 
@@ -188,6 +198,48 @@ protected:
     print_tuple(os, this->indices_);
     return os << ")";
   }
+
+private:
+
+  //  S_- * S_+ = 1/2 - S_z
+  //  S_z * S_+ = 1/2 S_+
+  //  S_z * S_- = -1/2 S_-
+  double swap_with_spin_one_half(generator_spin const& g2_,
+                                 linear_function_t & f) const {
+    if(c_ == spin_component::z) {
+      if(g2_.c_ == spin_component::plus) {
+        f.set(0, g2_.clone(), 0.5);
+      } else { /// g2.c_ == spin_component::minus
+        f.set(0, g2_.clone(), -0.5);
+      }
+    } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
+      f.set(0.5, g2_.clone(), -1);
+      dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
+        spin_component::z;
+    }
+    return 0;
+  }
+
+  //  S_- * S_+ = S_+ * S_- - 2*S_z
+  //  S_z * S_+ = S_+ * S_z + S_+
+  //  S_z * S_- = S_- * S_z - S_-
+  double swap_with_higher_spin(generator_spin const& g2_,
+                               linear_function_t & f) const {
+
+    if(c_ == spin_component::z) {
+      if(g2_.c_ == spin_component::plus) {
+        f.set(0, g2_.clone(), 1);
+      } else { /// g2.c_ == spin_component::minus
+        f.set(0, g2_.clone(), -1);
+      }
+    } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
+      f.set(0, g2_.clone(), -2);
+      dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
+        spin_component::z;
+    }
+    return 1;
+  }
+
 };
 
 // Check if generator belongs to the spin algebra

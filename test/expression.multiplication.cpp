@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "int_complex.hpp"
+#include "my_complex.hpp"
 #include "print_matcher.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
@@ -56,14 +56,14 @@ TEST_CASE("Compound assignment/multiplication", "[mul_assign]") {
     expr_c *= ref_t();
     CHECK_THAT(expr_c, Prints<ref_t>("(0,0)"));
   }
-  SECTION("int_complex") {
-    auto expr = c<int_complex>(2, "dn");
+  SECTION("my_complex") {
+    auto expr = c<my_complex>(2, "dn");
     using ref_t = decltype(expr);
-    expr *= c_dag<int_complex>(1, "up");
+    expr *= c_dag<my_complex>(1, "up");
     CHECK_THAT(expr, Prints<ref_t>("{-1,0}*C+(1,up)C(2,dn)"));
-    expr *= a<int_complex>(0, "x");
+    expr *= a<my_complex>(0, "x");
     CHECK_THAT(expr, Prints<ref_t>("{-1,0}*C+(1,up)C(2,dn)A(0,x)"));
-    expr *= a_dag<int_complex>(0, "y");
+    expr *= a_dag<my_complex>(0, "y");
     CHECK_THAT(expr, Prints<ref_t>("{-1,0}*C+(1,up)C(2,dn)A+(0,y)A(0,x)"));
     expr *= ref_t(2);
     CHECK_THAT(expr, Prints<ref_t>("{-2,0}*C+(1,up)C(2,dn)A+(0,y)A(0,x)"));
@@ -120,25 +120,25 @@ TEST_CASE("Multiplication", "[mul]") {
     CHECK_THAT((expr1 * complex::c_dag(1, "up")), Prints<ref1_t>("(0,0)"));
     CHECK_THAT((complex::c_dag(1, "up") * expr1), Prints<ref1_t>("(0,0)"));
   }
-  SECTION("int_complex") {
-    auto expr = c_dag<int_complex>(1, "up");
+  SECTION("my_complex") {
+    auto expr = c_dag<my_complex>(1, "up");
     using ref_t = decltype(expr);
     // Result type
-    CHECK(std::is_same<decltype(expr * c<int_complex>(2, "dn")), ref_t>::value);
-    CHECK(std::is_same<decltype(c<int_complex>(2, "dn") * expr), ref_t>::value);
+    CHECK(std::is_same<decltype(expr * c<my_complex>(2, "dn")), ref_t>::value);
+    CHECK(std::is_same<decltype(c<my_complex>(2, "dn") * expr), ref_t>::value);
     CHECK_THAT((ref_t() * ref_t()), Prints<ref_t>("{0,0}"));
     CHECK_THAT((expr * ref_t()), Prints<ref_t>("{0,0}"));
     CHECK_THAT((ref_t() * expr), Prints<ref_t>("{0,0}"));
-    CHECK_THAT((expr * c<int_complex>(2, "dn")),
+    CHECK_THAT((expr * c<my_complex>(2, "dn")),
                Prints<ref_t>("{1,0}*C+(1,up)C(2,dn)"));
-    CHECK_THAT((c<int_complex>(2, "dn") * expr),
+    CHECK_THAT((c<my_complex>(2, "dn") * expr),
                Prints<ref_t>("{-1,0}*C+(1,up)C(2,dn)"));
-    expr *= c<int_complex>(2, "dn");
-    CHECK_THAT((expr * a<int_complex>(0, "x")),
+    expr *= c<my_complex>(2, "dn");
+    CHECK_THAT((expr * a<my_complex>(0, "x")),
                Prints<ref_t>("{1,0}*C+(1,up)C(2,dn)A(0,x)"));
-    CHECK_THAT((a<int_complex>(0, "x") * expr),
+    CHECK_THAT((a<my_complex>(0, "x") * expr),
                Prints<ref_t>("{1,0}*C+(1,up)C(2,dn)A(0,x)"));
-    CHECK_THAT((expr * c_dag<int_complex>(1, "up")), Prints<ref_t>("{0,0}"));
-    CHECK_THAT((c_dag<int_complex>(1, "up") * expr), Prints<ref_t>("{0,0}"));
+    CHECK_THAT((expr * c_dag<my_complex>(1, "up")), Prints<ref_t>("{0,0}"));
+    CHECK_THAT((c_dag<my_complex>(1, "up") * expr), Prints<ref_t>("{0,0}"));
   }
 }

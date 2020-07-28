@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "int_complex.hpp"
+#include "my_complex.hpp"
 #include "print_matcher.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
@@ -117,6 +117,6 @@ TEST_CASE("Commutation relations (complex)", "[commutators_complex]") {
   make_commutators_test_case<std::complex<double>>();
 }
 
-TEST_CASE("Commutation relations (int_complex)", "[commutators_int_complex]") {
-  make_commutators_test_case<int_complex>();
+TEST_CASE("Commutation relations (my_complex)", "[commutators_my_complex]") {
+  make_commutators_test_case<my_complex>();
 }

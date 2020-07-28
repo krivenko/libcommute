@@ -59,8 +59,9 @@ public:
     return make_unique<generator_fermion>(*this);
   }
 
-  // c = -1, f(g) = \delta(g1, g2)
-  virtual double commute(base const& g2, linear_function_t & f) const override {
+  // c = -1, f(g) = \delta(g1, g2^+)
+  virtual double
+  swap_with(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
     double delta = base::equal(g2) && dagger_ != g2_.dagger_;
@@ -68,15 +69,14 @@ public:
     return -1;
   }
 
-  virtual bool collapse_power(int power, linear_function_t &) const override {
-    assert(power >= 2);
-    return false;
-  }
-
-  // A square of C^+/C is vanising
-  virtual bool has_vanishing_power(int power) const override {
-    assert(power >= 2);
-    return true;
+  virtual bool
+  simplify_prod(base const& g2, linear_function_t & f) const override {
+    assert(!(*this > g2));
+    if(*this == g2) {
+      f.set(0);
+      return true;
+    } else
+      return false;
   }
 
   // Accessor

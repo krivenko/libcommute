@@ -77,31 +77,45 @@ public:
   // Accessor
   inline index_types const& indices() const { return indices_; }
 
+  // The following methods are called to simplify products of generators
+  //
   // We assume that any pair of generators g1 and g2 satisfy
   //
   // g1 * g2 = c * g2 * g1 + f(g),
   //
-  // where c is a constant, and f(g) is a linear function of generators of
+  // where c is a real constant, and f(g) is a linear function of generators of
   // the same algebra. In particular, this condition is fulfilled by generators
   // of the Lie and Clifford algebras.
-  //
-  // Given a pair g1 = *this and g2, commute() must return c and write
-  // f(g) into its second argument. For the sake of optimization, it is
-  // required that g1 > g2.
-  virtual double commute(generator const& g2, linear_function_t & f) const = 0;
 
-  // If the given power of this generator can be represented as a linear
-  // function of generators, return true and write the linear function into f.
-  // The power must be greater than one.
-  virtual bool collapse_power(int power, linear_function_t & f) const {
-    assert(power >= 2);
+  // Given a pair g1 = *this and g2 such that g1 > g2, swap_with() must signal
+  // what transformation g1 * g2 -> c * g2 * g1 + f(g) should be applied
+  // to the product g1 * g2 to put it into the canonical order.
+  // swap_with() returns the constant 'c' and writes the linear function f(g)
+  // into its second argument. 'c' is allowed to be zero.
+  virtual double
+  swap_with(generator const& g2, linear_function_t & f) const = 0;
+
+  // Given a pair g1 = *this and g2 such that g1 * g2 is in the canonical order
+  // (g1 <= g2), optionally apply a simplifying transformation
+  // g1 * g2 -> f(g).
+  // If a simplification is actually possible, simplified_prod() must return
+  // true and write the linear function f(g) into its second argument. Otherwise
+  // return false.
+  virtual bool
+  simplify_prod(generator const& g2, linear_function_t & f) const {
+    assert(!(*this > g2));
     return false;
   }
 
-  // Does the given power of this generator vanish?
-  // The power must be greater than one.
-  virtual bool has_vanishing_power(int power) const {
-    assert(power >= 2);
+  // Given a generator g1 = *this and a power > 2, optionally apply
+  // a simplifying transformation g1^power -> f(g).
+  // If a simplification is actually possible, reduce_power() must return
+  // true and write the linear function f(g) into its second argument. Otherwise
+  // return false.
+  //
+  // N.B. Simplifications for power = 2 must be carried out by simplify_prod().
+  virtual bool reduce_power(int power, linear_function_t & f) const {
+    assert(power > 2);
     return false;
   }
 
@@ -139,17 +153,33 @@ protected:
 };
 
 // Check if g1 and g2 belong to the same algebra
-// and call g1.commute(g2) accordingly
+// and call g1.swap_with(g2, f) accordingly
 template<typename... IndexTypes>
-double commute(generator<IndexTypes...> const& g1,
-               generator<IndexTypes...> const& g2,
-               linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
-  // ** Generators of different algebras always commute **
-  if(g1.algebra_id() != g2.algebra_id()) {
+double
+swap_with(generator<IndexTypes...> const& g1,
+          generator<IndexTypes...> const& g2,
+          linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
+  if(g1.algebra_id() == g2.algebra_id()) {
+    return g1.swap_with(g2, f);
+  } else {
+    // ** Generators of different algebras always commute **
     f.set(0);
     return 1;
+  }
+}
+
+// Check if g1 and g2 belong to the same algebra
+// and call g1.simplify_prod(g2, f) accordingly
+template<typename... IndexTypes>
+bool
+simplify_prod(generator<IndexTypes...> const& g1,
+              generator<IndexTypes...> const& g2,
+              linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
+  if(g1.algebra_id() == g2.algebra_id()) {
+    return g1.simplify_prod(g2, f);
   } else {
-    return g1.commute(g2, f);
+    // ** No simplification possible in a heterogeneous product **
+    return false;
   }
 }
 

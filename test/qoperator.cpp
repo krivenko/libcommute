@@ -16,7 +16,7 @@
 #include <libcommute/qoperator/qoperator.hpp>
 #include <libcommute/expression/factories.hpp>
 
-#include "./int_complex.hpp"
+#include "./my_complex.hpp"
 
 #include <complex>
 #include <vector>
@@ -119,13 +119,13 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
     CHECK(out == state_vector{-6.0*I, 12.0*I, .0, 6.0*I});
   }
 
-  SECTION("int_complex") {
+  SECTION("my_complex") {
     using namespace static_indices;
 
-    const int_complex I(0, 1);
+    const my_complex I(0, 1);
 
-    auto expr1 = 3*c_dag<int_complex>("dn");
-    auto expr2 = 3*c<int_complex>("up");
+    auto expr1 = 3*c_dag<my_complex>("dn");
+    auto expr2 = 3*c<my_complex>("up");
     auto expr = 2*I*expr1 - 2*I*expr2;
 
     auto hs = make_hilbert_space(expr);
@@ -133,7 +133,7 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
     auto qop2 = make_qoperator(expr2, hs);
     auto qop = make_qoperator(expr, hs);
 
-    using state_vector = std::vector<int_complex>;
+    using state_vector = std::vector<my_complex>;
 
     const state_vector in{1, 1, 1, 1};
     state_vector out(4, 0);
@@ -152,8 +152,8 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
 
   using namespace static_indices;
 
-  auto expr1 = 3*c_dag<int_complex>("dn");
-  auto expr2 = 3*c<int_complex>("up");
+  auto expr1 = 3*c_dag<my_complex>("dn");
+  auto expr2 = 3*c<my_complex>("up");
   auto expr = 2*expr1 - 2*expr2;
 
   auto hs = make_hilbert_space(expr);
@@ -161,7 +161,7 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
   auto qop2 = make_param_qoperator(expr2, hs);
   auto qop = make_param_qoperator(expr, hs);
 
-  using state_vector = std::vector<int_complex>;
+  using state_vector = std::vector<my_complex>;
 
   SECTION("1 argument") {
     const state_vector in{1, 1, 1, 1};
@@ -175,19 +175,19 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
     CHECK(out == state_vector{-30, 60, 0, 30});
 
     SECTION("act_and_store_coeffs()") {
-      std::vector<int> coeffs1, coeffs2, coeffs;
+      std::vector<float> coeffs1, coeffs2, coeffs;
       coeffs1.reserve(1);
       coeffs2.reserve(1);
       coeffs.reserve(2);
 
       qop1.act_and_store_coeffs(in, out, coeffs1, 5);
-      CHECK(coeffs1 == std::vector<int>{15});
+      CHECK(coeffs1 == std::vector<float>{15});
       CHECK(out == state_vector{0, 15, 0, 15});
       qop2.act_and_store_coeffs(in, out, coeffs2, 5);
-      CHECK(coeffs2 == std::vector<int>{15});
+      CHECK(coeffs2 == std::vector<float>{15});
       CHECK(out == state_vector{15, -15, 0, 0});
       qop.act_and_store_coeffs(in, out, coeffs, 5);
-      CHECK(coeffs == std::vector<int>{30, -30});
+      CHECK(coeffs == std::vector<float>{30, -30});
       CHECK(out == state_vector{-30, 60, 0, 30});
     }
 
@@ -216,19 +216,19 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
     CHECK(out == state_vector{-60, 120, 0, 60});
 
     SECTION("act_and_store_coeffs()") {
-      std::vector<int_complex> coeffs1, coeffs2, coeffs;
+      std::vector<my_complex> coeffs1, coeffs2, coeffs;
       coeffs1.reserve(1);
       coeffs2.reserve(1);
       coeffs.reserve(2);
 
       qop1.act_and_store_coeffs(in, out, coeffs1, 5, 5);
-      CHECK(coeffs1 == std::vector<int_complex>{{30, 0}});
+      CHECK(coeffs1 == std::vector<my_complex>{{30, 0}});
       CHECK(out == state_vector{0, 30, 0, 30});
       qop2.act_and_store_coeffs(in, out, coeffs2, 5, 5);
-      CHECK(coeffs2 == std::vector<int_complex>{{30, 0}});
+      CHECK(coeffs2 == std::vector<my_complex>{{30, 0}});
       CHECK(out == state_vector{30, -30, 0, 0});
       qop.act_and_store_coeffs(in, out, coeffs, 5, 5);
-      CHECK(coeffs == std::vector<int_complex>{{60, 0}, {-60, 0}});
+      CHECK(coeffs == std::vector<my_complex>{{60, 0}, {-60, 0}});
       CHECK(out == state_vector{-60, 120, 0, 60});
     }
 

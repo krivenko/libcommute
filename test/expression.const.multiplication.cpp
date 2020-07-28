@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "int_complex.hpp"
+#include "my_complex.hpp"
 #include "print_matcher.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
@@ -43,8 +43,8 @@ TEST_CASE("Compound assignment/multiplication", "[mul_assign]") {
     expr_c *= 0;
     CHECK_THAT(expr_c, Prints<ref_t>("(0,0)"));
   }
-  SECTION("int_complex") {
-    auto expr = c_dag<int_complex>(1, "up");
+  SECTION("my_complex") {
+    auto expr = c_dag<my_complex>(1, "up");
     using ref_t = decltype(expr);
 
     expr *= 4;
@@ -95,8 +95,8 @@ TEST_CASE("Multiplication", "[mul]") {
     CHECK_THAT((expr_r * 2.0*I), Prints<ref_t>("(0,2)*C+(1,up)"));
     CHECK_THAT((2.0*I * expr_r), Prints<ref_t>("(0,2)*C+(1,up)"));
   }
-  SECTION("int_complex") {
-    auto expr = c_dag<int_complex>(1, "up");
+  SECTION("my_complex") {
+    auto expr = c_dag<my_complex>(1, "up");
     using ref_t = decltype(expr);
 
     // Result type

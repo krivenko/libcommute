@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "int_complex.hpp"
+#include "my_complex.hpp"
 #include "print_matcher.hpp"
 
 #include <libcommute/expression/generator_fermion.hpp>
@@ -21,6 +21,9 @@
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
 
+#include <array>
+
+#include <libcommute/libcommute.hpp>
 using namespace libcommute;
 using namespace static_indices;
 
@@ -94,7 +97,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
     auto expr_r = real::c_dag(1, "up");
     CHECK_THAT(-expr_r, Prints<decltype(expr_r)>("-1*C+(1,up)"));
 
-    auto expr_static_int = c_dag<int_complex>(1, "up");
+    auto expr_static_int = c_dag<my_complex>(1, "up");
     CHECK_THAT(-expr_static_int,
                Prints<decltype(expr_static_int)>("{-1,0}*C+(1,up)"));
   }
@@ -215,6 +218,20 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(conj(expr) == ref);
   }
 
+  SECTION("Products of Spin-1/2 operators") {
+    using namespace real;
+    CHECK(S_z() * S_z() == expr_real<>(0.25));
+    CHECK(S_p() * S_p() == expr_real<>(0));
+    CHECK(S_m() * S_m() == expr_real<>(0));
+
+    CHECK(S_p() * S_z() == -0.5*S_p());
+    CHECK(S_z() * S_m() == -0.5*S_m());
+    CHECK(S_z() * S_p() == 0.5*S_p());
+    CHECK(S_m() * S_z() == 0.5*S_m());
+    CHECK(S_p() * S_m() == 0.5 + S_z());
+    CHECK(S_m() * S_p() == 0.5 - S_z());
+  }
+
   SECTION("Powers of S_z") {
     using namespace real;
     expr_real<> sum;
@@ -225,5 +242,54 @@ TEST_CASE("Expression with static indices", "[expression]") {
       sum += p;
     }
     CHECK(sum == (c_dag()*(341.0/1024 + (1365.0/1024)*S_z())*a()));
+  }
+
+  SECTION("Heisenberg chain") {
+    using namespace complex;
+
+    using expr_t = expression<std::complex<double>, int>;
+    using vec_expr_t = std::array<expr_t, 3>;
+
+    // Addition of vectors
+    auto add = [](vec_expr_t const& S1, vec_expr_t const& S2) -> vec_expr_t {
+      return {S1[0] + S2[0], S1[1] + S2[1], S1[2] + S2[2]};
+    };
+    // Dot-product of vectors
+    auto dot = [](vec_expr_t const& S1, vec_expr_t const& S2) -> expr_t {
+      return S1[0] * S2[0] + S1[1] * S2[1] + S1[2] * S2[2];
+    };
+    // Cross-product of vectors
+    auto cross = [](vec_expr_t const& S1, vec_expr_t const& S2) -> vec_expr_t {
+      return {S1[1] * S2[2] - S1[2] * S2[1],
+              S1[2] * S2[0] - S1[0] * S2[2],
+              S1[0] * S2[1] - S1[1] * S2[0]};
+    };
+
+    const int N = 6;
+    std::vector<vec_expr_t> S;
+    for(int i = 0; i < N; ++i)
+      S.push_back({S_x(i), S_y(i), S_z(i)});
+
+    expr_t H;
+    for(int i = 0; i < N; ++i) {
+      H += dot(S[i], S[(i+1)%N]);
+    }
+
+    vec_expr_t S_tot;
+    for(int i = 0; i < N; ++i)
+      S_tot = add(S_tot, S[i]);
+
+    // H must commute with the total spin
+    CHECK((H * S_tot[0] - S_tot[0] * H).size() == 0);
+    CHECK((H * S_tot[1] - S_tot[1] * H).size() == 0);
+    CHECK((H * S_tot[2] - S_tot[2] * H).size() == 0);
+
+    expr_t Q3;
+    for(int i = 0; i < N; ++i) {
+      Q3 += dot(cross(S[i], S[(i+1)%N]), S[(i+2)%N]);
+    }
+
+    // Q3 is a higher-order integral of motion
+    CHECK((H * Q3 - Q3 * H).size() == 0);
   }
 }

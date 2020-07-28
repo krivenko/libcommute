@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include "int_complex.hpp"
+#include "my_complex.hpp"
 
 #include <libcommute/expression/hc.hpp>
 #include <libcommute/expression/factories.hpp>
@@ -35,10 +35,9 @@ TEST_CASE("Hermitian conjugate object (complex)", "[hc_complex]") {
   CHECK((expr - hc) == (expr - conj(expr)));
 }
 
-TEST_CASE("Hermitian conjugate object (int_complex)", "[hc_int_complex]") {
-  using namespace complex;
-  auto expr = int_complex(2,2) * c_dag<int_complex>("up", 1)
-                               * c<int_complex>("up", 2);
+TEST_CASE("Hermitian conjugate object (my_complex)", "[hc_my_complex]") {
+  auto expr = my_complex(2,2) * c_dag<my_complex>("up", 1)
+                              * c<my_complex>("up", 2);
   CHECK((expr + hc) == (expr + conj(expr)));
   CHECK((expr - hc) == (expr - conj(expr)));
 }
