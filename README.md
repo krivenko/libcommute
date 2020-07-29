@@ -5,15 +5,16 @@ https://travis-ci.org/krivenko/libcommute)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-red)](
 https://krivenko.github.io/libcommute)
 
-*libcommute* is a C++11/14/17 template library including two major parts.
+*libcommute* is a C++11/14/17 template library made of two major parts.
 
 * A Domain-Specific Language (DSL) designed to easily construct and manipulate
   polynomial expressions with quantum-mechanical operators,
   especially those used in the theory of many interacting fermions, bosons and
-  spins.
+  spins. The goal here is to make expressions written in C++ code closely
+  resemble the standard mathematical notation.
 
-* A fast intermediate representation of the quantum-mechanical operators
-  that enables their action on finite-dimensional state vectors.
+* A fast representation of the quantum-mechanical operators that enables
+  their action on finite-dimensional state vectors.
   This feature provides a basis for writing highly performant Exact
   Diagonalization (ED) codes without loss of flexibility.
 
