@@ -12,6 +12,7 @@ set(EXAMPLES
   hubbard_holstein
   exchange_matrix
   heisenberg_chain
+  virasoro_algebra
 )
 
 # Build C++11 examples

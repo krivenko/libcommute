@@ -51,6 +51,9 @@ public:
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
+#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+    using std::make_unique;
+#endif
     return make_unique<generator_gamma>(*this);
   }
 
