@@ -94,5 +94,5 @@ endif(TESTS)
 # Build examples
 if(EXAMPLES)
   message(STATUS "Building examples")
-  add_subdirectory(example)
+  add_subdirectory(examples)
 endif(EXAMPLES)

@@ -60,6 +60,7 @@ int main() {
   std::vector<double> phi(4), psi(4);
   // Iterate over basis states
   for(int i = 0; i < 4; ++i) {
+    // Reset vectors |\phi> and |\psi> to zero.
     std::fill(phi.begin(), phi.end(), 0);
     std::fill(psi.begin(), psi.end(), 0);
     psi[i] = 1; // 'psi' is i-th basis vector now
@@ -69,6 +70,7 @@ int main() {
     //  Hop(psi, phi);
     // as it eliminates a memory allocation needed to store the result.
 
+    // Print the result
     std::cout << "H|" << i << "> = ";
     for(int j = 0; j < 4; ++j) {
       std::cout << "+(" << phi[j] << ")|" << j << ">";

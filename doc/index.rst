@@ -90,6 +90,7 @@ Contents
 
     installation
     usage
+    examples/index
     genindex
     search
 

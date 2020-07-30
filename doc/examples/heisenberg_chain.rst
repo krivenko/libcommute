@@ -1,10 +1,7 @@
-.. _examples:
-
-Neat examples
-=============
+.. _heisenberg_chain:
 
 Spin-1/2 Heisenberg chain and its integrals of motion
------------------------------------------------------
+=====================================================
 
 The spin-1/2 Heisenberg chain is a textbook example of an integrable quantum
 system. Its Hamiltonian
@@ -26,19 +23,10 @@ Hamiltonian of the Heisenberg chain with periodic boundary conditions and
 checks that :math:`[\hat H, \mathbf{S}] = 0`, :math:`[\hat H, Q_n] = 0` and
 :math:`[Q_n, Q_m] = 0` for :math:`m,n = 3,4,5`.
 
-.. literalinclude:: ../example/heisenberg_chain.cpp
+.. literalinclude:: ../../examples/heisenberg_chain.cpp
   :language: cpp
   :lines: 25-
   :linenos:
-
-
-Application of ``parametric_qoperator``
----------------------------------------
-
-Virasoro algebra
-----------------
-
-TODO: polynomials of parameter as coefficients
 
 .. [Grab1994] "Quantum Integrals of Motion for the Heisenberg Spin Chain",
    M. P. Grabowski and P. Mathieu,
