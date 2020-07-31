@@ -247,7 +247,8 @@ private:
                           element_type_t<StateVector> const& a) {
       for(size_t n = 0; n < base::m_actions_.size(); ++n) {
         sv_index_type index = in_index;
-        auto coeff = scalar_traits<ScalarType>::make_const(1);
+        auto coeff =
+          scalar_traits<evaluated_coeff_t<CoeffArgs...>>::make_const(1);
         bool nz = base::m_actions_[n].first.act(index, coeff);
         if(nz) {
           update_add_element(dst, index, evaluated_coeffs[n] * coeff * a);
