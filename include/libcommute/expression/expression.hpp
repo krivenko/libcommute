@@ -295,61 +295,63 @@ public:
 
   // Multiplication by scalar (postfix form)
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  auto operator*(S && alpha) const
+  auto operator*(S const& alpha) const
     -> expression_t<mul_type<ScalarType, S>> {
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       return {};
     else
       return mul_const_postfix_impl(
-        std::forward<S>(alpha),
+        alpha,
         std::is_same<mul_type<ScalarType, S>, ScalarType>()
       );
   }
 
   // Multiplication by scalar (prefix form)
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  friend auto operator*(S && alpha, expression const& expr)
+  friend auto operator*(S const& alpha, expression const& expr)
     -> expression_t<mul_type<S, ScalarType>> {
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       return {};
     else
       return expr.mul_const_prefix_impl(
-        std::forward<S>(alpha),
+        alpha,
         std::is_same<mul_type<S, ScalarType>, ScalarType>()
       );
   }
 
   // Addition of scalar (postfix form)
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  auto operator+(S && alpha) const -> expression_t<sum_type<ScalarType, S>> {
+  auto operator+(S const& alpha) const ->
+    expression_t<sum_type<ScalarType, S>> {
     return add_const_postfix_impl(
-      std::forward<S>(alpha),
+      alpha,
       std::is_same<sum_type<ScalarType, S>, ScalarType>()
     );
   }
 
   // Addition of scalar (prefix form)
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  friend auto operator+(S && alpha, expression const& expr)
+  friend auto operator+(S const& alpha, expression const& expr)
     -> expression_t<sum_type<S, ScalarType>> {
     return expr.add_const_prefix_impl(
-      std::forward<S>(alpha),
+      alpha,
       std::is_same<sum_type<S, ScalarType>, ScalarType>()
     );
   }
 
   // Subtraction of scalar (postfix form)
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  auto operator-(S && alpha) const -> expression_t<diff_type<ScalarType, S>> {
+  auto operator-(S const& alpha) const ->
+    expression_t<diff_type<ScalarType, S>> {
     return sub_const_postfix_impl(
-      std::forward<S>(alpha),
+      alpha,
       std::is_same<diff_type<ScalarType, S>, ScalarType>()
     );
   }
 
   // Subtraction of scalar (prefix form)
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  friend auto operator-(S && alpha, expression const& expr)
+  friend auto operator-(S const& alpha, expression const& expr)
     -> expression_t<diff_type<S, ScalarType>> {
     using res_s_t = diff_type<S, ScalarType>;
     expression_t<res_s_t> res;
@@ -377,7 +379,7 @@ public:
 
   // Compound assignment/multiplication by scalar
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  expression & operator*=(S && alpha) {
+  expression & operator*=(S const& alpha) {
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       monomials_.clear();
     else
@@ -387,7 +389,7 @@ public:
 
   // Compound assignments/addition of scalar
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  expression & operator+=(S && alpha) {
+  expression & operator+=(S const& alpha) {
     using s_t = remove_cvref_t<S>;
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
@@ -406,7 +408,7 @@ public:
 
   // Compound assignments/subtraction of scalar
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  expression & operator-=(S && alpha) {
+  expression & operator-=(S const& alpha) {
     using s_t = remove_cvref_t<S>;
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
@@ -798,7 +800,8 @@ private:
   // Addition of scalar (postfix form)
   // sum_type<ScalarType, S> == ScalarType
   template<typename S>
-  inline expression add_const_postfix_impl(S&& alpha, std::true_type) const {
+  inline
+  expression add_const_postfix_impl(S const& alpha, std::true_type) const {
     expression res(*this);
     auto & res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -818,7 +821,7 @@ private:
   // sum_type<ScalarType, S> != ScalarType
   template<typename S>
   inline expression_t<sum_type<ScalarType, S>>
-  add_const_postfix_impl(S&& alpha, std::false_type) const {
+  add_const_postfix_impl(S const& alpha, std::false_type) const {
     using res_s_t = sum_type<ScalarType, S>;
     expression_t<res_s_t> res;
     auto z = scalar_traits<S>::make_const(0);
@@ -841,7 +844,8 @@ private:
   // Addition of scalar (prefix form)
   // sum_type<S, ScalarType> == ScalarType
   template<typename S>
-  inline expression add_const_prefix_impl(S&& alpha, std::true_type) const {
+  inline
+  expression add_const_prefix_impl(S const& alpha, std::true_type) const {
     expression res(*this);
     auto & res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -861,7 +865,7 @@ private:
   // sum_type<S, ScalarType> != ScalarType
   template<typename S>
   inline expression_t<sum_type<S, ScalarType>>
-  add_const_prefix_impl(S&& alpha, std::false_type) const {
+  add_const_prefix_impl(S const& alpha, std::false_type) const {
     using res_s_t = sum_type<S, ScalarType>;
     expression_t<res_s_t> res;
     auto z = scalar_traits<S>::make_const(0);
@@ -888,7 +892,8 @@ private:
   // Subtraction of scalar (postfix form)
   // diff_type<ScalarType, S> == ScalarType
   template<typename S>
-  inline expression sub_const_postfix_impl(S&& alpha, std::true_type) const {
+  inline
+  expression sub_const_postfix_impl(S const& alpha, std::true_type) const {
     expression res(*this);
     auto & res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -908,7 +913,7 @@ private:
   // diff_type<ScalarType, S> != ScalarType
   template<typename S>
   inline expression_t<diff_type<ScalarType, S>>
-  sub_const_postfix_impl(S&& alpha, std::false_type) const {
+  sub_const_postfix_impl(S const& alpha, std::false_type) const {
     using res_s_t = diff_type<ScalarType, S>;
     expression_t<res_s_t> res;
     auto z = scalar_traits<S>::make_const(0);
