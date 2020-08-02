@@ -12,7 +12,7 @@ in the two-dimensional conformal field theory. Its generators
   [L_m, L_n] = (m - n) L_{m+n} + c(m^3 - m) \delta_{m, -n},
 
 where :math:`c` is the central charge commuting with all generators. It was
-shown in [Fair1988]_ that the Virasoro algebra can be constructed out of just
+shown in [FNZ88]_ that the Virasoro algebra can be constructed out of just
 two generators :math:`L_3` and :math:`L_{-2}` using the following recurrence
 relations,
 
@@ -36,7 +36,7 @@ above.
   :lines: 25-
   :linenos:
 
-.. [Fair1988] "A presentation for the Virasoro and super-Virasoro algebras",
+.. [FNZ88] "A presentation for the Virasoro and super-Virasoro algebras",
    D. B. Fairlie, J. Nuyts and C. K. Zachos ,
    Commun. Math. Phys. **117**, pp. 595–614 (1988),
    https://doi.org/10.1007/BF01218387

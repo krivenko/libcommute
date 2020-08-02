@@ -18,7 +18,7 @@ conserves three projections of the total spin
 
 as well as a series of higher order charges :math:`Q_n`. Existence of these
 charges can be derived from the transfer matrix theory. Explicit expressions
-for :math:`Q_n` were obtained in [Grab1994]_. The following program constructs
+for :math:`Q_n` were obtained in [GM94]_. The following program constructs
 Hamiltonian of the Heisenberg chain with periodic boundary conditions and
 checks that :math:`[\hat H, \mathbf{S}] = 0`, :math:`[\hat H, Q_n] = 0` and
 :math:`[Q_n, Q_m] = 0` for :math:`m,n = 3,4,5`.
@@ -28,7 +28,7 @@ checks that :math:`[\hat H, \mathbf{S}] = 0`, :math:`[\hat H, Q_n] = 0` and
   :lines: 25-
   :linenos:
 
-.. [Grab1994] "Quantum Integrals of Motion for the Heisenberg Spin Chain",
+.. [GM94] "Quantum Integrals of Motion for the Heisenberg Spin Chain",
    M. P. Grabowski and P. Mathieu,
    Mod. Phys. Lett. A, Vol. 09, No. 24, pp. 2197-2206 (1994),
    https://doi.org/10.1142/S0217732394002057
