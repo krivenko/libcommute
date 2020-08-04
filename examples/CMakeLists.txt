@@ -12,6 +12,7 @@ set(EXAMPLES
   hubbard_holstein
   exchange_matrix
   kanamori
+  jaynes_cummings
   heisenberg_chain
   parametric_qoperator
   virasoro_algebra

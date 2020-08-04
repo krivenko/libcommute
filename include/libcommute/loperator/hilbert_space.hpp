@@ -178,7 +178,7 @@ public:
     return elementary_spaces_.count(es.clone()) == 1;
   }
 
-  // Bit range spanned by an elementary space
+  // Bit range spanned by elementary space
   bit_range_t bit_range(elementary_space_t const& es) const {
     auto it = elementary_spaces_.find(es.clone());
     if(it == elementary_spaces_.end())
@@ -187,7 +187,7 @@ public:
       return it->second;
   }
 
-  // Bit range spanned by an algebra
+  // Bit range spanned by algebra ID
   bit_range_t const& algebra_bit_range(int algebra_id) const {
     auto it = algebra_bit_ranges_.find(algebra_id);
     if(it == algebra_bit_ranges_.end())

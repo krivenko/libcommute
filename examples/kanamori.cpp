@@ -15,7 +15,7 @@
 // Kanamori interaction Hamiltonian and its expression in terms of
 // integrals of motion N, S^2 and L^2.
 //
-//   [GdMM2013] "Strong Correlations from Hund's Coupling",
+//   "Strong Correlations from Hund's Coupling",
 //   A. Georges, L. de' Medici and J. Mravlje,
 //   Annu. Rev. Condens. Matter Phys. 2013. 4:137–78,
 //   https://doi.org/10.1146/annurev-conmatphys-020911-125045
