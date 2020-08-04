@@ -21,6 +21,7 @@
 #include "../utility.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <limits>
 #include <map>
 #include <stdexcept>
@@ -211,12 +212,19 @@ public:
   // Apply functor `f` to all basis state indices
   template<typename Functor>
   inline friend void foreach(hilbert_space const& hs, Functor&& f) {
-  sv_index_type dim = hs.dim();
-  for(sv_index_type index = 0; index < dim; ++index) {
-    f(index);
+    sv_index_type dim = hs.dim();
+    for(sv_index_type index = 0; index < dim; ++index) {
+      f(index);
+    }
   }
-}
 
+  // Return index of the product basis state, which decomposes as
+  // |0> |0> ... |0> |n>_{es} |0> ... |0>.
+  sv_index_type basis_state_index(elementary_space_t const& es, sv_index_type n)
+  {
+    assert(n < (1 << es.n_bits()));
+    return n << bit_range(es).first;
+  }
 
 private:
 

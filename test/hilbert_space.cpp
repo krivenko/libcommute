@@ -119,7 +119,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     }
   }
 
-  SECTION("has() and bit_range()") {
+  SECTION("has(), bit_range() and basis_state_index()") {
     hs_type hs(es_s32_i, es_s32_j,
                es_s1_j,
                es_s_i, es_s_j,
@@ -135,24 +135,44 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
 
     CHECK(hs.has(es_f_dn));
     CHECK(hs.bit_range(es_f_dn) == std::make_pair(0, 0));
+    CHECK(hs.basis_state_index(es_f_dn, 0) == 0);
+    CHECK(hs.basis_state_index(es_f_dn, 1) == 1);
     CHECK(hs.has(es_f_up));
     CHECK(hs.bit_range(es_f_up) == std::make_pair(1, 1));
+    CHECK(hs.basis_state_index(es_f_up, 0) == 0);
+    CHECK(hs.basis_state_index(es_f_up, 1) == 2);
     CHECK(hs.has(es_b_x));
     CHECK(hs.bit_range(es_b_x) == std::make_pair(2, 5));
+    CHECK(hs.basis_state_index(es_b_x, 0) == 0);
+    CHECK(hs.basis_state_index(es_b_x, 1) == 4);
+    CHECK(hs.basis_state_index(es_b_x, 5) == 20);
     CHECK_FALSE(hs.has(es_b_y));
     CHECK_THROWS_AS(hs.bit_range(es_b_y), hs_type::elementary_space_not_found);
     CHECK(hs.has(es_s_i));
     CHECK(hs.bit_range(es_s_i) == std::make_pair(6, 6));
+    CHECK(hs.basis_state_index(es_s_i, 0) == 0);
+    CHECK(hs.basis_state_index(es_s_i, 1) == 64);
     CHECK(hs.has(es_s_j));
     CHECK(hs.bit_range(es_s_j) == std::make_pair(7, 7));
     CHECK_FALSE(hs.has(es_s1_i));
     CHECK_THROWS_AS(hs.bit_range(es_s1_i), hs_type::elementary_space_not_found);
     CHECK(hs.has(es_s1_j));
     CHECK(hs.bit_range(es_s1_j) == std::make_pair(8, 9));
+    CHECK(hs.basis_state_index(es_s1_j, 0) == 0);
+    CHECK(hs.basis_state_index(es_s1_j, 1) == 256);
+    CHECK(hs.basis_state_index(es_s1_j, 2) == 512);
     CHECK(hs.has(es_s32_i));
     CHECK(hs.bit_range(es_s32_i) == std::make_pair(10, 11));
+    CHECK(hs.basis_state_index(es_s32_i, 0) == 0);
+    CHECK(hs.basis_state_index(es_s32_i, 1) == 1024);
+    CHECK(hs.basis_state_index(es_s32_i, 2) == 2048);
+    CHECK(hs.basis_state_index(es_s32_i, 3) == 3072);
     CHECK(hs.has(es_s32_j));
     CHECK(hs.bit_range(es_s32_j) == std::make_pair(12, 13));
+    CHECK(hs.basis_state_index(es_s32_j, 0) == 0);
+    CHECK(hs.basis_state_index(es_s32_j, 1) == 4096);
+    CHECK(hs.basis_state_index(es_s32_j, 2) == 8192);
+    CHECK(hs.basis_state_index(es_s32_j, 3) == 12288);
   }
 
   SECTION("add()") {
