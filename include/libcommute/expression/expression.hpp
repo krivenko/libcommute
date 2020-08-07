@@ -285,8 +285,9 @@ public:
   }
 
   // Unary minus
-  auto operator-() const -> expression_t<minus_type<ScalarType>> {
-    return unary_minus_impl(std::is_same<minus_type<ScalarType>, ScalarType>());
+  template<typename S = ScalarType>
+  auto operator-() const -> expression_t<minus_type<S>> {
+    return unary_minus_impl<S>(std::is_same<minus_type<S>, ScalarType>());
   }
 
   //
@@ -585,6 +586,7 @@ private:
   //
 
   // Unary minus: minus_type<ScalarType> == ScalarType
+  template<typename S>
   inline expression unary_minus_impl(std::true_type) const {
     expression res(*this);
     for(auto & p : res.monomials_) p.second = -p.second;
@@ -592,9 +594,9 @@ private:
   }
 
   // Unary minus: minus_type<ScalarType> != ScalarType
-  inline expression_t<minus_type<ScalarType>>
-  unary_minus_impl(std::false_type) const {
-    expression_t<minus_type<ScalarType>> res;
+  template<typename S>
+  inline expression_t<minus_type<S>> unary_minus_impl(std::false_type) const {
+    expression_t<minus_type<S>> res;
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, -p.second);
