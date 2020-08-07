@@ -33,7 +33,8 @@ template<typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
-#define LIBCOMMUTE_NO_STD_MAKE_UNIQUE
+#else
+using std::make_unique;
 #endif
 
 //
@@ -120,7 +121,9 @@ struct invoke_result : detail::invoke_result<void, F, ArgTypes...> {};
 template<typename F, typename... ArgTypes>
 using invoke_result_t = typename invoke_result<F, ArgTypes...>::type;
 
-#define LIBCOMMUTE_NO_STD_INVOKE_RESULT
+#else
+using std::invoke_result;
+using std::invoke_result_t;
 #endif
 
 //

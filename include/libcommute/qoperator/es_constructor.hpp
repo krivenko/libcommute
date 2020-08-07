@@ -148,9 +148,6 @@ public:
   template<typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     return make_unique<elementary_space_fermion<IndexTypes...>>(g.indices());
   }
 };
@@ -166,9 +163,6 @@ public:
   template<typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     return make_unique<elementary_space_boson<IndexTypes...>>(bits_per_boson_,
                                                               g.indices());
   }
@@ -181,9 +175,6 @@ public:
   template<typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     double spin = dynamic_cast<generator_spin<IndexTypes...> const&>(g).spin();
     return make_unique<elementary_space_spin<IndexTypes...>>(spin, g.indices());
   }

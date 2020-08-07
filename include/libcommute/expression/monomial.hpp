@@ -42,9 +42,6 @@ class monomial {
   template<typename GenType1, typename... GenTypesTail>
   void constructor_impl(GenType1 && generator, GenTypesTail&&... more_gens) {
     using gen1_t = typename std::remove_reference<GenType1>::type;
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     generators_.emplace_back(make_unique<gen1_t>(generator));
     constructor_impl(std::forward<GenTypesTail>(more_gens)...);
   }

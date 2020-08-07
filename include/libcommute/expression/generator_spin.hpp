@@ -64,9 +64,6 @@ public:
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     return make_unique<generator_spin>(*this);
   }
 
@@ -134,9 +131,6 @@ public:
     spin_component new_c = (c_ == spin_component::z ? spin_component::z :
     (c_ == spin_component::plus ? spin_component::minus : spin_component::plus)
     );
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     double spin = (multiplicity_-1)/2.0;
     f.set(0, make_unique<generator_spin>(spin, new_c, base::indices_), 1);
   }

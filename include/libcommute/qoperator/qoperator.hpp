@@ -173,11 +173,7 @@ public:
   }
 
   template<typename... CoeffArgs>
-#ifndef LIBCOMMUTE_NO_STD_INVOKE_RESULT
-  using evaluated_coeff_t = std::invoke_result_t<ScalarType, CoeffArgs...>;
-#else
   using evaluated_coeff_t = invoke_result_t<ScalarType, CoeffArgs...>;
-#endif
 
   // Act on state `src` and return the resulting state via `dst`.
   //

@@ -173,15 +173,9 @@ public:
   // Apply functor 'f' to all monomial/coefficient pairs
   // and replace the coefficients with the functor return values.
   template<typename F,
-#ifndef LIBCOMMUTE_NO_STD_INVOKE_RESULT
-           typename NewScalarType = std::invoke_result_t<F,
-             expression::monomial_t const&,
-             expression::scalar_type const&>>
-#else
            typename NewScalarType = invoke_result_t<F,
              expression::monomial_t const&,
              expression::scalar_type const&>>
-#endif
   friend expression_t<NewScalarType> transform(expression const& expr, F&& f) {
     expression_t<NewScalarType> res;
     auto & res_mons = res.get_monomials();
@@ -996,9 +990,6 @@ public:
   // Dereference
   reference operator*() const { return {m_it_->first, m_it_->second}; }
   pointer operator->() const {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     return make_unique<value_type>(m_it_->first, m_it_->second);
   }
 

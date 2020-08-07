@@ -53,9 +53,6 @@ public:
 
   // Make a smart pointer that manages a copy of this generator
   virtual std::unique_ptr<base> clone() const override {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     return make_unique<generator_boson>(*this);
   }
 
@@ -74,9 +71,6 @@ public:
 
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const override {
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
     f.set(0, make_unique<generator_boson>(!dagger_, base::indices_), 1);
   }
 
