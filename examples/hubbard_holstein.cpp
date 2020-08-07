@@ -52,7 +52,7 @@ int main() {
   // Every creation and annihilation operator met in the expression must
   // carry two integer (coordinates of a lattice site) and one string
   // index.
-  expression<double,               // type of expression's coefficients
+  static_indices::expr_real<
              int, int, std::string // types of operator indices
              > H;
 

@@ -41,7 +41,7 @@ int main() {
   const double J = 0.2;
 
   // Kanamori Hamiltonian (Eq. (2))
-  expression<double,
+  static_indices::expr_real<
             int /* orbital index */,
             std::string /* spin index */> H_K;
 
@@ -99,8 +99,7 @@ int main() {
   }
 
   // Total spin operators S_x, S_y, S_z.
-  expression<
-    std::complex<double>, // to allow for complex coefficients in S_x, S_y
+  static_indices::expr_complex< // to allow for complex coefficients in S_x, S_y
     int, std::string> Sx, Sy, Sz;
   for(int m = 0; m < n_orbs; ++m) {
     Sx += 0.5*(c_dag(m, "up") * c(m, "down") + c_dag(m, "down") * c(m, "up"));
@@ -116,8 +115,7 @@ int main() {
   };
 
   // Orbital isospin generators L_x, L_y, L_z.
-  expression<
-    std::complex<double>, // to allow for complex coefficients
+  static_indices::expr_complex< // to allow for complex coefficients
     int, std::string> Lx, Ly, Lz;
 
   for(std::string spin : {"up", "down"}) {

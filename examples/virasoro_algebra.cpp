@@ -28,13 +28,6 @@
 
 #include <libcommute/libcommute.hpp>
 
-// Oddly enough, function std::make_unique() used in this program was introduced
-// only in C++14. When this example is compiled in the C++11 mode, we have to
-// fall back to libcommute's own implementation, libcommute::make_unique().
-#ifndef LIBCOMMUTE_NO_STD_MAKE_UNIQUE
-    using std::make_unique;
-#endif
-
 namespace libcommute {
 
 // Define a new generator type by deriving from the abstract base class

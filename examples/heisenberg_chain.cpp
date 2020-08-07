@@ -32,7 +32,7 @@ using namespace libcommute;
 
 // Type of the spin-1/2 Heisenberg Hamiltonian and its charges.
 // All spin operators are going to carry one integer index - the site index.
-using expr_t = expression<std::complex<double>, int>;
+using expr_t = static_indices::expr_complex<int>;
 
 // Spins S_i are operator-valued 3-dimensional vectors. Here, we use std::array
 // as a simplistic implementation of such vectors.

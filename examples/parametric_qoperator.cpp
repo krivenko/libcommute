@@ -98,22 +98,12 @@ public:
     return result;
   }
 
-  // In-place multiplication by a constant
-  polynomial & operator*=(double x) {
-    for(auto& c : coefficients) c *= x;
-    return *this;
+  // Multiplication by a constant pre-factor
+  friend polynomial operator*(double x, polynomial const& p) {
+    polynomial res(p);
+    for(auto& c : res.coefficients) c *= x;
+    return res;
   }
-
-  // Multiplication by a constant
-  polynomial operator*(double x) const {
-    polynomial result(*this);
-    result *= x;
-    return result;
-  }
-  friend polynomial operator*(double x, polynomial const& p) { return p * x; }
-
-  // Unary minus
-  polynomial operator-() const { return *this * (-1); }
 };
 
 // Specialize struct scalar_traits to let libcommute know about our polynomial
@@ -130,12 +120,6 @@ template<> struct scalar_traits<polynomial> {
   }
   // Make a constant polynomial from a double value
   static polynomial make_const(double x) { return polynomial{x}; }
-  // Real part of p
-  static polynomial real(polynomial const& p) { return p; }
-  // Imaginary part of p (always zero)
-  static polynomial imag(polynomial const& p) { return polynomial{0}; }
-  // Complex conjugate of p
-  static polynomial conj(polynomial const& p) { return p; }
 };
 
 }
