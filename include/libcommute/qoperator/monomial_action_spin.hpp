@@ -139,29 +139,32 @@ public:
         case plus: {
           if(n + update.power > update.s2) return false;
           for(int d = 0; d < update.power; ++d)
-            coeff = coeff *
+            mul_assign(coeff,
               scalar_traits<ScalarType>::make_const(
                 sqr_root((update.s2 - (n+d))*(n+d + 1))
-              );
+              )
+            );
           index += update.power << update.shift;
         }
         break;
         case minus: {
           if(n - std::int64_t(update.power) < 0) return false;
           for(int d = 0; d < update.power; ++d)
-            coeff = coeff *
+            mul_assign(coeff,
               scalar_traits<ScalarType>::make_const(
                 sqr_root((update.s2 - (n-d) + 1)*(n-d))
-              );
+              )
+            );
           index -= update.power << update.shift;
         }
         break;
         case z: {
           if((update.s2 % 2 == 0) && n == update.s2 / 2) return false;
-          coeff = coeff *
+          mul_assign(coeff,
             scalar_traits<ScalarType>::make_const(
               std::pow(double(n) - double(update.s2)/2, update.power)
-            );
+            )
+          );
         }
         break;
       }

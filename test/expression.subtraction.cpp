@@ -130,7 +130,7 @@ TEST_CASE("Subtraction", "[minus]") {
     CHECK_THAT((expr1 - complex::c_dag(1, "up")),
                Prints<ref1_t>("(-1,0)*C(2,dn)"));
     CHECK_THAT((complex::c_dag(1, "up") - expr1),
-               Prints<ref1_t>("(1,-0)*C(2,dn)"));
+               Prints<ref1_t>("(1,0)*C(2,dn)"));
 
     CHECK_THAT(((complex::c_dag(1, "up") + complex::c(2, "dn")) -
                (real::c(2, "dn") + 2.0)),

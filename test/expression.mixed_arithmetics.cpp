@@ -19,6 +19,10 @@
 
 using namespace libcommute;
 
+//
+// Mock types used to test return types of arithmetic operations
+//
+
 struct ST1 {};
 struct ST2 {};
 struct ST1p2 {}; // Result type of ST1{} + ST2{}

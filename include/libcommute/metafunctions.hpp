@@ -123,6 +123,16 @@ using invoke_result_t = typename invoke_result<F, ArgTypes...>::type;
 #define LIBCOMMUTE_NO_STD_INVOKE_RESULT
 #endif
 
+//
+// std::void_t from C++17
+//
+
+#if __cplusplus < 201703L
+template<typename... > using void_t = void;
+#else
+using std::void_t;
+#endif
+
 } // namespace libcommute
 
 #endif

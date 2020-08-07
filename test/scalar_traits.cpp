@@ -175,3 +175,80 @@ TEST_CASE("Result types of arithmetic operations", "[arithmetic_result_type]") {
     CHECK(std::is_same<mul_type<my_complex, my_complex>, my_complex>::value);
   }
 }
+
+TEST_CASE("Detect availability of compound assignments",
+          "[has_compound_assignment]") {
+  SECTION("has_add_assign") {
+    CHECK(has_add_assign<double, double>::value);
+    CHECK(has_add_assign<std::complex<double>, double>::value);
+    CHECK_FALSE(has_add_assign<double, std::complex<double>>::value);
+    CHECK_FALSE(has_add_assign<my_complex, my_complex>::value);
+    CHECK_FALSE(has_add_assign<my_complex, double>::value);
+  }
+
+  SECTION("has_sub_assign") {
+    CHECK(has_sub_assign<double, double>::value);
+    CHECK(has_sub_assign<std::complex<double>, double>::value);
+    CHECK_FALSE(has_sub_assign<double, std::complex<double>>::value);
+    CHECK_FALSE(has_sub_assign<my_complex, my_complex>::value);
+    CHECK_FALSE(has_sub_assign<my_complex, double>::value);
+  }
+
+  SECTION("has_mul_assign") {
+    CHECK(has_mul_assign<double, double>::value);
+    CHECK(has_mul_assign<std::complex<double>, double>::value);
+    CHECK_FALSE(has_mul_assign<double, std::complex<double>>::value);
+    CHECK_FALSE(has_mul_assign<my_complex, my_complex>::value);
+    CHECK_FALSE(has_mul_assign<my_complex, double>::value);
+  }
+}
+
+//
+// Mock types used to test functions *_assign()
+//
+
+struct ST1 { int a; };
+struct ST2 { int a; };
+
+struct ST3 {
+  int a;
+  ST3 & operator=(ST3 const&) = default;
+
+  ST3 & operator+=(ST1 const& x) { a += x.a; return *this; }
+  ST3 operator+(ST2 const& x) { return {a + 2*x.a}; }
+
+  ST3 & operator-=(ST1 const& x) { a -= x.a; return *this; }
+  ST3 operator-(ST2 const& x) { return {a - 2*x.a}; }
+
+  ST3 & operator*=(ST1 const& x) { a *= x.a; return *this; }
+  ST3 operator*(ST2 const& x) { return {a * 2*x.a}; }
+};
+
+TEST_CASE("Functions *_assign()", "[op_assign]") {
+  ST1 x = {1};
+  ST2 y = {1};
+
+  SECTION("add_assign") {
+    ST3 z1 = {2}, z2 = {2};
+    CHECK(add_assign(z1, x).a == 3);
+    CHECK(z1.a == 3);
+    CHECK(add_assign(z2, y).a == 4);
+    CHECK(z2.a == 4);
+  }
+
+  SECTION("sub_assign") {
+    ST3 z1 = {2}, z2 = {2};
+    CHECK(sub_assign(z1, x).a == 1);
+    CHECK(z1.a == 1);
+    CHECK(sub_assign(z2, y).a == 0);
+    CHECK(z2.a == 0);
+  }
+
+  SECTION("mul_assign") {
+    ST3 z1 = {2}, z2 = {2};
+    CHECK(mul_assign(z1, x).a == 2);
+    CHECK(z1.a == 2);
+    CHECK(mul_assign(z2, y).a == 4);
+    CHECK(z2.a == 4);
+  }
+}

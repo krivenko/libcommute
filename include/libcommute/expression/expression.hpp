@@ -32,8 +32,14 @@ namespace libcommute {
 //
 // Polynomial expression involving quantum-mechanical operators
 //
-// Instances of ScalarType are assumed to form a field under addition and
-// multiplication
+// Instances of ScalarType are assumed to form a ring w/o multiplicative
+// identity (a.k.a. rng):
+//  - An abelian group under addition.
+//  - A semigroup under multiplication.
+//  - Multiplication is distributive with respect to addition
+//
+// Whenever available, compound assignment operations +=, -= and *= will be
+// used instead of +, -, * in arithmetic expressions with ScalarType objects.
 //
 
 template<typename ScalarType, typename... IndexTypes>
@@ -245,7 +251,7 @@ public:
       if(it == monomials_.end())
         monomials_.emplace(p);
       else {
-        it->second = it->second + p.second;
+        add_assign(it->second, p.second);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           monomials_.erase(it);
       }
@@ -256,12 +262,13 @@ public:
   // Compound assignment/subtraction
   template<typename S>
   expression & operator-=(expression_t<S> const& expr) {
+    auto const z = scalar_traits<ScalarType>::make_const(0);
     for(auto const& p : expr.get_monomials()) {
       auto it = monomials_.find(p.first);
       if(it == monomials_.end())
-        monomials_.emplace(p.first, -p.second);
+        monomials_.emplace(p.first, z - p.second);
       else {
-        it->second = it->second - p.second;
+        sub_assign(it->second, p.second);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           monomials_.erase(it);
       }
@@ -356,17 +363,16 @@ public:
     -> expression_t<diff_type<S, ScalarType>> {
     using res_s_t = diff_type<S, ScalarType>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::make_const(0);
+    auto const z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : expr.monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, z - p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
-        auto z = scalar_traits<ScalarType>::make_const(0);
-        res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha - z);
+        res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
-        it->second = alpha + it->second;
+        add_assign(it->second, alpha);
         if(scalar_traits<res_s_t>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -384,7 +390,7 @@ public:
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       monomials_.clear();
     else
-      for(auto & p : monomials_) p.second = p.second * alpha;
+      for(auto & p : monomials_) mul_assign(p.second, alpha);
     return *this;
   }
 
@@ -396,10 +402,10 @@ public:
       auto it = monomials_.find(monomial_t{});
       if(it == monomials_.end()) {
         auto val = scalar_traits<ScalarType>::make_const(0);
-        val = val + alpha;
+        add_assign(val, alpha);
         monomials_.emplace_hint(monomials_.begin(), monomial_t{}, val);
       } else {
-        it->second = it->second + alpha;
+        add_assign(it->second, alpha);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           monomials_.erase(it);
       }
@@ -411,12 +417,13 @@ public:
   template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   expression & operator-=(S const& alpha) {
     using s_t = remove_cvref_t<S>;
+    auto const z = scalar_traits<ScalarType>::make_const(0);
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
       if(it == monomials_.end()) {
-        monomials_.emplace_hint(monomials_.begin(), monomial_t{}, -alpha);
+        monomials_.emplace_hint(monomials_.begin(), monomial_t{}, z - alpha);
       } else {
-        it->second = it->second - alpha;
+        sub_assign(it->second, alpha);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           monomials_.erase(it);
       }
@@ -461,7 +468,7 @@ private:
       if(it == res_mons.end())
         res_mons.emplace(p);
       else {
-        it->second = it->second + p.second;
+        add_assign(it->second, p.second);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -478,8 +485,8 @@ private:
     auto & res_mons = res.get_monomials();
     auto const& m1 = monomials_;
     auto const& m2 = expr.get_monomials();
-    auto z1 = scalar_traits<ScalarType>::make_const(0);
-    auto z2 = scalar_traits<S>::make_const(0);
+    auto const z1 = scalar_traits<ScalarType>::make_const(0);
+    auto const z2 = scalar_traits<S>::make_const(0);
 
     auto it1 = m1.begin();
     auto it2 = m2.begin();
@@ -524,12 +531,14 @@ private:
                              std::true_type) const {
     expression res(*this);
     auto & res_mons = res.get_monomials();
+    auto const z = scalar_traits<ScalarType>::make_const(0);
+
     for(auto const& p : expr.get_monomials()) {
       auto it = res_mons.find(p.first);
       if(it == res_mons.end())
-        res_mons.emplace(p.first, -p.second);
+        res_mons.emplace(p.first, z - p.second);
       else {
-        it->second = it->second - p.second;
+        sub_assign(it->second, p.second);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -546,8 +555,8 @@ private:
     auto & res_mons = res.get_monomials();
     auto const& m1 = monomials_;
     auto const& m2 = expr.get_monomials();
-    auto z1 = scalar_traits<ScalarType>::make_const(0);
-    auto z2 = scalar_traits<S>::make_const(0);
+    auto const z1 = scalar_traits<ScalarType>::make_const(0);
+    auto const z2 = scalar_traits<S>::make_const(0);
 
     auto it1 = m1.begin();
     auto it2 = m2.begin();
@@ -615,7 +624,7 @@ private:
     typename monomials_map_t::iterator it;
     std::tie(it, is_new_monomial) = target.emplace(m, coeff);
     if(!is_new_monomial) {
-      it->second = it->second + coeff;
+      add_assign(it->second, coeff);
       if(scalar_traits<ScalarType>::is_zero(it->second))
         target.erase(it);
     }
@@ -677,7 +686,7 @@ private:
                          // taken care of by process_f(n).
               return;
             } else { // Swap generators
-              coeff = coeff * scalar_traits<ScalarType>::make_const(c);
+              mul_assign(coeff, scalar_traits<ScalarType>::make_const(c));
               m.swap_generators(n - 1, n);
               is_swapped = true;
             }
@@ -758,7 +767,7 @@ private:
   template<typename S>
   inline expression mul_const_postfix_impl(S&& alpha, std::true_type) const {
     expression res(*this);
-    for(auto & p : res.monomials_) p.second = p.second * alpha;
+    for(auto & p : res.monomials_) mul_assign(p.second, alpha);
     return res;
   }
 
@@ -811,7 +820,7 @@ private:
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
-        it->second = it->second + alpha;
+        add_assign(it->second, alpha);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -826,16 +835,15 @@ private:
   add_const_postfix_impl(S const& alpha, std::false_type) const {
     using res_s_t = sum_type<ScalarType, S>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
-      res_mons.emplace_hint(res_mons.end(), p.first, p.second + z);
+      res_mons.emplace_hint(res_mons.end(), p.first, p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
-        it->second = it->second + alpha;
+        add_assign(it->second, alpha);
         if(scalar_traits<res_s_t>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -855,7 +863,7 @@ private:
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
-        it->second = alpha + it->second;
+        add_assign(it->second, alpha);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -870,16 +878,15 @@ private:
   add_const_prefix_impl(S const& alpha, std::false_type) const {
     using res_s_t = sum_type<S, ScalarType>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
-      res_mons.emplace_hint(res_mons.end(), p.first, z + p.second);
+      res_mons.emplace_hint(res_mons.end(), p.first, p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
-        it->second = alpha + it->second;
+        add_assign(it->second, alpha);
         if(scalar_traits<res_s_t>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -897,13 +904,14 @@ private:
   inline
   expression sub_const_postfix_impl(S const& alpha, std::true_type) const {
     expression res(*this);
+    auto const z = scalar_traits<ScalarType>::make_const(0);
     auto & res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
-        res_mons.emplace_hint(res_mons.begin(), monomial_t{}, -alpha);
+        res_mons.emplace_hint(res_mons.begin(), monomial_t{}, z - alpha);
       } else {
-        it->second = it->second - alpha;
+        sub_assign(it->second, alpha);
         if(scalar_traits<ScalarType>::is_zero(it->second))
           res_mons.erase(it);
       }
@@ -918,17 +926,16 @@ private:
   sub_const_postfix_impl(S const& alpha, std::false_type) const {
     using res_s_t = diff_type<ScalarType, S>;
     expression_t<res_s_t> res;
-    auto z = scalar_traits<S>::make_const(0);
     auto & res_mons = res.get_monomials();
     for(auto const& p : monomials_)
-      res_mons.emplace_hint(res_mons.end(), p.first, p.second - z);
+      res_mons.emplace_hint(res_mons.end(), p.first, p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
         auto z = scalar_traits<ScalarType>::make_const(0);
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, z - alpha);
       } else {
-        it->second = it->second - alpha;
+        sub_assign(it->second, alpha);
         if(scalar_traits<res_s_t>::is_zero(it->second))
           res_mons.erase(it);
       }

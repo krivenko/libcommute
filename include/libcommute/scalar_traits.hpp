@@ -13,6 +13,8 @@
 #ifndef LIBCOMMUTE_SCALAR_TRAITS_HPP_
 #define LIBCOMMUTE_SCALAR_TRAITS_HPP_
 
+#include "metafunctions.hpp"
+
 #include <cassert>
 #include <complex>
 #include <limits>
@@ -120,6 +122,49 @@ using diff_type = decltype(std::declval<S1>() - std::declval<S2>());
 // Type of product of two objects with types S1 and S2
 template<typename S1, typename S2>
 using mul_type = decltype(std::declval<S1>() * std::declval<S2>());
+
+//
+// Given a pair of types S1, S2 and a binary operation OP, define a trait
+// structure that detect whether 'S1 OP S2' is a valid expression.
+//
+#define DEFINE_HAS_OP(NAME, OP)                                                \
+template<typename S1, typename S2, typename = void> struct has_##NAME          \
+  : std::false_type {};                                                        \
+template<typename S1, typename S2> struct has_##NAME <S1, S2,                  \
+    void_t<decltype(std::declval<S1&>() OP std::declval<S2>())>                \
+  > : std::true_type {};
+
+DEFINE_HAS_OP(add_assign, +=)
+DEFINE_HAS_OP(sub_assign, -=)
+DEFINE_HAS_OP(mul_assign, *=)
+#undef DEFINE_HAS_OP
+
+//
+// Define a function NAME_assign(S1 & a, S2 const& b) that calls the compound
+// assignment operator 'a COMPOUND_OP b' if it is available, and 'a = a OP b'
+// otherwise.
+//
+#define DEFINE_OP_ASSIGN_FUNC(NAME, COMPOUND_OP, OP)                           \
+template<typename S1, typename S2>                                             \
+inline S1 & NAME##_assign_impl(S1 & a, S2 const& b, std::true_type) {          \
+  return a COMPOUND_OP b;                                                      \
+}                                                                              \
+                                                                               \
+template<typename S1, typename S2>                                             \
+inline S1 & NAME##_assign_impl(S1 & a, S2 const& b, std::false_type) {         \
+  a = a OP b;                                                                  \
+  return a;                                                                    \
+}                                                                              \
+                                                                               \
+template<typename S1, typename S2>                                             \
+inline S1 & NAME##_assign(S1 & a, S2 const& b) {                               \
+  return NAME##_assign_impl(a, b, has_##NAME##_assign<S1, S2>());              \
+}
+
+DEFINE_OP_ASSIGN_FUNC(add, +=, +)
+DEFINE_OP_ASSIGN_FUNC(sub, -=, -)
+DEFINE_OP_ASSIGN_FUNC(mul, *=, *)
+#undef DEFINE_OP_ASSIGN_FUNC
 
 } // namespace libcommute
 
