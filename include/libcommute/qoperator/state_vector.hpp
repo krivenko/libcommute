@@ -47,7 +47,8 @@ inline auto get_element(StateVector const& sv, sv_index_type n)
 // Add a constant to the n-th state amplitude stored in a StateVector object
 template<typename StateVector, typename T>
 inline void update_add_element(StateVector & sv, sv_index_type n, T&& value) {
-  sv[n] += value;
+  auto & sv_n = sv[n];
+  sv_n = sv_n + value;
 }
 
 // Set all amplitudes stored in a StateVector object to zero

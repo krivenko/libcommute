@@ -35,26 +35,6 @@ struct my_complex {
   // Arithmetics
   my_complex operator-() const {return {-re, -im};}
 
-  my_complex & operator+=(my_complex c) {
-    re += c.re;
-    im += c.im;
-    return *this;
-  }
-  my_complex & operator-=(my_complex c) {
-    re -= c.re;
-    im -= c.im;
-    return *this;
-  }
-  my_complex & operator*=(my_complex c2) {
-    auto c1 = *this;
-    re = c1.re*c2.re - c1.im*c2.im;
-    im = c1.re*c2.im + c1.im*c2.re;
-    return *this;
-  }
-  my_complex & operator+=(float x) { return *this += {x, 0}; }
-  my_complex & operator-=(float x) { return *this -= {x, 0}; }
-  my_complex & operator*=(float x) { return *this *= {x, 0}; }
-
   friend my_complex operator+(my_complex c, float x) {return {c.re + x, c.im};}
   friend my_complex operator+(float x, my_complex c) {return c + x;}
   friend my_complex operator+(my_complex c1, my_complex c2) {

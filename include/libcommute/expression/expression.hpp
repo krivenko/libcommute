@@ -384,7 +384,7 @@ public:
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       monomials_.clear();
     else
-      for(auto & p : monomials_) p.second *= alpha;
+      for(auto & p : monomials_) p.second = p.second * alpha;
     return *this;
   }
 
@@ -396,10 +396,10 @@ public:
       auto it = monomials_.find(monomial_t{});
       if(it == monomials_.end()) {
         auto val = scalar_traits<ScalarType>::make_const(0);
-        val += alpha;
+        val = val + alpha;
         monomials_.emplace_hint(monomials_.begin(), monomial_t{}, val);
       } else {
-        it->second += alpha;
+        it->second = it->second + alpha;
         if(scalar_traits<ScalarType>::is_zero(it->second))
           monomials_.erase(it);
       }
@@ -416,7 +416,7 @@ public:
       if(it == monomials_.end()) {
         monomials_.emplace_hint(monomials_.begin(), monomial_t{}, -alpha);
       } else {
-        it->second -= alpha;
+        it->second = it->second - alpha;
         if(scalar_traits<ScalarType>::is_zero(it->second))
           monomials_.erase(it);
       }

@@ -149,10 +149,12 @@ public:
 
       if(update.n_change > 0) {
         for(int d = 1; d <= update.n_change; ++d)
-          coeff *= sqr_root(n_part + d);
+          coeff = coeff *
+            scalar_traits<ScalarType>::make_const(sqr_root(n_part + d));
       } else {
         for(int d = 0; d <= -update.n_change-1; ++d)
-          coeff *= sqr_root(n_part - d);
+          coeff = coeff *
+            scalar_traits<ScalarType>::make_const(sqr_root(n_part - d));
       }
       index += update.state_change;
     }

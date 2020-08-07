@@ -100,7 +100,7 @@ public:
     bool minus = parity_number_of_bits((inter_index & annihilation_count_mask) ^
                                        (index & creation_count_mask)
                                       );
-    if(minus) coeff *= -1;
+    if(minus) coeff = coeff * scalar_traits<ScalarType>::make_const(-1);
     return true;
   }
 

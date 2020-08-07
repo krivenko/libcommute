@@ -25,6 +25,7 @@ set(TESTS
   expression.const.addition
   expression.const.subtraction
   expression.const.multiplication
+  expression.mixed_arithmetics
   hc
   commutators
   gamma

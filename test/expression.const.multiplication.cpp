@@ -29,18 +29,18 @@ TEST_CASE("Compound assignment/multiplication", "[mul_assign]") {
   SECTION("double") {
     auto expr_r = real::c_dag(1, "up");
     using ref_t = decltype(expr_r);
-    expr_r *= 4;
+    expr_r *= 4.0;
     CHECK_THAT(expr_r, Prints<ref_t>("4*C+(1,up)"));
-    expr_r *= 0;
+    expr_r *= 0.0;
     CHECK_THAT(expr_r, Prints<ref_t>("0"));
   }
   SECTION("complex from double") {
     auto expr_c = complex::c_dag(1, "up");
     using ref_t = decltype(expr_c);
 
-    expr_c *= 4;
+    expr_c *= 4.0;
     CHECK_THAT(expr_c, Prints<ref_t>("(4,0)*C+(1,up)"));
-    expr_c *= 0;
+    expr_c *= 0.0;
     CHECK_THAT(expr_c, Prints<ref_t>("(0,0)"));
   }
   SECTION("my_complex") {

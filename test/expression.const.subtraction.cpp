@@ -29,22 +29,22 @@ TEST_CASE("Compound assignment/subtraction", "[minus_assign]") {
   SECTION("double") {
     auto expr_r = real::c_dag(1, "up");
     using ref_t = decltype(expr_r);
-    expr_r -= 4;
+    expr_r -= 4.0;
     CHECK_THAT(expr_r, Prints<ref_t>("-4 + 1*C+(1,up)"));
-    expr_r -= 0;
+    expr_r -= 0.0;
     CHECK_THAT(expr_r, Prints<ref_t>("-4 + 1*C+(1,up)"));
-    expr_r -= -4;
+    expr_r -= -4.0;
     CHECK_THAT(expr_r, Prints<ref_t>("1*C+(1,up)"));
   }
   SECTION("complex from double") {
     auto expr_c = complex::c_dag(1, "up");
     using ref_t = decltype(expr_c);
 
-    expr_c -= 4;
+    expr_c -= 4.0;
     CHECK_THAT(expr_c, Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
-    expr_c -= 0;
+    expr_c -= 0.0;
     CHECK_THAT(expr_c, Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
-    expr_c -= -4;
+    expr_c -= -4.0;
     CHECK_THAT(expr_c, Prints<ref_t>("(1,0)*C+(1,up)"));
   }
   SECTION("my_complex") {
@@ -74,7 +74,7 @@ TEST_CASE("Subtraction", "[minus]") {
     CHECK_THAT((expr_r - 2), Prints<ref_t>("-2 + 1*C+(1,up)"));
     CHECK_THAT((2 - expr_r), Prints<ref_t>("2 + -1*C+(1,up)"));
 
-    expr_r -= 2;
+    expr_r -= 2.0;
 
     CHECK_THAT((expr_r - 0), Prints<ref_t>("-2 + 1*C+(1,up)"));
     CHECK_THAT((0 - expr_r), Prints<ref_t>("2 + -1*C+(1,up)"));
