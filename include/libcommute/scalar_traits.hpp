@@ -54,10 +54,6 @@ struct scalar_traits<S, with_trait<std::is_integral, S>> {
     assert(std::nearbyint(x) == x);
     return S(std::nearbyint(x));
   }
-  // Real part of x
-  static S real(S const& x) { return x; }
-  // Imaginary part of x
-  static S imag(S const& x) { return S{}; }
   // Complex conjugate of x
   static S conj(S const& x) { return x; }
 };
@@ -74,10 +70,6 @@ struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
   }
   // Make a constant from a double value
   static S make_const(double x) { return x; }
-  // Real part of x
-  static S real(S const& x) { return x; }
-  // Imaginary part of x
-  static S imag(S const& x) { return S{}; }
   // Complex conjugate of x
   static S conj(S const& x) { return x; }
 };
@@ -95,10 +87,6 @@ struct scalar_traits<S, with_trait<is_complex, S>> {
   }
   // Make a constant from a double value
   static S make_const(double x) { return S(x); }
-  // Real part of x
-  static S real(S const& x) { return std::real(x); }
-  // Imaginary part of x
-  static S imag(S const& x) { return std::imag(x); }
   // Complex conjugate of x
   static S conj(S const& x) { return std::conj(x); }
 };
