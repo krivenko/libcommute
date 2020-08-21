@@ -1,15 +1,17 @@
 libcommute
 ==========
 
-*libcommute* is a C++11/14/17 template library including two major parts.
+*libcommute* is a C++11/14/17 template library that includes two major parts.
 
 * A Domain-Specific Language (DSL) designed to easily construct and manipulate
   polynomial expressions with quantum-mechanical operators,
-  especially those used in the quantum many-body theory.
+  especially those used in the quantum many-body theory. The most commonly
+  used instances of such expressions are many-body Hamiltonians and operators
+  of physical observables.
 
 * A fast intermediate representation of the quantum-mechanical operators
-  that enables their action on finite-dimensional state vectors.
-  This feature provides a basis for writing highly performant Exact
+  that enables their action on state vectors in finite-dimensional Hilbert
+  spaces. This feature provides a basis for writing highly performant Exact
   Diagonalization (ED) codes without loss of flexibility.
 
 *libcommute* offers a bunch of features and is extensible in a number of ways.
@@ -18,19 +20,13 @@ libcommute
   can mix bosonic/fermionic
   (`CCR and CAR algebras <https://en.wikipedia.org/wiki/CCR_and_CAR_algebras>`_)
   and spin operators. It supports all standard arithmetic operations,
-  compound-assignement operators, Hermitian conjugation and gives access to the
+  compound-assignement operators, Hermitian conjugation and gives access to
   individual monomials via an iteration interface. No matrix representation is
   internally used to store the expressions, so there is virtually no limit on
   their size.
 
-* User-defined commutation/anticommutation operator algebras can be added via
-  inheritance from the abstract :cpp:class:`generator` base class.
-
-* Coefficients of the polynomial expressions can be real, complex
-  (``std::complex<T>``) or of any user-defined type ``S``,
-  provided the structure specialization ``scalar_traits<S>`` is available.
-
-* Algebra generators such as operators :math:`\hat c^\dagger_{i,j,k,\ldots}`
+* Algebra generators such as fermionic creation/annihilation operators
+  :math:`\hat c^\dagger_{i,j,k,\ldots}`
   (:math:`\hat c_{i,j,k,\ldots}`) are templated on the number and types of the
   indices :math:`i,j,k,\ldots`. It is, therefore, easy to implement notation
   that is most natural for the problem at hand.
@@ -40,6 +36,13 @@ libcommute
   expression can carry its own sequence of indices :math:`i,j,k,\ldots`.
   Neither lengths of the sequences nor types of their elements have to agree
   between different generators.
+
+* Coefficients of the polynomial expressions can be real, complex
+  (``std::complex<T>``) or of any user-defined type ``S`` (one needs to
+  specialize the structure ``scalar_traits<S>`` for that type).
+
+* User-defined commutation/anticommutation operator algebras can be added via
+  inheritance from the abstract :cpp:class:`generator` base class.
 
 * The common shorthand notation :math:`\pm \text{H.c.}` is supported in
   the expressions (credits to
@@ -63,7 +66,7 @@ libcommute
 * `qoperator` mirrors `expression` in the manner it can be extended to support
   more commutation/anticommutation algebras.
 
-* As an addition, there is an utility class :cpp:class:`space_partition`,
+* As a bonus, there is an utility class :cpp:class:`space_partition`,
   which implements the Hilbert space partitioning algorithm
   (`Computer Physics Communications 200, March 2016, 274-284
   <http://dx.doi.org/10.1016/j.cpc.2015.10.023>`_, Sec. 4.2).
@@ -90,6 +93,8 @@ Contents
 
     installation
     usage
+    dsl/index
+    ed/index
     examples/index
     genindex
     search
