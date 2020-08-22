@@ -8,6 +8,10 @@ project is based on. Either way, you would need a compiler that supports at
 least C++11 and -- optionally -- C++17, if you are interested in using the
 :ref:`dynamic index sequence feature <dyn_indices>`.
 
+It is recommended to include ``<libcommute/libcommute.hpp>``, which pulls in
+all *libcommute*'s headers. The entire library is under 5000 lines of code and
+compilation times should normally not be a concern.
+
 Makefiles/no build system
 -------------------------
 

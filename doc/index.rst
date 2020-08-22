@@ -93,8 +93,8 @@ Contents
 
     installation
     usage
-    dsl/index
-    ed/index
+    expression/index
+    qoperator/index
     examples/index
     genindex
     search

@@ -1,4 +1,4 @@
-.. _dsl:
+.. _expr_index:
 
 Domain-Specific Language for polynomial expressions with QM operators
 =====================================================================
@@ -9,6 +9,7 @@ Domain-Specific Language for polynomial expressions with QM operators
 
     intro
     expression
-    factories
+    monomial
     generator
+    factories
 
