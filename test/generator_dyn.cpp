@@ -181,6 +181,12 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
+    for(size_t i = 0; i < fermion_ops.size(); ++i) {
+      auto fermion_gen_p =
+        dynamic_cast<generator_fermion<dyn_indices>*>(fermion_ops[i]);
+      CHECK(fermion_gen_p->dagger() == (i < 2));
+    }
+
     check_equality(fermion_ops);
     check_less_greater(fermion_ops);
 
@@ -212,6 +218,12 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK(op->algebra_id() == boson::algebra_id());
       CHECK_FALSE(op->reduce_power(3, lin_f));
       CHECK_FALSE(op->reduce_power(4, lin_f));
+    }
+
+    for(size_t i = 0; i < boson_ops.size(); ++i) {
+      auto boson_gen_p =
+        dynamic_cast<generator_boson<dyn_indices>*>(boson_ops[i]);
+      CHECK(boson_gen_p->dagger() == (i < 2));
     }
 
     check_equality(boson_ops);

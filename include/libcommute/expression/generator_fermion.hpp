@@ -77,7 +77,7 @@ public:
   }
 
   // Accessor
-  inline int dagger() const { return dagger_; }
+  inline bool dagger() const { return dagger_; }
 
   // Return the Hermitian conjugate of this generator via f
   virtual void conj(linear_function_t & f) const override {
