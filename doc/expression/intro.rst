@@ -74,5 +74,5 @@ of the following routes.
   This is a common step in implementing Exact Diagonalization algorithms.
 - Use the :ref:`iteration interface <expr_iteration>` to analyze the structure
   of the Hamiltonian term by term.
-- :ref:`Transform <expr_transform>` the Hamiltonian by applying a function
+- :ref:`Transform <expr_iteration>` the Hamiltonian by applying a function
   to each term.

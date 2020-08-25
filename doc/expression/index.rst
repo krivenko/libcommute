@@ -1,7 +1,7 @@
 .. _expr_index:
 
-Domain-Specific Language for polynomial expressions with QM operators
-=====================================================================
+Domain-Specific Language for polynomial expressions
+===================================================
 
 .. toctree::
     :name: mastertoc
@@ -12,4 +12,5 @@ Domain-Specific Language for polynomial expressions with QM operators
     monomial
     generator
     factories
+    gamma
 

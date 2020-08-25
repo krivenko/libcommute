@@ -30,8 +30,8 @@ Class definitions
     E = C M^{(0)} + \sum_i C_i M^{(1)}_i + \sum_{ij} C_{ij} M^{(2)}_{ij} +
         \ldots
 
-  The :ref:`monomials <monomial>` are in turn ordered products
-  of :ref:`algebra generators <generator>` (operators
+  The :ref:`monomials <monomial>` are in turn canonically ordered products of
+  :ref:`algebra generators <generator>` (operators
   :math:`c^\dagger`/:math:`c`, :math:`a^\dagger`/:math:`a`, etc).
 
   :type:`ScalarType` is the type of coefficients
@@ -47,7 +47,8 @@ Class definitions
 
   Indices :math:`i`, :math:`j`, etc in the definition above are compound
   indices with a fixed number of components. Types of the components are
-  given by the template parameter pack :type:`IndexTypes`.
+  given by the template parameter pack :type:`IndexTypes`. **All index types
+  must be less-comparable and form strictly ordered sets.**
 
   .. code-block:: cpp
     :caption: Example: Expression types
@@ -350,7 +351,7 @@ There is also a special set of :ref:`factory functions <factories_dyn>` defined
 in :expr:`libcommute::dynamic_indices`. Those return commonly used QM operators
 with the dynamically typed indices.
 
-Some related type aliases declared for the sake of convenience are
+Some related type aliases are declared for the sake of convenience.
 
 .. code-block:: cpp
 

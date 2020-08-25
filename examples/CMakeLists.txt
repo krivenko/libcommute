@@ -10,6 +10,7 @@
 
 set(EXAMPLES
   holstein
+  new_algebra
   hubbard_holstein
   exchange_matrix
   kanamori

@@ -16,8 +16,8 @@ libcommute
 
 *libcommute* offers a bunch of features and is extensible in a number of ways.
 
-* The :cpp:class:`expression` class is an arbitrary polynomial expression that
-  can mix bosonic/fermionic
+* The :cpp:class:`libcommute::expression` class is an arbitrary polynomial
+  expression that can mix bosonic/fermionic
   (`CCR and CAR algebras <https://en.wikipedia.org/wiki/CCR_and_CAR_algebras>`_)
   and spin operators. It supports all standard arithmetic operations,
   compound-assignement operators, Hermitian conjugation and gives access to
@@ -42,7 +42,7 @@ libcommute
   specialize the structure ``scalar_traits<S>`` for that type).
 
 * User-defined commutation/anticommutation operator algebras can be added via
-  inheritance from the abstract :cpp:class:`generator` base class.
+  inheritance from the abstract base class :cpp:class:`libcommute::generator`.
 
 * The common shorthand notation :math:`\pm \text{H.c.}` is supported in
   the expressions (credits to
@@ -50,11 +50,12 @@ libcommute
   implementation of this idea in the
   `TBTK library <https://github.com/dafer45/TBTK>`_).
 
-* The :cpp:class:`qoperator` class translates an expression into a form, where
-  it can be quickly acted with on a state vector.
+* The :cpp:class:`libcommute::qoperator` class translates an expression into
+  a form, where it can be quickly acted with on a state vector.
 
 * A state vector is a container type modeling a special
-  :cpp:concept:`StateVector` concept. By default, :cpp:class:`qoperator` will
+  :cpp:concept:`StateVector` concept. By default,
+  :cpp:class:`libcommute::qoperator` will
   work with any container that gives read/write access to its elements
   via ``operator[]`` and exposes its size via a ``size()`` method
   (``std::vector<T>`` is one example).
@@ -63,10 +64,11 @@ libcommute
   it can be implemented by overloading the corresponding free function
   (part of the concept).
 
-* `qoperator` mirrors `expression` in the manner it can be extended to support
-  more commutation/anticommutation algebras.
+* `libcommute::qoperator` mirrors `libcommute::expression` in the manner
+  it can be extended to support more commutation/anticommutation algebras.
 
-* As a bonus, there is an utility class :cpp:class:`space_partition`,
+* As a bonus, there is an utility class
+  :cpp:class:`libcommute::space_partition`,
   which implements the Hilbert space partitioning algorithm
   (`Computer Physics Communications 200, March 2016, 274-284
   <http://dx.doi.org/10.1016/j.cpc.2015.10.023>`_, Sec. 4.2).
