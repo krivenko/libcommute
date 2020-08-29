@@ -348,25 +348,26 @@ each of type :expr:`int`, :expr:`std::string` or of the user-defined enumeration
 type :expr:`spin`.
 
 There is also a special set of :ref:`factory functions <factories_dyn>` defined
-in :expr:`libcommute::dynamic_indices`. Those return commonly used QM operators
-with the dynamically typed indices.
+in namespaces nested under :expr:`libcommute::dynamic_indices`. Those return
+commonly used QM operators with the dynamically typed indices.
+Some related type aliases are declared in the same namespace for the sake of
+convenience.
 
-Some related type aliases are declared for the sake of convenience.
+.. type:: libcommute::dynamic_indices::dyn_indices = \
+          dyn_indices_generic<int, std::string>
 
-.. code-block:: cpp
+  *Declared in <libcommute/expression/dyn_indices.hpp>*
 
-  namespace libcommute {
-  namespace dynamic_indices {
+  Dynamic mixture of integer and string indices.
 
-    // Dynamic mixture of integer and string indices.
-    // Declared in <libcommute/expression/dyn_indices.hpp>
-    using dyn_indices = dyn_indices_generic<int, std::string>;
+.. type:: libcommute::dynamic_indices::expr_real \
+          = expression<double, dyn_indices>
+          libcommute::dynamic_indices::expr_complex \
+          = expression<std::complex<double>, dyn_indices>
 
-    // Real/complex expression shorthand types.
-    // Declared in <libcommute/expression/expression.hpp>
-    using expr_real = expression<double, dyn_indices>;
-    using expr_complex = expression<std::complex<double>, dyn_indices>;
-  }}
+  *Declared in <libcommute/expression/expression.hpp>*
+
+  Real/complex expression shorthand types.
 
 .. _expr_iteration:
 
