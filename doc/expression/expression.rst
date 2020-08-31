@@ -74,7 +74,7 @@ Class definitions
 
   .. rubric:: Constructors
 
-  .. function:: expression() = default;
+  .. function:: expression() = default
 
    Construct a trivial expression, i.e. an expression containing no monomials.
 
@@ -159,6 +159,14 @@ Class definitions
 
   .. rubric:: :ref:`Iteration interface and transformations <expr_iteration>`
 
+  .. class:: const_iterator
+
+    Constant bidirectional iterator over monomial-coefficient pairs
+    :math:`(M,C)` in a polynomial expression. Given an iterator :expr:`it`,
+    :expr:`it->monomial` returns a constant reference to the :type:`monomial`
+    object :math:`M`, and :expr:`it->coeff` is a constant reference to
+    the respective coefficient :math:`C`.
+
   .. function:: const_iterator begin() const noexcept
                 const_iterator cbegin() const noexcept
 
@@ -235,16 +243,6 @@ Class definitions
 
   Shorthand type for expressions with complex coefficients and statically typed
   indices.
-
-.. class:: const_iterator
-
-  *Defined in <libcommute/expression/expression.hpp>*
-
-  Constant bidirectional iterator over monomial-coefficient pairs :math:`(M,C)`
-  in a polynomial expression. Given an iterator :expr:`it`, :expr:`it->monomial`
-  returns a constant reference to the :type:`monomial` object :math:`M`, and
-  :expr:`it->coeff` is a constant reference to the respective coefficient
-  :math:`C`.
 
 .. _custom_scalar_type:
 

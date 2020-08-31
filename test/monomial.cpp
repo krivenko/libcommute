@@ -85,11 +85,11 @@ TEST_CASE("Monomials", "[monomial]") {
     check_less_greater(monomials);
   }
 
-  SECTION("is_sorted()") {
-    CHECK(mon_type().is_sorted());
-    CHECK(mon_type(S1z_j, S1z_j, S1z_j, S1z_j).is_sorted());
-    CHECK_FALSE(mon_type(S1z_j, A_y, S1z_j, A_y).is_sorted());
-    CHECK(mon_type(A_y, A_y, S1z_j, S1z_j).is_sorted());
+  SECTION("is_ordered()") {
+    CHECK(mon_type().is_ordered());
+    CHECK(mon_type(S1z_j, S1z_j, S1z_j, S1z_j).is_ordered());
+    CHECK_FALSE(mon_type(S1z_j, A_y, S1z_j, A_y).is_ordered());
+    CHECK(mon_type(A_y, A_y, S1z_j, S1z_j).is_ordered());
   }
 
   SECTION("Copy and assignment") {

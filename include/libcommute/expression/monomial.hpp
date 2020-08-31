@@ -181,7 +181,7 @@ public:
   }
 
   // Is this monomial sorted?
-  inline bool is_sorted() const { return std::is_sorted(begin(), end()); }
+  inline bool is_ordered() const { return std::is_sorted(begin(), end()); }
 
   // Concatenate monomials, generators and ranges specified
   // by a pair of monomial iterators
