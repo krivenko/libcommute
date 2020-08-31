@@ -328,7 +328,61 @@ typed index sequences step in. They are instantiations of the
 :expr:`dyn_indices_generic` class template defined in a special nested namespace
 :expr:`libcommute::dynamic_indices`.
 
+.. class:: template<typename... IndexTypes> \
+           dynamic_indices::dyn_indices_generic
+
+  A wrapper around :expr:`std::vector<std::variant<IndexTypes...>>`.
+
+  .. type:: indices_t = std::vector<std::variant<IndexTypes...>>
+
+    Underlying dynamically typed sequence of indices.
+
+  .. function:: dyn_indices_generic() = default
+
+    Construct an empty index sequence.
+
+  .. function:: dyn_indices_generic(indices_t indices)
+
+    Construct an index sequence from a vector of indices.
+
+  .. function:: dyn_indices_generic(dyn_indices_generic const&) = default
+                dyn_indices_generic(dyn_indices_generic&&) noexcept = default
+                dyn_indices_generic& \
+                operator=(dyn_indices_generic const&) = default
+                dyn_indices_generic& \
+                operator=(dyn_indices_generic&&) noexcept = default
+
+    Copy/move-constructors and assignments
+
+  .. function:: size_t size() const
+
+    Number of indices in the sequence.
+
+  .. function:: explicit operator indices_t const& () const
+
+    Explicit cast to the underlying index sequence type.
+
+  .. function:: friend bool operator==(dyn_indices_generic const& ind1, \
+                                       dyn_indices_generic const& ind2)
+                friend bool operator!=(dyn_indices_generic const& ind1, \
+                                       dyn_indices_generic const& ind2)
+                friend bool operator<(dyn_indices_generic const& ind1, \
+                                      dyn_indices_generic const& ind2)
+                friend bool operator>(dyn_indices_generic const& ind1, \
+                                      dyn_indices_generic const& ind2)
+
+    Compare two dynamic index sequences :expr:`ind1` and :expr:`ind2`.
+    These operators compare sequences' lengths first, and in the case of equal
+    lengths call the `corresponding methods of std::vector
+    <https://en.cppreference.com/w/cpp/container/vector/operator_cmp>`_.
+
+  .. function:: friend std::ostream & operator<< \
+                (std::ostream & os, dyn_indices_generic const& ind)
+
+    Output stream insertion operator.
+
 .. code-block:: cpp
+  :caption: Dynamic index sequence example
 
   #include <libcommute/expression/dyn_indices.hpp>
 
@@ -374,7 +428,129 @@ convenience.
 Iteration interface and transformations
 ---------------------------------------
 
-TODO
+Both expressions and their constituent monomials can be easily iterated over
+using STL-compatible :class:`iterators <expression::const_iterator>` or
+range-based ``for``-loops.
+This allows for writing complex expression analysis algorithms.
+
+.. code-block:: cpp
+  :caption: Expression iteration example
+
+    using namespace libcommute;
+
+    // We are going to analyse the structure of this expression
+    expression<double, int> E;
+
+    //
+    // Fill expression 'E' ...
+    //
+
+    // Iterate over all monomial-coefficient pairs in 'E'
+    for(auto const& mc : E) {
+      std::cout << "Coefficient: " << mc.coeff << "\n";
+      std::cout << "Monomial: ";
+
+      // Iterate over algebra generators in current monomial
+      for(auto const& g : mc.monomial) {
+
+        if(is_fermion(g)) { // Print information about fermionic operators
+          auto const& f = dynamic_cast<generator_fermion<int> const&>(g);
+          std::cout << (f.dagger() ? "  c^+(" : "  c(");
+          std::cout << std::get<0>(g.indices());
+          std::cout << ")";
+        }
+
+        if(is_fermion(g)) { // Print information about bosonic operators
+          auto const& a = dynamic_cast<generator_boson<int> const&>(g);
+          std::cout << (a.dagger() ? "  a^+(" : "  a(");
+          std::cout << std::get<0>(g.indices());
+          std::cout << ")";
+        }
+
+        if(is_spin(g)) { // Print information about spin operators
+          auto const& s = dynamic_cast<generator_spin<int> const&>(g);
+          switch(s.component()) {
+            case plus:
+              std::cout << "S_+("; break;
+            case minus:
+              std::cout << "S_-("; break;
+            case z:
+              std::cout << "S_z("; break;
+          }
+          std::cout << std::get<0>(g.indices());
+          std::cout << ")";
+        }
+
+      }
+      std::cout << std::endl;
+    }
+
+.. note:: Only the constant iterators are implemented by :type:`expression` and
+          :type:`monomial`.
+
+Another common task is building a new expression out of an existing one by
+changing some of monomial coefficients. Removing some monomials (for instance,
+those corresponding to particle interaction terms) is a special case that
+amounts to setting coefficients of the unwanted monomials to zero. In the
+following example we show how to use function
+:func:`libcommute::transform() <libcommute::expression::transform>` to change
+Hamiltonian of a finite atomic chain
+
+.. math::
+
+  \hat H = v \sum_{a=1}^{N-1} (c^\dagger_a c_{a+1} + c^\dagger_{a+1} c_a)
+
+into the Su-Schrieffer-Heeger (SSH) model, where the hopping constant is
+taken to be different on odd and even chain links.
+
+.. code-block:: cpp
+  :caption: :func:`transform() <libcommute::expression::transform>` example
+
+    using namespace libcommute;
+
+    // Hamiltonian of the atomic chain
+    expression<double, int> H;
+
+    using static_indices::real::c_dag;
+    using static_indices::real::c;
+
+    // Length of the chain
+    const int N = 10;
+    // Hopping matrix element
+    const double v = 1.0;
+
+    // Add hopping terms
+    for(int a = 0; a < N - 1; ++a) {
+      H += v * (c_dag(a) * c(a + 1) + c_dag(a + 1) * c(a));
+    }
+
+    std::cout << "H = " << H << std::endl;
+
+    // Construct the Su-Schrieffer-Heeger (SSH) model by changing hopping
+    // constants on all even links of the chain.
+
+    // Hopping matrix element on the even links
+    const double w = 0.5;
+
+    // Transformation operation
+    auto update_hopping_element = [v, w](decltype(H)::monomial_t const& m,
+                                  double coeff) -> double {
+      // The monomial 'm' we are expecting here is a product c^\dagger(a1) c(a2)
+
+      // Site index of c^\dagger
+      int a1 = std::get<0>(m[0].indices());
+      // Site index of c
+      int a2 = std::get<0>(m[1].indices());
+      // Index of link connecting a1 and a2
+      int link = std::min(a1, a2);
+
+      // Return the updated matrix element
+      return (link % 2 == 1 ? w : v);
+    };
+
+    auto H_SSH = transform(H, update_hopping_element);
+
+    std::cout << "H_SSH = " << H_SSH << std::endl;
 
 .. _hc:
 

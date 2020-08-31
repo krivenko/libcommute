@@ -137,5 +137,3 @@ are always canonically ordered, that need not be true in general.
                 operator<<(std::ostream& os, monomial const& m)
 
     Output stream insertion operator.
-
-
