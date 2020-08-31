@@ -5,6 +5,8 @@ Algebra generators
 
 .. default-domain:: cpp
 
+.. namespace:: libcommute
+
 Algebra generators, such as creation/annihilation operators :math:`c^\dagger`/
 :math:`c` in `fermionic and bosonic algebras`__, are atomic structural units of
 any expression. Within *libcommute*'s framework, algebra generators are classes
@@ -62,7 +64,7 @@ The following table summarizes information about predefined generators.
 ``generator``: abstract base class for algebra generators
 ---------------------------------------------------------
 
-.. class:: template<typename... IndexTypes> libcommute::generator
+.. class:: template<typename... IndexTypes> generator
 
   *Defined in <libcommute/expression/generator.hpp>*
 
@@ -72,11 +74,11 @@ The following table summarizes information about predefined generators.
 
   .. rubric:: Member type aliases
 
-  .. type:: index_types = std::tuple<IndexTypes...>;
+  .. type:: index_types = std::tuple<IndexTypes...>
 
     Index tuple type.
 
-  .. type:: linear_function_t = linear_function<std::unique_ptr<generator>>;
+  .. type:: linear_function_t = linear_function<std::unique_ptr<generator>>
 
     Linear combination of generators. This type is used by various methods
     dealing with transformations of generator products.
@@ -113,9 +115,9 @@ The following table summarizes information about predefined generators.
 
   .. rubric:: Canonical ordering
 
-  .. function:: virtual bool equal(generator const& g) const;
-                virtual bool less(generator const& g) const;
-                virtual bool greater(generator const& g) const;
+  .. function:: virtual bool equal(generator const& g) const
+                virtual bool less(generator const& g) const
+                virtual bool greater(generator const& g) const
 
     These methods can be overridden by the derived classes to establish
     the canonical order of :expr:`g` w.r.t. :expr:`*this` assuming both
@@ -189,7 +191,7 @@ The following table summarizes information about predefined generators.
     Virtual stream output function to be overridden by the derived classes.
 
 
-.. struct:: template<typename T> libcommute::linear_function
+.. struct:: template<typename T> linear_function
 
   *Defined in <libcommute/utility.hpp>*
 
@@ -259,7 +261,7 @@ In other words,
 - Annihilation operator with the smallest index sequence comes last.
 
 .. class:: template<typename... IndexTypes> \
-           libcommute::generator_fermion : public generator<IndexTypes...>
+           generator_fermion : public generator<IndexTypes...>
 
   *Defined in <libcommute/expression/generator_fermion.hpp>*
 
@@ -272,7 +274,7 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_fermion<IndexTypes...> \
-              libcommute::static_indices::make_fermion(bool dagger, \
+              static_indices::make_fermion(bool dagger, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_fermion.hpp>*
@@ -282,7 +284,7 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_fermion<IndexTypes...> \
-              libcommute::dynamic_indices::make_fermion(bool dagger, \
+              dynamic_indices::make_fermion(bool dagger, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_fermion.hpp>*
@@ -292,8 +294,7 @@ In other words,
   :ref:`dynamic index sequence <dyn_indices>`.
 
 .. function:: template<typename... IndexTypes> \
-              bool libcommute::is_fermion( \
-              libcommute::generator<IndexTypes...> const& gen)
+              bool is_fermion(generator<IndexTypes...> const& gen)
 
   *Defined in <libcommute/expression/generator_fermion.hpp>*
 
@@ -344,7 +345,7 @@ In other words,
 - Annihilation operator with the smallest index sequence comes last.
 
 .. class:: template<typename... IndexTypes> \
-           libcommute::generator_boson : public generator<IndexTypes...>
+           generator_boson : public generator<IndexTypes...>
 
   *Defined in <libcommute/expression/generator_boson.hpp>*
 
@@ -357,7 +358,7 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_boson<IndexTypes...> \
-              libcommute::static_indices::make_boson(bool dagger, \
+              static_indices::make_boson(bool dagger, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_boson.hpp>*
@@ -367,7 +368,7 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_fermion<IndexTypes...> \
-              libcommute::dynamic_indices::make_boson(bool dagger, \
+              dynamic_indices::make_boson(bool dagger, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_boson.hpp>*
@@ -377,8 +378,7 @@ In other words,
   :ref:`dynamic index sequence <dyn_indices>`.
 
 .. function:: template<typename... IndexTypes> \
-              bool libcommute::is_boson( \
-              libcommute::generator<IndexTypes...> const& gen)
+              bool is_boson(generator<IndexTypes...> const& gen)
 
   *Defined in <libcommute/expression/generator_boson.hpp>*
 
@@ -443,7 +443,7 @@ In other words,
 - Among operators with the same :math:`S` and index sequence, :math:`S_+` comes
   first followed by :math:`S_-` and eventually by :math:`S_z`.
 
-.. enum:: libcommute::spin_component : int
+.. enum:: spin_component : int
 
   Component of spin operator.
 
@@ -460,7 +460,7 @@ In other words,
     :math:`S_z`.
 
 .. class:: template<typename... IndexTypes> \
-           libcommute::generator_spin : public generator<IndexTypes...>
+           generator_spin : public generator<IndexTypes...>
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
@@ -468,13 +468,13 @@ In other words,
               :type:`libcommute::generator`.
 
   .. function:: template<typename... Args> \
-                generator_spin(libcommute::spin_component c, Args&&... indices)
+                generator_spin(spin_component c, Args&&... indices)
 
     Construct generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
     :math:`S=1/2` with given indices.
 
   .. function:: template<typename... Args> \
-                generator_spin(double spin, libcommute::spin_component c, \
+                generator_spin(double spin, spin_component c, \
                 Args&&... indices)
 
     Construct generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
@@ -494,8 +494,8 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_spin<IndexTypes...> \
-              libcommute::static_indices::make_spin( \
-              libcommute::spin_component c, IndexTypes&&... indices)
+              static_indices::make_spin( \
+              spin_component c, IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
@@ -504,8 +504,8 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_spin<IndexTypes...> \
-              libcommute::static_indices::make_spin(double spin, \
-              libcommute::spin_component c, IndexTypes&&... indices)
+              static_indices::make_spin(double spin, \
+              spin_component c, IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
@@ -514,8 +514,8 @@ In other words,
 
 .. function:: template<typename... IndexTypes> \
               generator_spin<dyn_indices> \
-              libcommute::dynamic_indices::make_spin( \
-              libcommute::spin_component c, IndexTypes&&... indices)
+              dynamic_indices::make_spin( \
+              spin_component c, IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 

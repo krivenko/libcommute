@@ -14,8 +14,10 @@ Class definitions
 
 .. default-domain:: cpp
 
+.. namespace:: libcommute
+
 .. class:: template<typename ScalarType, typename... IndexTypes> \
-           libcommute::expression
+           expression
 
   *Defined in <libcommute/expression/expression.hpp>*
 
@@ -217,7 +219,7 @@ Class definitions
     Output stream insertion operator.
 
 .. type:: template<typename... IndexTypes> \
-          libcommute::static_indices::expr_real = \
+          static_indices::expr_real = \
           expression<double, IndexTypes...>;
 
   *Declared in <libcommute/expression/expression.hpp>*
@@ -226,7 +228,7 @@ Class definitions
   indices.
 
 .. type:: template<typename... IndexTypes> \
-          libcommute::static_indices::expr_complex = \
+          static_indices::expr_complex = \
           expression<std::complex<double>, IndexTypes...>;
 
   *Declared in <libcommute/expression/expression.hpp>*
@@ -234,7 +236,7 @@ Class definitions
   Shorthand type for expressions with complex coefficients and statically typed
   indices.
 
-.. class:: libcommute::const_iterator
+.. class:: const_iterator
 
   *Defined in <libcommute/expression/expression.hpp>*
 
@@ -353,16 +355,16 @@ commonly used QM operators with the dynamically typed indices.
 Some related type aliases are declared in the same namespace for the sake of
 convenience.
 
-.. type:: libcommute::dynamic_indices::dyn_indices = \
+.. type:: dynamic_indices::dyn_indices = \
           dyn_indices_generic<int, std::string>
 
   *Declared in <libcommute/expression/dyn_indices.hpp>*
 
   Dynamic mixture of integer and string indices.
 
-.. type:: libcommute::dynamic_indices::expr_real \
+.. type:: dynamic_indices::expr_real \
           = expression<double, dyn_indices>
-          libcommute::dynamic_indices::expr_complex \
+          dynamic_indices::expr_complex \
           = expression<std::complex<double>, dyn_indices>
 
   *Declared in <libcommute/expression/expression.hpp>*

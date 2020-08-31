@@ -45,9 +45,10 @@ Now, let us add a harmonic oscillator at each lattice site (a localized phonon),
 .. note::
 
   We had to assign an empty spin label "" to the bosons, because all operators
-  in ``H_ph`` have to carry exactly three indices. It is possible to overcome
-  this limitation and put just two integer indices on :math:`a^\dagger`/
-  :math:`a` by switching to the :ref:`dynamically-typed indices <dyn_indices>`.
+  in ``H_ph`` have to carry exactly three indices with the last one being a
+  string. It is possible to overcome this limitation and put just two integer
+  indices on :math:`a^\dagger`/:math:`a` by switching to the
+  :ref:`dynamically-typed indices <dyn_indices>`.
   Be aware, however, that the dynamic indices require C++17 and may result
   in less type-safe code.
 

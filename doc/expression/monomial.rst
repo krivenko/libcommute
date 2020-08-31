@@ -3,6 +3,10 @@
 Monomial
 ========
 
-.. class:: template<typename... IndexTypes> libcommute::monomial
+.. default-domain:: cpp
+
+.. namespace:: libcommute
+
+.. class:: template<typename... IndexTypes> monomial
 
   TODO
