@@ -9,5 +9,5 @@ Advanced examples
     kanamori
     jaynes_cummings
     heisenberg_chain
-    parametric_qoperator
+    parametric_loperator
     virasoro_algebra

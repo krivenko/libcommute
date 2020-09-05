@@ -47,9 +47,9 @@ int main() {
   auto hs = make_hilbert_space(H);
   std::cout << "dim(hs) = " << hs.dim() << std::endl;
 
-  // Construct a 'qoperator' object that represents action of expression 'H' on
+  // Construct a 'loperator' object that represents action of expression 'H' on
   // state vectors in the Hilbert space 'hs'.
-  auto Hop = make_qoperator(H, hs);
+  auto Hop = make_loperator(H, hs);
 
   // Here, we will act with 'Hop' on each of the 4 basis states |\psi> in 'hs',
   // |\phi> = Hop |\psi>, and print components of |\phi>. In other words,

@@ -16,7 +16,7 @@
 // the displacement being a polynomial of an external parameter.
 //
 // Action of the Hamiltonian on the vacuum state is derived for a few values
-// of the parameter using 'parametric_qoperator'.
+// of the parameter using 'parametric_loperator'.
 //
 
 #include <algorithm>
@@ -146,7 +146,7 @@ int main() {
   auto hs = make_hilbert_space(H, boson_es_constructor(4));
 
   // Parametric quantum operator (depends on parameter \lambda)
-  auto Hop = make_param_qoperator(H, hs);
+  auto Hop = make_param_loperator(H, hs);
 
   //
   // Check that

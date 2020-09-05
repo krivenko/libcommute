@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_ELEMENTARY_SPACE_BOSON_HPP_
-#define LIBCOMMUTE_QOPERATOR_ELEMENTARY_SPACE_BOSON_HPP_
+#ifndef LIBCOMMUTE_LOPERATOR_ELEMENTARY_SPACE_BOSON_HPP_
+#define LIBCOMMUTE_LOPERATOR_ELEMENTARY_SPACE_BOSON_HPP_
 
 #include "../algebra_tags.hpp"
 #include "../metafunctions.hpp"

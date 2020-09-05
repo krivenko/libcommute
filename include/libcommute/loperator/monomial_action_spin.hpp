@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_SPIN_HPP_
-#define LIBCOMMUTE_QOPERATOR_MONOMIAL_ACTION_SPIN_HPP_
+#ifndef LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_SPIN_HPP_
+#define LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_SPIN_HPP_
 
 #include "elementary_space_spin.hpp"
 #include "hilbert_space.hpp"

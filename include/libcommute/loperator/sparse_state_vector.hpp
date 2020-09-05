@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_SPARSE_STATE_VECTOR_HPP_
-#define LIBCOMMUTE_QOPERATOR_SPARSE_STATE_VECTOR_HPP_
+#ifndef LIBCOMMUTE_LOPERATOR_SPARSE_STATE_VECTOR_HPP_
+#define LIBCOMMUTE_LOPERATOR_SPARSE_STATE_VECTOR_HPP_
 
 #include "state_vector.hpp"
 #include "../scalar_traits.hpp"

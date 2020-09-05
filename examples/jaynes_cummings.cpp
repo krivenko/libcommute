@@ -89,8 +89,8 @@ int main() {
     return std::sqrt(d);
   };
 
-  // qoperator object corresponding to H
-  auto Hop = make_qoperator(H, hs);
+  // loperator object corresponding to H
+  auto Hop = make_loperator(H, hs);
 
   //
   // Verify that |0, g> is the ground state

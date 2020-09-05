@@ -10,8 +10,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  ******************************************************************************/
-#ifndef LIBCOMMUTE_QOPERATOR_QOPERATOR_DISJOINT_SETS_HPP_
-#define LIBCOMMUTE_QOPERATOR_QOPERATOR_DISJOINT_SETS_HPP_
+#ifndef LIBCOMMUTE_LOPERATOR_DISJOINT_SETS_HPP_
+#define LIBCOMMUTE_LOPERATOR_DISJOINT_SETS_HPP_
 
 #include <algorithm>
 #include <cassert>

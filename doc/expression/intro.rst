@@ -70,7 +70,7 @@ Hamiltonian of the Holstein model :math:`\hat H_H`,
 Now that we have the complete Hamiltonian object, we could proceed along one
 of the following routes.
 
-- :ref:`Make a <ed_intro>` ``qoperator`` object out of :math:`\hat H_H` and
+- :ref:`Make a <ed_intro>` ``loperator`` object out of :math:`\hat H_H` and
   use it to act on state vectors in a finite-dimensional Hilbert space.
   This is a common step in implementing Exact Diagonalization algorithms.
 - Use the :ref:`iteration interface <expr_iteration>` to analyze the structure

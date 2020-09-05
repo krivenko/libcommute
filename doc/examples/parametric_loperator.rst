@@ -1,11 +1,11 @@
-.. _parametric_qoperator:
+.. _parametric_loperator:
 
-Custom scalar types and ``parametric_qoperator``
+Custom scalar types and ``parametric_loperator``
 ================================================
 
 The goal of this example is twofold. First, it shows how to use user-defined
 types as ``ScalarType``'s, i.e. types of coefficient in expressions.
-Second, it demonstrates functionality of the ``parametric_qoperator`` class.
+Second, it demonstrates functionality of the ``parametric_loperator`` class.
 
 As for the custom scalar type, we will define a class implementing the
 algebra of polynomials
@@ -28,7 +28,7 @@ an external parameter :math:`\lambda`, :math:`g(\lambda) = 3\lambda`.
            \omega_0 \left(a^\dagger - g(\lambda)\right)
            \left(a - g(\lambda)\right).
 
-An instance of the ``parametric_qoperator`` class is constructed out of this
+An instance of the ``parametric_loperator`` class is constructed out of this
 expression and applied to the vacuum state for a few values of :math:`\lambda`.
 
 .. math::
@@ -37,10 +37,10 @@ expression and applied to the vacuum state for a few values of :math:`\lambda`.
                     \omega_0 g(\lambda) |1\rangle.
 
 The crucial point here is that the slow task of constructing
-``parametric_qoperator`` is performed only once. Substitution of :math:`\lambda`
+``parametric_loperator`` is performed only once. Substitution of :math:`\lambda`
 values is delayed until the moment the operator acts on the state.
 
-.. literalinclude:: ../../examples/parametric_qoperator.cpp
+.. literalinclude:: ../../examples/parametric_loperator.cpp
   :language: cpp
   :lines: 22-
   :linenos:

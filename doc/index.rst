@@ -50,12 +50,12 @@ libcommute
   implementation of this idea in the
   `TBTK library <https://github.com/dafer45/TBTK>`_).
 
-* The :cpp:class:`libcommute::qoperator` class translates an expression into
+* The :cpp:class:`libcommute::loperator` class translates an expression into
   a form, where it can be quickly acted with on a state vector.
 
 * A state vector is a container type modeling a special
   :cpp:concept:`StateVector` concept. By default,
-  :cpp:class:`libcommute::qoperator` will
+  :cpp:class:`libcommute::loperator` will
   work with any container that gives read/write access to its elements
   via ``operator[]`` and exposes its size via a ``size()`` method
   (``std::vector<T>`` is one example).
@@ -64,7 +64,7 @@ libcommute
   it can be implemented by overloading the corresponding free function
   (part of the concept).
 
-* `libcommute::qoperator` mirrors `libcommute::expression` in the manner
+* `libcommute::loperator` mirrors `libcommute::expression` in the manner
   it can be extended to support more commutation/anticommutation algebras.
 
 * As a bonus, there is an utility class
@@ -96,7 +96,7 @@ Contents
     installation
     usage
     expression/index
-    qoperator/index
+    loperator/index
     examples/index
     genindex
     search
