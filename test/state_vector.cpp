@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/qoperator/state_vector.hpp>
+#include <libcommute/loperator/state_vector.hpp>
 
 #include <type_traits>
 

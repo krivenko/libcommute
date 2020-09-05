@@ -14,7 +14,7 @@
 #include "catch2/catch.hpp"
 
 #include <libcommute/expression/factories.hpp>
-#include <libcommute/qoperator/space_partition.hpp>
+#include <libcommute/loperator/space_partition.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -71,8 +71,8 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
   // Hilbert space
   auto hs = make_hilbert_space(H);
-  // Quantum operator form of the Hamiltonian
-  auto Hop = make_qoperator(H, hs);
+  // Linear operator form of the Hamiltonian
+  auto Hop = make_loperator(H, hs);
 
   using es_type = elementary_space_fermion<std::string, int>;
   sv_index_type d0 = 1 << hs.bit_range(es_type("dn", 0)).first;

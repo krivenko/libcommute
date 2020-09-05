@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/qoperator/disjoint_sets.hpp>
+#include <libcommute/loperator/disjoint_sets.hpp>
 
 using namespace libcommute;
 

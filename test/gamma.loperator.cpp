@@ -17,8 +17,8 @@
 
 #include <libcommute/algebra_tags.hpp>
 #include <libcommute/expression/expression.hpp>
-#include <libcommute/qoperator/elementary_space.hpp>
-#include <libcommute/qoperator/qoperator.hpp>
+#include <libcommute/loperator/elementary_space.hpp>
+#include <libcommute/loperator/loperator.hpp>
 
 #include <algorithm>
 #include <array>
@@ -103,10 +103,10 @@ public:
 using namespace libcommute;
 
 template<typename ExprType>
-void check_qoperator(ExprType const& expr1, ExprType const& expr2) {
+void check_loperator(ExprType const& expr1, ExprType const& expr2) {
   hilbert_space<int> hs{elementary_space_gamma()};
-  auto qop1 = qoperator<std::complex<double>, gamma_>(expr1, hs);
-  auto qop2 = qoperator<std::complex<double>, gamma_>(expr2, hs);
+  auto qop1 = loperator<std::complex<double>, gamma_>(expr1, hs);
+  auto qop2 = loperator<std::complex<double>, gamma_>(expr2, hs);
 
   std::vector<std::complex<double>> in(4), out1(4), out2(4);
 
@@ -121,8 +121,8 @@ void check_qoperator(ExprType const& expr1, ExprType const& expr2) {
   }
 }
 
-TEST_CASE("qoperator for expressions with gamma-matrices",
-          "[qoperator_gamma]") {
+TEST_CASE("loperator for expressions with gamma-matrices",
+          "[loperator_gamma]") {
   using mon_type = monomial<int>;
   using expr_type = expression<std::complex<double>, int>;
 
@@ -144,18 +144,18 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
       for(int nu = 0; nu < 4; ++nu) {
         auto lhs = Gamma[mu] * Gamma[nu] + Gamma[nu] * Gamma[mu];
         auto rhs = expr_type(2 * eta(mu, nu));
-        check_qoperator(lhs, rhs);
+        check_loperator(lhs, rhs);
       }
     }
   }
 
   SECTION("Hermitian conjugate") {
-    check_qoperator(conj(Gamma[0]), Gamma[0]);
+    check_loperator(conj(Gamma[0]), Gamma[0]);
     for(int k = 1; k < 4; ++k) {
-      check_qoperator(conj(Gamma[k]), -Gamma[k]);
+      check_loperator(conj(Gamma[k]), -Gamma[k]);
     }
     for(int mu = 0; mu < 4; ++mu) {
-      check_qoperator(conj(Gamma[mu]), Gamma[0] * Gamma[mu] * Gamma[0]);
+      check_loperator(conj(Gamma[mu]), Gamma[0] * Gamma[mu] * Gamma[0]);
     }
   }
 
@@ -163,10 +163,10 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
 
   SECTION("Gamma^5") {
     for(int mu = 0; mu < 4; ++mu) {
-      check_qoperator(Gamma5 * Gamma[mu] + Gamma[mu] * Gamma5, expr_type());
+      check_loperator(Gamma5 * Gamma[mu] + Gamma[mu] * Gamma5, expr_type());
     }
-    check_qoperator(Gamma5 * Gamma5, expr_type(1));
-    check_qoperator(conj(Gamma5), Gamma5);
+    check_loperator(Gamma5 * Gamma5, expr_type(1));
+    check_loperator(conj(Gamma5), Gamma5);
   }
 
   //
@@ -177,7 +177,7 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
     expr_type s;
     for(int mu = 0; mu < 4; ++mu)
       s += Gamma[mu] * Gammac[mu];
-    check_qoperator(s, expr_type(4));
+    check_loperator(s, expr_type(4));
   }
 
   SECTION("Identity 2") {
@@ -185,7 +185,7 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
       expr_type s;
       for(int mu = 0; mu < 4; ++mu)
         s += Gamma[mu] * Gamma[nu] * Gammac[mu];
-      check_qoperator(s, -2.0*Gamma[nu]);
+      check_loperator(s, -2.0*Gamma[nu]);
     }
   }
 
@@ -195,7 +195,7 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
         expr_type s;
         for(int mu = 0; mu < 4; ++mu)
           s += Gamma[mu] * Gamma[nu] * Gamma[rho] * Gammac[mu];
-        check_qoperator(s, expr_type(4*eta(nu, rho)));
+        check_loperator(s, expr_type(4*eta(nu, rho)));
       }
     }
   }
@@ -207,7 +207,7 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
           expr_type s;
           for(int mu = 0; mu < 4; ++mu)
             s += Gamma[mu] * Gamma[nu] * Gamma[rho] * Gamma[sigma] * Gammac[mu];
-          check_qoperator(s, -2.0 * Gamma[sigma] * Gamma[rho] * Gamma[nu]);
+          check_loperator(s, -2.0 * Gamma[sigma] * Gamma[rho] * Gamma[nu]);
         }
       }
     }
@@ -229,7 +229,7 @@ TEST_CASE("qoperator for expressions with gamma-matrices",
           for(int sigma = 0; sigma < 4; ++sigma) {
             rhs += -I*eps(sigma, mu, nu, rho) * Gammac[sigma] * Gamma5;
           }
-          check_qoperator(lhs, rhs);
+          check_loperator(lhs, rhs);
         }
       }
     }

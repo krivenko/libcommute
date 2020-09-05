@@ -17,13 +17,13 @@
 #include <libcommute/expression/generator_boson.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
-#include <libcommute/qoperator/elementary_space_fermion.hpp>
-#include <libcommute/qoperator/elementary_space_boson.hpp>
-#include <libcommute/qoperator/elementary_space_spin.hpp>
-#include <libcommute/qoperator/hilbert_space.hpp>
-#include <libcommute/qoperator/monomial_action_fermion.hpp>
-#include <libcommute/qoperator/monomial_action_boson.hpp>
-#include <libcommute/qoperator/monomial_action_spin.hpp>
+#include <libcommute/loperator/elementary_space_fermion.hpp>
+#include <libcommute/loperator/elementary_space_boson.hpp>
+#include <libcommute/loperator/elementary_space_spin.hpp>
+#include <libcommute/loperator/hilbert_space.hpp>
+#include <libcommute/loperator/monomial_action_fermion.hpp>
+#include <libcommute/loperator/monomial_action_boson.hpp>
+#include <libcommute/loperator/monomial_action_spin.hpp>
 
 #include "./monomial_action.hpp"
 

@@ -14,9 +14,9 @@
 #define LIBCOMMUTE_TEST_MONOMIAL_ACTION_HPP_
 
 #include <libcommute/expression/monomial.hpp>
-#include <libcommute/qoperator/elementary_space.hpp>
-#include <libcommute/qoperator/hilbert_space.hpp>
-#include <libcommute/qoperator/state_vector.hpp>
+#include <libcommute/loperator/elementary_space.hpp>
+#include <libcommute/loperator/hilbert_space.hpp>
+#include <libcommute/loperator/state_vector.hpp>
 
 #include <memory>
 #include <utility>

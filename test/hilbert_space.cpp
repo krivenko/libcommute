@@ -14,10 +14,10 @@
 #include "catch2/catch.hpp"
 
 #include <libcommute/expression/factories.hpp>
-#include <libcommute/qoperator/elementary_space_fermion.hpp>
-#include <libcommute/qoperator/elementary_space_boson.hpp>
-#include <libcommute/qoperator/elementary_space_spin.hpp>
-#include <libcommute/qoperator/hilbert_space.hpp>
+#include <libcommute/loperator/elementary_space_fermion.hpp>
+#include <libcommute/loperator/elementary_space_boson.hpp>
+#include <libcommute/loperator/elementary_space_spin.hpp>
+#include <libcommute/loperator/hilbert_space.hpp>
 
 #include <utility>
 

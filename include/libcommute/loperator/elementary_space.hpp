@@ -20,7 +20,7 @@
 namespace libcommute {
 
 //
-// qoperator objects act on states in a Hilbert space. That Hilbert space is
+// loperator objects act on states in a Hilbert space. That Hilbert space is
 // formed as a direct product of smaller elementary spaces. For example,
 // in the case of fermions one has as many elementary spaces as there are
 // fermionic degrees of freedom, and each of those elementary spaces is

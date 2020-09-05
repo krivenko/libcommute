@@ -36,8 +36,8 @@ set(TESTS
   monomial_action_fermion
   monomial_action_boson
   monomial_action_spin
-  qoperator
-  gamma.qoperator
+  loperator
+  gamma.loperator
   disjoint_sets
   sparse_state_vector
   space_partition

@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/qoperator/sparse_state_vector.hpp>
+#include <libcommute/loperator/sparse_state_vector.hpp>
 
 #include <type_traits>
 

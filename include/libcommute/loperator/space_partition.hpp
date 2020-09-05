@@ -15,7 +15,7 @@
 
 #include "disjoint_sets.hpp"
 #include "sparse_state_vector.hpp"
-#include "qoperator.hpp"
+#include "loperator.hpp"
 #include "../scalar_traits.hpp"
 
 #include <functional>
@@ -50,8 +50,8 @@ class space_partition {
   std::map<sv_index_type, sv_index_type> root_to_subspace;
 
   template<typename... QOperatorParams>
-  using qoperator_melem_t =
-  matrix_elements_map<typename qoperator<QOperatorParams...>::scalar_type>;
+  using loperator_melem_t =
+  matrix_elements_map<typename loperator<QOperatorParams...>::scalar_type>;
 
 public:
 
@@ -63,9 +63,9 @@ public:
   // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
   // to each basis state index in `hs`.
   template<typename HSType, typename... QOperatorParams>
-  space_partition(qoperator<QOperatorParams...> const& h, HSType const& hs)
+  space_partition(loperator<QOperatorParams...> const& h, HSType const& hs)
     : ds(get_dim(hs)) {
-    using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
+    using scalar_type = typename loperator<QOperatorParams...>::scalar_type;
     sv_index_type dim = get_dim(hs);
 
     sparse_state_vector<scalar_type> in_state(dim);
@@ -90,11 +90,11 @@ public:
   // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
   // to each basis state index in `hs`.
   template<typename HSType, typename... QOperatorParams>
-  space_partition(qoperator<QOperatorParams...> const& h,
+  space_partition(loperator<QOperatorParams...> const& h,
                   HSType const& hs,
-                  qoperator_melem_t<QOperatorParams...> & me)
+                  loperator_melem_t<QOperatorParams...> & me)
     : ds(get_dim(hs)) {
-    using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
+    using scalar_type = typename loperator<QOperatorParams...>::scalar_type;
     sv_index_type dim = get_dim(hs);
 
     sparse_state_vector<scalar_type> in_state(dim);
@@ -120,17 +120,17 @@ public:
   // operator `Cd` and its Hermitian conjugate `C` generate only one-to-one
   // connections between the subspaces.
   template<typename HSType, typename... QOperatorParams>
-  auto merge_subspaces(qoperator<QOperatorParams...> const& Cd,
-                       qoperator<QOperatorParams...> const& C,
+  auto merge_subspaces(loperator<QOperatorParams...> const& Cd,
+                         loperator<QOperatorParams...> const& C,
                        HSType const& hs,
                        bool store_matrix_elements = true
                       ) ->
-    std::pair<qoperator_melem_t<QOperatorParams...>,
-              qoperator_melem_t<QOperatorParams...>>
+    std::pair<loperator_melem_t<QOperatorParams...>,
+              loperator_melem_t<QOperatorParams...>>
 
   {
-    using qoperator_t = qoperator<QOperatorParams...>;
-    using scalar_type = typename qoperator_t::scalar_type;
+    using loperator_t = loperator<QOperatorParams...>;
+    using scalar_type = typename loperator_t::scalar_type;
     matrix_elements_map<scalar_type> Cd_elements, C_elements;
     std::multimap<sv_index_type, sv_index_type> Cd_conn, C_conn;
 
@@ -144,7 +144,7 @@ public:
       sv_index_type in_subspace = ds.find_root(in_index);
 
       auto fill_conn = [&, this](
-        qoperator_t const& qop,
+        loperator_t const& qop,
         std::multimap<sv_index_type, sv_index_type> & conn,
         matrix_elements_map<scalar_type> & elem) {
         qop(in_state, out_state);

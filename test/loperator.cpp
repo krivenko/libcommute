@@ -13,7 +13,7 @@
 
 #include "catch2/catch.hpp"
 
-#include <libcommute/qoperator/qoperator.hpp>
+#include <libcommute/loperator/loperator.hpp>
 #include <libcommute/expression/factories.hpp>
 
 #include "./my_complex.hpp"
@@ -23,13 +23,13 @@
 
 using namespace libcommute;
 
-TEST_CASE("Quantum-mechanical operator with constant coefficients",
-          "[qoperator]") {
+TEST_CASE("Linear operator with constant coefficients",
+          "[loperator]") {
 
   SECTION("empty") {
     expression<double, int> expr0;
     auto hs = make_hilbert_space(expr0);
-    auto qop = make_qoperator(expr0, hs);
+    auto qop = make_loperator(expr0, hs);
 
     const std::vector<double> in;
     CHECK(qop(in) == in);
@@ -47,9 +47,9 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
     auto expr = 2*expr1 - 2*expr2;
 
     auto hs = make_hilbert_space(expr);
-    auto qop1 = make_qoperator(expr1, hs);
-    auto qop2 = make_qoperator(expr2, hs);
-    auto qop = make_qoperator(expr, hs);
+    auto qop1 = make_loperator(expr1, hs);
+    auto qop2 = make_loperator(expr2, hs);
+    auto qop = make_loperator(expr, hs);
 
     using state_vector = std::vector<double>;
 
@@ -94,9 +94,9 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
     auto expr = 2.0*I*expr1 - 2.0*I*expr2;
 
     auto hs = make_hilbert_space(expr);
-    auto qop1 = make_qoperator(expr1, hs);
-    auto qop2 = make_qoperator(expr2, hs);
-    auto qop = make_qoperator(expr, hs);
+    auto qop1 = make_loperator(expr1, hs);
+    auto qop2 = make_loperator(expr2, hs);
+    auto qop = make_loperator(expr, hs);
 
     using state_vector = std::vector<std::complex<double>>;
 
@@ -129,9 +129,9 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
     auto expr = 2*I*expr1 - 2*I*expr2;
 
     auto hs = make_hilbert_space(expr);
-    auto qop1 = make_qoperator(expr1, hs);
-    auto qop2 = make_qoperator(expr2, hs);
-    auto qop = make_qoperator(expr, hs);
+    auto qop1 = make_loperator(expr1, hs);
+    auto qop2 = make_loperator(expr2, hs);
+    auto qop = make_loperator(expr, hs);
 
     using state_vector = std::vector<my_complex>;
 
@@ -147,8 +147,8 @@ TEST_CASE("Quantum-mechanical operator with constant coefficients",
   }
 }
 
-TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
-          "[parametric_qoperator]") {
+TEST_CASE("Linear operator with parameter-dependent coefficients",
+          "[parametric_loperator]") {
 
   using namespace static_indices;
 
@@ -157,9 +157,9 @@ TEST_CASE("Quantum-mechanical operator with parameter-dependent coefficients",
   auto expr = 2*expr1 - 2*expr2;
 
   auto hs = make_hilbert_space(expr);
-  auto qop1 = make_param_qoperator(expr1, hs);
-  auto qop2 = make_param_qoperator(expr2, hs);
-  auto qop = make_param_qoperator(expr, hs);
+  auto qop1 = make_param_loperator(expr1, hs);
+  auto qop2 = make_param_loperator(expr2, hs);
+  auto qop = make_param_loperator(expr, hs);
 
   using state_vector = std::vector<my_complex>;
 

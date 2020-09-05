@@ -14,8 +14,8 @@
 #include "catch2/catch.hpp"
 
 #include <libcommute/expression/factories.hpp>
-#include <libcommute/qoperator/qoperator.hpp>
-#include <libcommute/qoperator/mapped_basis_view.hpp>
+#include <libcommute/loperator/loperator.hpp>
+#include <libcommute/loperator/mapped_basis_view.hpp>
 
 #include <map>
 #include <set>
@@ -125,11 +125,11 @@ TEST_CASE("Basis-mapped view of a state vector",
     }
   }
 
-  SECTION("qoperator") {
+  SECTION("loperator") {
     state_vector out(6);
 
     SECTION("Spin flips") {
-      auto Hop = make_qoperator(Hex, hs);
+      auto Hop = make_loperator(Hex, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
       Hop(mapped_basis_view<state_vector, true>(in1, map),
@@ -145,7 +145,7 @@ TEST_CASE("Basis-mapped view of a state vector",
     }
 
     SECTION("Pair hops") {
-      auto Hop = make_qoperator(Hp, hs);
+      auto Hop = make_loperator(Hp, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
       Hop(mapped_basis_view<state_vector, true>(in1, map),
@@ -181,23 +181,23 @@ TEST_CASE("Basis-mapped view of a state vector",
                c_dag("dn", 1) * c_dag("up", 2) +
                c_dag("dn", 2) * c_dag("up", 2) +
                c_dag("up", 1) * c_dag("up", 2);
-      basis_mapper mapper(make_qoperator(P, hs), hs);
+      basis_mapper mapper(make_loperator(P, hs), hs);
       CHECK(mapper.size() == 6);
       check_equal_maps_up_to_value_permutation(mapper.map(), map);
     }
 
     SECTION("Compositions") {
-      using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
+      using O_list_t = std::vector<loperator<double, fermion, boson, spin>>;
 
       basis_mapper mapper_empty(O_list_t{}, hs, 0);
       CHECK(mapper_empty.size() == 1);
       CHECK(mapper_empty.map().at(0) == 0);
 
       O_list_t O_list{
-        make_qoperator(c_dag("dn", 1), hs),
-        make_qoperator(c_dag("dn", 2), hs),
-        make_qoperator(c_dag("up", 1), hs),
-        make_qoperator(c_dag("up", 2), hs)
+        make_loperator(c_dag("dn", 1), hs),
+        make_loperator(c_dag("dn", 2), hs),
+        make_loperator(c_dag("up", 1), hs),
+        make_loperator(c_dag("up", 2), hs)
       };
 
       basis_mapper mapper_N0(O_list, hs, 0);
@@ -209,16 +209,16 @@ TEST_CASE("Basis-mapped view of a state vector",
     }
 
     SECTION("Compositions/bosons") {
-      using O_list_t = std::vector<qoperator<double, fermion, boson, spin>>;
+      using O_list_t = std::vector<loperator<double, fermion, boson, spin>>;
 
       auto hs = make_hilbert_space(a_dag(1) + a_dag(2) + a_dag(3) + a_dag(4),
                                    boson_es_constructor(4));
 
       O_list_t O_list{
-        make_qoperator(a_dag(1), hs),
-        make_qoperator(a_dag(2), hs),
-        make_qoperator(a_dag(3), hs),
-        make_qoperator(a_dag(4), hs)
+        make_loperator(a_dag(1), hs),
+        make_loperator(a_dag(2), hs),
+        make_loperator(a_dag(3), hs),
+        make_loperator(a_dag(4), hs)
       };
 
       std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};

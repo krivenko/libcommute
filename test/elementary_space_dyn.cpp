@@ -15,9 +15,9 @@
 
 #include "check_ordering.hpp"
 
-#include <libcommute/qoperator/elementary_space_fermion.hpp>
-#include <libcommute/qoperator/elementary_space_boson.hpp>
-#include <libcommute/qoperator/elementary_space_spin.hpp>
+#include <libcommute/loperator/elementary_space_fermion.hpp>
+#include <libcommute/loperator/elementary_space_boson.hpp>
+#include <libcommute/loperator/elementary_space_spin.hpp>
 
 #include <vector>
 

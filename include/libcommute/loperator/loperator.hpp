@@ -29,11 +29,11 @@
 namespace libcommute {
 
 //
-// Quantum-mechanical operator acting on a state vector in a Hilbert space
+// Linear operator acting on a state vector in a Hilbert space
 //
 
 template<typename ScalarType, typename... AlgebraTags>
-class qoperator_base {
+class loperator_base {
 
   using monomial_action_t = monomial_action<AlgebraTags...>;
 
@@ -41,10 +41,10 @@ public:
 
   using scalar_type = ScalarType;
 
-  qoperator_base() = default;
+  loperator_base() = default;
 
   template<typename... IndexTypes>
-  qoperator_base(expression<scalar_type, IndexTypes...> const& expr,
+  loperator_base(expression<scalar_type, IndexTypes...> const& expr,
                  hilbert_space<IndexTypes...> const& hs) {
     for(auto const& m : expr) {
       m_actions_.emplace_back(
@@ -62,10 +62,10 @@ public:
   }
 
   // Value semantics
-  qoperator_base(qoperator_base const&) = default;
-  qoperator_base(qoperator_base&&) noexcept = default;
-  qoperator_base& operator=(qoperator_base const&) = default;
-  qoperator_base& operator=(qoperator_base&&) noexcept = default;
+  loperator_base(loperator_base const&) = default;
+  loperator_base(loperator_base&&) noexcept = default;
+  loperator_base& operator=(loperator_base const&) = default;
+  loperator_base& operator=(loperator_base&&) noexcept = default;
 
 protected:
 
@@ -73,23 +73,23 @@ protected:
 };
 
 //
-// Quantum-mechanical operator with constant monomial coefficients
+// Linear operator with constant monomial coefficients
 //
 
 template<typename ScalarType, typename... AlgebraTags>
-class qoperator : public qoperator_base<ScalarType, AlgebraTags...> {
+class loperator : public loperator_base<ScalarType, AlgebraTags...> {
 
-  using base = qoperator_base<ScalarType, AlgebraTags...>;
+  using base = loperator_base<ScalarType, AlgebraTags...>;
 
 public:
 
   using base::base;
 
   // Value semantics
-  qoperator(qoperator const&) = default;
-  qoperator(qoperator&&) noexcept = default;
-  qoperator& operator=(qoperator const&) = default;
-  qoperator& operator=(qoperator&&) noexcept = default;
+  loperator(loperator const&) = default;
+  loperator(loperator&&) noexcept = default;
+  loperator& operator=(loperator const&) = default;
+  loperator& operator=(loperator&&) noexcept = default;
 
   // Act on state and return the resulting state.
   template<typename StateVector>
@@ -133,29 +133,29 @@ private:
 };
 
 //
-// Quantum-mechanical operator with parameter-dependent (callable) coefficients
+// Linear operator with parameter-dependent (callable) coefficients
 //
 
 template<typename ScalarType, typename... AlgebraTags>
-class parametric_qoperator : public qoperator_base<ScalarType, AlgebraTags...> {
+class parametric_loperator : public loperator_base<ScalarType, AlgebraTags...> {
 
-  using base = qoperator_base<ScalarType, AlgebraTags...>;
+  using base = loperator_base<ScalarType, AlgebraTags...>;
 
 public:
 
-  parametric_qoperator() = delete;
+  parametric_loperator() = delete;
 
   template<typename... IndexTypes>
-  parametric_qoperator(expression<ScalarType, IndexTypes...> const& expr,
+  parametric_loperator(expression<ScalarType, IndexTypes...> const& expr,
                        hilbert_space<IndexTypes...> const& hs)
     : base(expr, hs) {
   }
 
   // Value semantics
-  parametric_qoperator(parametric_qoperator const&) = default;
-  parametric_qoperator(parametric_qoperator&&) noexcept = default;
-  parametric_qoperator& operator=(parametric_qoperator const&) = default;
-  parametric_qoperator& operator=(parametric_qoperator&&) noexcept = default;
+  parametric_loperator(parametric_loperator const&) = default;
+  parametric_loperator(parametric_loperator&&) noexcept = default;
+  parametric_loperator& operator=(parametric_loperator const&) = default;
+  parametric_loperator& operator=(parametric_loperator&&) noexcept = default;
 
   // Act on state and return the resulting state.
   //
@@ -214,9 +214,9 @@ public:
   // expression are invoked with the `args` as arguments to produce
   // the output coefficient values.
   template<typename... CoeffArgs>
-  inline qoperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...>
+  inline loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...>
   at(CoeffArgs&&... args) const {
-    qoperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...> qop;
+        loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...> qop;
     for(auto const& m : base::m_actions_) {
       qop.add_monomial_action(m.first,
                               m.second(std::forward<CoeffArgs>(args)...));
@@ -254,20 +254,20 @@ private:
   }
 };
 
-// Factory function for qoperator
+// Factory function for loperator
 template<typename ScalarType, typename... IndexTypes>
-qoperator<ScalarType, fermion, boson, spin>
-make_qoperator(expression<ScalarType, IndexTypes...> const& expr,
+loperator<ScalarType, fermion, boson, spin>
+make_loperator(expression<ScalarType, IndexTypes...> const& expr,
                hilbert_space<IndexTypes...> const& hs) {
-  return qoperator<ScalarType, fermion, boson, spin>(expr, hs);
+  return loperator<ScalarType, fermion, boson, spin>(expr, hs);
 }
 
-// Factory function for parametric_qoperator
+// Factory function for parametric_loperator
 template<typename ScalarType, typename... IndexTypes>
-parametric_qoperator<ScalarType, fermion, boson, spin>
-make_param_qoperator(expression<ScalarType, IndexTypes...> const& expr,
+parametric_loperator<ScalarType, fermion, boson, spin>
+make_param_loperator(expression<ScalarType, IndexTypes...> const& expr,
                      hilbert_space<IndexTypes...> const& hs) {
-  return parametric_qoperator<ScalarType, fermion, boson, spin>(expr, hs);
+  return parametric_loperator<ScalarType, fermion, boson, spin>(expr, hs);
 }
 
 } // namespace libcommute

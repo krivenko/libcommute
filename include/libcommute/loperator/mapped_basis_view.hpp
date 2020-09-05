@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_QOPERATOR_MAPPED_BASIS_VIEW_HPP_
 #define LIBCOMMUTE_QOPERATOR_MAPPED_BASIS_VIEW_HPP_
 
-#include "qoperator.hpp"
+#include "loperator.hpp"
 #include "sparse_state_vector.hpp"
 #include "state_vector.hpp"
 
@@ -30,7 +30,7 @@
 // an existing state vector. Such operations as `get_element()` and
 // `update_add_element()` are forwarded to the adapted vector with state
 // indices being translated according to a given map. mapped_basis_view can be
-// used in situations where a qoperator object acts only on a subspace of a full
+// used in situations where a loperator object acts only on a subspace of a full
 // Hilbert space and it is desirable to store vector components only within this
 // subspace.
 //
@@ -135,9 +135,9 @@ class basis_mapper {
 
   template<typename... QOperatorParams>
   void compositions_constructor_impl(
-    std::vector<qoperator<QOperatorParams...>> const& O_list,
+    std::vector<loperator<QOperatorParams...>> const& O_list,
     sparse_state_vector<
-      typename qoperator<QOperatorParams...>::scalar_type
+      typename loperator<QOperatorParams...>::scalar_type
     > const& st,
     int m,
     int sum_n,
@@ -146,7 +146,7 @@ class basis_mapper {
     if(sum_n == N) {
       foreach(st, [&](
         sv_index_type out_index,
-        typename qoperator<QOperatorParams...>::scalar_type const&
+        typename loperator<QOperatorParams...>::scalar_type const&
       ) {
         map_.emplace(out_index, map_.size());
       });
@@ -182,8 +182,8 @@ public:
   // Build a mapping from a set of all basis states contributing to O|vac>.
   // Mapped values are assigned continuously but without any specific order.
   template<typename HSType, typename... QOperatorParams>
-  basis_mapper(qoperator<QOperatorParams...> const& O, HSType const& hs) {
-    using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
+  basis_mapper(loperator<QOperatorParams...> const& O, HSType const& hs) {
+    using scalar_type = typename loperator<QOperatorParams...>::scalar_type;
     sv_index_type dim = get_dim(hs);
     sparse_state_vector<scalar_type> vac(dim);
     vac.amplitude(0) = 1;
@@ -200,7 +200,7 @@ public:
   // Mapped values are assigned continuously but without any specific order.
   template<typename HSType, typename... QOperatorParams>
   basis_mapper(
-    std::vector<qoperator<QOperatorParams...>> const& O_list,
+    std::vector<loperator<QOperatorParams...>> const& O_list,
     HSType const& hs,
     int N
   ) {
@@ -208,7 +208,7 @@ public:
       map_.emplace(0, 0);
       return;
     }
-    using scalar_type = typename qoperator<QOperatorParams...>::scalar_type;
+    using scalar_type = typename loperator<QOperatorParams...>::scalar_type;
     sparse_state_vector<scalar_type> vac(get_dim(hs));
     vac.amplitude(0) = 1;
     compositions_constructor_impl(O_list, vac, 0, 0, N);
