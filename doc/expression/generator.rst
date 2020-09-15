@@ -48,16 +48,45 @@ The following table summarizes information about predefined generators.
     - Algebra ID
   * - Fermions :math:`c^\dagger_i`/:math:`c_i`
     - :expr:`libcommute::generator_fermion`
-    - ``-3``
+    - :expr:`libcommute::fermion::algebra_id()`
   * - Bosons :math:`a^\dagger_i`/:math:`a_i`
     - :expr:`libcommute::generator_boson`
-    - ``-2``
+    - :expr:`libcommute::boson::algebra_id()`
   * - Spins :math:`S_\pm`/:math:`S_z`
     - :expr:`libcommute::generator_spin`
-    - ``-1``
+    - :expr:`libcommute::spin::algebra_id()`
   * - User-defined algebra
     - A class derived from :type:`libcommute::generator`
     - ``>= LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID``
+
+.. _algebra_tags:
+
+Structures :struct:`fermion`, :struct:`boson` and :struct:`spin` mentioned in
+the 3rd column are simple tag types defined in *<libcommute/algebra_tags.hpp>*.
+Their definitions contain algebra ID constants for the predefined algebras.
+Besides, they play roles in the :ref:`linear operator interface <loperator>`
+and in the
+:ref:`customization of automatic Hilbert space construction <es_constructor>`.
+
+.. namespace:: libcommute
+
+.. struct:: fermion
+
+  .. function:: static constexpr int algebra_id()
+
+    Return ``-3``.
+
+.. struct:: boson
+
+  .. function:: static constexpr int algebra_id()
+
+    Return ``-2``.
+
+.. struct:: spin
+
+  .. function:: static constexpr int algebra_id()
+
+    Return ``-1``.
 
 .. _gen_base:
 
@@ -115,9 +144,9 @@ The following table summarizes information about predefined generators.
 
   .. rubric:: Canonical ordering
 
-  .. function:: virtual bool equal(generator const& g) const
-                virtual bool less(generator const& g) const
-                virtual bool greater(generator const& g) const
+  .. function:: protected virtual bool equal(generator const& g) const
+                protected virtual bool less(generator const& g) const
+                protected virtual bool greater(generator const& g) const
 
     These methods can be overridden by the derived classes to establish
     the canonical order of :expr:`g` w.r.t. :expr:`*this` assuming both
@@ -186,7 +215,7 @@ The following table summarizes information about predefined generators.
 
      Output stream insertion operator. Calls :expr:`g.print(os)`.
 
-  .. function:: virtual std::ostream & print(std::ostream & os) const
+  .. function:: protected virtual std::ostream & print(std::ostream & os) const
 
     Virtual stream output function to be overridden by the derived classes.
 

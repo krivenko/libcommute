@@ -14,7 +14,7 @@ of quantum Hamiltonians -- so called exact diagonalization (ED) methods.
 writing ED codes. The following few steps describe a typical workflow of a
 *libcommute*-based ED code.
 
-* Define Hamiltonian of a quantum system as a
+* Define Hamiltonian of a quantum system in a form of a
   :ref:`polynomial expression <expression>`.
 
 * Make a finite-dimensional :ref:`Hilbert space <hilbert_space>`. This can
@@ -27,13 +27,6 @@ writing ED codes. The following few steps describe a typical workflow of a
   This object can be either a :ref:`simple linear operator <simple_loperator>`
   or a :ref:`parametric linear operator <param_loperator>`.
 
-* Optionally :ref:`find invariant subspaces <space_partition>` of the
-  Hamiltonian to reduce the numerical cost of the diagonalization procedure.
-  The :cpp:class:`mapped_basis_view` state vector adapter can be acted upon by
-  linear operators defined in the full Hilbert space, while saving memory by
-  storing only the part of a state vector belonging to a certain invariant
-  subspace.
-
 * Act with the constructed linear operator on
   :ref:`state vectors <state_vector>` to obtain a matrix representation of the
   Hamiltonian. Instead of computing all matrix elements at once and resorting
@@ -41,3 +34,10 @@ writing ED codes. The following few steps describe a typical workflow of a
   power iteration or Lanczos algorithm for sparse eigenproblems. In the latter
   case, one must act with the operator on a state at each step of the iterative
   diagonalization scheme.
+
+There is also an option to :ref:`find invariant subspaces <space_partition>` of
+the Hamiltonian to reduce the numerical cost of the diagonalization procedure.
+The :cpp:class:`mapped_basis_view` state vector adapter can be acted upon by
+linear operators defined in the full Hilbert space, while saving memory by
+storing only the part of a state vector belonging to a certain invariant
+subspace.

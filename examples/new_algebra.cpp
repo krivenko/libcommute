@@ -24,6 +24,22 @@
 
 namespace libcommute {
 
+// First, we define a tag type for our new algebra
+struct gamma_tag {
+  // Fix the algebra ID
+  static constexpr int algebra_id() {
+    // Use the lowest algebra ID available to user-defined algebras
+    return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
+  }
+};
+
+// NOTE: Defining the new algebra tag type is optional. The only place it is
+// used in this example is the generator_gamma::algebra_id() method, where one
+// could simply return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID. Nonetheless,
+// the tag type becomes mandatory when one implements the linear operator
+// representation of the algebra (for more details, see "Advanced: Linear
+// operator representation of a user-defined algebra").
+
 // Our generator type: a gamma matrix with one integer index
 class generator_gamma : public generator<int> {
 
@@ -32,10 +48,9 @@ class generator_gamma : public generator<int> {
 
 public:
 
-  // Here, we fix the algebra ID of our new algebra
+  // Algebra ID of this generator
   virtual int algebra_id() const override {
-    // Use the lowest algebra ID available to user-defined algebras
-    return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
+    return gamma_tag::algebra_id();
   }
 
   // Constructor: Just pass the index to the base class

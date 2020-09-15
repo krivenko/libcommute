@@ -33,21 +33,21 @@ their canonical ordering. The identities we will be using in the code below are
 
 .. literalinclude:: ../../examples/new_algebra.cpp
   :language: cpp
-  :lines: 18-120
+  :lines: 18-135
 
 It is usually worth defining a factory function that creates an expression
 containing one generator with a unity prefactor.
 
 .. literalinclude:: ../../examples/new_algebra.cpp
   :language: cpp
-  :lines: 121-132
+  :lines: 136-148
 
 Now we can check that generators of our algebra actually fulfil the canonical
 anti-commutation relations.
 
 .. literalinclude:: ../../examples/new_algebra.cpp
   :language: cpp
-  :lines: 134-155
+  :lines: 150-171
 
 Let us also define the fifth gamma matrix
 
@@ -64,4 +64,4 @@ and check that
 
 .. literalinclude:: ../../examples/new_algebra.cpp
   :language: cpp
-  :lines: 157-
+  :lines: 173-189
