@@ -145,11 +145,7 @@ public:
 
   parametric_loperator() = delete;
 
-  template<typename... IndexTypes>
-  parametric_loperator(expression<ScalarType, IndexTypes...> const& expr,
-                       hilbert_space<IndexTypes...> const& hs)
-    : base(expr, hs) {
-  }
+  using base::base;
 
   // Value semantics
   parametric_loperator(parametric_loperator const&) = default;

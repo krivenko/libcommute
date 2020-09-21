@@ -503,7 +503,7 @@ rewriting all the code needed to processed the predefined generators. This goal
 can be achieved in a few steps by means of a special utility class
 :class:`es_constructor`.
 
-.. class:: template<typename... AlgebraIDs> es_constructor
+.. class:: template<int... AlgebraIDs> es_constructor
 
   *Defined in <libcommute/loperator/es_constructor.hpp>*
 
@@ -546,8 +546,8 @@ can be achieved in a few steps by means of a special utility class
     auto es_constr = es_constructor<fermion, spin, my_algebra_id>();
 
   Now, :expr:`es_constr` knows how to process
-  :struct:`fermionic <libcommute::fermion>`,
-  :struct:`spin <libcommute::spin>` and ``my_algebra`` generators.
+  :var:`fermionic <libcommute::fermion>`,
+  :var:`spin <libcommute::spin>` and ``my_algebra`` generators.
 
   .. warning:: The algebra IDs must come in the ascending order when used as
                template parameters of :class:`es_constructor`.
