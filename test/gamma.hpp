@@ -26,7 +26,7 @@
 namespace libcommute {
 
 // Use the lowest algebra ID available to user-defined algebras
-static constexpr int gamma_ = LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
+static constexpr int gamma = LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
 
 class generator_gamma : public generator<int> {
 
@@ -35,7 +35,7 @@ class generator_gamma : public generator<int> {
 
 public:
 
-  virtual int algebra_id() const override { return gamma_; }
+  virtual int algebra_id() const override { return libcommute::gamma; }
 
   // Value semantics
   generator_gamma(int index) : base(index) {}

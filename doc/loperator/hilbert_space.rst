@@ -51,7 +51,7 @@ a direct product of basis vectors of the elementary spaces,
                           |n_N\rangle_{\mathcal{H}_N}.
 
 In the code, the basis vectors are represented by 64-bit unsigned integers
-(:type:`std::uint64_t`).
+(:type:`sv_index_type`).
 The binary form of :math:`|n\rangle_\mathcal{H}` is
 then a concatenation of binary forms of :math:`|n_i\rangle_{\mathcal{H}_i}`.
 For example, the following picture shows memory representation of basis
@@ -234,11 +234,11 @@ does not matter -- they will be reordered automatically.
                 friend void foreach(hilbert_space const& hs, Functor&& f)
 
     Apply functor :expr:`f` to all basis state indices in :expr:`hs`.
-    :expr:`f` must accept one argument of type :type:`std::uint64_t`.
+    :expr:`f` must accept one argument of type :type:`sv_index_type`.
 
-  .. function:: std::uint64_t \
+  .. function:: sv_index_type \
                 basis_state_index(elementary_space<IndexTypes...> const& es, \
-                                  std::uint64_t n)
+                                  sv_index_type n)
 
     Given an elementary space :expr:`es` and an index :expr:`n` of a basis state
     within it, return the corresponding basis state index within the full

@@ -133,7 +133,8 @@ expression<std::complex<double>, int> make_gamma(int index) {
 
 }
 
-int main() {
+// Check that expressions with gamma-matrices behave as expected
+void check_expressions() {
 
   using namespace libcommute;
 
@@ -157,7 +158,7 @@ int main() {
   }
 
   // \gamma^5
-  std::complex<double> I(0,1);
+  const std::complex<double> I(0,1);
   auto gamma5 = I * make_gamma(0)
                   * make_gamma(1)
                   * make_gamma(2)
@@ -173,6 +174,183 @@ int main() {
     std::cout << "{gamma5, " << gamma_mu << "} = "
               << (gamma5 * gamma_mu + gamma_mu * gamma5) << std::endl;
   }
+}
+
+#include <libcommute/loperator/elementary_space.hpp>
+
+//
+// 4-dimensional elementary space gamma matrices act in
+//
+
+namespace libcommute {
+
+class elementary_space_gamma : public elementary_space<int> {
+
+  using base = elementary_space<int>;
+
+public:
+
+  // Value semantics
+  elementary_space_gamma() : base(0) {}
+  elementary_space_gamma(elementary_space_gamma const&) = default;
+  elementary_space_gamma(elementary_space_gamma&&) noexcept = default;
+  elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
+  elementary_space_gamma& operator=(elementary_space_gamma&&) noexcept
+    = default;
+
+  virtual std::unique_ptr<base> clone() const override {
+    return make_unique<elementary_space_gamma>(*this);
+  }
+
+  // Algebra ID, must be the same with generator_gamma::algebra_id()
+  virtual int algebra_id() const override { return libcommute::gamma; }
+
+  // We need 2 bits to enumerate all 4 = 2^2 basis vectors
+  virtual int n_bits() const override { return 2; }
+};
+
+}
+
+#include <array>
+#include <libcommute/loperator/monomial_action.hpp>
+
+namespace libcommute {
+
+//
+// Action of a product of gamma matrices (a gamma-matrix monomial)
+// on a basis vector.
+//
+
+template<> class monomial_action<libcommute::gamma> {
+
+  // Indices of matrices in the product, right to left.
+  // This order is chosen because the matrix on the right acts on a state first
+  std::vector<int> index_sequence;
+
+public:
+
+  // m_range is a pair of iterators over a list of generator_gamma objects.
+  // This range represents the product of gamma matrices we want to act with.
+  monomial_action(monomial<int>::range_type const& m_range,
+                  hilbert_space<int> const& hs) {
+    // Iterate over matrices in the product, left to right
+    for(auto it = m_range.first; it != m_range.second; ++it)
+      // Collect indices of the matrices
+      index_sequence.push_back(std::get<0>(it->indices()));
+    // Reverse the order
+    std::reverse(index_sequence.begin(), index_sequence.end());
+  }
+
+  //
+  // Act on a basis state
+  //
+  // In the present implementation, libcommute requires all algebra generators
+  // to be represented by generalized permutation matrices [1], i.e. matrices
+  // with exactly one non-zero element in each row and each column.
+  // Equivalently, any generator acting on a basis state must give a single
+  // basis state multiplied by a constant.
+  //
+  // [1] https://en.wikipedia.org/wiki/Generalized_permutation_matrix
+  //
+  // 'index' is the index (a 64-bit unsigned integer) of the basis state we are
+  // acting upon. It must also receive the index of the resulting basis state.
+  // 'coeff' must be multiplied by the overall constant factor acquired as
+  // a result of monomial action.
+  //
+  template<typename ScalarType>
+  inline bool act(sv_index_type & index,
+                  ScalarType & coeff) const {
+
+    const std::complex<double> I(0,1);
+
+    // Act with all matrices in the product, right to left
+    for(int i : index_sequence) {
+      switch(i) {
+        case 0:
+          // Action of \gamma^0
+          // It is diagonal => 'index' does not change
+          coeff *= std::array<double, 4>{1,1,-1,-1}[index];
+          break;
+        case 1:
+          // Action of \gamma^1
+          coeff *= std::array<double, 4>{-1,-1,1,1}[index];
+          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
+          break;
+        case 2:
+          // Action of \gamma^2
+          coeff *= std::array<std::complex<double>, 4>{-I,I,I,-I}[index];
+          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
+          break;
+        case 3:
+          // Action of \gamma^3
+          coeff *= std::array<std::complex<double>, 4>{-1,1,1,-1}[index];
+          index = std::array<sv_index_type, 4>{2,3,0,1}[index];
+          break;
+      }
+    }
+    // This 'true' signals that the action result is not the identical zero.
+    // Returning 'false' in cases when it is zero would help improve
+    // performance.
+    return true;
+  }
+};
+
+} // namespace libcommute
+
+#include <algorithm>
+#include <vector>
+#include <libcommute/loperator/loperator.hpp>
+
+// Check new linear operator functionality
+void check_loperator() {
+
+  using namespace libcommute;
+
+  // Hilbert space made of one elementary space for gamma matrices.
+  hilbert_space<int> hs{elementary_space_gamma()};
+
+  const std::complex<double> I(0,1);
+
+  // Expression for \gamma^5
+  auto gamma5 = I * make_gamma(0)
+                  * make_gamma(1)
+                  * make_gamma(2)
+                  * make_gamma(3);
+
+  // Linear operator representation of \gamma^5
+  auto gamma5op = loperator<std::complex<double>,
+                            libcommute::gamma>(gamma5, hs);
+
+  //
+  // Build the explicit matrix representation of \gamma^5
+  //
+
+  // Preallocate state vectors.
+  std::vector<std::complex<double>> psi(4);
+  std::vector<std::complex<double>> phi(4);
+
+  // Iterate over basis states
+  for(int i = 0; i < 4; ++i) {
+    // Reset vectors |\psi> and |\phi> to zero.
+    std::fill(psi.begin(), psi.end(), 0);
+    std::fill(phi.begin(), phi.end(), 0);
+    psi[i] = 1; // 'psi' is i-th basis vector now
+
+    phi = gamma5op(psi);
+
+    // Print the result
+    std::cout << "gamma5|" << i << "> = ";
+    for(int j = 0; j < 4; ++j) {
+      std::cout << "+" << phi[j] << "|" << j << ">";
+    }
+    std::cout << "\n";
+  }
+}
+
+int main() {
+
+  check_expressions();
+  check_loperator();
 
   return 0;
 }

@@ -52,7 +52,7 @@ public:
     return make_unique<elementary_space_gamma>(*this);
   }
 
-  virtual int algebra_id() const override { return gamma_; }
+  virtual int algebra_id() const override { return libcommute::gamma; }
   virtual int n_bits() const override { return 2; }
 };
 
@@ -60,7 +60,7 @@ public:
 // Action of a gamma-matrix monomial
 //
 
-template<> class monomial_action<gamma_> {
+template<> class monomial_action<libcommute::gamma> {
 
   std::vector<int> index_sequence;
 
@@ -105,8 +105,10 @@ using namespace libcommute;
 template<typename ExprType>
 void check_loperator(ExprType const& expr1, ExprType const& expr2) {
   hilbert_space<int> hs{elementary_space_gamma()};
-  auto lop1 = loperator<std::complex<double>, gamma_>(expr1, hs);
-  auto lop2 = loperator<std::complex<double>, gamma_>(expr2, hs);
+
+  using libcommute::gamma;
+  auto lop1 = loperator<std::complex<double>, gamma>(expr1, hs);
+  auto lop2 = loperator<std::complex<double>, gamma>(expr2, hs);
 
   std::vector<std::complex<double>> in(4), out1(4), out2(4);
 

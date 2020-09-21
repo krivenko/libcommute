@@ -1,7 +1,7 @@
 .. _generator_gamma:
 
-Example: A user-defined algebra
-===============================
+Advanced: A user-defined algebra
+================================
 
 .. default-domain:: cpp
 
@@ -47,7 +47,7 @@ anti-commutation relations.
 
 .. literalinclude:: ../../examples/new_algebra.cpp
   :language: cpp
-  :lines: 138-157
+  :lines: 139-158
 
 Let us also define the fifth gamma matrix
 
@@ -64,4 +64,4 @@ and check that
 
 .. literalinclude:: ../../examples/new_algebra.cpp
   :language: cpp
-  :lines: 166-175
+  :lines: 161-176
