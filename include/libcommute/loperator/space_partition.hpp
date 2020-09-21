@@ -49,9 +49,11 @@ class space_partition {
   // Map representative basis state to subspace index
   std::map<sv_index_type, sv_index_type> root_to_subspace;
 
-  template<typename... LOperatorParams>
+  template<typename LOpScalarType, int... LOpAlgebraIDs>
   using loperator_melem_t =
-  matrix_elements_map<typename loperator<LOperatorParams...>::scalar_type>;
+  matrix_elements_map<
+    typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type
+    >;
 
 public:
 
@@ -62,10 +64,12 @@ public:
   // `hs` can be of any type, for which `get_dim(hs)` returns the dimension of
   // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
   // to each basis state index in `hs`.
-  template<typename HSType, typename... LOperatorParams>
-  space_partition(loperator<LOperatorParams...> const& h, HSType const& hs)
+  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
+                  HSType const& hs)
     : ds(get_dim(hs)) {
-    using scalar_type = typename loperator<LOperatorParams...>::scalar_type;
+    using scalar_type =
+      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sv_index_type dim = get_dim(hs);
 
     sparse_state_vector<scalar_type> in_state(dim);
@@ -89,12 +93,13 @@ public:
   // `hs` can be of any type, for which `get_dim(hs)` returns the dimension of
   // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
   // to each basis state index in `hs`.
-  template<typename HSType, typename... LOperatorParams>
-  space_partition(loperator<LOperatorParams...> const& h,
+  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
                   HSType const& hs,
-                  loperator_melem_t<LOperatorParams...> & me)
+                  loperator_melem_t<LOpScalarType, LOpAlgebraIDs...> & me)
     : ds(get_dim(hs)) {
-    using scalar_type = typename loperator<LOperatorParams...>::scalar_type;
+    using scalar_type =
+      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sv_index_type dim = get_dim(hs);
 
     sparse_state_vector<scalar_type> in_state(dim);
@@ -119,17 +124,17 @@ public:
   // Merge some of the invariant subspaces together, to ensure that a given
   // operator `Cd` and its Hermitian conjugate `C` generate only one-to-one
   // connections between the subspaces.
-  template<typename HSType, typename... LOperatorParams>
-  auto merge_subspaces(loperator<LOperatorParams...> const& Cd,
-                         loperator<LOperatorParams...> const& C,
+  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  auto merge_subspaces(loperator<LOpScalarType, LOpAlgebraIDs...> const& Cd,
+                         loperator<LOpScalarType, LOpAlgebraIDs...> const& C,
                        HSType const& hs,
                        bool store_matrix_elements = true
                       ) ->
-    std::pair<loperator_melem_t<LOperatorParams...>,
-              loperator_melem_t<LOperatorParams...>>
+    std::pair<loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>,
+              loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>>
 
   {
-    using loperator_t = loperator<LOperatorParams...>;
+    using loperator_t = loperator<LOpScalarType, LOpAlgebraIDs...>;
     using scalar_type = typename loperator_t::scalar_type;
     matrix_elements_map<scalar_type> Cd_elements, C_elements;
     std::multimap<sv_index_type, sv_index_type> Cd_conn, C_conn;

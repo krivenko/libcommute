@@ -32,10 +32,10 @@ namespace libcommute {
 // Linear operator acting on a state vector in a Hilbert space
 //
 
-template<typename ScalarType, typename... AlgebraTags>
+template<typename ScalarType, int... AlgebraIDs>
 class loperator_base {
 
-  using monomial_action_t = monomial_action<AlgebraTags...>;
+  using monomial_action_t = monomial_action<AlgebraIDs...>;
 
 public:
 
@@ -76,10 +76,10 @@ protected:
 // Linear operator with constant monomial coefficients
 //
 
-template<typename ScalarType, typename... AlgebraTags>
-class loperator : public loperator_base<ScalarType, AlgebraTags...> {
+template<typename ScalarType, int... AlgebraIDs>
+class loperator : public loperator_base<ScalarType, AlgebraIDs...> {
 
-  using base = loperator_base<ScalarType, AlgebraTags...>;
+  using base = loperator_base<ScalarType, AlgebraIDs...>;
 
 public:
 
@@ -136,10 +136,10 @@ private:
 // Linear operator with parameter-dependent (callable) coefficients
 //
 
-template<typename ScalarType, typename... AlgebraTags>
-class parametric_loperator : public loperator_base<ScalarType, AlgebraTags...> {
+template<typename ScalarType, int... AlgebraIDs>
+class parametric_loperator : public loperator_base<ScalarType, AlgebraIDs...> {
 
-  using base = loperator_base<ScalarType, AlgebraTags...>;
+  using base = loperator_base<ScalarType, AlgebraIDs...>;
 
 public:
 
@@ -214,9 +214,9 @@ public:
   // expression are invoked with the `args` as arguments to produce
   // the output coefficient values.
   template<typename... CoeffArgs>
-  inline loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...>
+  inline loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...>
   at(CoeffArgs&&... args) const {
-        loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraTags...> qop;
+        loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> qop;
     for(auto const& m : base::m_actions_) {
       qop.add_monomial_action(m.first,
                               m.second(std::forward<CoeffArgs>(args)...));

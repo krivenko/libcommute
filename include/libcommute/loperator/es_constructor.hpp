@@ -17,7 +17,7 @@
 #include "elementary_space_fermion.hpp"
 #include "elementary_space_boson.hpp"
 #include "elementary_space_spin.hpp"
-#include "../algebra_tags.hpp"
+#include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../expression/generator_spin.hpp"
 #include "../utility.hpp"
@@ -52,16 +52,16 @@ struct es_construction_failure : public std::runtime_error {
 // Functors to construct elementary spaces associated with algebra generators.
 //
 
-template<typename... AlgebraTags> class es_constructor;
+template<int... AlgebraIDs> class es_constructor;
 
 namespace detail {
 
-template<typename AlgebraTag1, typename... AlgebraTagsTail>
-class es_constructor_impl : public es_constructor<AlgebraTag1>,
-                            public es_constructor_impl<AlgebraTagsTail...> {
+template<int AlgebraID1, int... AlgebraIDsTail>
+class es_constructor_impl : public es_constructor<AlgebraID1>,
+                            public es_constructor_impl<AlgebraIDsTail...> {
 
-  using base_head = es_constructor<AlgebraTag1>;
-  using base_tail = es_constructor_impl<AlgebraTagsTail...>;
+  using base_head = es_constructor<AlgebraID1>;
+  using base_tail = es_constructor_impl<AlgebraIDsTail...>;
 
 public:
 
@@ -90,18 +90,18 @@ public:
   template<typename... IndexTypes>
   inline  std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-    if(g.algebra_id() == AlgebraTag1::algebra_id())
+    if(g.algebra_id() == AlgebraID1)
       return base_head::operator()(g);
     else
       return base_tail::operator()(g);
   }
 };
 
-// Specialization of es_constructor_impl: end of algebra tag chain
-template<typename AlgebraTag>
-class es_constructor_impl<AlgebraTag> : public es_constructor<AlgebraTag> {
+// Specialization of es_constructor_impl: end of algebra ID chain
+template<int AlgebraID>
+class es_constructor_impl<AlgebraID> : public es_constructor<AlgebraID> {
 
-  using base = es_constructor<AlgebraTag>;
+  using base = es_constructor<AlgebraID>;
 
 public:
 
@@ -112,7 +112,7 @@ public:
   template<typename... IndexTypes>
   inline  std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-    if(g.algebra_id() == AlgebraTag::algebra_id())
+    if(g.algebra_id() == AlgebraID)
       return base::operator()(g);
     else
       throw es_construction_failure<IndexTypes...>(g);
@@ -121,15 +121,15 @@ public:
 
 } // namespace libcommute::detail
 
-template<typename... AlgebraTags>
-class es_constructor : public detail::es_constructor_impl<AlgebraTags...> {
+template<int... AlgebraIDs>
+class es_constructor : public detail::es_constructor_impl<AlgebraIDs...> {
 
-  static_assert(sizeof...(AlgebraTags) > 0,
-                "There must be at least one algebra tag");
-  static_assert(algebra_tags_ordered<AlgebraTags...>::value,
-                "Algebra tags must be ordered according to their IDs");
+  static_assert(sizeof...(AlgebraIDs) > 0,
+                "There must be at least one algebra ID");
+  static_assert(algebra_ids_ordered<AlgebraIDs...>::value,
+                "Algebra IDs must be ordered");
 
-  using base = detail::es_constructor_impl<AlgebraTags...>;
+  using base = detail::es_constructor_impl<AlgebraIDs...>;
 
 public:
 

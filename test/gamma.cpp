@@ -15,7 +15,7 @@
 
 #include "./gamma.hpp"
 
-#include <libcommute/algebra_tags.hpp>
+#include <libcommute/algebra_ids.hpp>
 #include <libcommute/expression/expression.hpp>
 
 using namespace libcommute;

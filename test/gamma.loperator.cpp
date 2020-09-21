@@ -15,7 +15,7 @@
 
 #include "./gamma.hpp"
 
-#include <libcommute/algebra_tags.hpp>
+#include <libcommute/algebra_ids.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/loperator/elementary_space.hpp>
 #include <libcommute/loperator/loperator.hpp>
@@ -52,7 +52,7 @@ public:
     return make_unique<elementary_space_gamma>(*this);
   }
 
-  virtual int algebra_id() const override { return gamma_::algebra_id(); }
+  virtual int algebra_id() const override { return gamma_; }
   virtual int n_bits() const override { return 2; }
 };
 

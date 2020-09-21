@@ -503,27 +503,22 @@ rewriting all the code needed to processed the predefined generators. This goal
 can be achieved in a few steps by means of a special utility class
 :class:`es_constructor`.
 
-.. class:: template<typename... AlgebraTags> es_constructor
+.. class:: template<typename... AlgebraIDs> es_constructor
 
   *Defined in <libcommute/loperator/es_constructor.hpp>*
 
-* Define a new :ref:`algebra tag type <algebra_tags>`,
-  e.g. :struct:`my_algebra_tag`.
+* Define a new algebra ID, e.g. :expr:`my_algebra_id`.
 
   .. code-block:: cpp
 
-    struct my_algebra_tag {
-      static constexpr int algebra_id() {
-        // A unique integer >=LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID
-        return 13;
-      }
-    };
+    // A unique integer >=LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID
+    static constexpr int my_algebra_id = 7;
 
 * Specialize class :class:`libcommute::es_constructor` as follows
 
   .. code-block:: cpp
 
-    template<> class es_constructor<my_algebra_tag> {
+    template<> class es_constructor<my_algebra_id> {
     public:
 
       es_constructor() = default;
@@ -535,27 +530,27 @@ can be achieved in a few steps by means of a special utility class
         // Create an elementary space associated with 'g' and return it
         // wrapped in a unique pointer. This method will be called only for
         // the generators of the new algebra, i.e. only when
-        // g.algebra_id() == my_algebra_tag::algebra_id()
+        // g.algebra_id() == my_algebra_id
         //
       }
     };
 
-  :type:`es_constructor<my_algebra_tag>` is obviously a valid elementary space
+  :type:`es_constructor<my_algebra_id>` is obviously a valid elementary space
   constructor for ``my_algebra``
 
 * Instantiate :type:`es_constructor` with multiple template parameters
-  (algebra tags).
+  (algebra IDs).
 
   .. code-block:: cpp
 
-    auto es_constr = es_constructor<fermion, spin, my_algebra_tag>();
+    auto es_constr = es_constructor<fermion, spin, my_algebra_id>();
 
-  Now, :expr:`es_constr` knows how to process :struct:`fermionic <libcommute::fermion>`,
+  Now, :expr:`es_constr` knows how to process
+  :struct:`fermionic <libcommute::fermion>`,
   :struct:`spin <libcommute::spin>` and ``my_algebra`` generators.
 
-  .. warning:: The algebra tags must come in the ascending order of their
-               respective algebra IDs when used as template parameters of
-               :class:`es_constructor`.
+  .. warning:: The algebra IDs must come in the ascending order when used as
+               template parameters of :class:`es_constructor`.
 
 * Finally, call :func:`make_hilbert_space()` with two arguments.
 
@@ -576,11 +571,11 @@ use another elementary space constructor,
 .. type:: boson_es_constructor = es_constructor<fermion, boson, spin>
 
 .. note:: Calling
-          ``es_constructor<tag1, tag2, ..., tagN>(arg1, arg2, ..., argK)``
+          ``es_constructor<ID1, ID2, ..., IDN>(arg1, arg2, ..., argK)``
           will internally construct a series of objects
-          :expr:`es_constructor<tag1>`, :expr:`es_constructor<tag2>`, ...,
-          :expr:`es_constructor<tagN>`. The arguments will be 'fed' into
-          constructors of the single-tag objects in order, *at most one
+          :expr:`es_constructor<ID1>`, :expr:`es_constructor<ID2>`, ...,
+          :expr:`es_constructor<IDN>`. The arguments will be 'fed' into
+          constructors of the single-ID objects in order, *at most one
           argument per constructor*. For example,
           :expr:`es_constructor<fermion, boson, spin>(4)` will call
           :expr:`es_constructor<fermion>()`,

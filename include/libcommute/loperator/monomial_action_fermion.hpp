@@ -75,7 +75,7 @@ public:
         |= (sv_index_type(1) << br.first);
     }
 
-    auto const& range = hs.algebra_bit_range(fermion::algebra_id());
+    auto const& range = hs.algebra_bit_range(fermion);
 
     creation_count_mask = compute_count_mask(creation_set_bits, range);
     annihilation_count_mask = compute_count_mask(annihilation_set_bits, range);

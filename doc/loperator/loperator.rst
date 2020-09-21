@@ -59,18 +59,23 @@ Although all three forms are semantically equivalent, the last one is faster as
 it eliminates the need for a temporary object to store
 :math:`\hat Q|\psi\rangle`.
 
-An important note must be made about the template parameters of
-:class:`loperator`. Expressions can dynamically accommodate new algebras via
-inheritance from the polymorphic base :class:`generator`. Unlike them, linear
-operators must know action of what algebras they represent at the compile time.
+.. note::
 
+  An important note must be made about the template parameters of
+  :class:`loperator`. Expressions can dynamically accommodate new algebras via
+  inheritance from the polymorphic base :class:`generator`. Unlike them, linear
+  operators represent action of a certain set of algebras that is fixed at
+  compile time. This design decision allows to remove the virtual function call
+  overhead from the hottest parts of codes, where linear operators are
+  repeatedly applied to state vectors. Template parameter pack
+  :expr:`loperator::AlgebraIDs` (sorted list of integers) determines what
+  algebras a given linear operator object supports. :func:`make_loperator`
+  returns operators covering all three predefined algebras. For the sake of
+  optimization, it may make sense to manually create :class:`loperator` objects
+  with a more restricted set of IDs if some of the predefined algebras will
+  never be used in expressions.
 
-
-This design decision allows to remove the virtual function call overhead from
-the hottest parts of codes, where linear operators are repeatedly applied to
-state vectors.
-
-.. class:: template<typename ScalarType, typename... AlgebraTags> loperator
+.. class:: template<typename ScalarType, int... AlgebraIDs> loperator
 
 .. function:: template<typename ScalarType, typename... IndexTypes> \
               loperator<ScalarType, fermion, boson, spin> \
@@ -83,7 +88,7 @@ state vectors.
 Parametric linear operator
 --------------------------
 
-.. class:: template<typename ScalarType, typename... AlgebraTags> \
+.. class:: template<typename ScalarType, int... AlgebraIDs> \
            parametric_loperator
 
 .. function:: template<typename ScalarType, typename... IndexTypes> \

@@ -53,19 +53,19 @@ struct unknown_generator : public std::runtime_error {
 };
 
 
-template<typename... AlgebraTags> class monomial_action;
+template<int... AlgebraIDs> class monomial_action;
 
 namespace detail {
 
 template<typename... IndexTypes>
 using monomial_range_t = typename monomial<IndexTypes...>::range_type;
 
-template<typename AlgebraTag1, typename... AlgebraTagsTail>
-class monomial_action_impl : public monomial_action<AlgebraTag1>,
-                             public monomial_action_impl<AlgebraTagsTail...> {
+template<int AlgebraID1, int... AlgebraIDsTail>
+class monomial_action_impl : public monomial_action<AlgebraID1>,
+                             public monomial_action_impl<AlgebraIDsTail...> {
 
-  using base_head = monomial_action<AlgebraTag1>;
-  using base_tail = monomial_action_impl<AlgebraTagsTail...>;
+  using base_head = monomial_action<AlgebraID1>;
+  using base_tail = monomial_action_impl<AlgebraIDsTail...>;
 
   template<typename... IndexTypes>
   static monomial_range_t<IndexTypes...>
@@ -76,12 +76,12 @@ class monomial_action_impl : public monomial_action<AlgebraTag1>,
     auto res_range = std::make_pair(m_range.first, m_range.first);
 
     for(auto it = m_range.first; it != m_range.second; ++it) {
-      if(it->algebra_id() < AlgebraTag1::algebra_id())
+      if(it->algebra_id() < AlgebraID1)
         throw unknown_generator<IndexTypes...>(*it);
-      else if(it->algebra_id() == AlgebraTag1::algebra_id()) {
+      else if(it->algebra_id() == AlgebraID1) {
         ++res_range.second;
         ++m_range.first;
-      } else // it->algebra_id() > AlgebraTag1::algebra_id()
+      } else // it->algebra_id() > AlgebraID1
         break;
     }
 
@@ -104,11 +104,11 @@ public:
   }
 };
 
-// Specialization of monomial_action_impl: end of algebra tag chain
-template<typename AlgebraTag>
-class monomial_action_impl<AlgebraTag> : public monomial_action<AlgebraTag> {
+// Specialization of monomial_action_impl: end of algebra ID chain
+template<int AlgebraID>
+class monomial_action_impl<AlgebraID> : public monomial_action<AlgebraID> {
 
-  using base = monomial_action<AlgebraTag>;
+  using base = monomial_action<AlgebraID>;
 
 public:
 
@@ -127,13 +127,13 @@ public:
 
 } // namespace libcommute::detail
 
-template<typename... AlgebraTags>
-class monomial_action : public detail::monomial_action_impl<AlgebraTags...> {
+template<int... AlgebraIDs>
+class monomial_action : public detail::monomial_action_impl<AlgebraIDs...> {
 
-  static_assert(algebra_tags_ordered<AlgebraTags...>::value,
-                "Algebra tags must be ordered according to their IDs");
+  static_assert(algebra_ids_ordered<AlgebraIDs...>::value,
+                "Algebra IDs must be ordered according to their IDs");
 
-  using base = detail::monomial_action_impl<AlgebraTags...>;
+  using base = detail::monomial_action_impl<AlgebraIDs...>;
 
 public:
 
@@ -144,7 +144,7 @@ public:
   }
 };
 
-// Specialization for the case when no algebra tags have been provided
+// Specialization for the case when no algebra IDs have been provided
 template<> class monomial_action<> {
 
 public:
@@ -152,7 +152,7 @@ public:
   template<typename... IndexTypes>
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs) {
-    // Without algebra tags, we support only the constant (empty) monomial
+    // Without algebra IDs, we support only the constant (empty) monomial
     if(m_range.first != m_range.second)
       throw unknown_generator<IndexTypes...>(*m_range.first);
   }

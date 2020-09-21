@@ -14,7 +14,7 @@
 #ifndef LIBCOMMUTE_TEST_GAMMA_HPP_
 #define LIBCOMMUTE_TEST_GAMMA_HPP_
 
-#include <libcommute/algebra_tags.hpp>
+#include <libcommute/algebra_ids.hpp>
 #include <libcommute/expression/generator.hpp>
 
 #include <cassert>
@@ -25,12 +25,8 @@
 
 namespace libcommute {
 
-struct gamma_ {
-  static constexpr int algebra_id() {
-    // Use the lowest algebra ID available to user-defined algebras
-    return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
-  }
-};
+// Use the lowest algebra ID available to user-defined algebras
+static constexpr int gamma_ = LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
 
 class generator_gamma : public generator<int> {
 
@@ -39,7 +35,7 @@ class generator_gamma : public generator<int> {
 
 public:
 
-  virtual int algebra_id() const override { return gamma_::algebra_id(); }
+  virtual int algebra_id() const override { return gamma_; }
 
   // Value semantics
   generator_gamma(int index) : base(index) {}

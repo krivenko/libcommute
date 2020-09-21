@@ -48,45 +48,27 @@ The following table summarizes information about predefined generators.
     - Algebra ID
   * - Fermions :math:`c^\dagger_i`/:math:`c_i`
     - :expr:`libcommute::generator_fermion`
-    - :expr:`libcommute::fermion::algebra_id()`
+    - :expr:`libcommute::fermion`
   * - Bosons :math:`a^\dagger_i`/:math:`a_i`
     - :expr:`libcommute::generator_boson`
-    - :expr:`libcommute::boson::algebra_id()`
+    - :expr:`libcommute::boson`
   * - Spins :math:`S_\pm`/:math:`S_z`
     - :expr:`libcommute::generator_spin`
-    - :expr:`libcommute::spin::algebra_id()`
+    - :expr:`libcommute::spin`
   * - User-defined algebra
     - A class derived from :type:`libcommute::generator`
-    - ``>= LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID``
+    - >= :expr:`libcommute::LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID`
 
-.. _algebra_tags:
+Integer constants :expr:`fermion`, :expr:`boson`, :expr:`spin` and
+:expr:`LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID`
+mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
-Structures :struct:`fermion`, :struct:`boson` and :struct:`spin` mentioned in
-the 3rd column are simple tag types defined in *<libcommute/algebra_tags.hpp>*.
-Their definitions contain algebra ID constants for the predefined algebras.
-Besides, they play roles in the :ref:`linear operator interface <loperator>`
-and in the
-:ref:`customization of automatic Hilbert space construction <es_constructor>`.
+.. _algebra_ids:
 
-.. namespace:: libcommute
-
-.. struct:: fermion
-
-  .. function:: static constexpr int algebra_id()
-
-    Return ``-3``.
-
-.. struct:: boson
-
-  .. function:: static constexpr int algebra_id()
-
-    Return ``-2``.
-
-.. struct:: spin
-
-  .. function:: static constexpr int algebra_id()
-
-    Return ``-1``.
+.. var:: static constexpr int fermion = -3
+.. var:: static constexpr int boson = -2
+.. var:: static constexpr int spin = -1
+.. var:: static constexpr int LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID = 0
 
 .. _gen_base:
 

@@ -129,9 +129,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs.size() == 8);
     CHECK(hs.total_n_bits() == 14);
     CHECK(hs.dim() == 16384);
-    CHECK(hs.algebra_bit_range(fermion::algebra_id()) == std::make_pair(0, 1));
-    CHECK(hs.algebra_bit_range(boson::algebra_id()) == std::make_pair(2, 5));
-    CHECK(hs.algebra_bit_range(spin::algebra_id()) == std::make_pair(6, 13));
+    CHECK(hs.algebra_bit_range(fermion) == std::make_pair(0, 1));
+    CHECK(hs.algebra_bit_range(boson) == std::make_pair(2, 5));
+    CHECK(hs.algebra_bit_range(spin) == std::make_pair(6, 13));
 
     CHECK(hs.has(es_f_dn));
     CHECK(hs.bit_range(es_f_dn) == std::make_pair(0, 0));
@@ -194,23 +194,23 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
 
       if(fermion_b != -1) {
         auto ref_range = std::make_pair(fermion_b, fermion_e);
-        CHECK(hs.algebra_bit_range(fermion::algebra_id()) == ref_range);
+        CHECK(hs.algebra_bit_range(fermion) == ref_range);
       } else {
-        CHECK_THROWS_AS(hs.algebra_bit_range(fermion::algebra_id()),
+        CHECK_THROWS_AS(hs.algebra_bit_range(fermion),
                         std::runtime_error);
       }
       if(boson_b != -1) {
         auto ref_range = std::make_pair(boson_b, boson_e);
-        CHECK(hs.algebra_bit_range(boson::algebra_id()) == ref_range);
+        CHECK(hs.algebra_bit_range(boson) == ref_range);
       } else {
-        CHECK_THROWS_AS(hs.algebra_bit_range(boson::algebra_id()),
+        CHECK_THROWS_AS(hs.algebra_bit_range(boson),
                         std::runtime_error);
       }
       if(spin_b != -1) {
         auto ref_range = std::make_pair(spin_b, spin_e);
-        CHECK(hs.algebra_bit_range(spin::algebra_id()) == ref_range);
+        CHECK(hs.algebra_bit_range(spin) == ref_range);
       } else {
-        CHECK_THROWS_AS(hs.algebra_bit_range(spin::algebra_id()),
+        CHECK_THROWS_AS(hs.algebra_bit_range(spin),
                         std::runtime_error);
       }
     };
@@ -241,9 +241,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     check_hs(es_s1_j, 8, 14, 8, 9, 0, 1, 2, 5, 6, 13);
     check_hs(es_s32_i, 8, 14, 10, 11, 0, 1, 2, 5, 6, 13);
     check_hs(es_s32_j, 8, 14, 12, 13, 0, 1, 2, 5, 6, 13);
-    CHECK(hs.algebra_bit_range(fermion::algebra_id()) == std::make_pair(0, 1));
-    CHECK(hs.algebra_bit_range(boson::algebra_id()) == std::make_pair(2, 5));
-    CHECK(hs.algebra_bit_range(spin::algebra_id()) == std::make_pair(6, 13));
+    CHECK(hs.algebra_bit_range(fermion) == std::make_pair(0, 1));
+    CHECK(hs.algebra_bit_range(boson) == std::make_pair(2, 5));
+    CHECK(hs.algebra_bit_range(spin) == std::make_pair(6, 13));
   }
 
   SECTION("Construction from expression") {

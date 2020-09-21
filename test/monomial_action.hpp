@@ -40,7 +40,7 @@ public:
   clone() const override {
     return make_unique<elementary_space_padding>(*this);
   }
-  virtual int algebra_id() const override { return fermion::algebra_id()-2; }
+  virtual int algebra_id() const override { return fermion-2; }
   virtual int n_bits() const override { return 2; }
 };
 

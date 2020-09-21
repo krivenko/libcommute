@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_LOPERATOR_ELEMENTARY_SPACE_SPIN_HPP_
 #define LIBCOMMUTE_LOPERATOR_ELEMENTARY_SPACE_SPIN_HPP_
 
-#include "../algebra_tags.hpp"
+#include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -55,7 +55,7 @@ public:
   }
 
   // ID of the algebra this elementary space is associated with
-  virtual int algebra_id() const override { return spin::algebra_id(); }
+  virtual int algebra_id() const override { return spin; }
 
   // The minimal number of binary digits needed to represent any state
   // in this elementary space

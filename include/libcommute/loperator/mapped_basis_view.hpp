@@ -133,11 +133,11 @@ class basis_mapper {
 
   std::unordered_map<sv_index_type, sv_index_type> map_;
 
-  template<typename... LOperatorParams>
+  template<typename LOpScalarType, int... LOpAlgebraIDs>
   void compositions_constructor_impl(
-    std::vector<loperator<LOperatorParams...>> const& O_list,
+    std::vector<loperator<LOpScalarType, LOpAlgebraIDs...>> const& O_list,
     sparse_state_vector<
-      typename loperator<LOperatorParams...>::scalar_type
+      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type
     > const& st,
     int m,
     int sum_n,
@@ -146,7 +146,7 @@ class basis_mapper {
     if(sum_n == N) {
       foreach(st, [&](
         sv_index_type out_index,
-        typename loperator<LOperatorParams...>::scalar_type const&
+        typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type const&
       ) {
         map_.emplace(out_index, map_.size());
       });
@@ -181,9 +181,11 @@ public:
 
   // Build a mapping from a set of all basis states contributing to O|vac>.
   // Mapped values are assigned continuously but without any specific order.
-  template<typename HSType, typename... LOperatorParams>
-  basis_mapper(loperator<LOperatorParams...> const& O, HSType const& hs) {
-    using scalar_type = typename loperator<LOperatorParams...>::scalar_type;
+  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  basis_mapper(loperator<LOpScalarType, LOpAlgebraIDs...> const& O,
+               HSType const& hs) {
+    using scalar_type =
+      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sv_index_type dim = get_dim(hs);
     sparse_state_vector<scalar_type> vac(dim);
     vac.amplitude(0) = 1;
@@ -198,9 +200,9 @@ public:
   // O_1^{n_1} O_2^{n_2} ... O_M^{n_M} |vac>, where n_m >= 0 and
   // \sum_{m=1}^M n_M = N.
   // Mapped values are assigned continuously but without any specific order.
-  template<typename HSType, typename... LOperatorParams>
+  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   basis_mapper(
-    std::vector<loperator<LOperatorParams...>> const& O_list,
+    std::vector<loperator<LOpScalarType, LOpAlgebraIDs...>> const& O_list,
     HSType const& hs,
     int N
   ) {
@@ -208,7 +210,8 @@ public:
       map_.emplace(0, 0);
       return;
     }
-    using scalar_type = typename loperator<LOperatorParams...>::scalar_type;
+    using scalar_type =
+      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sparse_state_vector<scalar_type> vac(get_dim(hs));
     vac.amplitude(0) = 1;
     compositions_constructor_impl(O_list, vac, 0, 0, N);

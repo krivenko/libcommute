@@ -34,12 +34,12 @@
 
 using namespace libcommute;
 
-TEST_CASE("Different algebra tags", "[monomial_action_tags]") {
+TEST_CASE("Different algebra IDs", "[monomial_action_IDs]") {
 
   using mon_type = monomial<std::string, int>;
   using hs_type = hilbert_space<std::string, int>;
 
-  SECTION("Missing algebra tags") {
+  SECTION("Missing algebra IDs") {
     using namespace static_indices;
 
     hs_type hs(make_space_fermion("dn", 0),
@@ -256,11 +256,11 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
                         sv_index_type & index,
                         double & coeff) {
     switch(g.algebra_id()) {
-      case fermion::algebra_id():
+      case fermion:
         return ref_c_dag_c_action(g, index, coeff);
-      case boson::algebra_id():
+      case boson:
         return ref_a_dag_a_action(g, index, coeff);
-      case spin::algebra_id():
+      case spin:
         return ref_spin_action(g, index, coeff);
     }
     return false;

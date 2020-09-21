@@ -14,7 +14,7 @@
 #define LIBCOMMUTE_EXPRESSION_GENERATOR_SPIN_HPP_
 
 #include "generator.hpp"
-#include "../algebra_tags.hpp"
+#include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
 
@@ -43,7 +43,7 @@ class generator_spin : public generator<IndexTypes...> {
 public:
 
   // Get ID of the algebra this generator belongs to
-  virtual int algebra_id() const override { return spin::algebra_id(); }
+  virtual int algebra_id() const override { return libcommute::spin; }
 
   // Value semantics
   template<typename... Args>
@@ -239,7 +239,7 @@ private:
 // Check if generator belongs to the spin algebra
 template<typename... IndexTypes>
 inline bool is_spin(generator<IndexTypes...> const& gen) {
-  return gen.algebra_id() == spin::algebra_id();
+  return gen.algebra_id() == libcommute::spin;
 }
 
 namespace static_indices {
