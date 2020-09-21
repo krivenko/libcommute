@@ -216,12 +216,12 @@ public:
   template<typename... CoeffArgs>
   inline loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...>
   at(CoeffArgs&&... args) const {
-        loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> qop;
+        loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> lop;
     for(auto const& m : base::m_actions_) {
-      qop.add_monomial_action(m.first,
+      lop.add_monomial_action(m.first,
                               m.second(std::forward<CoeffArgs>(args)...));
     }
-    return qop;
+    return lop;
   }
 
 private:

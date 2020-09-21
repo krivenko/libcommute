@@ -105,17 +105,17 @@ using namespace libcommute;
 template<typename ExprType>
 void check_loperator(ExprType const& expr1, ExprType const& expr2) {
   hilbert_space<int> hs{elementary_space_gamma()};
-  auto qop1 = loperator<std::complex<double>, gamma_>(expr1, hs);
-  auto qop2 = loperator<std::complex<double>, gamma_>(expr2, hs);
+  auto lop1 = loperator<std::complex<double>, gamma_>(expr1, hs);
+  auto lop2 = loperator<std::complex<double>, gamma_>(expr2, hs);
 
   std::vector<std::complex<double>> in(4), out1(4), out2(4);
 
   for(sv_index_type in_index : {0,1,2,3}) {
     in[in_index] = 1;
-    CHECK(qop1(in) == qop2(in));
-    CHECK(qop1 * in == qop2 * in);
-    qop1(in, out1);
-    qop2(in, out2);
+    CHECK(lop1(in) == lop2(in));
+    CHECK(lop1 * in == lop2 * in);
+    lop1(in, out1);
+    lop2(in, out2);
     CHECK(out1 == out2);
     in[in_index] = 0;
   }

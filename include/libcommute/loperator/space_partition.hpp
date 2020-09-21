@@ -149,10 +149,10 @@ public:
       sv_index_type in_subspace = ds.find_root(in_index);
 
       auto fill_conn = [&, this](
-        loperator_t const& qop,
+        loperator_t const& lop,
         std::multimap<sv_index_type, sv_index_type> & conn,
         matrix_elements_map<scalar_type> & elem) {
-        qop(in_state, out_state);
+        lop(in_state, out_state);
         // Iterate over non-zero final amplitudes
         foreach(out_state, [&](sv_index_type out_index, scalar_type const& a) {
           sv_index_type out_subspace = ds.find_root(out_index);
