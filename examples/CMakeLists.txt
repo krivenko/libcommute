@@ -12,6 +12,7 @@ set(EXAMPLES
   holstein
   gamma.expression
   gamma.loperator
+  partition
   hubbard_holstein
   exchange_matrix
   kanamori

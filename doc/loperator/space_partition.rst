@@ -2,3 +2,120 @@
 
 Finding invariant subspaces of a linear operator
 ================================================
+
+.. default-domain:: cpp
+
+.. namespace:: libcommute
+
+This page explains how to use :class:`space_partition`, an efficient tool to
+performs the following two tasks.
+
+* Partition of a Hilbert space into a set of disjoint subspaces invariant under
+  action of a given Hermitian operator :math:`\hat H` (Hamiltonian).
+
+* Merge some of the invariant subspaces together to ensure that a given
+  operator :math:`\hat O` and its Hermitian conjugate :math:`\hat O^\dagger`
+  generate only one-to-one connections between the subspaces.
+
+Partition of the Hilbert space is a preparatory step that can immensely reduce
+complexity of an exact diagonalization problem by reducing it to a series of
+smaller problem.
+
+Merging some of the invariant subspaces increases computational costs of
+diagonalization but simplifies computation of many-body correlation functions
+of operators :math:`\hat O`, :math:`\hat O^\dagger`.
+
+For a detailed description of the algorithm see [SKFP16]_.
+
+.. type:: template<typename ScalarType> \
+          matrix_elements_map = \
+          std::map<std::pair<sv_index_type, sv_index_type>, ScalarType>;
+
+  Sparse storage type for matrix elements of a linear operator :math:`\hat O`.
+  Pairs of indices :math:`(i,j)` are mapped to
+  :math:`\langle i| \hat O |j\rangle`.
+
+.. class:: space_partition
+
+  Partition of a Hilbert space into disjoint subspaces.
+
+  .. function:: template<typename HSType, \
+                         typename LOpScalarType, int... LOpAlgebraIDs> \
+                space_partition( \
+                  loperator<LOpScalarType, LOpAlgebraIDs...> const& h, \
+                  HSType const& hs)
+
+    Partition Hilbert space :expr:`hs` into invariant subspaces of Hermitian
+    linear operator :expr:`h` (Hamiltonian).
+
+  .. function:: template<typename HSType, \
+                         typename LOpScalarType, int... LOpAlgebraIDs> \
+                space_partition( \
+                  loperator<LOpScalarType, LOpAlgebraIDs...> const& h, \
+                  HSType const& hs, \
+                  loperator_melem_t<LOpScalarType, LOpAlgebraIDs...> & me)
+
+    Partition Hilbert space :expr:`hs` into invariant subspaces of Hermitian
+    linear operator :expr:`h` (Hamiltonian). This constructor reveals all
+    matrix elements of :expr:`h` and writes them into :expr:`me`.
+
+  .. function:: template<typename HSType, \
+                         typename LOpScalarType, int... LOpAlgebraIDs> \
+                auto merge_subspaces( \
+                  loperator<LOpScalarType, LOpAlgebraIDs...> const& Od, \
+                  loperator<LOpScalarType, LOpAlgebraIDs...> const& O, \
+                  HSType const& hs, \
+                  bool store_matrix_elements = true \
+                ) -> \
+                std::pair<loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>, \
+                loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>>
+
+    Merge some of the found invariant subspaces to ensure that linear operators
+    :expr:`Od` and :expr:`O` generate only one-to-one connections between the
+    subspaces.
+
+    Matrix elements of :expr:`Od` and :expr:`O` will be returned as a pair of
+    :type:`matrix_elements_map` objects if
+    :expr:`store_matrix_elements == true`. Otherwise, the returned maps will be
+    empty.
+
+    This method can be called multiple types to make the partition
+    simultaneously fulfil the one-to-one conditions for many :math:`\hat O_i`,
+    :math:`\hat O^\dagger_i` pairs.
+
+
+  .. function:: sv_index_type dim() const
+
+    Dimension of the Hilbert space used to construct this partition.
+
+  .. function:: sv_index_type n_subspaces() const
+
+    Number of disjoint subspaces in this partition.
+
+    Calls to :func:`merge_subspaces()` can decrease this number.
+
+  .. function:: sv_index_type operator[](sv_index_type index) const
+
+    Return serial number of the disjoint subspace the basis state with
+    :expr:`index` belongs to.
+
+    The disjoint subspaces can be re-enumerated after a call to
+    :func:`merge_subspaces()`.
+
+  .. function:: template<typename F> \
+                friend void foreach(space_partition const& sp, F&& f)
+
+    Apply functor :expr:`f` to all basis states in a given space partition.
+    The functor must take two arguments, index of the basis state,
+    and serial number of the subspace this basis state belongs to.
+
+.. literalinclude:: ../../examples/partition.cpp
+  :language: cpp
+  :caption: Space partition example
+  :lines: 18-
+
+.. [SKFP16] "TRIQS/CTHYB: A continuous-time quantum Monte Carlo
+   hybridisation expansion solver for quantum impurity problems",
+   P. Seth, I. Krivenko, M. Ferrero and O. Parcollet,
+   Comp. Phys. Comm. 200, March 2016, 274-284,
+   http://dx.doi.org/10.1016/j.cpc.2015.10.023 (section 4.2)

@@ -126,7 +126,7 @@ public:
   // connections between the subspaces.
   template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   auto merge_subspaces(loperator<LOpScalarType, LOpAlgebraIDs...> const& Cd,
-                         loperator<LOpScalarType, LOpAlgebraIDs...> const& C,
+                       loperator<LOpScalarType, LOpAlgebraIDs...> const& C,
                        HSType const& hs,
                        bool store_matrix_elements = true
                       ) ->
