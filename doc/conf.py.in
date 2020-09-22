@@ -176,6 +176,11 @@ html_static_path = [os.path.join('@CMAKE_CURRENT_SOURCE_DIR@', '_static')]
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'libcommutedoc'
 
+html_context = {
+  'css_files': [
+    '_static/theme_overrides.css',  # override wide tables in RTD theme
+  ],
+}
 
 # -- Options for LaTeX output ---------------------------------------------
 
