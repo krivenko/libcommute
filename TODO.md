@@ -1,4 +1,2 @@
 TODO list
 =========
-
-* Documentation.
