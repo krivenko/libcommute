@@ -28,7 +28,7 @@ set(TESTS
   expression.mixed_arithmetics
   hc
   commutators
-  gamma
+  new_algebra
   state_vector
   elementary_space
   hilbert_space
@@ -37,7 +37,7 @@ set(TESTS
   monomial_action_boson
   monomial_action_spin
   loperator
-  gamma.loperator
+  new_algebra.loperator
   disjoint_sets
   sparse_state_vector
   space_partition

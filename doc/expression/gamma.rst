@@ -31,23 +31,23 @@ their canonical ordering. The identities we will be using in the code below are
     (\gamma^0)^\dagger &= \gamma^0,\\
     (\gamma^k)^\dagger &= -\gamma^k.
 
-.. literalinclude:: ../../examples/new_algebra.cpp
+.. literalinclude:: ../../examples/gamma.hpp
   :language: cpp
-  :lines: 18-121
+  :lines: 18-119
 
 It is usually worth defining a factory function that creates an expression
 containing one generator with a unity prefactor.
 
-.. literalinclude:: ../../examples/new_algebra.cpp
+.. literalinclude:: ../../examples/gamma.hpp
   :language: cpp
-  :lines: 123-134
+  :lines: 121-135
 
 Now we can check that generators of our algebra actually fulfil the canonical
 anti-commutation relations.
 
-.. literalinclude:: ../../examples/new_algebra.cpp
+.. literalinclude:: ../../examples/gamma.expression.cpp
   :language: cpp
-  :lines: 139-158
+  :lines: 26-45
 
 Let us also define the fifth gamma matrix
 
@@ -62,6 +62,6 @@ and check that
   (\gamma^5)^\dagger = \gamma^5,\\
   \{\gamma^5, \gamma^\mu\} = 0.
 
-.. literalinclude:: ../../examples/new_algebra.cpp
+.. literalinclude:: ../../examples/gamma.expression.cpp
   :language: cpp
-  :lines: 161-176
+  :lines: 47-63

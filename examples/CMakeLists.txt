@@ -10,7 +10,8 @@
 
 set(EXAMPLES
   holstein
-  new_algebra
+  gamma.expression
+  gamma.loperator
   hubbard_holstein
   exchange_matrix
   kanamori

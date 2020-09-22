@@ -19,18 +19,18 @@ the extra steps needed to plug the new algebra into the
   Its dimension is 4, so the :ref:`number of occupied bits <hilbert_space>` is
   :math:`b = 2`.
 
-  .. literalinclude:: ../../examples/new_algebra.cpp
+  .. literalinclude:: ../../examples/gamma.loperator.cpp
     :language: cpp
-    :lines: 179-212
+    :lines: 18-60
 
 * Specialize class template :class:`monomial_action` for the new algebra. This
   specialization will describe how a product
   :math:`\gamma^\mu \gamma^\nu \gamma^\kappa \ldots` acts on a single basis
   state :math:`|n\rangle, n = \{0,1,2,3\}`.
 
-  .. literalinclude:: ../../examples/new_algebra.cpp
+  .. literalinclude:: ../../examples/gamma.loperator.cpp
     :language: cpp
-    :lines: 214-298
+    :lines: 66-142
 
   In general, :class:`monomial_action` is defined as follows.
 
@@ -68,6 +68,6 @@ the extra steps needed to plug the new algebra into the
 * Make a :ref:`linear operator object <loperator>` with the new algebra ID and
   apply it to 4-dimensional state vectors as usual.
 
-  .. literalinclude:: ../../examples/new_algebra.cpp
+  .. literalinclude:: ../../examples/gamma.loperator.cpp
     :language: cpp
-    :lines: 307-347
+    :lines: 150-190
