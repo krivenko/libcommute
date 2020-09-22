@@ -160,7 +160,7 @@ class basis_mapper {
     auto to_st = zeros_like(st);
     for(; sum_n < N; ++sum_n) {
       O_list[m](from_st, to_st);
-      if(to_st.n_amplitudes() == 0) return;
+      if(to_st.n_nonzeros() == 0) return;
       compositions_constructor_impl(O_list, to_st, m + 1, sum_n + 1, N);
       from_st = to_st;
     }
@@ -188,7 +188,7 @@ public:
       typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sv_index_type dim = get_dim(hs);
     sparse_state_vector<scalar_type> vac(dim);
-    vac.amplitude(0) = 1;
+    vac[0] = 1;
     auto st =  O(vac);
     foreach(st, [&](sv_index_type out_index, scalar_type const&) {
       map_.emplace(out_index, map_.size());
@@ -213,7 +213,7 @@ public:
     using scalar_type =
       typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sparse_state_vector<scalar_type> vac(get_dim(hs));
-    vac.amplitude(0) = 1;
+    vac[0] = 1;
     compositions_constructor_impl(O_list, vac, 0, 0, N);
   }
 

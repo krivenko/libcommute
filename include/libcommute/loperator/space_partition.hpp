@@ -75,7 +75,7 @@ public:
     sparse_state_vector<scalar_type> in_state(dim);
     sparse_state_vector<scalar_type> out_state(dim);
     foreach(hs, [&](sv_index_type in_index) {
-      in_state.amplitude(in_index) = scalar_traits<scalar_type>::make_const(1);
+      in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       h(in_state, out_state);
       foreach(out_state, [&](sv_index_type out_index, scalar_type const&) {
         ds.set_union(in_index, out_index);
@@ -105,7 +105,7 @@ public:
     sparse_state_vector<scalar_type> in_state(dim);
     sparse_state_vector<scalar_type> out_state(dim);
     foreach(hs, [&](sv_index_type in_index) {
-      in_state.amplitude(in_index) = scalar_traits<scalar_type>::make_const(1);
+      in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       h(in_state, out_state);
 
       foreach(out_state, [&](sv_index_type out_index, scalar_type const& a) {
@@ -145,7 +145,7 @@ public:
     sparse_state_vector<scalar_type> in_state(dim);
     sparse_state_vector<scalar_type> out_state(dim);
     foreach(hs, [&](sv_index_type in_index) {
-      in_state.amplitude(in_index) = scalar_traits<scalar_type>::make_const(1);
+      in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       sv_index_type in_subspace = ds.find_root(in_index);
 
       auto fill_conn = [&, this](

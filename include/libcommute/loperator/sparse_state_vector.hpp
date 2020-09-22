@@ -34,14 +34,14 @@ public:
   sparse_state_vector() = delete;
   sparse_state_vector(sv_index_type size) : size_(size) {}
 
+  // Size of the vector
+  inline sv_index_type size() const { return size_; }
+
   // Number of non-zero amplitudes
-  inline sv_index_type n_amplitudes() const { return data_.size(); }
+  inline sv_index_type n_nonzeros() const { return data_.size(); }
 
   // Element access
-  inline ScalarType const& amplitude(sv_index_type n) const {
-    return data_[n];
-  }
-  inline ScalarType & amplitude(sv_index_type n) { return data_[n]; }
+  inline ScalarType & operator[](sv_index_type n) { return data_[n]; }
 
   // Get n-th state amplitude
   inline friend ScalarType
