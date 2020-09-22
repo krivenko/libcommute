@@ -10,7 +10,6 @@ Tools for exact diagonalization
     intro
     hilbert_space
     loperator
-    state_vector
-    mapped_basis_view
-    space_partition
     monomial_action
+    state_vector
+    space_partition
