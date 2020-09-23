@@ -1,0 +1,855 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Polynomial expressions &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Monomial" href="monomial.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Domain-Specific Language for polynomial expressions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Polynomial expressions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-definitions">Class definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-scalar-types">Custom scalar types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-17-dynamically-typed-index-sequences">[C++17] Dynamically typed index sequences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#iteration-interface-and-transformations">Iteration interface and transformations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pm-h-c-notation"><span class="math notranslate nohighlight">\(\pm H.c.\)</span> notation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="monomial.html">Monomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generator.html">Algebra generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factories.html">Factory functions for creation/annihilation/spin operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Advanced: A user-defined algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Advanced examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Domain-Specific Language for polynomial expressions</a> &raquo;</li>
+        
+      <li>Polynomial expressions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/expression/expression.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="polynomial-expressions">
+<span id="expression"></span><h1>Polynomial expressions<a class="headerlink" href="#polynomial-expressions" title="Permalink to this headline">¶</a></h1>
+<p>This page describes how <em>libcommute</em> represent polynomial expressions built
+out of non-commuting quantum-mechanical operators and what features such
+expressions support.</p>
+<div class="section" id="class-definitions">
+<span id="expr-classes"></span><h2>Class definitions<a class="headerlink" href="#class-definitions" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0DpEN10libcommute10expressionE">
+<span id="_CPPv3I0DpEN10libcommute10expressionE"></span><span id="_CPPv2I0DpEN10libcommute10expressionE"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>, typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">expression</code><a class="headerlink" href="#_CPPv4I0DpEN10libcommute10expressionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Defined in &lt;libcommute/expression/expression.hpp&gt;</em></p>
+<p>A polynomial expression, the main building block of <em>libcommute</em>’s DSL.</p>
+<p>Expressions are finite ordered sums of monomials
+<span class="math notranslate nohighlight">\(M^{(n)}_{i_1 i_2 \ldots i_n}\)</span> accompanied by their respective
+coefficients <span class="math notranslate nohighlight">\(C_{i_1 i_2 \ldots i_n}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[E = C M^{(0)} + \sum_i C_i M^{(1)}_i + \sum_{ij} C_{ij} M^{(2)}_{ij} +
+    \ldots\]</div>
+<p>The <a class="reference internal" href="monomial.html#monomial"><span class="std std-ref">monomials</span></a> are in turn canonically ordered products of
+<a class="reference internal" href="generator.html#generator"><span class="std std-ref">algebra generators</span></a> (operators
+<span class="math notranslate nohighlight">\(c^\dagger\)</span>/<span class="math notranslate nohighlight">\(c\)</span>, <span class="math notranslate nohighlight">\(a^\dagger\)</span>/<span class="math notranslate nohighlight">\(a\)</span>, etc).</p>
+<p><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a> is the type of coefficients
+<span class="math notranslate nohighlight">\(C_{i_1 i_2 \ldots i_n}\)</span>. The most common choices of <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a>
+are <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">double</span></code> for expressions with real coefficients and
+<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">complex</span><span class="pre">&lt;</span><span class="pre">double</span><span class="pre">&gt;</span></code> for the complex expressions. There are two
+convenience type aliases in the <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">libcommute</span><span class="pre">::</span><span class="pre">static_indices</span></code> namespace
+for these particular scalar types, <a class="reference internal" href="#_CPPv4IDpEN10libcommute14static_indices9expr_realE" title="libcommute::static_indices::expr_real"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">static_indices::expr_real</span></code></a> and
+<a class="reference internal" href="#_CPPv4IDpEN10libcommute14static_indices12expr_complexE" title="libcommute::static_indices::expr_complex"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">static_indices::expr_complex</span></code></a>.
+Use of custom scalar types – subject to some
+requirements – is also allowed. See Section <a class="reference internal" href="#custom-scalar-type"><span class="std std-ref">Custom scalar types</span></a>
+for more details.</p>
+<p>Indices <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(j\)</span>, etc in the definition above are compound
+indices with a fixed number of components. Types of the components are
+given by the template parameter pack <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">IndexTypes</span></code></a>. <strong>All index types
+must be less-comparable and form strictly ordered sets.</strong></p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Example: Expression types</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Polynomial expressions with real coefficients. Monomials in &#39;expr1&#39;</span>
+<span class="c1">// and &#39;expr2&#39; are products of operators with one integer index.</span>
+<span class="n">libcommute</span><span class="o">::</span><span class="n">expression</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">expr1</span><span class="p">;</span>
+<span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">expr_real</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">expr2</span><span class="p">;</span>
+
+<span class="c1">// Polynomial expressions with complex coefficients. Monomials in &#39;expr3&#39;</span>
+<span class="c1">// and &#39;expr4&#39; are products of operators with one integer</span>
+<span class="c1">// and one string index.</span>
+<span class="n">libcommute</span><span class="o">::</span><span class="n">expression</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">expr3</span><span class="p">;</span>
+<span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">expr_complex</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">expr4</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p class="rubric">Member type aliases</p>
+<dl class="cpp type">
+<dt id="_CPPv4N10libcommute10expression11scalar_typeE">
+<span id="_CPPv3N10libcommute10expression11scalar_typeE"></span><span id="_CPPv2N10libcommute10expression11scalar_typeE"></span><em class="property">using </em><code class="sig-name descname">scalar_type</code> = <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType">ScalarType</a><a class="headerlink" href="#_CPPv4N10libcommute10expression11scalar_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N10libcommute10expression11index_typesE">
+<span id="_CPPv3N10libcommute10expression11index_typesE"></span><span id="_CPPv2N10libcommute10expression11index_typesE"></span><em class="property">using </em><code class="sig-name descname">index_types</code> = std::tuple&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes">IndexTypes</a>...&gt;<a class="headerlink" href="#_CPPv4N10libcommute10expression11index_typesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N10libcommute10expression10monomial_tE">
+<span id="_CPPv3N10libcommute10expression10monomial_tE"></span><span id="_CPPv2N10libcommute10expression10monomial_tE"></span><em class="property">using </em><code class="sig-name descname">monomial_t</code> = <a class="reference internal" href="monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial">monomial</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes">IndexTypes</a>...&gt;<a class="headerlink" href="#_CPPv4N10libcommute10expression10monomial_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p class="rubric">Constructors</p>
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expression10expressionEv">
+<span id="_CPPv3N10libcommute10expression10expressionEv"></span><span id="_CPPv2N10libcommute10expression10expressionEv"></span><span id="libcommute::expression::expression"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute10expression10expressionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct a trivial expression, i.e. an expression containing no monomials.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN10libcommute10expression10expressionERK10expressionI1SDp10IndexTypesE">
+<span id="_CPPv3I0EN10libcommute10expression10expressionERK10expressionI1SDp10IndexTypesE"></span><span id="_CPPv2I0EN10libcommute10expression10expressionERK10expressionI1SDp10IndexTypesE"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN10libcommute10expression10expressionERK10expressionI1SDp10IndexTypesE" title="libcommute::expression::expression">expression</a>&lt;<a class="reference internal" href="#_CPPv4I0EN10libcommute10expression10expressionERK10expressionI1SDp10IndexTypesE" title="libcommute::expression::expression::S">S</a>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN10libcommute10expression10expressionERK10expressionI1SDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p>Construct a copy of an expression <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">x</span></code> with a different
+scalar type <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">S</span></code> by converting its coefficients to <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a>.</p>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN10libcommute10expression10expressionERK1S">
+<span id="_CPPv3I0EN10libcommute10expression10expressionERK1S"></span><span id="_CPPv2I0EN10libcommute10expression10expressionERK1S"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><em class="property">explicit</em> <code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN10libcommute10expression10expressionERK1S" title="libcommute::expression::expression::S">S</a> <em class="property">const</em> &amp;<em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN10libcommute10expression10expressionERK1S" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p>Construct a constant expression <span class="math notranslate nohighlight">\(E = x M^{(0)}\)</span>.</p>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN10libcommute10expression10expressionERK1SRK10monomial_t">
+<span id="_CPPv3I0EN10libcommute10expression10expressionERK1SRK10monomial_t"></span><span id="_CPPv2I0EN10libcommute10expression10expressionERK1SRK10monomial_t"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><em class="property">explicit</em> <code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN10libcommute10expression10expressionERK1SRK10monomial_t" title="libcommute::expression::expression::S">S</a> <em class="property">const</em> &amp;<em>x</em>, <a class="reference internal" href="#_CPPv4N10libcommute10expression10monomial_tE" title="libcommute::expression::monomial_t">monomial_t</a> <em class="property">const</em> &amp;<em>monomial</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN10libcommute10expression10expressionERK1SRK10monomial_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p>Construct an expression made of exactly one monomial,
+<span class="math notranslate nohighlight">\(E = x M^{(n)}_{i_1 i_2 \ldots i_n}\)</span>.</p>
+<p>The constructors listed here have limited functionality. One is supposed to
+use the <a class="reference internal" href="factories.html#factories"><span class="std std-ref">factory functions</span></a> to build expressions most
+of the time.</p>
+<p class="rubric">Copy/move-constructors and assignments</p>
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expression10expressionERK10expression">
+<span id="_CPPv3N10libcommute10expression10expressionERK10expression"></span><span id="_CPPv2N10libcommute10expression10expressionERK10expression"></span><span id="libcommute::expression::expression__expressionCR"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute10expression10expressionERK10expression" title="libcommute::expression::expression">expression</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute10expression10expressionERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expression10expressionERR10expression">
+<span id="_CPPv3N10libcommute10expression10expressionERR10expression"></span><span id="_CPPv2N10libcommute10expression10expressionERR10expression"></span><span id="libcommute::expression::expression__expressionRR"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute10expression10expressionERR10expression" title="libcommute::expression::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute10expression10expressionERR10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expressionaSERK10expression">
+<span id="_CPPv3N10libcommute10expressionaSERK10expression"></span><span id="_CPPv2N10libcommute10expressionaSERK10expression"></span><span id="libcommute::expression::assign-operator__expressionCR"></span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute10expressionaSERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expressionaSERR10expression">
+<span id="_CPPv3N10libcommute10expressionaSERR10expression"></span><span id="_CPPv2N10libcommute10expressionaSERR10expression"></span><span id="libcommute::expression::assign-operator__expressionRR"></span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute10expressionaSERR10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN10libcommute10expressionaSER10expressionRK10expressionI1SDp10IndexTypesE">
+<span id="_CPPv3I0EN10libcommute10expressionaSERK10expressionI1SDp10IndexTypesE"></span><span id="_CPPv2I0EN10libcommute10expressionaSERK10expressionI1SDp10IndexTypesE"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;<a class="reference internal" href="#_CPPv4I0EN10libcommute10expressionaSER10expressionRK10expressionI1SDp10IndexTypesE" title="libcommute::expression::operator=::S">S</a>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN10libcommute10expressionaSER10expressionRK10expressionI1SDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p class="rubric">Arithmetic operations</p>
+<p>Two expression objects can be added, subtracted and multiplied as long as
+their <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">IndexTypes</span></code></a> agree and the corresponding arithmetic operation
+is defined for their scalar types. For example, it is possible to mix real
+and complex expressions as operands of <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code> and <code class="docutils literal notranslate"><span class="pre">*</span></code>.
+The unary minus is defined for an expression type iff it is defined for
+expression’s scalar type. Another possibility is to mix expression objects
+with objects of other arbitrary types in binary operations. Object of the
+non-expression types are treated as constants, i.e. contributions to
+<span class="math notranslate nohighlight">\(C M^{(0)}\)</span>.</p>
+<p>The following table shows how result types of arithmetic operations
+are calculated.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Arithmetic operation</p></th>
+<th class="head"><p>Result type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S1</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">+</span> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S2</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">+</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S1</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">-</span> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S2</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">-</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S1</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">*</span> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S2</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">*</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">-</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">-</span><span class="pre">S</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S1</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">+</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">+</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S1</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">-</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">-</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S1</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">*</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">*</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">+</span> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S2</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">+</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">-</span> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S2</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">-</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">*</span> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">S2</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">{</span><span class="pre">}</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><span class="pre">expression</span></a><span class="pre">&lt;</span><span class="pre">decltype(</span><span class="pre">S1</span><span class="pre">{</span><span class="pre">}</span> <span class="pre">*</span> <span class="pre">S2</span><span class="pre">{</span><span class="pre">}</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">IT</span><span class="pre">...</span><span class="pre">&gt;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Compound assignments <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code> are available under the same
+scalar type compatibility conditions between LHS and RHS. If the RHS is
+of a non-expression type <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">S</span></code>, <em>libcommute</em> will attempt to select
+the optimized compound operator <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><span class="pre">ScalarType</span></a><span class="pre">::</span><code class="sig-prename descclassname"><span class="pre">operator+=</span></code><span class="sig-paren">(</span><span class="pre">S</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><span class="pre">x</span><span class="sig-paren">)</span></code>
+first (similarly for <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>). If it fails,
+<code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><span class="pre">ScalarType</span></a><span class="pre">::</span><code class="sig-prename descclassname"><span class="pre">operator+</span></code><span class="sig-paren">(</span><span class="pre">S</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><span class="pre">x</span><span class="sig-paren">)</span></code> and the regular assignment will
+be called instead.</p>
+<p class="rubric"><a class="reference internal" href="#expr-iteration"><span class="std std-ref">Iteration interface and transformations</span></a></p>
+<dl class="cpp class">
+<dt id="_CPPv4N10libcommute10expression14const_iteratorE">
+<span id="_CPPv3N10libcommute10expression14const_iteratorE"></span><span id="_CPPv2N10libcommute10expression14const_iteratorE"></span><span id="libcommute::expression::const_iterator"></span><em class="property">class </em><code class="sig-name descname">const_iterator</code><a class="headerlink" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constant bidirectional iterator over monomial-coefficient pairs
+<span class="math notranslate nohighlight">\((M,C)\)</span> in a polynomial expression. Given an iterator <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">it</span></code>,
+<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">it</span><span class="pre">-&gt;</span><span class="pre">monomial</span></code> returns a constant reference to the <a class="reference internal" href="monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">monomial</span></code></a>
+object <span class="math notranslate nohighlight">\(M\)</span>, and <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">it</span><span class="pre">-&gt;</span><span class="pre">coeff</span></code> is a constant reference to
+the respective coefficient <span class="math notranslate nohighlight">\(C\)</span>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10libcommute10expression5beginEv">
+<span id="_CPPv3NK10libcommute10expression5beginEv"></span><span id="_CPPv2NK10libcommute10expression5beginEv"></span><span id="libcommute::expression::beginC"></span><a class="reference internal" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="libcommute::expression::const_iterator">const_iterator</a> <code class="sig-name descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> <em class="property">noexcept</em><a class="headerlink" href="#_CPPv4NK10libcommute10expression5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4NK10libcommute10expression6cbeginEv">
+<span id="_CPPv3NK10libcommute10expression6cbeginEv"></span><span id="_CPPv2NK10libcommute10expression6cbeginEv"></span><span id="libcommute::expression::cbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="libcommute::expression::const_iterator">const_iterator</a> <code class="sig-name descname">cbegin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> <em class="property">noexcept</em><a class="headerlink" href="#_CPPv4NK10libcommute10expression6cbeginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constant iterator to the first monomial-coefficient pair.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10libcommute10expression3endEv">
+<span id="_CPPv3NK10libcommute10expression3endEv"></span><span id="_CPPv2NK10libcommute10expression3endEv"></span><span id="libcommute::expression::endC"></span><a class="reference internal" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="libcommute::expression::const_iterator">const_iterator</a> <code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> <em class="property">noexcept</em><a class="headerlink" href="#_CPPv4NK10libcommute10expression3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4NK10libcommute10expression4cendEv">
+<span id="_CPPv3NK10libcommute10expression4cendEv"></span><span id="_CPPv2NK10libcommute10expression4cendEv"></span><span id="libcommute::expression::cendC"></span><a class="reference internal" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="libcommute::expression::const_iterator">const_iterator</a> <code class="sig-name descname">cend</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> <em class="property">noexcept</em><a class="headerlink" href="#_CPPv4NK10libcommute10expression4cendEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constant past-the-end iterator.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN10libcommute10expression9transformE10expressionI13NewScalarTypeDp10IndexTypesERK10expressionRR1F">
+<span id="_CPPv3I00EN10libcommute10expression9transformERK10expressionRR1F"></span><span id="_CPPv2I00EN10libcommute10expression9transformERK10expressionRR1F"></span>template&lt;typename <code class="sig-name descname">F</code>, typename <code class="sig-name descname">NewScalarType</code>&gt;<br /><em class="property">friend</em> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;<a class="reference internal" href="#_CPPv4I00EN10libcommute10expression9transformE10expressionI13NewScalarTypeDp10IndexTypesERK10expressionRR1F" title="libcommute::expression::transform::NewScalarType">NewScalarType</a>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes">IndexTypes</a>...&gt; <code class="sig-name descname">transform</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>expr</em>, <a class="reference internal" href="#_CPPv4I00EN10libcommute10expression9transformE10expressionI13NewScalarTypeDp10IndexTypesERK10expressionRR1F" title="libcommute::expression::transform::F">F</a> &amp;&amp;<em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10libcommute10expression9transformE10expressionI13NewScalarTypeDp10IndexTypesERK10expressionRR1F" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Apply functor <code class="docutils literal notranslate"><span class="pre">f</span></code> to each monomial-coefficient pair in <code class="docutils literal notranslate"><span class="pre">expr</span></code>.
+Return a new expression obtained by replacing coefficients in <code class="docutils literal notranslate"><span class="pre">expr</span></code> with
+respective values returned by <code class="docutils literal notranslate"><span class="pre">f</span></code>. The expected signature of <code class="docutils literal notranslate"><span class="pre">f</span></code> is</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">NewScalarType</span> <span class="n">f</span><span class="p">(</span><span class="n">monomial_t</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">ScalarType</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The transformed scalar type <code class="docutils literal notranslate"><span class="pre">NewScalarType</span></code> is automatically deduced
+from <code class="docutils literal notranslate"><span class="pre">f</span></code>’s return type. When <code class="docutils literal notranslate"><span class="pre">f</span></code> returns a zero for a certain monomial,
+that monomial is excluded from the resulting expression.</p>
+</dd></dl>
+
+<p class="rubric">Other methods and friend functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK10libcommute10expression13get_monomialsEv">
+<span id="_CPPv3NK10libcommute10expression13get_monomialsEv"></span><span id="_CPPv2NK10libcommute10expression13get_monomialsEv"></span><span id="libcommute::expression::get_monomialsC"></span>std::map&lt;<a class="reference internal" href="#_CPPv4N10libcommute10expression10monomial_tE" title="libcommute::expression::monomial_t">monomial_t</a>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType">ScalarType</a>&gt; <em class="property">const</em> &amp;<code class="sig-name descname">get_monomials</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute10expression13get_monomialsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Direct read-only access to the list of monomials.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10libcommute10expression4sizeEv">
+<span id="_CPPv3NK10libcommute10expression4sizeEv"></span><span id="_CPPv2NK10libcommute10expression4sizeEv"></span><span id="libcommute::expression::sizeC"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute10expression4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Number of monomials in this polynomial expression.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expression5clearEv">
+<span id="_CPPv3N10libcommute10expression5clearEv"></span><span id="_CPPv2N10libcommute10expression5clearEv"></span><span id="libcommute::expression::clear"></span>void <code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute10expression5clearEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set expression to zero by removing all monomials.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expressioneqERK10expressionRK10expression">
+<span id="_CPPv3N10libcommute10expressioneqERK10expressionRK10expression"></span><span id="_CPPv2N10libcommute10expressioneqERK10expressionRK10expression"></span><span id="libcommute::expression::eq-operator__expressionCR.expressionCR"></span><em class="property">friend</em> bool <code class="sig-name descname">operator==</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>e1</em>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>e2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute10expressioneqERK10expressionRK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check if <code class="docutils literal notranslate"><span class="pre">e1</span></code> and <code class="docutils literal notranslate"><span class="pre">e2</span></code> contain identical lists of monomials.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expressionneERK10expressionRK10expression">
+<span id="_CPPv3N10libcommute10expressionneERK10expressionRK10expression"></span><span id="_CPPv2N10libcommute10expressionneERK10expressionRK10expression"></span><span id="libcommute::expression::neq-operator__expressionCR.expressionCR"></span><em class="property">friend</em> bool <code class="sig-name descname">operator!=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>e1</em>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>e2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute10expressionneERK10expressionRK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check if <code class="docutils literal notranslate"><span class="pre">e1</span></code> and <code class="docutils literal notranslate"><span class="pre">e2</span></code> contain different lists of monomials.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expression4conjERK10expression">
+<span id="_CPPv3N10libcommute10expression4conjERK10expression"></span><span id="_CPPv2N10libcommute10expression4conjERK10expression"></span><span id="libcommute::expression::conj__expressionCR"></span><em class="property">friend</em> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <code class="sig-name descname">conj</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>expr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute10expression4conjERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return Hermitian conjugate of <code class="docutils literal notranslate"><span class="pre">expr</span></code>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute10expressionlsERNSt7ostreamERK10expression">
+<span id="_CPPv3N10libcommute10expressionlsERNSt7ostreamERK10expression"></span><span id="_CPPv2N10libcommute10expressionlsERNSt7ostreamERK10expression"></span><span id="libcommute::expression::lshift-operator__osR.expressionCR"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a> <em class="property">const</em> &amp;<em>expr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute10expressionlsERNSt7ostreamERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Output stream insertion operator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4IDpEN10libcommute14static_indices9expr_realE">
+<span id="_CPPv3IDpEN10libcommute14static_indices9expr_realE"></span><span id="_CPPv2IDpEN10libcommute14static_indices9expr_realE"></span>template&lt;typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><em class="property">using </em><code class="sig-prename descclassname">static_indices<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expr_real</code> = <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;double, <a class="reference internal" href="#_CPPv4IDpEN10libcommute14static_indices9expr_realE" title="libcommute::static_indices::expr_real::IndexTypes">IndexTypes</a>...&gt;;<a class="headerlink" href="#_CPPv4IDpEN10libcommute14static_indices9expr_realE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Declared in &lt;libcommute/expression/expression.hpp&gt;</em></p>
+<p>Shorthand type for expressions with real coefficients and statically typed
+indices.</p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4IDpEN10libcommute14static_indices12expr_complexE">
+<span id="_CPPv3IDpEN10libcommute14static_indices12expr_complexE"></span><span id="_CPPv2IDpEN10libcommute14static_indices12expr_complexE"></span>template&lt;typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><em class="property">using </em><code class="sig-prename descclassname">static_indices<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expr_complex</code> = <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;std::complex&lt;double&gt;, <a class="reference internal" href="#_CPPv4IDpEN10libcommute14static_indices12expr_complexE" title="libcommute::static_indices::expr_complex::IndexTypes">IndexTypes</a>...&gt;;<a class="headerlink" href="#_CPPv4IDpEN10libcommute14static_indices12expr_complexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Declared in &lt;libcommute/expression/expression.hpp&gt;</em></p>
+<p>Shorthand type for expressions with complex coefficients and statically typed
+indices.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="custom-scalar-types">
+<span id="custom-scalar-type"></span><h2>Custom scalar types<a class="headerlink" href="#custom-scalar-types" title="Permalink to this headline">¶</a></h2>
+<p>Choosing <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">double</span></code> or <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">complex</span><span class="pre">&lt;</span><span class="pre">double</span><span class="pre">&gt;</span></code> as the scalar type of
+expressions covers the vast majority of practically important cases.
+Nonetheless, sometimes it may be desirable to go beyond and pass a
+user-defined type as <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a>.
+For instance, one may want to use types from an arbitrary-precision arithmetic
+library to represent expansion coefficients of a quantum-mechanical operator.
+Another potential use - making coefficients depend on a parameter, such as time
+or an external field. The <code class="docutils literal notranslate"><span class="pre">polynomial</span></code> class from the Boost Math Toolkit or
+a similar type would allow to represent the functional dependence on
+the parameter while also implementing addition, subtraction and multiplication
+operations.</p>
+<p>Mathematically speaking, instances of
+<a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a> are assumed to form
+a ring without a multiplicative identity
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Ring_(mathematics)#Rng">a.k.a. rng</a>). More
+specifically, the set of <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a>
+instances must be</p>
+<ul class="simple">
+<li><p>An abelian group under addition (with binary <code class="docutils literal notranslate"><span class="pre">operator+</span></code> and <code class="docutils literal notranslate"><span class="pre">operator-</span></code>).
+In particular, there must be a well-defined zero element.</p></li>
+<li><p>A semigroup under multiplication (<code class="docutils literal notranslate"><span class="pre">operator*</span></code>).</p></li>
+<li><p>Multiplication must be distributive with respect to addition.</p></li>
+</ul>
+<p>Let us say we have a type <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">S</span></code> with the required algebraic properties.
+Before using it as a scalar type, we must define a specialization of structure
+<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">scalar_traits</span></code> in the namespace <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">libcommute</span></code> to teach <em>libcommute</em>
+how to deal with the new type.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">struct</span> <span class="nc">scalar_traits</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="c1">// Test whether &#39;s&#39; is the zero element</span>
+  <span class="k">static</span> <span class="kt">bool</span> <span class="n">is_zero</span><span class="p">(</span><span class="n">S</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+
+  <span class="c1">// Make a constant of type &#39;S&#39; from a double value &#39;x&#39;</span>
+  <span class="k">static</span> <span class="n">S</span> <span class="n">make_const</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+
+  <span class="c1">// OPTIONAL: Complex conjugate of &#39;s&#39;</span>
+  <span class="k">static</span> <span class="n">S</span> <span class="n">conj</span><span class="p">(</span><span class="n">S</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The static member <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">scalar_traits</span><span class="pre">&lt;</span><span class="pre">S</span><span class="pre">&gt;</span><span class="pre">::</span><span class="pre">conj</span><span class="pre">(</span><span class="pre">)</span></code> is optional and will only be
+called by the Hermitian conjugation function
+<a class="reference internal" href="#_CPPv4N10libcommute10expression4conjERK10expression" title="libcommute::expression::conj"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">conj()</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the built-in floating-point types, the zero-value test method is
+implemented as</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="kt">bool</span> <span class="n">is_zero</span><span class="p">(</span><span class="n">S</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">epsilon</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>One can adjust the test and change the constant 100 to something else by
+defining a special macro <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">LIBCOMMUTE_FLOATING_POINT_TOL_EPS</span></code>.</p>
+</div>
+</div>
+<div class="section" id="c-17-dynamically-typed-index-sequences">
+<span id="dyn-indices"></span><h2>[C++17] Dynamically typed index sequences<a class="headerlink" href="#c-17-dynamically-typed-index-sequences" title="Permalink to this headline">¶</a></h2>
+<p>On the most basic level, index sequences of all generators found in a single
+expression must agree in types with the <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">IndexTypes</span></code></a> template parameter pack. In many
+situations, however, it is more natural to have generators with different
+numbers/types of indices mixed in one expression. This is where the dynamically
+typed index sequences step in. They are instantiations of the
+<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">dyn_indices_generic</span></code> class template defined in a special nested namespace
+<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">libcommute</span><span class="pre">::</span><span class="pre">dynamic_indices</span></code>.</p>
+<dl class="cpp class">
+<dt id="_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE">
+<span id="_CPPv3IDpEN10libcommute15dynamic_indices19dyn_indices_genericE"></span><span id="_CPPv2IDpEN10libcommute15dynamic_indices19dyn_indices_genericE"></span>template&lt;typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><em class="property">class </em><code class="sig-prename descclassname">dynamic_indices<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">dyn_indices_generic</code><a class="headerlink" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A wrapper around <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">vector</span><span class="pre">&lt;</span><span class="pre">std</span><span class="pre">::</span><span class="pre">variant</span><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic::IndexTypes"><span class="pre">IndexTypes</span></a><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">&gt;</span></code>.</p>
+<dl class="cpp type">
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic9indices_tE">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_generic9indices_tE"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_generic9indices_tE"></span><em class="property">using </em><code class="sig-name descname">indices_t</code> = std::vector&lt;std::variant&lt;<a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic::IndexTypes">IndexTypes</a>...&gt;&gt;<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic9indices_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Underlying dynamically typed sequence of indices.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericEv">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericEv"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericEv"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic"></span><code class="sig-name descname">dyn_indices_generic</code><span class="sig-paren">(</span><span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct an empty index sequence.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericE9indices_t">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericE9indices_t"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericE9indices_t"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic__indices_t"></span><code class="sig-name descname">dyn_indices_generic</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic9indices_tE" title="libcommute::dynamic_indices::dyn_indices_generic::indices_t">indices_t</a> <em>indices</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericE9indices_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct an index sequence from a vector of indices.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic__dyn_indices_genericCR"></span><code class="sig-name descname">dyn_indices_generic</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERK19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic__dyn_indices_genericRR"></span><code class="sig-name descname">dyn_indices_generic</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic">dyn_indices_generic</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericaSERK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericaSERK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericaSERK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::assign-operator__dyn_indices_genericCR"></span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic">dyn_indices_generic</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericaSERK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericaSERR19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericaSERR19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericaSERR19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::assign-operator__dyn_indices_genericRR"></span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic">dyn_indices_generic</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic19dyn_indices_genericERR19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::dyn_indices_generic">dyn_indices_generic</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericaSERR19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy/move-constructors and assignments</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10libcommute15dynamic_indices19dyn_indices_generic4sizeEv">
+<span id="_CPPv3NK10libcommute15dynamic_indices19dyn_indices_generic4sizeEv"></span><span id="_CPPv2NK10libcommute15dynamic_indices19dyn_indices_generic4sizeEv"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::sizeC"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute15dynamic_indices19dyn_indices_generic4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Number of indices in the sequence.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10libcommute15dynamic_indices19dyn_indices_genericcvRK9indices_tEv">
+<span id="_CPPv3NK10libcommute15dynamic_indices19dyn_indices_genericcvRK9indices_tEv"></span><span id="_CPPv2NK10libcommute15dynamic_indices19dyn_indices_genericcvRK9indices_tEv"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::castto-indices_tCR-operatorC"></span><em class="property">explicit</em> <code class="sig-name descname">operator indices_t const&amp;</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute15dynamic_indices19dyn_indices_genericcvRK9indices_tEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Explicit cast to the underlying index sequence type.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericeqERK19dyn_indices_genericRK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericeqERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericeqERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::eq-operator__dyn_indices_genericCR.dyn_indices_genericCR"></span><em class="property">friend</em> bool <code class="sig-name descname">operator==</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind1</em>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericeqERK19dyn_indices_genericRK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericneERK19dyn_indices_genericRK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericneERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericneERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::neq-operator__dyn_indices_genericCR.dyn_indices_genericCR"></span><em class="property">friend</em> bool <code class="sig-name descname">operator!=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind1</em>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericneERK19dyn_indices_genericRK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericltERK19dyn_indices_genericRK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericltERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericltERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::lt-operator__dyn_indices_genericCR.dyn_indices_genericCR"></span><em class="property">friend</em> bool <code class="sig-name descname">operator&lt;</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind1</em>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericltERK19dyn_indices_genericRK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericgtERK19dyn_indices_genericRK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericgtERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericgtERK19dyn_indices_genericRK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::gt-operator__dyn_indices_genericCR.dyn_indices_genericCR"></span><em class="property">friend</em> bool <code class="sig-name descname">operator&gt;</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind1</em>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericgtERK19dyn_indices_genericRK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compare two dynamic index sequences <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericgtERK19dyn_indices_genericRK19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::operator&gt;::ind1"><span class="pre">ind1</span></a></code> and <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericgtERK19dyn_indices_genericRK19dyn_indices_generic" title="libcommute::dynamic_indices::dyn_indices_generic::operator&gt;::ind2"><span class="pre">ind2</span></a></code>.
+These operators compare sequences’ lengths first, and in the case of equal
+lengths call the <a class="reference external" href="https://en.cppreference.com/w/cpp/container/vector/operator_cmp">corresponding methods of std::vector</a>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericlsERNSt7ostreamERK19dyn_indices_generic">
+<span id="_CPPv3N10libcommute15dynamic_indices19dyn_indices_genericlsERNSt7ostreamERK19dyn_indices_generic"></span><span id="_CPPv2N10libcommute15dynamic_indices19dyn_indices_genericlsERNSt7ostreamERK19dyn_indices_generic"></span><span id="libcommute::dynamic_indices::dyn_indices_generic::lshift-operator__osR.dyn_indices_genericCR"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a> <em class="property">const</em> &amp;<em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices19dyn_indices_genericlsERNSt7ostreamERK19dyn_indices_generic" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Output stream insertion operator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Dynamic index sequence example</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/expression/dyn_indices.hpp&gt;</span><span class="cp"></span>
+
+<span class="c1">// A user-defined index type</span>
+<span class="k">enum</span> <span class="nc">spin</span> <span class="p">{</span><span class="n">up</span><span class="p">,</span> <span class="n">down</span><span class="p">};</span>
+
+<span class="c1">// Our own dynamically typed index sequence (mind the namespace!)</span>
+<span class="k">using</span> <span class="n">my_dyn_indices</span> <span class="o">=</span>
+  <span class="n">libcommute</span><span class="o">::</span><span class="n">dynamic_indices</span><span class="o">::</span><span class="n">dyn_indices_generic</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">spin</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// An expression with dynamically typed indices</span>
+<span class="n">libcommute</span><span class="o">::</span><span class="n">expression</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="n">my_dyn_indices</span><span class="o">&gt;</span> <span class="n">dyn_expr</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">dyn_expr</span></code> is an expression with dynamically typed indices. It can
+contain generators that effectively carry a variable number of indices,
+each of type <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span></code> or of the user-defined enumeration
+type <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="generator.html#_CPPv4N10libcommute4spinE" title="libcommute::spin"><span class="pre">spin</span></a></code>.</p>
+<p>There is also a special set of <a class="reference internal" href="factories.html#factories-dyn"><span class="std std-ref">factory functions</span></a> defined
+in namespaces nested under <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">libcommute</span><span class="pre">::</span><span class="pre">dynamic_indices</span></code>. Those return
+commonly used QM operators with the dynamically typed indices.
+Some related type aliases are declared in the same namespace for the sake of
+convenience.</p>
+<dl class="cpp type">
+<dt id="_CPPv4N10libcommute15dynamic_indices11dyn_indicesE">
+<span id="_CPPv3N10libcommute15dynamic_indices11dyn_indicesE"></span><span id="_CPPv2N10libcommute15dynamic_indices11dyn_indicesE"></span><em class="property">using </em><code class="sig-prename descclassname">dynamic_indices<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">dyn_indices</code> = <a class="reference internal" href="#_CPPv4IDpEN10libcommute15dynamic_indices19dyn_indices_genericE" title="libcommute::dynamic_indices::dyn_indices_generic">dyn_indices_generic</a>&lt;int, std::string&gt;<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices11dyn_indicesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Declared in &lt;libcommute/expression/dyn_indices.hpp&gt;</em></p>
+<p>Dynamic mixture of integer and string indices.</p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N10libcommute15dynamic_indices9expr_realE">
+<span id="_CPPv3N10libcommute15dynamic_indices9expr_realE"></span><span id="_CPPv2N10libcommute15dynamic_indices9expr_realE"></span><em class="property">using </em><code class="sig-prename descclassname">dynamic_indices<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expr_real</code> = <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;double, <a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices11dyn_indicesE" title="libcommute::dynamic_indices::dyn_indices">dyn_indices</a>&gt;<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices9expr_realE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N10libcommute15dynamic_indices12expr_complexE">
+<span id="_CPPv3N10libcommute15dynamic_indices12expr_complexE"></span><span id="_CPPv2N10libcommute15dynamic_indices12expr_complexE"></span><em class="property">using </em><code class="sig-prename descclassname">dynamic_indices<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expr_complex</code> = <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;std::complex&lt;double&gt;, <a class="reference internal" href="#_CPPv4N10libcommute15dynamic_indices11dyn_indicesE" title="libcommute::dynamic_indices::dyn_indices">dyn_indices</a>&gt;<a class="headerlink" href="#_CPPv4N10libcommute15dynamic_indices12expr_complexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Declared in &lt;libcommute/expression/expression.hpp&gt;</em></p>
+<p>Real/complex expression shorthand types.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="iteration-interface-and-transformations">
+<span id="expr-iteration"></span><h2>Iteration interface and transformations<a class="headerlink" href="#iteration-interface-and-transformations" title="Permalink to this headline">¶</a></h2>
+<p>Both expressions and their constituent monomials can be easily iterated over
+using STL-compatible <a class="reference internal" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="libcommute::expression::const_iterator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">iterators</span></code></a> or
+range-based <code class="docutils literal notranslate"><span class="pre">for</span></code>-loops.
+This allows for writing complex expression analysis algorithms.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Expression iteration example</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+  <span class="c1">// We are going to analyse the structure of this expression</span>
+  <span class="n">expression</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">E</span><span class="p">;</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Fill expression &#39;E&#39; ...</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Iterate over all monomial-coefficient pairs in &#39;E&#39;</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="k">const</span><span class="o">&amp;</span> <span class="nl">mc</span> <span class="p">:</span> <span class="n">E</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Coefficient: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">mc</span><span class="p">.</span><span class="n">coeff</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Monomial: &quot;</span><span class="p">;</span>
+
+    <span class="c1">// Iterate over algebra generators in current monomial</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="k">const</span><span class="o">&amp;</span> <span class="nl">g</span> <span class="p">:</span> <span class="n">mc</span><span class="p">.</span><span class="n">monomial</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="n">is_fermion</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// Print information about fermionic operators</span>
+        <span class="k">auto</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">f</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">generator_fermion</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">dagger</span><span class="p">()</span> <span class="o">?</span> <span class="s">&quot;  c^+(&quot;</span> <span class="o">:</span> <span class="s">&quot;  c(&quot;</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">indices</span><span class="p">());</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="n">is_fermion</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// Print information about bosonic operators</span>
+        <span class="k">auto</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">a</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">generator_boson</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">dagger</span><span class="p">()</span> <span class="o">?</span> <span class="s">&quot;  a^+(&quot;</span> <span class="o">:</span> <span class="s">&quot;  a(&quot;</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">indices</span><span class="p">());</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="n">is_spin</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// Print information about spin operators</span>
+        <span class="k">auto</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">s</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">generator_spin</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+        <span class="k">switch</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">component</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="nl">plus</span><span class="p">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;S_+(&quot;</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="nl">minus</span><span class="p">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;S_-(&quot;</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="nl">z</span><span class="p">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;S_z(&quot;</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">indices</span><span class="p">());</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only the constant iterators are implemented by <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">expression</span></code></a> and
+<a class="reference internal" href="monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">monomial</span></code></a>.</p>
+</div>
+<p>Another common task is building a new expression out of an existing one by
+changing some of monomial coefficients. Removing some monomials (for instance,
+those corresponding to particle interaction terms) is a special case that
+amounts to setting coefficients of the unwanted monomials to zero. In the
+following example we show how to use function
+<a class="reference internal" href="#_CPPv4I00EN10libcommute10expression9transformE10expressionI13NewScalarTypeDp10IndexTypesERK10expressionRR1F" title="libcommute::expression::transform"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">libcommute::transform()</span></code></a> to change
+Hamiltonian of a finite atomic chain</p>
+<div class="math notranslate nohighlight">
+\[\hat H = v \sum_{a=1}^{N-1} (c^\dagger_a c_{a+1} + c^\dagger_{a+1} c_a)\]</div>
+<p>into the Su-Schrieffer-Heeger (SSH) model, where the hopping constant is
+taken to be different on odd and even chain links.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><a class="reference internal" href="#_CPPv4I00EN10libcommute10expression9transformE10expressionI13NewScalarTypeDp10IndexTypesERK10expressionRR1F" title="libcommute::expression::transform"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">transform()</span></code></a> example</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+  <span class="c1">// Hamiltonian of the atomic chain</span>
+  <span class="n">expression</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">H</span><span class="p">;</span>
+
+  <span class="k">using</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">c_dag</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">c</span><span class="p">;</span>
+
+  <span class="c1">// Length of the chain</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="c1">// Hopping matrix element</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">v</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+
+  <span class="c1">// Add hopping terms</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">H</span> <span class="o">+=</span> <span class="n">v</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_dag</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">c_dag</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;H = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">H</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Construct the Su-Schrieffer-Heeger (SSH) model by changing hopping</span>
+  <span class="c1">// constants on all even links of the chain.</span>
+
+  <span class="c1">// Hopping matrix element on the even links</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">w</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+
+  <span class="c1">// Transformation operation</span>
+  <span class="k">auto</span> <span class="n">update_hopping_element</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">](</span><span class="k">decltype</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="o">::</span><span class="n">monomial_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span>
+                                <span class="kt">double</span> <span class="n">coeff</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">double</span> <span class="p">{</span>
+    <span class="c1">// The monomial &#39;m&#39; we are expecting here is a product c^\dagger(a1) c(a2)</span>
+
+    <span class="c1">// Site index of c^\dagger</span>
+    <span class="kt">int</span> <span class="n">a1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">indices</span><span class="p">());</span>
+    <span class="c1">// Site index of c</span>
+    <span class="kt">int</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">indices</span><span class="p">());</span>
+    <span class="c1">// Index of link connecting a1 and a2</span>
+    <span class="kt">int</span> <span class="n">link</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">);</span>
+
+    <span class="c1">// Return the updated matrix element</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">link</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="nl">w</span> <span class="p">:</span> <span class="n">v</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">auto</span> <span class="n">H_SSH</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">update_hopping_element</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;H_SSH = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">H_SSH</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="pm-h-c-notation">
+<span id="hc"></span><h2><span class="math notranslate nohighlight">\(\pm H.c.\)</span> notation<a class="headerlink" href="#pm-h-c-notation" title="Permalink to this headline">¶</a></h2>
+<p>It is common to use the <span class="math notranslate nohighlight">\(\pm H.c.\)</span> (“plus/minus Hermitian conjugate”)
+notation to abbreviate analytical expressions when writing down Hamiltonians
+and other Hermitian operators. The same trick works with <em>libcommute</em>’s
+expressions, thanks to the <code class="docutils literal notranslate"><span class="pre">hc</span></code> singleton object.</p>
+<p>Here is a simple usage example that constructs two operators</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat H_A = c^\dagger_1 c_2 + c^\dagger_2 c_1 = c^\dagger_1 c_2 + H.c.,\\
+\hat H_B = i(c^\dagger_1 c_2 - c^\dagger_2 c_1) = ic^\dagger_1 c_2 - H.c.\end{split}\]</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/expression/hc.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">auto</span> <span class="n">H_A</span> <span class="o">=</span> <span class="n">c_dag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">hc</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">H_B</span> <span class="o">=</span> <span class="n">I</span> <span class="o">*</span> <span class="n">c_dag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">hc</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="monomial.html" class="btn btn-neutral float-right" title="Monomial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

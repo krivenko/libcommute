@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Advanced: A user-defined algebra &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tools for exact diagonalization" href="../loperator/index.html" />
+    <link rel="prev" title="Factory functions for creation/annihilation/spin operators" href="factories.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Domain-Specific Language for polynomial expressions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html">Polynomial expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monomial.html">Monomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generator.html">Algebra generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factories.html">Factory functions for creation/annihilation/spin operators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Advanced: A user-defined algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Advanced examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Domain-Specific Language for polynomial expressions</a> &raquo;</li>
+        
+      <li>Advanced: A user-defined algebra</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/expression/gamma.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="advanced-a-user-defined-algebra">
+<span id="generator-gamma"></span><h1>Advanced: A user-defined algebra<a class="headerlink" href="#advanced-a-user-defined-algebra" title="Permalink to this headline">¶</a></h1>
+<p>Introducing a new <a class="reference internal" href="generator.html#generator"><span class="std std-ref">algebra</span></a> is as easy as deriving a class from
+the abstract base <a class="reference internal" href="generator.html#_CPPv4IDpEN10libcommute9generatorE" title="libcommute::generator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::generator</span></code></a>. In this example we will define
+the algebra of Dirac gamma matrices
+<span class="math notranslate nohighlight">\({\gamma^0,\gamma^1,\gamma^2,\gamma^3}\)</span>.
+The generators will carry one integer index (0, 1, 2 or 3), which will also fix
+their canonical ordering. The identities we will be using in the code below are</p>
+<ul>
+<li><p>Anti-commutation relation
+<span class="math notranslate nohighlight">\(\{\gamma^\mu, \gamma^\nu\} = 2\eta^{\mu\nu} \hat I_4\)</span>, where
+<span class="math notranslate nohighlight">\(\eta^{\mu\nu}\)</span> is the Minkowski metric tensor with signature
+<span class="math notranslate nohighlight">\((+,-,-,-)\)</span> and <span class="math notranslate nohighlight">\(\hat I_4\)</span> is the four-dimensional identity
+matrix.</p></li>
+<li><p>Squares of gamma matrices,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}(\gamma^0)^2 &amp;= \hat I_4,\\
+(\gamma^k)^2 &amp;= -\hat I_4 \text{ for } k=1,2,3,\\\end{split}\]</div>
+</li>
+<li><p>Hermitian conjugates</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}(\gamma^0)^\dagger &amp;= \gamma^0,\\
+(\gamma^k)^\dagger &amp;= -\gamma^k.\end{split}\]</div>
+</li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/expression/generator.hpp&gt;</span><span class="cp"></span>
+
+<span class="c1">// For LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID</span>
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/algebra_ids.hpp&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;complex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
+
+<span class="c1">//</span>
+<span class="c1">// First, we define an ID for our new algebra</span>
+<span class="c1">//</span>
+
+<span class="c1">// Use the lowest algebra ID available to user-defined algebras</span>
+<span class="k">static</span> <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">gamma</span> <span class="o">=</span> <span class="n">LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID</span><span class="p">;</span>
+
+<span class="c1">//</span>
+<span class="c1">// Our generator type: a gamma matrix with one integer index</span>
+<span class="c1">//</span>
+<span class="k">class</span> <span class="nc">generator_gamma</span> <span class="o">:</span> <span class="k">public</span> <span class="n">generator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="k">using</span> <span class="n">base</span> <span class="o">=</span> <span class="n">generator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">linear_function_t</span> <span class="o">=</span> <span class="k">typename</span> <span class="nc">base</span><span class="o">::</span><span class="n">linear_function_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+  <span class="c1">// Algebra ID of this generator</span>
+  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">algebra_id</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">// Constructor: Just pass the index to the base class</span>
+  <span class="n">generator_gamma</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="o">:</span> <span class="n">base</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="c1">// Virtual copy-constructor.</span>
+  <span class="c1">// Make a smart pointer that manages a copy of this generator</span>
+  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="c1">// With C++14 or newer, libcommute::make_unique() will be resolved to</span>
+    <span class="c1">// std::make_unique(). Otherwise, a custom implementation will be used.</span>
+    <span class="k">return</span> <span class="n">make_unique</span><span class="o">&lt;</span><span class="n">generator_gamma</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// This function will be called for g1 = *this and g2 such that g1 &gt; g2.</span>
+  <span class="c1">// We must transform the product g1 * g2 and put it into the</span>
+  <span class="c1">// canonical order,</span>
+  <span class="c1">//</span>
+  <span class="c1">// g1 * g2 -&gt; -g2 * g1 + 2\eta(g1, g2)</span>
+  <span class="k">virtual</span> <span class="kt">double</span>
+  <span class="n">swap_with</span><span class="p">(</span><span class="n">base</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">g2</span><span class="p">,</span> <span class="n">linear_function_t</span> <span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+
+    <span class="c1">// Do g1 and g2 have the same indices?</span>
+    <span class="kt">bool</span> <span class="n">diag</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">g2</span><span class="p">);</span>
+
+    <span class="c1">// Minkowski metric</span>
+    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">indices</span><span class="p">());</span>
+    <span class="kt">double</span> <span class="n">eta</span> <span class="o">=</span> <span class="n">diag</span> <span class="o">?</span> <span class="p">(</span><span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">-1</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Set f(g) to be the constant 2\eta(g1, g2)</span>
+    <span class="n">f</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eta</span><span class="p">);</span>
+
+    <span class="c1">// Return coefficient in front of g2 * g1 in the transformed expression</span>
+    <span class="k">return</span> <span class="mi">-1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// This function will be called for g1 = *this and g2 that are already</span>
+  <span class="c1">// canonically ordered, g1 &lt;= g2.</span>
+  <span class="c1">//</span>
+  <span class="c1">// It tries to simplify squares of gamma matrices,</span>
+  <span class="c1">// (\gamma^0)^2 = I_4</span>
+  <span class="c1">// (\gamma^k)^2 = -I_4 for k = 1,2,3</span>
+  <span class="k">virtual</span> <span class="kt">bool</span>
+  <span class="n">simplify_prod</span><span class="p">(</span><span class="n">base</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">g2</span><span class="p">,</span> <span class="n">linear_function_t</span> <span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="k">this</span> <span class="o">==</span> <span class="n">g2</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Replace the square with a constant</span>
+      <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">indices</span><span class="p">());</span>
+      <span class="n">f</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">-1</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span>
+      <span class="c1">// Not a square, cannot simplify</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Hermitian conjugate of this generator as a linear function of generators.</span>
+  <span class="c1">// \gamma^0 is Hermitian and \gamma^k are anti-Hermitian</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">conj</span><span class="p">(</span><span class="n">linear_function_t</span> <span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">indices</span><span class="p">());</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// f(g) = 0 + 1*(*this)</span>
+      <span class="n">f</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">clone</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// f(g) = 0 + (-1)*(*this)</span>
+      <span class="n">f</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">clone</span><span class="p">(),</span> <span class="mi">-1</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Stream output function</span>
+  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">indices</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">gamma^&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">index</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace libcommute</span>
+</pre></div>
+</div>
+<p>It is usually worth defining a factory function that creates an expression
+containing one generator with a unity prefactor.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/expression/expression.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
+
+<span class="c1">//</span>
+<span class="c1">// Define a factory function to simplify construction of expressions</span>
+<span class="c1">//</span>
+
+<span class="n">expression</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_gamma</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="n">expr_t</span> <span class="o">=</span> <span class="n">expression</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="c1">// Return an expression made of one monomial with coefficient = 1.</span>
+  <span class="k">return</span> <span class="nf">expr_t</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">expr_t</span><span class="o">::</span><span class="n">monomial_t</span><span class="p">(</span><span class="n">generator_gamma</span><span class="p">(</span><span class="n">index</span><span class="p">)));</span>
+<span class="p">}</span>
+
+<span class="p">}</span> <span class="c1">// namespace libcommute</span>
+</pre></div>
+</div>
+<p>Now we can check that generators of our algebra actually fulfil the canonical
+anti-commutation relations.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+  <span class="c1">// Minkowski metric tensor</span>
+  <span class="k">auto</span> <span class="n">eta</span> <span class="o">=</span> <span class="p">[](</span><span class="kt">int</span> <span class="n">mu</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nu</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">double</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">mu</span> <span class="o">!=</span> <span class="n">nu</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">mu</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mf">1.0</span> <span class="o">:</span> <span class="mf">-1.0</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="c1">// Check the commutation relations</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">mu</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">mu</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">nu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">nu</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">nu</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">gamma_mu</span> <span class="o">=</span> <span class="n">make_gamma</span><span class="p">(</span><span class="n">mu</span><span class="p">);</span>
+      <span class="k">auto</span> <span class="n">gamma_nu</span> <span class="o">=</span> <span class="n">make_gamma</span><span class="p">(</span><span class="n">nu</span><span class="p">);</span>
+
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">gamma_mu</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">gamma_nu</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;}&quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="s">&quot; - 2</span><span class="se">\\</span><span class="s">eta(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">mu</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">nu</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;} = &quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">gamma_mu</span> <span class="o">*</span> <span class="n">gamma_nu</span> <span class="o">+</span> <span class="n">gamma_nu</span> <span class="o">*</span> <span class="n">gamma_mu</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">eta</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">nu</span><span class="p">))</span>
+                <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>Let us also define the fifth gamma matrix</p>
+<div class="math notranslate nohighlight">
+\[\gamma^5 = i \gamma^0 \gamma^1 \gamma^2 \gamma^3\]</div>
+<p>and check that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}(\gamma^5)^\dagger = \gamma^5,\\
+\{\gamma^5, \gamma^\mu\} = 0.\end{split}\]</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// \gamma^5</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">gamma5</span> <span class="o">=</span> <span class="n">I</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+  <span class="c1">// \gamma^5 is Hermitian ...</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;gamma5 - conj(gamma5) = &quot;</span>
+            <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">gamma5</span> <span class="o">-</span> <span class="n">conj</span><span class="p">(</span><span class="n">gamma5</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// ... and anti-commutes with \gamma^\mu.</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">mu</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">mu</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">gamma_mu</span> <span class="o">=</span> <span class="n">make_gamma</span><span class="p">(</span><span class="n">mu</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{gamma5, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">gamma_mu</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;} = &quot;</span>
+              <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">gamma5</span> <span class="o">*</span> <span class="n">gamma_mu</span> <span class="o">+</span> <span class="n">gamma_mu</span> <span class="o">*</span> <span class="n">gamma5</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../loperator/index.html" class="btn btn-neutral float-right" title="Tools for exact diagonalization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="factories.html" class="btn btn-neutral float-left" title="Factory functions for creation/annihilation/spin operators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

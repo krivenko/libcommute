@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Advanced: Linear operator representation of a user-defined algebra &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="State vectors" href="state_vector.html" />
+    <link rel="prev" title="Linear operators" href="loperator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tools for exact diagonalization</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hilbert_space.html">Finite-dimensional Hilbert spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loperator.html">Linear operators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Advanced: Linear operator representation of a user-defined algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_vector.html">State vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="space_partition.html">Finding invariant subspaces of a linear operator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Advanced examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Tools for exact diagonalization</a> &raquo;</li>
+        
+      <li>Advanced: Linear operator representation of a user-defined algebra</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/loperator/monomial_action.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="advanced-linear-operator-representation-of-a-user-defined-algebra">
+<span id="monomial-action"></span><h1>Advanced: Linear operator representation of a user-defined algebra<a class="headerlink" href="#advanced-linear-operator-representation-of-a-user-defined-algebra" title="Permalink to this headline">¶</a></h1>
+<p>Having <a class="reference internal" href="../expression/gamma.html#generator-gamma"><span class="std std-ref">defined a new algebra</span></a> one can take a step
+further and implement the <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator representation</span></a>
+of it. Let us build on the <a class="reference internal" href="../expression/gamma.html#generator-gamma"><span class="std std-ref">example</span></a> where we introduced
+the algebra of 4-dimensional <span class="math notranslate nohighlight">\(\gamma\)</span>-matrices. This page will outline
+the extra steps needed to plug the new algebra into the
+<a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator</span></a> framework.</p>
+<ul>
+<li><p>Declare a new <a class="reference internal" href="hilbert_space.html#elementary-spaces"><span class="std std-ref">elementary space</span></a> class.
+The elementary space must share algebra ID with <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">generator_gamma</span></code>.
+Its dimension is 4, so the <a class="reference internal" href="hilbert_space.html#hilbert-space"><span class="std std-ref">number of occupied bits</span></a> is
+<span class="math notranslate nohighlight">\(b = 2\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gamma.hpp&quot;</span><span class="c1"> // Definition of &#39;gamma&#39; algebra ID</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/loperator/elementary_space.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/loperator/loperator.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/loperator/monomial_action.hpp&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
+
+<span class="c1">//</span>
+<span class="c1">// 4-dimensional elementary space gamma matrices act in</span>
+<span class="c1">//</span>
+
+<span class="k">class</span> <span class="nc">elementary_space_gamma</span> <span class="o">:</span> <span class="k">public</span> <span class="n">elementary_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="k">using</span> <span class="n">base</span> <span class="o">=</span> <span class="n">elementary_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+  <span class="c1">// Since all 4 gamma matrices act in the same elementary space,</span>
+  <span class="c1">// we can initialize the base class with any number</span>
+  <span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="o">:</span> <span class="n">base</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="o">~</span><span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="c1">// Virtual copy-constructor.</span>
+  <span class="c1">// Make a smart pointer that manages a copy of this elementary space</span>
+  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">make_unique</span><span class="o">&lt;</span><span class="n">elementary_space_gamma</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Algebra ID, must be the same with generator_gamma::algebra_id()</span>
+  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">algebra_id</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">// We need 2 bits to enumerate all 4 = 2^2 basis vectors</span>
+  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">n_bits</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace libcommute</span>
+</pre></div>
+</div>
+</li>
+<li><p>Specialize class template <a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial_action</span></code></a> for the new algebra. This
+specialization will describe how a product
+<span class="math notranslate nohighlight">\(\gamma^\mu \gamma^\nu \gamma^\kappa \ldots\)</span> acts on a single basis
+state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">class</span> <span class="nc">monomial_action</span><span class="o">&lt;</span><span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="c1">// Indices of matrices in the product, right to left.</span>
+  <span class="c1">// This order is chosen because the matrix on the right acts on a state first</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">index_sequence</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+  <span class="c1">// m_range is a pair of iterators over a list of generator_gamma objects.</span>
+  <span class="c1">// This range represents the product of gamma matrices we want to act with.</span>
+  <span class="n">monomial_action</span><span class="p">(</span><span class="n">monomial</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">range_type</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">m_range</span><span class="p">,</span>
+                  <span class="n">hilbert_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">hs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Iterate over matrices in the product, left to right</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_range</span><span class="p">.</span><span class="n">first</span><span class="p">;</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_range</span><span class="p">.</span><span class="n">second</span><span class="p">;</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+      <span class="c1">// Collect indices of the matrices</span>
+      <span class="n">index_sequence</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">indices</span><span class="p">()));</span>
+    <span class="c1">// Reverse the order</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">index_sequence</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">index_sequence</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+  <span class="p">}</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Act on a basis state</span>
+  <span class="c1">//</span>
+  <span class="c1">// In the present implementation, libcommute requires all algebra generators</span>
+  <span class="c1">// to be represented by generalized permutation matrices [1], i.e. matrices</span>
+  <span class="c1">// with exactly one non-zero element in each row and each column.</span>
+  <span class="c1">// Equivalently, any generator acting on a basis state must give a single</span>
+  <span class="c1">// basis state multiplied by a constant.</span>
+  <span class="c1">//</span>
+  <span class="c1">// [1] https://en.wikipedia.org/wiki/Generalized_permutation_matrix</span>
+  <span class="c1">//</span>
+  <span class="c1">// &#39;index&#39; is the index (a 64-bit unsigned integer) of the basis state we are</span>
+  <span class="c1">// acting upon. It must also receive the index of the resulting basis state.</span>
+  <span class="c1">// &#39;coeff&#39; must be multiplied by the overall constant factor acquired as</span>
+  <span class="c1">// a result of monomial action.</span>
+  <span class="c1">//</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">ScalarType</span><span class="o">&gt;</span>
+  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">act</span><span class="p">(</span><span class="n">sv_index_type</span> <span class="o">&amp;</span> <span class="n">index</span><span class="p">,</span>
+                  <span class="n">ScalarType</span> <span class="o">&amp;</span> <span class="n">coeff</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="c1">// Act with all matrices in the product, right to left</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">index_sequence</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">switch</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+          <span class="c1">// Action of \gamma^0</span>
+          <span class="c1">// It is diagonal =&gt; &#39;index&#39; does not change</span>
+          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">,</span><span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+          <span class="c1">// Action of \gamma^1</span>
+          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">-1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+          <span class="c1">// Action of \gamma^2</span>
+          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="o">-</span><span class="n">I</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="o">-</span><span class="n">I</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+          <span class="c1">// Action of \gamma^3</span>
+          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+          <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// This &#39;true&#39; signals that the action result is not identically zero.</span>
+    <span class="c1">// Returning &#39;false&#39; in cases when it is zero would help improve</span>
+    <span class="c1">// performance.</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace libcommute</span>
+</pre></div>
+</div>
+<p>In general, <a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial_action</span></code></a> is defined as follows.</p>
+<dl class="cpp class">
+<dt id="_CPPv4I_iEN10libcommute15monomial_actionE">
+<span id="_CPPv3I_iEN10libcommute15monomial_actionE"></span><span id="_CPPv2I_iEN10libcommute15monomial_actionE"></span>template&lt;int <code class="sig-name descname">AlgebraID</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">monomial_action</code><a class="headerlink" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Defined in &lt;libcommute/loperator/monomial_action.hpp&gt;</em></p>
+<p>Action of a product of generators belonging to the same algebra
+<code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action::AlgebraID"><span class="pre">AlgebraID</span></a></code> on a basis vector.</p>
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE">
+<span id="_CPPv3IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span>template&lt;typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><code class="sig-name descname">monomial_action</code><span class="sig-paren">(</span><a class="reference internal" href="../expression/monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial">monomial</a>&lt;<a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes">IndexTypes</a>...&gt;::range_type <em class="property">const</em> &amp;<em>m_range</em>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space">hilbert_space</a>&lt;<a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>hs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::m_range"><span class="pre">m_range</span></a></code> is a pair of <a class="reference internal" href="../expression/monomial.html#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial::const_iterator</span></code></a>’s.
+This range represents the product of generators one wants to act with.
+<code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::hs"><span class="pre">hs</span></a></code> is the Hilbert space to act in.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType">
+<span id="_CPPv3I0ENK10libcommute15monomial_action3actER13sv_index_typeR10ScalarType"></span><span id="_CPPv2I0ENK10libcommute15monomial_action3actER13sv_index_typeR10ScalarType"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>&gt;<br />bool <code class="sig-name descname">act</code><span class="sig-paren">(</span><a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a> &amp;<em>index</em>, <a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::ScalarType">ScalarType</a> &amp;<em>coeff</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Act on a basis state. It is assumed the action of a generator (and,
+therefore, of a monomial) maps a single basis state to a single basis
+state multiplied by a constant.</p>
+<p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::index"><span class="pre">index</span></a></code> is the index of the input and output basis states.</p>
+<p><code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::coeff"><span class="pre">coeff</span></a></code> must be multiplied by the overall constant factor acquired
+as a result of monomial action.</p>
+<p>This method should return <code class="docutils literal notranslate"><span class="pre">false</span></code> if the action result is the identical
+zero and <code class="docutils literal notranslate"><span class="pre">true</span></code> otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+</li>
+<li><p>Make a <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator object</span></a> with the new algebra ID and
+apply it to 4-dimensional state vectors as usual.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+  <span class="c1">// Hilbert space made of one elementary space for gamma matrices.</span>
+  <span class="n">hilbert_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">hs</span><span class="p">{</span><span class="n">elementary_space_gamma</span><span class="p">()};</span>
+
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+  <span class="c1">// Expression for \gamma^5</span>
+  <span class="k">auto</span> <span class="n">gamma5</span> <span class="o">=</span> <span class="n">I</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+  <span class="c1">// Linear operator representation of \gamma^5</span>
+  <span class="k">auto</span> <span class="n">gamma5op</span> <span class="o">=</span> <span class="n">loperator</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span>
+                            <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span><span class="p">(</span><span class="n">gamma5</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Build the explicit matrix representation of \gamma^5</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Preallocate state vectors.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">psi</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">phi</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+
+  <span class="c1">// Iterate over basis states</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Reset vectors |\psi&gt; and |\phi&gt; to zero.</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">psi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">psi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">phi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">phi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// &#39;psi&#39; is i-th basis vector now</span>
+
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">gamma5op</span><span class="p">(</span><span class="n">psi</span><span class="p">);</span>
+
+    <span class="c1">// Print the result</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;gamma5|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt; = &quot;</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;+&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">phi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="state_vector.html" class="btn btn-neutral float-right" title="State vectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="loperator.html" class="btn btn-neutral float-left" title="Linear operators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

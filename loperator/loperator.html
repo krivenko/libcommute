@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linear operators &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced: Linear operator representation of a user-defined algebra" href="monomial_action.html" />
+    <link rel="prev" title="Finite-dimensional Hilbert spaces" href="hilbert_space.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tools for exact diagonalization</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hilbert_space.html">Finite-dimensional Hilbert spaces</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linear operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simple-linear-operator">Simple linear operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parametric-linear-operator">Parametric linear operator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="monomial_action.html">Advanced: Linear operator representation of a user-defined algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_vector.html">State vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="space_partition.html">Finding invariant subspaces of a linear operator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Advanced examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Tools for exact diagonalization</a> &raquo;</li>
+        
+      <li>Linear operators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/loperator/loperator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linear-operators">
+<span id="loperator"></span><h1>Linear operators<a class="headerlink" href="#linear-operators" title="Permalink to this headline">¶</a></h1>
+<p><em>libcommute</em>’s linear operators implement action of
+<a class="reference internal" href="../expression/expression.html#expression"><span class="std std-ref">polynomial expressions</span></a> on
+<a class="reference internal" href="state_vector.html#state-vector"><span class="std std-ref">state vectors</span></a> in
+<a class="reference internal" href="hilbert_space.html#hilbert-space"><span class="std std-ref">finite-dimensional Hilbert spaces</span></a>. Linear operator
+classes are core devices used to build exact diagonalization routines based on
+<em>libcommute</em>.</p>
+<p>The linear operators come in two flavors, simple (<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a>)
+and parametric (<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a>).</p>
+<div class="section" id="simple-linear-operator">
+<span id="simple-loperator"></span><h2>Simple linear operator<a class="headerlink" href="#simple-linear-operator" title="Permalink to this headline">¶</a></h2>
+<p>Simple linear operators are instances of class template <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a>.</p>
+<p>Let us assume that <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">expr</span></code> is a real expression involving only the
+predefined algebras (fermions, bosons and spins), and <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">hs</span></code> is a Hilbert
+space object compatible with <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">expr</span></code>. Then creating a simple linear
+operator is as easy as</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">L</span> <span class="o">=</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">make_loperator</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Futhermore, let us declare a couple of objects that model the
+<a class="reference internal" href="state_vector.html#state-vector"><span class="std std-ref">state vectors</span></a> concept (in this particular case, they are
+standard vectors)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>The following code fragment shows three (nearly) equivalent ways to act with our
+operator on a state, <span class="math notranslate nohighlight">\(|\phi\rangle = \hat L |\psi\rangle\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Function call syntax</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">psi</span><span class="p">);</span>
+
+<span class="c1">// Multiplication syntax</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">L</span> <span class="o">*</span> <span class="n">psi</span><span class="p">;</span>
+
+<span class="c1">// &#39;In-place&#39; action syntax</span>
+<span class="n">L</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Although all three forms are semantically equivalent, the last one is faster as
+it eliminates the need for a temporary object to store
+<span class="math notranslate nohighlight">\(\hat L|\psi\rangle\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An important note must be made about various algebra support in
+<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a>. Expressions can dynamically accommodate new algebras via
+inheritance from the polymorphic base <a class="reference internal" href="../expression/generator.html#_CPPv4IDpEN10libcommute9generatorE" title="libcommute::generator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">generator</span></code></a>. Unlike them, linear
+operators represent action of a certain set of algebras that is fixed at
+compile time. This design decision allows to remove the virtual function call
+overhead from the hottest parts of codes, where linear operators are
+repeatedly applied to state vectors. Template parameter pack
+<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator::AlgebraIDs"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">loperator::AlgebraIDs</span></code></a> (sorted list of integers) determines what
+algebras a given linear operator object supports. <a class="reference internal" href="#_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_loperator"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_loperator()()</span></code></a>
+returns operators covering all three predefined algebras. For the sake of
+optimization, it may make sense to manually create <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a> objects
+with a more restricted set of IDs if some of the predefined algebras will
+appear in expressions.</p>
+</div>
+<dl class="cpp class">
+<dt id="_CPPv4I0_DpiEN10libcommute9loperatorE">
+<span id="_CPPv3I0_DpiEN10libcommute9loperatorE"></span><span id="_CPPv2I0_DpiEN10libcommute9loperatorE"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>, int... <code class="sig-name descname">AlgebraIDs</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">loperator</code><a class="headerlink" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Defined in &lt;libcommute/loperator/loperator.hpp&gt;</em></p>
+<p>Linear operator representation of a polynomial expression acting in
+a finite-dimensional Hilbert space.</p>
+<p><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a> - coefficient type of the corresponding
+polynomial expression.</p>
+<p><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator::AlgebraIDs"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">AlgebraIDs</span></code></a> - IDs of algebras supported by this object.</p>
+<p class="rubric">Constructor</p>
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN10libcommute9loperator9loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE">
+<span id="_CPPv3IDpEN10libcommute9loperator9loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2IDpEN10libcommute9loperator9loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span>template&lt;typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><code class="sig-name descname">loperator</code><span class="sig-paren">(</span><a class="reference internal" href="../expression/expression.html#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;scalar_type, <a class="reference internal" href="#_CPPv4IDpEN10libcommute9loperator9loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::loperator::loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>expr</em>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space">hilbert_space</a>&lt;<a class="reference internal" href="#_CPPv4IDpEN10libcommute9loperator9loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::loperator::loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>hs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute9loperator9loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct from an expression and a Hilbert space.</p>
+</dd></dl>
+
+<p class="rubric">Copy/move-constructors and assignments</p>
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute9loperator9loperatorERK9loperator">
+<span id="_CPPv3N10libcommute9loperator9loperatorERK9loperator"></span><span id="_CPPv2N10libcommute9loperator9loperatorERK9loperator"></span><span id="libcommute::loperator::loperator__loperatorCR"></span><code class="sig-name descname">loperator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute9loperator9loperatorERK9loperator" title="libcommute::loperator::loperator">loperator</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute9loperator9loperatorERK9loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute9loperator9loperatorERR9loperator">
+<span id="_CPPv3N10libcommute9loperator9loperatorERR9loperator"></span><span id="_CPPv2N10libcommute9loperator9loperatorERR9loperator"></span><span id="libcommute::loperator::loperator__loperatorRR"></span><code class="sig-name descname">loperator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute9loperator9loperatorERR9loperator" title="libcommute::loperator::loperator">loperator</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute9loperator9loperatorERR9loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute9loperatoraSERK9loperator">
+<span id="_CPPv3N10libcommute9loperatoraSERK9loperator"></span><span id="_CPPv2N10libcommute9loperatoraSERK9loperator"></span><span id="libcommute::loperator::assign-operator__loperatorCR"></span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute9loperatoraSERK9loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute9loperatoraSERR9loperator">
+<span id="_CPPv3N10libcommute9loperatoraSERR9loperator"></span><span id="_CPPv2N10libcommute9loperatoraSERR9loperator"></span><span id="libcommute::loperator::assign-operator__loperatorRR"></span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute9loperatoraSERR9loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p class="rubric">Action on a state vector</p>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK10libcommute9loperatorclE11StateVectorRK11StateVector">
+<span id="_CPPv3I0ENK10libcommute9loperatorclERK11StateVector"></span><span id="_CPPv2I0ENK10libcommute9loperatorclERK11StateVector"></span>template&lt;typename <code class="sig-name descname">StateVector</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0ENK10libcommute9loperatorclE11StateVectorRK11StateVector" title="libcommute::loperator::operator()::StateVector">StateVector</a> <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute9loperatorclE11StateVectorRK11StateVector" title="libcommute::loperator::operator()::StateVector">StateVector</a> <em class="property">const</em> &amp;<em>psi</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK10libcommute9loperatorclE11StateVectorRK11StateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0ENK10libcommute9loperatormlE11StateVectorRK11StateVector">
+<span id="_CPPv3I0ENK10libcommute9loperatormlERK11StateVector"></span><span id="_CPPv2I0ENK10libcommute9loperatormlERK11StateVector"></span>template&lt;typename <code class="sig-name descname">StateVector</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0ENK10libcommute9loperatormlE11StateVectorRK11StateVector" title="libcommute::loperator::operator*::StateVector">StateVector</a> <code class="sig-name descname">operator*</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute9loperatormlE11StateVectorRK11StateVector" title="libcommute::loperator::operator*::StateVector">StateVector</a> <em class="property">const</em> &amp;<em>psi</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK10libcommute9loperatormlE11StateVectorRK11StateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Act on a state vector <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0ENK10libcommute9loperatormlE11StateVectorRK11StateVector" title="libcommute::loperator::operator*::psi"><span class="pre">psi</span></a></code> and return the result
+<span class="math notranslate nohighlight">\(\hat L|\psi\rangle\)</span>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector">
+<span id="_CPPv3I00ENK10libcommute9loperatorclERR14SrcStateVectorRR14DstStateVector"></span><span id="_CPPv2I00ENK10libcommute9loperatorclERR14SrcStateVectorRR14DstStateVector"></span>template&lt;typename <code class="sig-name descname">SrcStateVector</code>, typename <code class="sig-name descname">DstStateVector</code>&gt;<br />void <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector" title="libcommute::loperator::operator()::SrcStateVector">SrcStateVector</a> &amp;&amp;<em>psi</em>, <a class="reference internal" href="#_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector" title="libcommute::loperator::operator()::DstStateVector">DstStateVector</a> &amp;&amp;<em>phi</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Act on a state vector <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector" title="libcommute::loperator::operator()::psi"><span class="pre">psi</span></a></code> and write the result into <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector" title="libcommute::loperator::operator()::phi"><span class="pre">phi</span></a></code>,
+<span class="math notranslate nohighlight">\(|\phi\rangle = \hat L |\psi\rangle\)</span>. This method is faster than the
+previous two because the result is written directly into <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I00ENK10libcommute9loperatorclEvRR14SrcStateVectorRR14DstStateVector" title="libcommute::loperator::operator()::phi"><span class="pre">phi</span></a></code> without
+making a temporary object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE">
+<span id="_CPPv3I0DpEN10libcommute14make_loperatorERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2I0DpEN10libcommute14make_loperatorERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>, typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_loperator::ScalarType">ScalarType</a>, <a class="reference internal" href="../expression/generator.html#_CPPv4N10libcommute7fermionE" title="libcommute::fermion">fermion</a>, <a class="reference internal" href="../expression/generator.html#_CPPv4N10libcommute5bosonE" title="libcommute::boson">boson</a>, <a class="reference internal" href="../expression/generator.html#_CPPv4N10libcommute4spinE" title="libcommute::spin">spin</a>&gt; <code class="sig-name descname">make_loperator</code><span class="sig-paren">(</span><a class="reference internal" href="../expression/expression.html#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_loperator::ScalarType">ScalarType</a>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>expr</em>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space">hilbert_space</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>hs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0DpEN10libcommute14make_loperatorE9loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Defined in &lt;libcommute/loperator/loperator.hpp&gt;</em></p>
+<p>A helper factory function that constructs an <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a> instance.
+This function is a more convenient equivalent of <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a>’s
+constructor.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="parametric-linear-operator">
+<span id="param-loperator"></span><h2>Parametric linear operator<a class="headerlink" href="#parametric-linear-operator" title="Permalink to this headline">¶</a></h2>
+<p>Parametric linear operators are similar to
+the <a class="reference internal" href="#simple-loperator"><span class="std std-ref">simple ones</span></a> with one important distinction. They
+represent polynomial expressions with coefficients that support function-like
+call syntax. This generalization can be of relevance for expressions that depend
+on various parameters (hence the name). A rather common example here is when
+the Hamiltonian of a quantum system explicitly depends on time or some external
+fields.</p>
+<p>When a parametric operator acts on a state, it takes a list of extra arguments.
+These extra arguments are passed to the callable coefficients of the
+corresponding expression and their return values are used to eventually form the
+output state vector. In other words, the extra arguments are effectively
+‘substituted’ into the expression.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Coefficients of &#39;expr&#39; depend on one real parameter, i.e. its</span>
+<span class="c1">// ScalarType implements the call operator taking one &#39;double&#39; argument</span>
+<span class="c1">// and returning a &#39;double&#39;.</span>
+
+<span class="c1">// Create a parametric linear operator</span>
+<span class="k">auto</span> <span class="n">PL</span> <span class="o">=</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">make_param_loperator</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+
+<span class="c1">// Input and output state vectors</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+
+<span class="c1">//</span>
+<span class="c1">// Substitute 2.0 into the expression and act on &#39;psi&#39;</span>
+<span class="c1">//</span>
+
+<span class="c1">// Function call syntax</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">PL</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+
+<span class="c1">// &#39;In-place&#39; action syntax</span>
+<span class="n">PL</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Omitting the extra arguments will result in the coefficients being
+called without arguments.</p>
+</div>
+<p>There is also an option to optimize the substitution process by preallocating
+storage for the coefficient return values.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">evaluated_coeffs</span><span class="p">;</span>
+
+<span class="c1">// Only the first call will cause memory allocation</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">evaluated_coeffs</span><span class="p">,</span> <span class="mf">.0</span><span class="p">);</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">evaluated_coeffs</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">evaluated_coeffs</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">);</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">evaluated_coeffs</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Finally, one can permanently transform a parametric operator into the
+non-parametric form.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Substitute 4.0 into PL and save the result as a simple linear operator</span>
+<span class="k">auto</span> <span class="n">L</span> <span class="o">=</span> <span class="n">PL</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mf">4.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For an extensive example of <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a>’s use have a look at
+“<a class="reference internal" href="../examples/parametric_loperator.html#parametric-loperator"><span class="std std-ref">Custom scalar types and parametric_loperator</span></a>”.</p>
+<dl class="cpp class">
+<dt id="_CPPv4I0_DpiEN10libcommute20parametric_loperatorE">
+<span id="_CPPv3I0_DpiEN10libcommute20parametric_loperatorE"></span><span id="_CPPv2I0_DpiEN10libcommute20parametric_loperatorE"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>, int... <code class="sig-name descname">AlgebraIDs</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">parametric_loperator</code><a class="headerlink" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Defined in &lt;libcommute/loperator/loperator.hpp&gt;</em></p>
+<p>Linear operator representation of a polynomial expression acting in
+a finite-dimensional Hilbert space. This class supports parameter substitution
+upon acting on a state.</p>
+<p class="rubric">Constructor</p>
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN10libcommute20parametric_loperator20parametric_loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE">
+<span id="_CPPv3IDpEN10libcommute20parametric_loperator20parametric_loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2IDpEN10libcommute20parametric_loperator20parametric_loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span>template&lt;typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><code class="sig-name descname">parametric_loperator</code><span class="sig-paren">(</span><a class="reference internal" href="../expression/expression.html#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;scalar_type, <a class="reference internal" href="#_CPPv4IDpEN10libcommute20parametric_loperator20parametric_loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::parametric_loperator::parametric_loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>expr</em>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space">hilbert_space</a>&lt;<a class="reference internal" href="#_CPPv4IDpEN10libcommute20parametric_loperator20parametric_loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::parametric_loperator::parametric_loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>hs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute20parametric_loperator20parametric_loperatorERK10expressionI11scalar_typeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct from an expression and a Hilbert space.</p>
+</dd></dl>
+
+<p class="rubric">Copy/move-constructors and assignments</p>
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute20parametric_loperator20parametric_loperatorERK20parametric_loperator">
+<span id="_CPPv3N10libcommute20parametric_loperator20parametric_loperatorERK20parametric_loperator"></span><span id="_CPPv2N10libcommute20parametric_loperator20parametric_loperatorERK20parametric_loperator"></span><span id="libcommute::parametric_loperator::parametric_loperator__parametric_loperatorCR"></span><code class="sig-name descname">parametric_loperator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute20parametric_loperator20parametric_loperatorERK20parametric_loperator" title="libcommute::parametric_loperator::parametric_loperator">parametric_loperator</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute20parametric_loperator20parametric_loperatorERK20parametric_loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute20parametric_loperator20parametric_loperatorERR20parametric_loperator">
+<span id="_CPPv3N10libcommute20parametric_loperator20parametric_loperatorERR20parametric_loperator"></span><span id="_CPPv2N10libcommute20parametric_loperator20parametric_loperatorERR20parametric_loperator"></span><span id="libcommute::parametric_loperator::parametric_loperator__parametric_loperatorRR"></span><code class="sig-name descname">parametric_loperator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute20parametric_loperator20parametric_loperatorERR20parametric_loperator" title="libcommute::parametric_loperator::parametric_loperator">parametric_loperator</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute20parametric_loperator20parametric_loperatorERR20parametric_loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute20parametric_loperatoraSERK20parametric_loperator">
+<span id="_CPPv3N10libcommute20parametric_loperatoraSERK20parametric_loperator"></span><span id="_CPPv2N10libcommute20parametric_loperatoraSERK20parametric_loperator"></span><span id="libcommute::parametric_loperator::assign-operator__parametric_loperatorCR"></span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator">parametric_loperator</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator">parametric_loperator</a> <em class="property">const</em>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N10libcommute20parametric_loperatoraSERK20parametric_loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10libcommute20parametric_loperatoraSERR20parametric_loperator">
+<span id="_CPPv3N10libcommute20parametric_loperatoraSERR20parametric_loperator"></span><span id="_CPPv2N10libcommute20parametric_loperatoraSERR20parametric_loperator"></span><span id="libcommute::parametric_loperator::assign-operator__parametric_loperatorRR"></span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator">parametric_loperator</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator">parametric_loperator</a>&amp;&amp;<span class="sig-paren">)</span> <em class="property">noexcept</em> = default<a class="headerlink" href="#_CPPv4N10libcommute20parametric_loperatoraSERR20parametric_loperator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p class="rubric">Action on a state vector</p>
+<dl class="cpp function">
+<dt id="_CPPv4I0DpENK10libcommute20parametric_loperatorclE11StateVectorRK11StateVectorDpRR9CoeffArgs">
+<span id="_CPPv3I0DpENK10libcommute20parametric_loperatorclERK11StateVectorDpRR9CoeffArgs"></span><span id="_CPPv2I0DpENK10libcommute20parametric_loperatorclERK11StateVectorDpRR9CoeffArgs"></span>template&lt;typename <code class="sig-name descname">StateVector</code>, typename ...<code class="sig-name descname">CoeffArgs</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclE11StateVectorRK11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::StateVector">StateVector</a> <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclE11StateVectorRK11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::StateVector">StateVector</a> <em class="property">const</em> &amp;<em>psi</em>, <a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclE11StateVectorRK11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::CoeffArgs">CoeffArgs</a>&amp;&amp;... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclE11StateVectorRK11StateVectorDpRR9CoeffArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Act on a state vector <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclE11StateVectorRK11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::psi"><span class="pre">psi</span></a></code> and return the result
+<span class="math notranslate nohighlight">\(\hat L(\text{args}\ldots)|\psi\rangle\)</span>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs">
+<span id="_CPPv3I0DpENK10libcommute20parametric_loperatorclERK11StateVectorR11StateVectorDpRR9CoeffArgs"></span><span id="_CPPv2I0DpENK10libcommute20parametric_loperatorclERK11StateVectorR11StateVectorDpRR9CoeffArgs"></span>template&lt;typename <code class="sig-name descname">StateVector</code>, typename ...<code class="sig-name descname">CoeffArgs</code>&gt;<br />void <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::StateVector">StateVector</a> <em class="property">const</em> &amp;<em>psi</em>, <a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::StateVector">StateVector</a> &amp;<em>phi</em>, <a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::CoeffArgs">CoeffArgs</a>&amp;&amp;... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Act on a state vector <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::psi"><span class="pre">psi</span></a></code> and write the result into <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::phi"><span class="pre">phi</span></a></code>,
+<span class="math notranslate nohighlight">\(|\phi\rangle = \hat L(\text{args}\ldots) |\psi\rangle\)</span>.
+This method is faster than the previous one because the result is written
+directly into <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperatorclEvRK11StateVectorR11StateVectorDpRR9CoeffArgs" title="libcommute::parametric_loperator::operator()::phi"><span class="pre">phi</span></a></code> without making a temporary object.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsEvRK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs">
+<span id="_CPPv3I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsERK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs"></span><span id="_CPPv2I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsERK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs"></span>template&lt;typename <code class="sig-name descname">StateVector</code>, typename ...<code class="sig-name descname">CoeffArgs</code>&gt;<br />void <code class="sig-name descname">act_and_store_coeffs</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsEvRK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs" title="libcommute::parametric_loperator::act_and_store_coeffs::StateVector">StateVector</a> <em class="property">const</em> &amp;<em>psi</em>, <a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsEvRK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs" title="libcommute::parametric_loperator::act_and_store_coeffs::StateVector">StateVector</a> &amp;<em>phi</em>, std::vector&lt;evaluated_coeff_t&lt;<a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsEvRK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs" title="libcommute::parametric_loperator::act_and_store_coeffs::CoeffArgs">CoeffArgs</a>...&gt;&gt; &amp;<em>evaluated_coeffs</em>, <a class="reference internal" href="#_CPPv4I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsEvRK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs" title="libcommute::parametric_loperator::act_and_store_coeffs::CoeffArgs">CoeffArgs</a>&amp;&amp;... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0DpENK10libcommute20parametric_loperator20act_and_store_coeffsEvRK11StateVectorR11StateVectorRNSt6vectorI17evaluated_coeff_tIDp9CoeffArgsEEEDpRR9CoeffArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p>Similar to the previous method, but using the external vector
+<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">evaluated_coeffs</span></code> to store coefficient values after parameter
+substitution. When called multiple times, only the first invocation will
+resize <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">evaluated_coeffs</span></code> and allocate memory.</p>
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK10libcommute20parametric_loperator2atE9loperatorI17evaluated_coeff_tIDp9CoeffArgsEDp10AlgebraIDsEDpRR9CoeffArgs">
+<span id="_CPPv3IDpENK10libcommute20parametric_loperator2atEDpRR9CoeffArgs"></span><span id="_CPPv2IDpENK10libcommute20parametric_loperator2atEDpRR9CoeffArgs"></span>template&lt;typename ...<code class="sig-name descname">CoeffArgs</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a>&lt;evaluated_coeff_t&lt;<a class="reference internal" href="#_CPPv4IDpENK10libcommute20parametric_loperator2atE9loperatorI17evaluated_coeff_tIDp9CoeffArgsEDp10AlgebraIDsEDpRR9CoeffArgs" title="libcommute::parametric_loperator::at::CoeffArgs">CoeffArgs</a>...&gt;, <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator::AlgebraIDs">AlgebraIDs</a>...&gt; <code class="sig-name descname">at</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK10libcommute20parametric_loperator2atE9loperatorI17evaluated_coeff_tIDp9CoeffArgsEDp10AlgebraIDsEDpRR9CoeffArgs" title="libcommute::parametric_loperator::at::CoeffArgs">CoeffArgs</a>&amp;&amp;... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK10libcommute20parametric_loperator2atE9loperatorI17evaluated_coeff_tIDp9CoeffArgsEDp10AlgebraIDsEDpRR9CoeffArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Transform this parametric linear operator into the non-parametric form
+by substituting parameters <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4IDpENK10libcommute20parametric_loperator2atE9loperatorI17evaluated_coeff_tIDp9CoeffArgsEDp10AlgebraIDsEDpRR9CoeffArgs" title="libcommute::parametric_loperator::at::args"><span class="pre">args</span></a></code> into it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE">
+<span id="_CPPv3I0DpEN10libcommute20make_param_loperatorERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2I0DpEN10libcommute20make_param_loperatorERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>, typename ...<code class="sig-name descname">IndexTypes</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator">parametric_loperator</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_param_loperator::ScalarType">ScalarType</a>, <a class="reference internal" href="../expression/generator.html#_CPPv4N10libcommute7fermionE" title="libcommute::fermion">fermion</a>, <a class="reference internal" href="../expression/generator.html#_CPPv4N10libcommute5bosonE" title="libcommute::boson">boson</a>, <a class="reference internal" href="../expression/generator.html#_CPPv4N10libcommute4spinE" title="libcommute::spin">spin</a>&gt; <code class="sig-name descname">make_param_loperator</code><span class="sig-paren">(</span><a class="reference internal" href="../expression/expression.html#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression">expression</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_param_loperator::ScalarType">ScalarType</a>, <a class="reference internal" href="#_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_param_loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>expr</em>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space">hilbert_space</a>&lt;<a class="reference internal" href="#_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::make_param_loperator::IndexTypes">IndexTypes</a>...&gt; <em class="property">const</em> &amp;<em>hs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Defined in &lt;libcommute/loperator/loperator.hpp&gt;</em></p>
+<p>A helper factory function that constructs a <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a>
+instance. This function is a more convenient equivalent of
+<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a>’s constructor.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="monomial_action.html" class="btn btn-neutral float-right" title="Advanced: Linear operator representation of a user-defined algebra" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hilbert_space.html" class="btn btn-neutral float-left" title="Finite-dimensional Hilbert spaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Polynomial expressions" href="expression.html" />
+    <link rel="prev" title="Domain-Specific Language for polynomial expressions" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Domain-Specific Language for polynomial expressions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html">Polynomial expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monomial.html">Monomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generator.html">Algebra generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factories.html">Factory functions for creation/annihilation/spin operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Advanced: A user-defined algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Advanced examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Domain-Specific Language for polynomial expressions</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/expression/intro.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<span id="expr-intro"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>Dealing with involved Hamiltonians and other operators from the quantum
+many-body theory in C++ can be tough. In some cases, quantum-mechanical
+operators can be uniformly represented by finite-dimensional matrices.
+This representation, however, is often impractical. Storing the matrices can
+quickly prove infeasible as the amount of required memory grows exponentially
+with the number of degrees of freedom. For this reason, many computational
+programs in the field use sparse matrices or hard-coded procedures that describe
+how said operators act on quantum states. These implementations usually accept
+a few Hamiltonian parameters as input, but switching to a more general
+form/adding more terms to the Hamiltonian requires a considerable code rewrite.</p>
+<p>The goal of <em>libcommute</em>’s Domain-Specific Language (DSL) is to streamline this
+coding task. It introduces an abstraction of the polynomial quantum-mechanical
+operator expression, which can be manipulated as easily as an equation written
+on a piece of paper.</p>
+<p>As a primer, let us consider the following simple program that constructs
+Hamiltonian of an electronic tight-binding model on a square <span class="math notranslate nohighlight">\(10\times 10\)</span>
+lattice with only nearest-neighbour hopping allowed,</p>
+<div class="math notranslate nohighlight">
+\[\hat H_\text{e} = -t \sum_\sigma \sum_{\langle i,j\rangle}
+                  c^\dagger_{i,\sigma} c_{j,\sigma}.\]</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Let us define Hamiltonian of an electronic tight-binding model</span>
+  <span class="c1">// on a square lattice.</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Number of lattice sites in each direction</span>
+  <span class="c1">// (the total number of sites is N*N)</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+  <span class="c1">// Electron hopping constant - energy parameter of the TB model</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
+
+  <span class="c1">// TB Hamiltonian as an expression with real coefficients and</span>
+  <span class="c1">// statically-typed indices. In this case, the indices are a pair of</span>
+  <span class="c1">// integers - lattice site coordinates - and a spin label (&quot;up&quot; or &quot;down&quot;).</span>
+  <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">expr_real</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">H_e</span><span class="p">;</span>
+
+  <span class="c1">// Use functions c_dag() and c() that return fermionic creation/annihilation</span>
+  <span class="c1">// operators.</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">c_dag</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">c</span><span class="p">;</span>
+
+  <span class="c1">// Iterate over spin projections</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
+    <span class="c1">// Iterate over all lattice sites with coordinates i = (ix, iy)</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Iterate over all lattice sites with coordinates j = (jx, jy)</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">jx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jx</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">jx</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">jy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">jy</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// Skip all pairs of lattice sites i and j that are not</span>
+            <span class="c1">// nearest-neighbors. The modulus operation accounts for</span>
+            <span class="c1">// periodic boundary conditions on the lattice.</span>
+            <span class="k">if</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">ix</span> <span class="o">-</span> <span class="n">jx</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">iy</span> <span class="o">==</span> <span class="n">jy</span><span class="p">)</span> <span class="o">||</span>
+               <span class="p">(</span><span class="n">ix</span> <span class="o">==</span> <span class="n">jx</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">iy</span> <span class="o">-</span> <span class="n">jy</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span> <span class="p">{</span>
+              <span class="c1">// Add a hopping term</span>
+              <span class="n">H_e</span> <span class="o">+=</span> <span class="o">-</span><span class="n">t</span> <span class="o">*</span> <span class="n">c_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">spin</span><span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Now, let us add a harmonic oscillator at each lattice site (a localized phonon),</p>
+<div class="math notranslate nohighlight">
+\[\hat H_\text{ph} = \omega_0 \sum_i a^\dagger_i a_i.\]</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// Frequency of the localized phonon</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">w0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Hamiltonian of phonons localized at lattice sites.</span>
+  <span class="c1">// We want this object to have the same type as H_e.</span>
+  <span class="c1">//</span>
+  <span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span> <span class="n">H_ph</span><span class="p">;</span>
+
+  <span class="c1">// Use functions a_dag() and a() that return bosonic creation/annihilation</span>
+  <span class="c1">// operators.</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">a_dag</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">a</span><span class="p">;</span>
+
+  <span class="c1">// Iterate over all lattice sites</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Energy of the localized phonon at site (ix, iy)</span>
+      <span class="n">H_ph</span> <span class="o">+=</span> <span class="n">w0</span> <span class="o">*</span> <span class="n">a_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We had to assign an empty spin label “” to the bosons, because all operators
+in <code class="docutils literal notranslate"><span class="pre">H_ph</span></code> have to carry exactly three indices with the last one being a
+string. It is possible to overcome this limitation and put just two integer
+indices on <span class="math notranslate nohighlight">\(a^\dagger\)</span>/<span class="math notranslate nohighlight">\(a\)</span> by switching to the
+<a class="reference internal" href="expression.html#dyn-indices"><span class="std std-ref">dynamically-typed indices</span></a>.
+Be aware, however, that the dynamic indices require C++17 and may result
+in less type-safe code.</p>
+</div>
+<p>Finally, we are going to couple electrons with phonons and arrive at
+Hamiltonian of the Holstein model <span class="math notranslate nohighlight">\(\hat H_H\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\hat H_\text{e-ph} = g \sum_\sigma \sum_i n_{i,\sigma}(a^\dagger_i + a_i),\]</div>
+<div class="math notranslate nohighlight">
+\[\hat H_H = \hat H_\text{e} + \hat H_\text{ph} + \hat H_\text{e-ph}.\]</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// Electron-phonon coupling constant</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">g</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Hamiltonian of electron-phonon coupling.</span>
+  <span class="c1">//</span>
+  <span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span> <span class="n">H_e_ph</span><span class="p">;</span>
+
+  <span class="c1">// Use function n() that returns the fermionic number operator n = c_dag * c</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">n</span><span class="p">;</span>
+
+  <span class="c1">// Iterate over spin projections</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
+    <span class="c1">// Iterate over all lattice sites</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Electron-phonon coupling at site (ix, iy)</span>
+        <span class="n">H_e_ph</span> <span class="o">+=</span> <span class="n">g</span> <span class="o">*</span> <span class="n">n</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">));</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Holstein Hamiltonian.</span>
+  <span class="k">auto</span> <span class="n">H_H</span> <span class="o">=</span> <span class="n">H_e</span> <span class="o">+</span> <span class="n">H_ph</span> <span class="o">+</span> <span class="n">H_e_ph</span><span class="p">;</span>
+
+  <span class="c1">// Print H_H. There will be quite a lot of terms for the 100-site lattice!</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;H_H = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">H_H</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Check hermiticity of H_H</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;H_H - H_H^</span><span class="se">\\</span><span class="s">dagger = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H_H</span> <span class="o">-</span> <span class="n">conj</span><span class="p">(</span><span class="n">H_H</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Check that H_H commutes with the total number of electrons</span>
+  <span class="k">decltype</span><span class="p">(</span><span class="n">H_H</span><span class="p">)</span> <span class="n">N_e</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">N_e</span> <span class="o">+=</span> <span class="n">n</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H_H, N_e] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H_H</span> <span class="o">*</span> <span class="n">N_e</span> <span class="o">-</span> <span class="n">N_e</span> <span class="o">*</span> <span class="n">H_H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now that we have the complete Hamiltonian object, we could proceed along one
+of the following routes.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../loperator/intro.html#ed-intro"><span class="std std-ref">Make a</span></a> <code class="docutils literal notranslate"><span class="pre">loperator</span></code> object out of <span class="math notranslate nohighlight">\(\hat H_H\)</span> and
+use it to act on state vectors in a finite-dimensional Hilbert space.
+This is a common step in implementing Exact Diagonalization algorithms.</p></li>
+<li><p>Use the <a class="reference internal" href="expression.html#expr-iteration"><span class="std std-ref">iteration interface</span></a> to analyze the structure
+of the Hamiltonian term by term.</p></li>
+<li><p><a class="reference internal" href="expression.html#expr-iteration"><span class="std std-ref">Transform</span></a> the Hamiltonian by applying a function
+to each term.</p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="expression.html" class="btn btn-neutral float-right" title="Polynomial expressions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Domain-Specific Language for polynomial expressions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

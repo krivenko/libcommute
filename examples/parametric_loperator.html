@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Custom scalar types and parametric_loperator &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Virasoro algebra" href="virasoro_algebra.html" />
+    <link rel="prev" title="Spin-1/2 Heisenberg chain and its integrals of motion" href="heisenberg_chain.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kanamori.html">Kanamori interaction Hamiltonian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaynes_cummings.html">Jaynes-Cummings ladder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heisenberg_chain.html">Spin-1/2 Heisenberg chain and its integrals of motion</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="virasoro_algebra.html">Virasoro algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Advanced examples</a> &raquo;</li>
+        
+      <li>Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/examples/parametric_loperator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="custom-scalar-types-and-parametric-loperator">
+<span id="parametric-loperator"></span><h1>Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code><a class="headerlink" href="#custom-scalar-types-and-parametric-loperator" title="Permalink to this headline">¶</a></h1>
+<p>The goal of this example is twofold. First, it shows how to use user-defined
+types as <code class="docutils literal notranslate"><span class="pre">ScalarType</span></code>’s, i.e. types of coefficient in expressions.
+Second, it demonstrates functionality of the <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code> class.</p>
+<p>As for the custom scalar type, we will define a class implementing the
+algebra of polynomials</p>
+<div class="math notranslate nohighlight">
+\[P_n(x) = C_0 + C_1 x + C_2 x^2 + \ldots + C_n x^n.\]</div>
+<p><span class="math notranslate nohighlight">\(x\)</span> can be understood as a parameter (for instance, time or an external
+field) a quantum-mechanical operator depends on. One could envision other
+practically relevant choices of <code class="docutils literal notranslate"><span class="pre">ScalarType</span></code> such as interpolators based
+on the Chebyshev polynomial expansion or Padé approximants. The expression
+constructed in the program is the Hamiltonian of a displaced quantum harmonic
+oscillator with frequency <span class="math notranslate nohighlight">\(\omega_0 = 2\)</span> and the displacement depending on
+an external parameter <span class="math notranslate nohighlight">\(\lambda\)</span>, <span class="math notranslate nohighlight">\(g(\lambda) = 3\lambda\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\hat H = \frac{\omega_0}{2} +
+         \omega_0 \left(a^\dagger - g(\lambda)\right)
+         \left(a - g(\lambda)\right).\]</div>
+<p>An instance of the <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code> class is constructed out of this
+expression and applied to the vacuum state for a few values of <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\hat H|0\rangle = \omega_0\left(g^2(\lambda) + \frac{1}{2}\right)|0\rangle -
+                  \omega_0 g(\lambda) |1\rangle.\]</div>
+<p>The crucial point here is that the slow task of constructing
+<code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code> is performed only once. Substitution of <span class="math notranslate nohighlight">\(\lambda\)</span>
+values is delayed until the moment the operator acts on the state.</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;initializer_list&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+<span class="c1">// Polynomial of one real variable - a (very) basic implementation.</span>
+<span class="c1">// For production code, it is strongly advised to use optimized libraries</span>
+<span class="c1">// such as &#39;polynomial&#39; from Boost Math Toolkit.</span>
+<span class="k">class</span> <span class="nc">polynomial</span> <span class="p">{</span>
+
+  <span class="c1">// Polynomial coefficients {C_0, C_1, C_2, ..., C_n}.</span>
+  <span class="c1">// P_n(x) = C_0 + C_1 x + C_2 x^2 + ... + C_n * x^n.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">coefficients</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+  <span class="c1">// Construct zero polynomial of degree n</span>
+  <span class="n">polynomial</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">coefficients</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="c1">// Construct from a list of coefficients</span>
+  <span class="n">polynomial</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">:</span>
+    <span class="n">coefficients</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="c1">// Degree of this polynomial</span>
+  <span class="kt">int</span> <span class="n">degree</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">// Read-only access to the coefficients</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">coeffs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">coefficients</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">// Evaluate P_n(x)</span>
+  <span class="kt">double</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">x_n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">coefficients</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sum</span> <span class="o">+=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">x_n</span><span class="p">;</span>
+      <span class="n">x_n</span> <span class="o">*=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Addition of polynomials</span>
+  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">degree</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
+    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">max_degree</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Subtraction of polynomials</span>
+  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">degree</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
+    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">max_degree</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Multiplication of polynomials</span>
+  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">degree</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Multiplication by a constant pre-factor</span>
+  <span class="k">friend</span> <span class="n">polynomial</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">polynomial</span> <span class="nf">res</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">res</span><span class="p">.</span><span class="n">coefficients</span><span class="p">)</span> <span class="n">c</span> <span class="o">*=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Specialize struct scalar_traits to let libcommute know about our polynomial</span>
+<span class="c1">// type so that it can be used as a coefficient type of libcommute::expression.</span>
+<span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">struct</span> <span class="nc">scalar_traits</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="c1">// Zero value test</span>
+  <span class="k">static</span> <span class="kt">bool</span> <span class="n">is_zero</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">p</span><span class="p">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// Make a constant polynomial from a double value</span>
+  <span class="k">static</span> <span class="n">polynomial</span> <span class="n">make_const</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">polynomial</span><span class="p">{</span><span class="n">x</span><span class="p">};</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Displaced harmonic oscillator</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Oscillator frequency \omega_0 = 2.</span>
+  <span class="n">polynomial</span> <span class="n">w0</span><span class="p">{</span><span class="mi">2</span><span class="p">};</span>
+  <span class="c1">// Displacement as a linear function of an external parameter,</span>
+  <span class="c1">// g(\lambda) = 3\lambda.</span>
+  <span class="n">polynomial</span> <span class="n">g</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+  <span class="c1">// Hamiltonian of the oscillator</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="p">;</span> <span class="c1">// For a_dag() and a()</span>
+  <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">w0</span> <span class="o">+</span> <span class="n">w0</span><span class="o">*</span><span class="p">(</span><span class="n">a_dag</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="p">);</span>
+
+  <span class="c1">// H will act in the Hilbert space &#39;hs&#39;. Since we are working with a boson,</span>
+  <span class="c1">// we have to truncate the Hilbert space and allow a finite number of</span>
+  <span class="c1">// excitations (here, N = 0, 1, ..., 2^4 - 1).</span>
+  <span class="k">auto</span> <span class="n">hs</span> <span class="o">=</span> <span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">boson_es_constructor</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+
+  <span class="c1">// Parametric quantum operator (depends on parameter \lambda)</span>
+  <span class="k">auto</span> <span class="n">Hop</span> <span class="o">=</span> <span class="n">make_param_loperator</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Check that</span>
+  <span class="c1">// H|0&gt; = \omega_0 (1/2 + g(\lambda)^2) |0&gt; - \omega_0 g(\lambda) |1&gt;</span>
+  <span class="c1">// for a few values of \lambda.</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Initial state |0&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ket0</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+  <span class="n">ket0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+
+  <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">lambda</span> <span class="p">:</span> <span class="p">{</span><span class="mf">.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">})</span> <span class="p">{</span>
+    <span class="c1">// Act with H(\lambda) upon |0&gt;</span>
+    <span class="k">auto</span> <span class="n">ket</span> <span class="o">=</span> <span class="n">Hop</span><span class="p">(</span><span class="n">ket0</span><span class="p">,</span> <span class="n">lambda</span><span class="p">);</span>
+
+    <span class="c1">// Print all non-zero elements of |ket&gt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">lambda = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">lambda</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; :|ket&gt; = &quot;</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ket</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">ket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; +(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="virasoro_algebra.html" class="btn btn-neutral float-right" title="Virasoro algebra" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="heisenberg_chain.html" class="btn btn-neutral float-left" title="Spin-1/2 Heisenberg chain and its integrals of motion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

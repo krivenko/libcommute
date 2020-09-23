@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Jaynes-Cummings ladder &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Spin-1/2 Heisenberg chain and its integrals of motion" href="heisenberg_chain.html" />
+    <link rel="prev" title="Kanamori interaction Hamiltonian" href="kanamori.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kanamori.html">Kanamori interaction Hamiltonian</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Jaynes-Cummings ladder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heisenberg_chain.html">Spin-1/2 Heisenberg chain and its integrals of motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametric_loperator.html">Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="virasoro_algebra.html">Virasoro algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Advanced examples</a> &raquo;</li>
+        
+      <li>Jaynes-Cummings ladder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/examples/jaynes_cummings.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jaynes-cummings-ladder">
+<span id="jaynes-cummings"></span><h1>Jaynes-Cummings ladder<a class="headerlink" href="#jaynes-cummings-ladder" title="Permalink to this headline">¶</a></h1>
+<p>The Jaynes-Cummings model was introduced in quantum optics to describe
+interaction of a two-level atom with a single quantized mode of an optical
+cavity <a class="reference internal" href="#jc63" id="id1"><span>[JC63]</span></a>. Phonons in the mode are created/destroyed by bosonic ladder
+operators <span class="math notranslate nohighlight">\(a^\dagger\)</span>/<span class="math notranslate nohighlight">\(a\)</span>. Atom’s Hilbert space is spanned by the
+ground state <span class="math notranslate nohighlight">\(|g\rangle\)</span> and the excited state <span class="math notranslate nohighlight">\(|e\rangle\)</span>, and is
+equivalent to that of a spin-half. The operators acting in this isospin space
+are raising and lowering operators <span class="math notranslate nohighlight">\(S_+ = |e\rangle\langle g|\)</span>,
+<span class="math notranslate nohighlight">\(S_- = |g\rangle\langle e|\)</span> and the atomic inversion operator
+<span class="math notranslate nohighlight">\(2S_z = |e\rangle\langle e| - |g\rangle\langle g|\)</span>.</p>
+<p>Under the assumpion that the photon frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> and the atomic
+transition frequency <span class="math notranslate nohighlight">\(\omega_a\)</span> satisfy
+<span class="math notranslate nohighlight">\(|\omega_c - \omega_a| \ll \omega_c + \omega_a\)</span> (small detuning
+<span class="math notranslate nohighlight">\(\delta = \omega_a - \omega_c\)</span>), one can write down the Jaynes-Cummings
+Hamiltonian in the rotating wave approximation as follows,</p>
+<div class="math notranslate nohighlight">
+\[\hat H = \hbar \omega_c a^\dagger a + \hbar \omega_a S_z +
+         \hbar \frac{\Omega}{2}(a S_+ + a^\dagger S_-),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Omega\)</span> is the atom-field interaction strength. The Jaynes-Cummings
+Hamiltonian commutes with operator <span class="math notranslate nohighlight">\(\hat N = a^\dagger a + S_z\)</span>, which
+means <span class="math notranslate nohighlight">\(\hat H\)</span> takes on a block-digonal structure. The ground state
+<span class="math notranslate nohighlight">\(|n = 0, g\rangle\)</span> is within its own one-dimensional block, while the
+rest of the blocks are spanned by a pair <span class="math notranslate nohighlight">\(|n-1, e\rangle\)</span>,
+<span class="math notranslate nohighlight">\(|n, g\rangle\)</span> each (<span class="math notranslate nohighlight">\(n = \overline{1,\infty}\)</span>). Accordingly,
+the ground state energy is <span class="math notranslate nohighlight">\(E_g = -(1/2)\hbar\omega_a\)</span>, while all excited
+states form a series of doublets <span class="math notranslate nohighlight">\(E_\pm(n)\)</span> – the so called
+Jaynes-Cummings ladder.</p>
+<div class="math notranslate nohighlight">
+\[E_\pm(n) = \hbar\omega_c \left(n - \frac{1}{2}\right) \pm
+           \frac{\hbar}{2} \sqrt{\delta^2 + n\Omega^2}.\]</div>
+<p>The respective eigenstates in each block (dressed states) are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}|n, +\rangle &amp;= \cos\left(\frac{\alpha_n}{2}\right) |n - 1, e\rangle +
+                \sin\left(\frac{\alpha_n}{2}\right) |n, g\rangle,\\
+|n, -\rangle &amp;= \sin\left(\frac{\alpha_n}{2}\right) |n - 1, e\rangle -
+                \cos\left(\frac{\alpha_n}{2}\right) |n, g\rangle\\\end{split}\]</div>
+<p>with mixing angle</p>
+<div class="math notranslate nohighlight">
+\[\alpha_n = \tan^{-1}\left(\frac{\Omega\sqrt{n}}{\delta}\right).\]</div>
+<p>The program below verifies these analytical results numerically.</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">// Planck constant</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">hbar</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+  <span class="c1">// Angular frequency of the cavity mode</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">w_c</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+  <span class="c1">// Atomic transition frequency</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">w_a</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">;</span>
+  <span class="c1">// Atom-field coupling constant</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">Omega</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span>
+  <span class="c1">// Detuning</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">delta</span> <span class="o">=</span> <span class="n">w_a</span> <span class="o">-</span> <span class="n">w_c</span><span class="p">;</span>
+
+  <span class="c1">// For a_dag(), a(), S_p(), S_m() and S_z()</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="p">;</span>
+
+  <span class="c1">// The Jaynes-Cummings Hamiltonian</span>
+  <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">hbar</span> <span class="o">*</span> <span class="n">w_c</span> <span class="o">*</span> <span class="n">a_dag</span><span class="p">()</span> <span class="o">*</span> <span class="n">a</span><span class="p">()</span>  <span class="o">+</span>
+           <span class="n">hbar</span> <span class="o">*</span> <span class="n">w_a</span> <span class="o">*</span> <span class="n">S_z</span><span class="p">()</span> <span class="o">+</span>
+           <span class="n">hbar</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">Omega</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="p">()</span> <span class="o">*</span> <span class="n">S_p</span><span class="p">()</span> <span class="o">+</span> <span class="n">a_dag</span><span class="p">()</span> <span class="o">*</span> <span class="n">S_m</span><span class="p">());</span>
+
+  <span class="c1">// Check that the number operator commutes with the Hamiltonian</span>
+  <span class="k">auto</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a_dag</span><span class="p">()</span> <span class="o">*</span> <span class="n">a</span><span class="p">()</span> <span class="o">+</span> <span class="n">S_z</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, N] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">N</span> <span class="o">-</span> <span class="n">N</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Complete Hilbert space of the system is a product of the isospin-1/2 space</span>
+  <span class="c1">// and the bosonic space truncated to 2^10 - 1 excitations.</span>
+  <span class="k">auto</span> <span class="n">es_spin</span> <span class="o">=</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">make_space_spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">es_boson</span> <span class="o">=</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">make_space_boson</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+  <span class="n">hilbert_space</span><span class="o">&lt;</span><span class="cm">/* Our operators have no indices */</span><span class="o">&gt;</span> <span class="n">hs</span><span class="p">(</span><span class="n">es_spin</span><span class="p">,</span> <span class="n">es_boson</span><span class="p">);</span>
+
+  <span class="c1">// Ground state energy</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">E_gs</span> <span class="o">=</span> <span class="o">-</span><span class="n">hbar</span> <span class="o">*</span> <span class="n">w_a</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="c1">// Excited energy levels E_{\pm}(n)</span>
+  <span class="k">auto</span> <span class="n">energy</span> <span class="o">=</span> <span class="p">[</span><span class="o">=</span><span class="p">](</span><span class="kt">int</span> <span class="n">pm</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">hbar</span> <span class="o">*</span> <span class="n">w_c</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span>
+           <span class="n">pm</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">hbar</span> <span class="o">*</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span> <span class="o">*</span> <span class="n">delta</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">Omega</span> <span class="o">*</span> <span class="n">Omega</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="c1">// Mixing angle \alpha_n</span>
+  <span class="k">auto</span> <span class="n">alpha</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">atan</span><span class="p">(</span><span class="n">Omega</span> <span class="o">*</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">delta</span><span class="p">);</span> <span class="p">};</span>
+
+  <span class="c1">// Two state vectors in the complete Hilbert space</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">()),</span> <span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+
+  <span class="c1">// L^2 norm of |\spi&gt; - E|\phi&gt;</span>
+  <span class="c1">// Will be used to verify correctness of the eigenpairs</span>
+  <span class="k">auto</span> <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">psi</span><span class="p">,</span>
+                  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">phi</span><span class="p">,</span>
+                  <span class="kt">double</span> <span class="n">E</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">d</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">E</span><span class="o">*</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="c1">// loperator object corresponding to H</span>
+  <span class="k">auto</span> <span class="n">Hop</span> <span class="o">=</span> <span class="n">make_loperator</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Verify that |0, g&gt; is the ground state</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Index of the |0, g&gt; basis vector</span>
+  <span class="kt">int</span> <span class="n">gs_index</span> <span class="o">=</span> <span class="n">hs</span><span class="p">.</span><span class="n">basis_state_index</span><span class="p">(</span><span class="n">es_boson</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="c1">// n = 0</span>
+                 <span class="n">hs</span><span class="p">.</span><span class="n">basis_state_index</span><span class="p">(</span><span class="n">es_spin</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>   <span class="c1">// 0 -&gt; g</span>
+
+  <span class="c1">// Set |\phi&gt; = |0, g&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">phi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">phi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">phi</span><span class="p">[</span><span class="n">gs_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">psi</span> <span class="o">=</span> <span class="n">Hop</span><span class="p">(</span><span class="n">phi</span><span class="p">);</span>
+
+  <span class="c1">// Check |\psi&gt; \approx E_{gs} |\phi&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;|||0,g&gt; - E_g|0,g&gt;||_{L^2} = &quot;</span>
+            <span class="o">&lt;&lt;</span> <span class="n">diff</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">E_gs</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">//</span>
+  <span class="c1">// Now, do a similar check for the Jaynes-Cummings ladder doublets.</span>
+  <span class="c1">//</span>
+
+  <span class="c1">// Check the first 20 doublets</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">;</span> <span class="o">++</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Index of basis state |n - 1, e&gt;</span>
+    <span class="kt">int</span> <span class="n">n1_e_index</span> <span class="o">=</span> <span class="n">hs</span><span class="p">.</span><span class="n">basis_state_index</span><span class="p">(</span><span class="n">es_boson</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="c1">// n - 1</span>
+                     <span class="n">hs</span><span class="p">.</span><span class="n">basis_state_index</span><span class="p">(</span><span class="n">es_spin</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>       <span class="c1">// 1 -&gt; e</span>
+    <span class="c1">// Index of basis state |n, g&gt;</span>
+    <span class="kt">int</span> <span class="n">n_g_index</span> <span class="o">=</span> <span class="n">hs</span><span class="p">.</span><span class="n">basis_state_index</span><span class="p">(</span><span class="n">es_boson</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span>      <span class="c1">// n</span>
+                    <span class="n">hs</span><span class="p">.</span><span class="n">basis_state_index</span><span class="p">(</span><span class="n">es_spin</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>        <span class="c1">// 0 -&gt; g</span>
+
+    <span class="c1">// Set \phi to be the &quot;+&quot; dressed state</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">phi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">phi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">n1_e_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">n_g_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">Hop</span><span class="p">(</span><span class="n">phi</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;|||&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;,+&gt; - E_+(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span><span class="s">&quot;,+&gt;||_{L^2} = &quot;</span>
+              <span class="o">&lt;&lt;</span> <span class="n">diff</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">energy</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="c1">// Set \phi to be the &quot;-&quot; dressed state</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">phi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">phi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">n1_e_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">n_g_index</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">Hop</span><span class="p">(</span><span class="n">phi</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;|||&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;,-&gt; - E_-(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span><span class="s">&quot;,-&gt;||_{L^2} = &quot;</span>
+              <span class="o">&lt;&lt;</span> <span class="n">diff</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">energy</span><span class="p">(</span><span class="mi">-1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<dl class="citation">
+<dt class="label" id="jc63"><span class="brackets"><a class="fn-backref" href="#id1">JC63</a></span></dt>
+<dd><p>“Comparison of quantum and semiclassical radiation theories
+with application to the beam maser”,
+E. T. Jaynes and F.W. Cummings,
+Proc. IEEE, Vol. 51, issue 1, pp. 89-109 (1963),
+<a class="reference external" href="https://doi.org/10.1109/PROC.1963.1664">https://doi.org/10.1109/PROC.1963.1664</a></p>
+</dd>
+</dl>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="heisenberg_chain.html" class="btn btn-neutral float-right" title="Spin-1/2 Heisenberg chain and its integrals of motion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kanamori.html" class="btn btn-neutral float-left" title="Kanamori interaction Hamiltonian" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

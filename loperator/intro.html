@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Finite-dimensional Hilbert spaces" href="hilbert_space.html" />
+    <link rel="prev" title="Tools for exact diagonalization" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tools for exact diagonalization</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hilbert_space.html">Finite-dimensional Hilbert spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loperator.html">Linear operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monomial_action.html">Advanced: Linear operator representation of a user-defined algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_vector.html">State vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="space_partition.html">Finding invariant subspaces of a linear operator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Advanced examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Tools for exact diagonalization</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/loperator/intro.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<span id="ed-intro"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>Sometimes, algebraic manipulations with quantum-mechanical operators can be an
+important part of a numerical algorithm in their own right. It is, however, much
+more common to use the resulting algebraic expressions as operators acting in a
+space of quantum states (Hilbert space). This scenario is of particular
+importance when implementing algorithms for partial or full diagonalization
+of quantum Hamiltonians – so called exact diagonalization (ED) methods.</p>
+<p><em>libcommute</em> gives user a handful of tools to minimize overhead when
+writing ED codes. The following few steps describe a typical workflow of a
+<em>libcommute</em>-based ED code.</p>
+<ul class="simple">
+<li><p>Define Hamiltonian of a quantum system in a form of a
+<a class="reference internal" href="../expression/expression.html#expression"><span class="std std-ref">polynomial expression</span></a>.</p></li>
+<li><p>Make a finite-dimensional <a class="reference internal" href="hilbert_space.html#hilbert-space"><span class="std std-ref">Hilbert space</span></a>. This can
+be done either automatically for a given Hamiltonian, or – in more tricky
+cases – by explicitly constructing a product of
+<a class="reference internal" href="hilbert_space.html#elementary-spaces"><span class="std std-ref">elementary spaces</span></a>.</p></li>
+<li><p>Use the polynomial expression and the Hilbert space to make a
+<a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator</span></a> object representing the Hamiltonian.
+This object can be either a <a class="reference internal" href="loperator.html#simple-loperator"><span class="std std-ref">simple linear operator</span></a>
+or a <a class="reference internal" href="loperator.html#param-loperator"><span class="std std-ref">parametric linear operator</span></a>.</p></li>
+<li><p>Act with the constructed linear operator on
+<a class="reference internal" href="state_vector.html#state-vector"><span class="std std-ref">state vectors</span></a> to obtain a matrix representation of the
+Hamiltonian. Instead of computing all matrix elements at once and resorting
+to a dense diagonalization method such as QR algorithm, one could opt to
+power iteration or Lanczos algorithm for sparse eigenproblems. In the latter
+case, one must act with the operator on a state at each step of the iterative
+diagonalization scheme.</p></li>
+</ul>
+<p>There is also an option to <a class="reference internal" href="space_partition.html#space-partition"><span class="std std-ref">find invariant subspaces</span></a> of
+the Hamiltonian to reduce the numerical cost of the diagonalization procedure.
+The <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code> state vector adapter can be acted upon by
+linear operators defined in the full Hilbert space, while saving memory by
+storing only the part of a state vector belonging to a certain invariant
+subspace.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hilbert_space.html" class="btn btn-neutral float-right" title="Finite-dimensional Hilbert spaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Tools for exact diagonalization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

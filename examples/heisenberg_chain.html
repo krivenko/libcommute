@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Spin-1/2 Heisenberg chain and its integrals of motion &mdash; libcommute 0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Custom scalar types and parametric_loperator" href="parametric_loperator.html" />
+    <link rel="prev" title="Jaynes-Cummings ladder" href="jaynes_cummings.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+          
+
+          
+            
+            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kanamori.html">Kanamori interaction Hamiltonian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaynes_cummings.html">Jaynes-Cummings ladder</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Spin-1/2 Heisenberg chain and its integrals of motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametric_loperator.html">Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="virasoro_algebra.html">Virasoro algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Advanced examples</a> &raquo;</li>
+        
+      <li>Spin-1/2 Heisenberg chain and its integrals of motion</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/examples/heisenberg_chain.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="spin-1-2-heisenberg-chain-and-its-integrals-of-motion">
+<span id="heisenberg-chain"></span><h1>Spin-1/2 Heisenberg chain and its integrals of motion<a class="headerlink" href="#spin-1-2-heisenberg-chain-and-its-integrals-of-motion" title="Permalink to this headline">¶</a></h1>
+<p>The spin-1/2 Heisenberg chain is a textbook example of an integrable quantum
+system. Its Hamiltonian</p>
+<div class="math notranslate nohighlight">
+\[\hat H = g \sum_i \mathbf{S}_i \cdot \mathbf{S}_{i+1}\]</div>
+<p>conserves three projections of the total spin</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{S} = \sum_i \mathbf{S}_i\]</div>
+<p>as well as a series of higher order charges <span class="math notranslate nohighlight">\(Q_n\)</span>. Existence of these
+charges can be derived from the transfer matrix theory. Explicit expressions
+for <span class="math notranslate nohighlight">\(Q_n\)</span> were obtained in <a class="reference internal" href="#gm94" id="id1"><span>[GM94]</span></a>. The following program constructs
+Hamiltonian of the Heisenberg chain with periodic boundary conditions and
+checks that <span class="math notranslate nohighlight">\([\hat H, \mathbf{S}] = 0\)</span>, <span class="math notranslate nohighlight">\([\hat H, Q_n] = 0\)</span> and
+<span class="math notranslate nohighlight">\([Q_n, Q_m] = 0\)</span> for <span class="math notranslate nohighlight">\(m,n = 3,4,5\)</span>.</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
+
+<span class="c1">// Type of the spin-1/2 Heisenberg Hamiltonian and its charges.</span>
+<span class="c1">// All spin operators are going to carry one integer index - the site index.</span>
+<span class="k">using</span> <span class="n">expr_t</span> <span class="o">=</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">expr_complex</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// Spins S_i are operator-valued 3-dimensional vectors. Here, we use std::array</span>
+<span class="c1">// as a simplistic implementation of such vectors.</span>
+<span class="k">using</span> <span class="n">vector_expr_t</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">expr_t</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// Addition of two vectors.</span>
+<span class="n">vector_expr_t</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">vector_expr_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">S1</span><span class="p">,</span> <span class="n">vector_expr_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">S2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span><span class="n">S1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">S2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">S2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">S2</span><span class="p">[</span><span class="mi">2</span><span class="p">]};</span>
+<span class="p">}</span>
+
+<span class="c1">// Scalar product of two vectors.</span>
+<span class="n">expr_t</span> <span class="n">dot</span><span class="p">(</span><span class="n">vector_expr_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">S1</span><span class="p">,</span> <span class="n">vector_expr_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">S2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">S1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">S1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">S1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// Cross product of two vectors</span>
+<span class="n">vector_expr_t</span> <span class="n">cross</span><span class="p">(</span><span class="n">vector_expr_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">S1</span><span class="p">,</span> <span class="n">vector_expr_t</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">S2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span><span class="n">S1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">S1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="n">S1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">S1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+          <span class="n">S1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">S1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">S2</span><span class="p">[</span><span class="mi">0</span><span class="p">]};</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">// For functions S_x(), S_y() and S_z().</span>
+  <span class="c1">// Note that the x/y functions exist only for the complex expressions.</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">complex</span><span class="p">;</span>
+
+  <span class="c1">// Number of spins in the chain</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+  <span class="c1">// Heisenberg exchange constant</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="n">g</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="c1">// List of spin operators {S_0, S_1, ..., S_{N-1}}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector_expr_t</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">S</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">S_x</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">S_y</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">S_z</span><span class="p">(</span><span class="n">i</span><span class="p">)});</span>
+
+  <span class="c1">// Hamiltonian of the spin-1/2 Heisenberg chain.</span>
+  <span class="n">expr_t</span> <span class="n">H</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Index shift modulo N ensures periodic boundary conditions.</span>
+    <span class="n">H</span> <span class="o">+=</span> <span class="n">g</span> <span class="o">*</span> <span class="n">dot</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Total spin of the chain</span>
+  <span class="n">vector_expr_t</span> <span class="n">S_tot</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">S_tot</span> <span class="o">=</span> <span class="n">S_tot</span> <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+  <span class="c1">// All three components of S commute with the Hamiltonian.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, S_x] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">S_tot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">S_tot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, S_y] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">S_tot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">S_tot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, S_z] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">S_tot</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">S_tot</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Higher charge Q_3 (1st line of Eq. (10)).</span>
+  <span class="n">expr_t</span> <span class="n">Q3</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Q3</span> <span class="o">+=</span> <span class="n">dot</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, Q3] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q3</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Higher charge Q_4 (2nd line of Eq. (10)).</span>
+  <span class="n">expr_t</span> <span class="n">Q4</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Q4</span> <span class="o">+=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+    <span class="n">Q4</span> <span class="o">+=</span> <span class="n">dot</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, Q4] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">Q4</span> <span class="o">-</span> <span class="n">Q4</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Higher charge Q_5 (3rd line of Eq. (10)).</span>
+  <span class="n">expr_t</span> <span class="n">Q5</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Q5</span> <span class="o">+=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span>
+              <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+    <span class="n">Q5</span> <span class="o">+=</span> <span class="n">dot</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+    <span class="n">Q5</span> <span class="o">+=</span> <span class="n">dot</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]),</span> <span class="n">S</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">%</span><span class="n">N</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H, Q5] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">Q5</span> <span class="o">-</span> <span class="n">Q5</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Check that the higher charges pairwise commute.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[Q3, Q4] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">Q3</span> <span class="o">*</span> <span class="n">Q4</span> <span class="o">-</span> <span class="n">Q4</span> <span class="o">*</span> <span class="n">Q3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[Q3, Q5] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">Q3</span> <span class="o">*</span> <span class="n">Q5</span> <span class="o">-</span> <span class="n">Q5</span> <span class="o">*</span> <span class="n">Q3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[Q4, Q5] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">Q4</span> <span class="o">*</span> <span class="n">Q5</span> <span class="o">-</span> <span class="n">Q5</span> <span class="o">*</span> <span class="n">Q4</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<dl class="citation">
+<dt class="label" id="gm94"><span class="brackets"><a class="fn-backref" href="#id1">GM94</a></span></dt>
+<dd><p>“Quantum Integrals of Motion for the Heisenberg Spin Chain”,
+M. P. Grabowski and P. Mathieu,
+Mod. Phys. Lett. A, Vol. 09, No. 24, pp. 2197-2206 (1994),
+<a class="reference external" href="https://doi.org/10.1142/S0217732394002057">https://doi.org/10.1142/S0217732394002057</a></p>
+</dd>
+</dl>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="parametric_loperator.html" class="btn btn-neutral float-right" title="Custom scalar types and parametric_loperator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jaynes_cummings.html" class="btn btn-neutral float-left" title="Jaynes-Cummings ladder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016-2020, Igor Krivenko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
