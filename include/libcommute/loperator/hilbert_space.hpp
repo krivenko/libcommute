@@ -222,7 +222,7 @@ public:
   // |0> |0> ... |0> |n>_{es} |0> ... |0>.
   sv_index_type basis_state_index(elementary_space_t const& es, sv_index_type n)
   {
-    assert(n < (1 << es.n_bits()));
+    assert(n < (sv_index_type(1) << es.n_bits()));
     return n << bit_range(es).first;
   }
 

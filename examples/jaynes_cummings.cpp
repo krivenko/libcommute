@@ -83,7 +83,7 @@ int main() {
                   std::vector<double> const& phi,
                   double E) {
     double d = 0;
-    for(int i = 0; i < hs.dim(); ++i) {
+    for(unsigned int i = 0; i < hs.dim(); ++i) {
       d += std::pow(psi[i] - E*phi[i], 2);
     }
     return std::sqrt(d);

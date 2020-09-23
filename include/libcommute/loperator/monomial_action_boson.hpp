@@ -81,7 +81,7 @@ public:
     auto next_it = it; ++next_it;
     auto end_it = m_range.second;
 
-    int power = 1;
+    sv_index_type power = 1;
     for(;it != end_it; ++it, ++next_it) {
       if(!is_boson(*it))
         throw unknown_generator<IndexTypes...>(*it);
@@ -129,7 +129,7 @@ public:
         sv_index_type(LIBCOMMUTE_BOSON_MAX_NUM_PRECOMPUTED_SQRT)
       );
       sqr_roots_.resize(sqr_roots_size);
-      for(int n = 0; n < sqr_roots_size; ++n)
+      for(sv_index_type n = 0; n < sqr_roots_size; ++n)
         sqr_roots_[n] = std::sqrt(double(n));
     }
   }
@@ -145,7 +145,8 @@ public:
 
       int64_t n_part = (index >> update.shift) & update.mask;
       int64_t new_n_part = n_part + update.n_change;
-      if(new_n_part < 0 || new_n_part > update.n_max) return false;
+      if(new_n_part < 0 || new_n_part > int64_t(update.n_max))
+        return false;
 
       if(update.n_change > 0) {
         for(int d = 1; d <= update.n_change; ++d)

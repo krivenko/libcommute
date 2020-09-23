@@ -152,7 +152,7 @@ class basis_mapper {
       });
     }
 
-    if(m == O_list.size()) return;
+    if(std::size_t(m) == O_list.size()) return;
 
     compositions_constructor_impl(O_list, st, m + 1, sum_n, N);
 

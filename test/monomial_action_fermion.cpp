@@ -69,7 +69,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
   for(int i = 0; i < n_ops; ++i) hs.add(make_space_fermion(i));
 
   std::vector<sv_index_type> in_index_list(1 << n_ops);
-  for(int i = 0; i < in_index_list.size(); i++)
+  for(unsigned int i = 0; i < in_index_list.size(); i++)
     in_index_list[i] = (i << n_pad_bits) + (1 << n_pad_bits) - 1;
 
   SECTION("No operators") {
@@ -85,7 +85,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
     }
   }
   SECTION("1 operator") {
-    for(int i = 0; i < gens.size(); ++i) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
       mon_type mon(gens[i]);
       check_monomial_action<ma_type>(mon,
                                      hs,
@@ -94,8 +94,8 @@ TEST_CASE("Action of a fermionic monomial on an index",
     }
   }
   SECTION("2 operators") {
-    for(int i = 0; i < gens.size(); ++i) {
-      for(int j = 0; j < gens.size(); ++j) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
+      for(unsigned int j = 0; j < gens.size(); ++j) {
         if(!(gens[i] < gens[j])) continue;
         mon_type mon(gens[i], gens[j]);
         check_monomial_action<ma_type>(mon,
@@ -106,9 +106,9 @@ TEST_CASE("Action of a fermionic monomial on an index",
     }
   }
   SECTION("3 operators") {
-    for(int i = 0; i < gens.size(); ++i) {
-      for(int j = 0; j < gens.size(); ++j) {
-        for(int k = 0; k < gens.size(); ++k) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
+      for(unsigned int j = 0; j < gens.size(); ++j) {
+        for(unsigned int k = 0; k < gens.size(); ++k) {
           if(!(gens[i] < gens[j]) || !(gens[j] < gens[k])) continue;
           mon_type mon(gens[i], gens[j], gens[k]);
           check_monomial_action<ma_type>(mon,
@@ -120,10 +120,10 @@ TEST_CASE("Action of a fermionic monomial on an index",
     }
   }
   SECTION("4 operators") {
-    for(int i = 0; i < gens.size(); ++i) {
-      for(int j = 0; j < gens.size(); ++j) {
-        for(int k = 0; k < gens.size(); ++k) {
-          for(int l = 0; l < gens.size(); ++l) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
+      for(unsigned int j = 0; j < gens.size(); ++j) {
+        for(unsigned int k = 0; k < gens.size(); ++k) {
+          for(unsigned int l = 0; l < gens.size(); ++l) {
             if(!(gens[i] < gens[j]) ||
                !(gens[j] < gens[k]) ||
                !(gens[k] < gens[l])) continue;

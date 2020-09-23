@@ -308,14 +308,14 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     }
   }
   SECTION("1 operator") {
-    for(int i = 0; i < gens.size(); ++i) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
       mon_type mon{gens[i]->clone()};
       check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
     }
   }
   SECTION("2 operators") {
-    for(int i = 0; i < gens.size(); ++i) {
-      for(int j = 0; j < gens.size(); ++j) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
+      for(unsigned int j = 0; j < gens.size(); ++j) {
         if(!(*gens[i] < *gens[j])) continue;
         mon_type mon{gens[i]->clone(), gens[j]->clone()};
         check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
@@ -323,9 +323,9 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     }
   }
   SECTION("3 operators") {
-    for(int i = 0; i < gens.size(); ++i) {
-      for(int j = 0; j < gens.size(); ++j) {
-        for(int k = 0; k < gens.size(); ++k) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
+      for(unsigned int j = 0; j < gens.size(); ++j) {
+        for(unsigned int k = 0; k < gens.size(); ++k) {
           if(!(*gens[i] < *gens[j]) || !(*gens[j] < *gens[k])) continue;
           mon_type mon{gens[i]->clone(), gens[j]->clone(), gens[k]->clone()};
           check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
@@ -334,10 +334,10 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     }
   }
   SECTION("4 operators") {
-    for(int i = 0; i < gens.size(); ++i) {
-      for(int j = 0; j < gens.size(); ++j) {
-        for(int k = 0; k < gens.size(); ++k) {
-          for(int l = 0; l < gens.size(); ++l) {
+    for(unsigned int i = 0; i < gens.size(); ++i) {
+      for(unsigned int j = 0; j < gens.size(); ++j) {
+        for(unsigned int k = 0; k < gens.size(); ++k) {
+          for(unsigned int l = 0; l < gens.size(); ++l) {
             if(!(*gens[i] < *gens[j]) ||
                !(*gens[j] < *gens[k]) ||
                !(*gens[k] < *gens[l])) continue;

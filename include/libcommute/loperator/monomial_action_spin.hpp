@@ -123,7 +123,7 @@ public:
         sv_index_type(LIBCOMMUTE_SPIN_MAX_NUM_PRECOMPUTED_SQRT)
       );
       sqr_roots_.resize(sqr_roots_size);
-      for(int n = 0; n < sqr_roots_size; ++n)
+      for(sv_index_type n = 0; n < sqr_roots_size; ++n)
         sqr_roots_[n] = std::sqrt(double(n));
     }
   }
@@ -138,7 +138,7 @@ public:
       switch(update.c) {
         case plus: {
           if(n + update.power > update.s2) return false;
-          for(int d = 0; d < update.power; ++d)
+          for(sv_index_type d = 0; d < update.power; ++d)
             mul_assign(coeff,
               scalar_traits<ScalarType>::make_const(
                 sqr_root((update.s2 - (n+d))*(n+d + 1))
@@ -149,7 +149,7 @@ public:
         break;
         case minus: {
           if(n - std::int64_t(update.power) < 0) return false;
-          for(int d = 0; d < update.power; ++d)
+          for(sv_index_type d = 0; d < update.power; ++d)
             mul_assign(coeff,
               scalar_traits<ScalarType>::make_const(
                 sqr_root((update.s2 - (n-d) + 1)*(n-d))
@@ -159,7 +159,8 @@ public:
         }
         break;
         case z: {
-          if((update.s2 % 2 == 0) && n == update.s2 / 2) return false;
+          if((update.s2 % 2 == 0) && n == std::int64_t(update.s2 / 2))
+            return false;
           mul_assign(coeff,
             scalar_traits<ScalarType>::make_const(
               std::pow(double(n) - double(update.s2)/2, update.power)

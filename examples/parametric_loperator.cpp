@@ -164,7 +164,7 @@ int main() {
 
     // Print all non-zero elements of |ket>
     std::cout << "\\lambda = " << lambda << " :|ket> = ";
-    for(int i = 0; i < ket.size(); ++i) {
+    for(unsigned int i = 0; i < ket.size(); ++i) {
       if(ket[i] != 0)
         std::cout << " +(" << ket[i] << ")|" << i << ">";
     }

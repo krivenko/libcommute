@@ -33,7 +33,7 @@ TEST_CASE("Disjoint sets data structure", "[disjoint_sets]") {
     CHECK(ds.size() == 15);
     CHECK(ds.n_sets() == 15);
 
-    for(int i = 0; i < ds.n_sets(); ++i)
+    for(unsigned int i = 0; i < ds.n_sets(); ++i)
       CHECK(ds.find_root(i) == i);
 
     CHECK_FALSE(ds.in_same_set(2, 3));
