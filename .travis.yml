@@ -1,0 +1,66 @@
+language: cpp
+os: linux
+dist: bionic
+cache: bundler
+
+branches:
+  only:
+    - master
+    - travis
+
+jobs:
+  include:
+  - compiler: clang
+  - compiler: gcc
+
+before_script:
+  # Stop on first error
+  - set -e
+
+  # Install Sphinx and Read the Docs Sphinx Theme
+  - pyenv global 3.8
+  - pip3 install -U sphinx sphinx-rtd-theme
+
+  # Force CLang to use libc++
+  - |
+    if [[ "${CXX}" == "clang++" ]]; then
+      CMAKE_CXX_FLAGS="-stdlib=libc++ -D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR";
+      export LD_LIBRARY_PATH=/usr/local/clang-7.0.0/lib:$LD_LIBRARY_PATH;
+    fi
+
+  # Conditionally build documentation
+  - |
+    if [[ "${CXX}" == "clang++" ]]; then
+      export DOCS=ON
+    else
+      export DOCS=OFF
+    fi
+
+script:
+  - mkdir installed
+  - mkdir build && pushd build
+  - |
+    cmake ..                                                        \
+    -DCMAKE_BUILD_TYPE=Debug                                        \
+    -DCMAKE_INSTALL_PREFIX=$(readlink -f ../installed)              \
+    -DTESTS=ON                                                      \
+    -DEXAMPLES=ON                                                   \
+    -DDOCUMENTATION=${DOCS}
+  - make -j3
+  - make test
+  - make install
+  - popd
+  # Prepare documentation for deployment
+  - touch $TRAVIS_BUILD_DIR/installed/share/doc/libcommute/.nojekyll
+
+deploy:
+  # Publish documentation
+  provider: pages
+  strategy: git
+  skip_cleanup: true
+  token: $GITHUB_TOKEN
+  keep_history: true
+  local_dir: $TRAVIS_BUILD_DIR/installed/share/doc/libcommute
+  on:
+    branch: master
+    condition: "$CC = clang"
