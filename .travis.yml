@@ -51,7 +51,10 @@ script:
   - make install
   - popd
   # Prepare documentation for deployment
-  - touch $TRAVIS_BUILD_DIR/installed/share/doc/libcommute/.nojekyll
+  - |
+    if [[ "${CXX}" == "clang++" ]]; then
+      touch $TRAVIS_BUILD_DIR/installed/share/doc/libcommute/.nojekyll
+    fi
 
 deploy:
   # Publish documentation
