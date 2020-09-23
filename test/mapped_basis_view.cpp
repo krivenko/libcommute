@@ -75,7 +75,10 @@ TEST_CASE("Basis-mapped view of a state vector",
 
   // Map all basis states with 2 electrons so that their indices are contiguous
   std::unordered_map<sv_index_type, sv_index_type> map;
-  for(auto i : {3, 5, 6, 9, 10, 12}) map[i] = map.size();
+  for(auto i : {3, 5, 6, 9, 10, 12}) {
+    sv_index_type j = map.size();
+    map[i] = j;
+  }
   REQUIRE(map.size() == 6);
 
   state_vector st{0, 1, 2, 3, 4, 5};
