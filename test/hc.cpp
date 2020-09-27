@@ -22,14 +22,12 @@ using namespace libcommute;
 using namespace static_indices;
 
 TEST_CASE("Hermitian conjugate object (double)", "[hc_double]") {
-  using namespace real;
   auto expr = 2 * c_dag("up", 1) * c("up", 2);
   CHECK((expr + hc) == (expr + conj(expr)));
   CHECK((expr - hc) == (expr - conj(expr)));
 }
 
 TEST_CASE("Hermitian conjugate object (complex)", "[hc_complex]") {
-  using namespace complex;
   auto expr = std::complex<double>(2, 2) * c_dag("up", 1) * c("up", 2);
   CHECK((expr + hc) == (expr + conj(expr)));
   CHECK((expr - hc) == (expr - conj(expr)));

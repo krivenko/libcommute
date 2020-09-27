@@ -27,7 +27,7 @@ using namespace static_indices;
 
 TEST_CASE("Compound assignment/addition", "[plus_assign]") {
   SECTION("double") {
-    auto expr_r = real::c_dag(1, "up");
+    auto expr_r = c_dag(1, "up");
     using ref_t = decltype(expr_r);
     expr_r += 4.0;
     CHECK_THAT(expr_r, Prints<ref_t>("4 + 1*C+(1,up)"));
@@ -37,7 +37,7 @@ TEST_CASE("Compound assignment/addition", "[plus_assign]") {
     CHECK_THAT(expr_r, Prints<ref_t>("1*C+(1,up)"));
   }
   SECTION("complex from double") {
-    auto expr_c = complex::c_dag(1, "up");
+    auto expr_c = make_complex(c_dag(1, "up"));
     using ref_t = decltype(expr_c);
 
     expr_c += 4.0;
@@ -62,7 +62,7 @@ TEST_CASE("Compound assignment/addition", "[plus_assign]") {
 
 TEST_CASE("Addition", "[plus]") {
   SECTION("double") {
-    auto expr_r = real::c_dag(1, "up");
+    auto expr_r = c_dag(1, "up");
     using ref_t = decltype(expr_r);
 
     // Result type
@@ -84,7 +84,7 @@ TEST_CASE("Addition", "[plus]") {
     CHECK_THAT(((-2) + expr_r), Prints<ref_t>("1*C+(1,up)"));
   }
   SECTION("complex and double") {
-    auto expr_c = complex::c_dag(1, "up");
+    auto expr_c = make_complex(c_dag(1, "up"));
     using ref_t = decltype(expr_c);
 
     // Result type
@@ -106,7 +106,7 @@ TEST_CASE("Addition", "[plus]") {
     CHECK_THAT(((-2.0) + expr_c), Prints<ref_t>("(1,0)*C+(1,up)"));
   }
   SECTION("double and complex") {
-    auto expr_r = real::c_dag(1, "up");
+    auto expr_r = c_dag(1, "up");
     using ref_t = expression<std::complex<double>, int, std::string>;
     const std::complex<double> Id(1,0);
     const std::complex<double> I(0,1);

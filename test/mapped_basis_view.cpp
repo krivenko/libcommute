@@ -47,7 +47,7 @@ void check_equal_maps_up_to_value_permutation(
 TEST_CASE("Basis-mapped view of a state vector",
           "[mapped_basis_view]") {
 
-  using namespace static_indices::real;
+  using namespace static_indices;
   using state_vector = std::vector<double>;
 
   // Finite system of 4 fermions: 2 orbitals, two spin projections

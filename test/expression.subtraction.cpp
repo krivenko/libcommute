@@ -28,25 +28,25 @@ using namespace static_indices;
 
 TEST_CASE("Compound assignment/subtraction", "[minus_assign]") {
   SECTION("double") {
-    auto expr_r = real::c_dag(1, "up");
+    auto expr_r = c_dag(1, "up");
     using ref_t = decltype(expr_r);
 
-    expr_r -= real::c(2, "dn");
+    expr_r -= c(2, "dn");
     CHECK_THAT(expr_r, Prints<ref_t>("1*C+(1,up) + -1*C(2,dn)"));
     expr_r -= ref_t();
     CHECK_THAT(expr_r, Prints<ref_t>("1*C+(1,up) + -1*C(2,dn)"));
-    expr_r -= real::c_dag(1, "up");
+    expr_r -= c_dag(1, "up");
     CHECK_THAT(expr_r, Prints<ref_t>("-1*C(2,dn)"));
   }
   SECTION("complex from double") {
-    auto expr_c = complex::c_dag(1, "up");
+    auto expr_c = make_complex(c_dag(1, "up"));
     using ref_t = decltype(expr_c);
 
-    expr_c -= real::c(2, "dn");
+    expr_c -= c(2, "dn");
     CHECK_THAT(expr_c, Prints<ref_t>("(1,0)*C+(1,up) + (-1,0)*C(2,dn)"));
     expr_c -= ref_t();
     CHECK_THAT(expr_c, Prints<ref_t>("(1,0)*C+(1,up) + (-1,0)*C(2,dn)"));
-    expr_c -= real::c_dag(1, "up");
+    expr_c -= c_dag(1, "up");
     CHECK_THAT(expr_c, Prints<ref_t>("(-1,0)*C(2,dn)"));
   }
   SECTION("my_complex") {
@@ -64,40 +64,40 @@ TEST_CASE("Compound assignment/subtraction", "[minus_assign]") {
 
 TEST_CASE("Subtraction", "[minus]") {
   SECTION("double") {
-    auto expr_r = real::c_dag(1, "up");
+    auto expr_r = c_dag(1, "up");
     using ref_t = decltype(expr_r);
 
     // Result type
-    CHECK(std::is_same<decltype(expr_r - real::c(2, "dn")), ref_t>::value);
-    CHECK(std::is_same<decltype(real::c(2, "dn") - expr_r), ref_t>::value);
+    CHECK(std::is_same<decltype(expr_r - c(2, "dn")), ref_t>::value);
+    CHECK(std::is_same<decltype(c(2, "dn") - expr_r), ref_t>::value);
 
     CHECK_THAT((ref_t() - ref_t()), Prints<ref_t>("0"));
 
     CHECK_THAT((expr_r - ref_t()), Prints<ref_t>("1*C+(1,up)"));
     CHECK_THAT((ref_t() - expr_r), Prints<ref_t>("-1*C+(1,up)"));
-    CHECK_THAT((expr_r - real::c(2, "dn")),
+    CHECK_THAT((expr_r - c(2, "dn")),
                Prints<ref_t>("1*C+(1,up) + -1*C(2,dn)"));
-    CHECK_THAT((real::c(2, "dn") - expr_r),
+    CHECK_THAT((c(2, "dn") - expr_r),
                Prints<ref_t>("-1*C+(1,up) + 1*C(2,dn)"));
 
-    expr_r -= real::c(2, "dn");
+    expr_r -= c(2, "dn");
 
     CHECK_THAT((expr_r + ref_t()), Prints<ref_t>("1*C+(1,up) + -1*C(2,dn)"));
     CHECK_THAT((ref_t() - expr_r), Prints<ref_t>("-1*C+(1,up) + 1*C(2,dn)"));
-    CHECK_THAT((expr_r - real::a(0, "x")),
+    CHECK_THAT((expr_r - a(0, "x")),
                Prints<ref_t>("1*C+(1,up) + -1*C(2,dn) + -1*A(0,x)"));
-    CHECK_THAT((real::a(0, "x") - expr_r),
+    CHECK_THAT((a(0, "x") - expr_r),
                Prints<ref_t>("-1*C+(1,up) + 1*C(2,dn) + 1*A(0,x)"));
-    CHECK_THAT((expr_r - real::c_dag(1, "up")), Prints<ref_t>("-1*C(2,dn)"));
-    CHECK_THAT((real::c_dag(1, "up") - expr_r), Prints<ref_t>("1*C(2,dn)"));
+    CHECK_THAT((expr_r - c_dag(1, "up")), Prints<ref_t>("-1*C(2,dn)"));
+    CHECK_THAT((c_dag(1, "up") - expr_r), Prints<ref_t>("1*C(2,dn)"));
 
-    CHECK_THAT(((real::c_dag(1, "up") + real::c(2, "dn")) -
-                (real::c(2, "dn") + 2.0)),
+    CHECK_THAT(((c_dag(1, "up") + c(2, "dn")) -
+                (c(2, "dn") + 2.0)),
                Prints<ref_t>("-2 + 1*C+(1,up)"));
   }
   SECTION("complex and double") {
-    auto expr1 = complex::c_dag(1, "up");
-    auto expr2 = real::c(2, "dn");
+    auto expr1 = make_complex(c_dag(1, "up"));
+    auto expr2 = c(2, "dn");
     using ref1_t = decltype(expr1);
     using ref2_t = decltype(expr2);
 
@@ -123,17 +123,17 @@ TEST_CASE("Subtraction", "[minus]") {
                Prints<ref1_t>("(1,0)*C+(1,up) + (-1,0)*C(2,dn)"));
     CHECK_THAT((ref2_t() - expr1),
                Prints<ref1_t>("(-1,-0)*C+(1,up) + (1,-0)*C(2,dn)"));
-    CHECK_THAT((expr1 - real::a(0, "x")),
+    CHECK_THAT((expr1 - a(0, "x")),
              Prints<ref1_t>("(1,0)*C+(1,up) + (-1,0)*C(2,dn) + (-1,0)*A(0,x)"));
-    CHECK_THAT((real::a(0, "x") - expr1),
+    CHECK_THAT((a(0, "x") - expr1),
            Prints<ref1_t>("(-1,-0)*C+(1,up) + (1,-0)*C(2,dn) + (1,-0)*A(0,x)"));
-    CHECK_THAT((expr1 - complex::c_dag(1, "up")),
+    CHECK_THAT((expr1 - make_complex(c_dag(1, "up"))),
                Prints<ref1_t>("(-1,0)*C(2,dn)"));
-    CHECK_THAT((complex::c_dag(1, "up") - expr1),
+    CHECK_THAT((make_complex(c_dag(1, "up")) - expr1),
                Prints<ref1_t>("(1,0)*C(2,dn)"));
 
-    CHECK_THAT(((complex::c_dag(1, "up") + complex::c(2, "dn")) -
-               (real::c(2, "dn") + 2.0)),
+    CHECK_THAT((make_complex(c_dag(1, "up") + c(2, "dn")) -
+               (c(2, "dn") + 2.0)),
                Prints<ref1_t>("(-2,0) + (1,0)*C+(1,up)"));
   }
   SECTION("my_complex") {

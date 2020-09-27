@@ -58,7 +58,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(expr_monomial.size() == 0);
 
     SECTION("S_z products") {
-      using namespace real;
       monomial<int> mon_sz(
         make_fermion(true, 1),
         make_spin(spin_component::z, 1),
@@ -94,7 +93,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("Unary minus") {
-    auto expr_r = real::c_dag(1, "up");
+    auto expr_r = c_dag(1, "up");
     CHECK_THAT(-expr_r, Prints<decltype(expr_r)>("-1*C+(1,up)"));
 
     auto expr_static_int = c_dag<my_complex>(1, "up");
@@ -105,10 +104,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
   SECTION("const_iterator") {
     using expr_type = expression<double, int, std::string>;
     using mon_type = expr_type::monomial_t;
-    using real::c_dag;
-    using real::c;
-    using real::a_dag;
-    using real::a;
 
     expr_type expr0;
     CHECK(expr0.begin() == expr0.end());
@@ -178,7 +173,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("transform()") {
-    using namespace real;
     auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
                 3.0 * a(0, "x") + 2.0 * a_dag(0, "y");
     using mon_type = decltype(expr)::monomial_t;
@@ -209,7 +203,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("conj()") {
-    using namespace complex;
     auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
                 3.0 * a(0, "x") + std::complex<double>(0,2) * a_dag(0, "y");
     auto ref = 4.0 * c_dag(2, "dn") * c(1, "up") + 1.0 +
@@ -219,7 +212,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("Products of Spin-1/2 operators") {
-    using namespace real;
     CHECK(S_z() * S_z() == expr_real<>(0.25));
     CHECK(S_p() * S_p() == expr_real<>(0));
     CHECK(S_m() * S_m() == expr_real<>(0));
@@ -233,7 +225,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("Powers of S_z") {
-    using namespace real;
     expr_real<> sum;
     for(int n = 1; n <= 11; ++n) {
       auto p = c_dag();
@@ -245,8 +236,6 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("Heisenberg chain") {
-    using namespace complex;
-
     using expr_t = expression<std::complex<double>, int>;
     using vec_expr_t = std::array<expr_t, 3>;
 

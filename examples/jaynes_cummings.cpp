@@ -44,7 +44,7 @@ int main() {
   const double delta = w_a - w_c;
 
   // For a_dag(), a(), S_p(), S_m() and S_z()
-  using namespace static_indices::real;
+  using namespace static_indices;
 
   // The Jaynes-Cummings Hamiltonian
   auto H = hbar * w_c * a_dag() * a()  +

@@ -25,7 +25,7 @@
 using namespace libcommute;
 
 TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
-  using namespace static_indices::real;
+  using namespace static_indices;
 
   // 3 orbital Hubbard-Kanamori atom
   const int n_orbs = 3;

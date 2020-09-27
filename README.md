@@ -130,11 +130,11 @@ int main() {
 
   // The following 'factory' functions make quantum operators with
   // statically typed indices and real coefficients.
-  using static_indices::real::c_dag; // Create an electron
-  using static_indices::real::c;     // Destroy an electron
-  using static_indices::real::n;     // Number of electrons
-  using static_indices::real::a_dag; // Create a phonon
-  using static_indices::real::a;     // Destroy a phonon
+  using static_indices::c_dag; // Create an electron
+  using static_indices::c;     // Destroy an electron
+  using static_indices::n;     // Number of electrons
+  using static_indices::a_dag; // Create a phonon
+  using static_indices::a;     // Destroy a phonon
 
   // Hopping terms of H
   for(auto spin : {"up", "down"}) {
@@ -234,9 +234,9 @@ int main() {
 
   // The following 'factory' functions make spin operators with statically typed
   // indices and real coefficients.
-  using static_indices::real::S_p;  // Spin-1/2 raising operator S_+
-  using static_indices::real::S_m;  // Spin-1/2 lowering operator S_-
-  using static_indices::real::S_z;  // Spin-1/2 operator S_z
+  using static_indices::S_p;  // Spin-1/2 raising operator S_+
+  using static_indices::S_m;  // Spin-1/2 lowering operator S_-
+  using static_indices::S_z;  // Spin-1/2 operator S_z
 
   // Expression 'H' will represent the exchange interaction term.
   // Our spin operators will carry one integer index (site 1 or 2).

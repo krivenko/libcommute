@@ -18,6 +18,9 @@
 
 #include <libcommute/expression/factories_dyn.hpp>
 
+#include <complex>
+#include <type_traits>
+
 using namespace libcommute;
 using namespace libcommute::dynamic_indices;
 
@@ -35,6 +38,16 @@ void check_monomial(E const& expr, S ref_coeff, Generators&&... generators) {
 TEST_CASE("Factory functions", "[factories]") {
 
   using namespace dynamic_indices;
+
+  SECTION("make_complex()") {
+    auto expr = make_complex(4.0 * c_dag(1, "up") * c(2, "dn") + 1.0);
+    CHECK(std::is_same<decltype(expr),
+                       expression<std::complex<double>, dyn_indices>
+          >::value);
+    CHECK(expr == std::complex<double>(4,0) * c_dag(1, "up") * c(2, "dn") +
+                  std::complex<double>(1,0)
+    );
+  }
 
   SECTION("my_complex") {
     SECTION("fermion") {
@@ -109,10 +122,6 @@ TEST_CASE("Factory functions", "[factories]") {
 
   SECTION("real") {
     SECTION("fermion") {
-      using real::c_dag;
-      using real::c;
-      using real::n;
-
       auto c_dag_1_up = c_dag(1, "up");
       check_monomial(c_dag_1_up, 1, make_fermion(true, 1, "up"));
 
@@ -127,9 +136,6 @@ TEST_CASE("Factory functions", "[factories]") {
                     );
     }
     SECTION("boson") {
-      using real::a_dag;
-      using real::a;
-
       auto a_dag_x = a_dag(0, "x");
       check_monomial(a_dag_x, 1, make_boson(true, 0, "x"));
 
@@ -137,10 +143,6 @@ TEST_CASE("Factory functions", "[factories]") {
       check_monomial(a_y, 1, make_boson(false, 0, "y"));
     }
     SECTION("spin-1/2") {
-      using real::S_p;
-      using real::S_m;
-      using real::S_z;
-
       auto S_p_0_x = S_p(0, "x");
       check_monomial(S_p_0_x, 1, make_spin(spin_component::plus, 0, "x"));
       auto S_m_0_x = S_m(0, "x");
@@ -149,10 +151,6 @@ TEST_CASE("Factory functions", "[factories]") {
       check_monomial(S_z_0_x, 1, make_spin(spin_component::z, 0, "x"));
     }
     SECTION("spin-1") {
-      using real::S_p;
-      using real::S_m;
-      using real::S_z;
-
       auto S_p_0_x = S_p<3>(0, "x");
       check_monomial(S_p_0_x, 1, make_spin(1.0, spin_component::plus, 0, "x"));
       auto S_m_0_x = S_m<3>(0, "x");
@@ -161,10 +159,6 @@ TEST_CASE("Factory functions", "[factories]") {
       check_monomial(S_z_0_x, 1, make_spin(1.0, spin_component::z, 0, "x"));
     }
     SECTION("spin-3/2") {
-      using real::S_p;
-      using real::S_m;
-      using real::S_z;
-
       auto S_p_0_x = S_p<4>(0, "x");
       check_monomial(S_p_0_x,
                      1,
@@ -185,17 +179,13 @@ TEST_CASE("Factory functions", "[factories]") {
     const std::complex<double> I(0, 1.0);
 
     SECTION("fermion") {
-      using complex::c_dag;
-      using complex::c;
-      using complex::n;
-
-      auto c_dag_1_up = c_dag(1, "up");
+      auto c_dag_1_up = make_complex(c_dag(1, "up"));
       check_monomial(c_dag_1_up, c1, make_fermion(true, 1, "up"));
 
-      auto c_2_dn = c(2, "dn");
+      auto c_2_dn = make_complex(c(2, "dn"));
       check_monomial(c_2_dn, c1, make_fermion(false, 2, "dn"));
 
-      auto n_1_dn = n(1, "dn");
+      auto n_1_dn = make_complex(n(1, "dn"));
       check_monomial(n_1_dn,
                     c1,
                     make_fermion(true, 1, "dn"),
@@ -203,65 +193,44 @@ TEST_CASE("Factory functions", "[factories]") {
                     );
     }
     SECTION("boson") {
-      using complex::a_dag;
-      using complex::a;
-
-      auto a_dag_x = a_dag(0, "x");
+      auto a_dag_x = make_complex(a_dag(0, "x"));
       check_monomial(a_dag_x, c1, make_boson(true, 0, "x"));
 
-      auto a_y = a(0, "y");
+      auto a_y = make_complex(a(0, "y"));
       check_monomial(a_y, c1, make_boson(false, 0, "y"));
     }
     SECTION("spin-1/2") {
-      using complex::S_p;
-      using complex::S_m;
-      using complex::S_x;
-      using complex::S_y;
-      using complex::S_z;
-
-      auto S_p_0_x = S_p(0, "x");
+      auto S_p_0_x = make_complex(S_p(0, "x"));
       check_monomial(S_p_0_x, c1, make_spin(spin_component::plus, 0, "x"));
-      auto S_m_0_x = S_m(0, "x");
+      auto S_m_0_x = make_complex(S_m(0, "x"));
       check_monomial(S_m_0_x, c1, make_spin(spin_component::minus, 0, "x"));
-      auto S_z_0_x = S_z(0, "x");
+      auto S_z_0_x = make_complex(S_z(0, "x"));
       check_monomial(S_z_0_x, c1, make_spin(spin_component::z, 0, "x"));
 
       CHECK(S_p_0_x == S_x(0, "x") + I * S_y(0, "x"));
       CHECK(S_m_0_x == S_x(0, "x") - I * S_y(0, "x"));
     }
     SECTION("spin-1") {
-      using complex::S_p;
-      using complex::S_m;
-      using complex::S_x;
-      using complex::S_y;
-      using complex::S_z;
-
-      auto S_p_0_x = S_p<3>(0, "x");
+      auto S_p_0_x = make_complex(S_p<3>(0, "x"));
       check_monomial(S_p_0_x, c1, make_spin(1.0, spin_component::plus, 0, "x"));
-      auto S_m_0_x = S_m<3>(0, "x");
+      auto S_m_0_x = make_complex(S_m<3>(0, "x"));
       check_monomial(S_m_0_x, c1, make_spin(1.0, spin_component::minus, 0, "x"));
-      auto S_z_0_x = S_z<3>(0, "x");
+      auto S_z_0_x = make_complex(S_z<3>(0, "x"));
       check_monomial(S_z_0_x, c1, make_spin(1.0, spin_component::z, 0, "x"));
 
       CHECK(S_p_0_x == S_x<3>(0, "x") + I * S_y<3>(0, "x"));
       CHECK(S_m_0_x == S_x<3>(0, "x") - I * S_y<3>(0, "x"));
     }
     SECTION("spin-3/2") {
-      using complex::S_p;
-      using complex::S_m;
-      using complex::S_x;
-      using complex::S_y;
-      using complex::S_z;
-
-      auto S_p_0_x = S_p<4>(0, "x");
+      auto S_p_0_x = make_complex(S_p<4>(0, "x"));
       check_monomial(S_p_0_x,
                      c1,
                      make_spin(3.0/2, spin_component::plus, 0, "x"));
-      auto S_m_0_x = S_m<4>(0, "x");
+      auto S_m_0_x = make_complex(S_m<4>(0, "x"));
       check_monomial(S_m_0_x,
                      c1,
                      make_spin(3.0/2, spin_component::minus, 0, "x"));
-      auto S_z_0_x = S_z<4>(0, "x");
+      auto S_z_0_x = make_complex(S_z<4>(0, "x"));
       check_monomial(S_z_0_x,
                      c1,
                      make_spin(3.0/2, spin_component::z, 0, "x"));
@@ -272,8 +241,6 @@ TEST_CASE("Factory functions", "[factories]") {
   }
 
   SECTION("Mixed indices") {
-    using namespace real;
-
     auto expr = c_dag(0, "up")*c(1, "dn") +
                 a_dag("x") * n() + a("y") * n() + S_p()*S_m();
     CHECK_THAT(expr, Prints<decltype(expr)>(

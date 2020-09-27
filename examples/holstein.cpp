@@ -42,8 +42,8 @@ int main() {
 
   // Use functions c_dag() and c() that return fermionic creation/annihilation
   // operators.
-  using libcommute::static_indices::real::c_dag;
-  using libcommute::static_indices::real::c;
+  using libcommute::static_indices::c_dag;
+  using libcommute::static_indices::c;
 
   // Iterate over spin projections
   for(auto spin : {"up", "down"}) {
@@ -79,8 +79,8 @@ int main() {
 
   // Use functions a_dag() and a() that return bosonic creation/annihilation
   // operators.
-  using libcommute::static_indices::real::a_dag;
-  using libcommute::static_indices::real::a;
+  using libcommute::static_indices::a_dag;
+  using libcommute::static_indices::a;
 
   // Iterate over all lattice sites
   for(int ix = 0; ix < N; ++ix) {
@@ -99,7 +99,7 @@ int main() {
   decltype(H_e) H_e_ph;
 
   // Use function n() that returns the fermionic number operator n = c_dag * c
-  using libcommute::static_indices::real::n;
+  using libcommute::static_indices::n;
 
   // Iterate over spin projections
   for(auto spin : {"up", "down"}) {

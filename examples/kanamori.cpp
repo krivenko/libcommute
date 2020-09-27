@@ -32,7 +32,7 @@ using namespace libcommute;
 int main() {
 
   // For functions c_dag(), c() and n().
-  using namespace static_indices::real;
+  using namespace static_indices;
 
   // Orbital degeneracy of the shell (t_{2g} triplet)
   const int n_orbs = 3;

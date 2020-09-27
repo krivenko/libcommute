@@ -59,7 +59,7 @@ int main() {
 
   // For functions S_x(), S_y() and S_z().
   // Note that the x/y functions exist only for the complex expressions.
-  using namespace static_indices::complex;
+  using namespace static_indices;
 
   // Number of spins in the chain
   const int N = 20;

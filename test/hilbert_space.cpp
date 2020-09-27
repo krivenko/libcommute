@@ -247,8 +247,6 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   }
 
   SECTION("Construction from expression") {
-    using namespace real;
-
     auto expr = 2.0 * S_p<4>("i", 0) * S_m<4>("j", 0) +
                 5.0 * n("up", 0) * n("dn", 0);
 
@@ -303,8 +301,6 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
 
     using ex_type = hs_type::hilbert_space_too_big;
     CHECK_THROWS_AS(hs1.add(make_space_spin(3.0/2, "s", 32)), ex_type);
-
-    using namespace real;
 
     auto expr = expression<double, std::string, int>(1);
     for(int i = 0; i < 32; ++i) expr *= S_p<4>("s", i);

@@ -36,7 +36,7 @@ namespace dynamic_indices {
 
 #define INDICES std::forward<IndexTypes>(indices)...
 #define DEFINE_FACTORY(NAME, ...)                                         \
-template<typename ScalarType, typename... IndexTypes>                     \
+template<typename ScalarType = double, typename... IndexTypes>            \
 inline                                                                    \
 expression<ScalarType, dyn_indices>                                       \
 NAME(IndexTypes&&... indices) {                                           \
@@ -47,7 +47,9 @@ NAME(IndexTypes&&... indices) {                                           \
 }
 
 #define DEFINE_FACTORY_SPIN(NAME, ...)                                    \
-template<int Multiplicity, typename ScalarType, typename... IndexTypes>   \
+template<int Multiplicity,                                                \
+         typename ScalarType = double,                                    \
+         typename... IndexTypes>                                          \
 inline                                                                    \
 expression<ScalarType, dyn_indices>                                       \
 NAME(IndexTypes&&... indices) {                                           \
@@ -56,22 +58,6 @@ NAME(IndexTypes&&... indices) {                                           \
   return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
                typename ret_t::monomial_t(__VA_ARGS__)                    \
   );                                                                      \
-}
-
-#define DEFINE_FACTORY_SCALAR_TYPE(NAME, S)                             \
-template<typename... IndexTypes>                                        \
-inline expression<S, dyn_indices>                                       \
-NAME(IndexTypes&&... indices) {                                         \
-  using libcommute::dynamic_indices::NAME;                              \
-  return NAME<S>(INDICES);                                              \
-}
-
-#define DEFINE_FACTORY_SPIN_SCALAR_TYPE(NAME, S)                        \
-template<int Multiplicity, typename... IndexTypes>                      \
-inline expression<S, dyn_indices>                                       \
-NAME(IndexTypes&&... indices) {                                         \
-  using libcommute::dynamic_indices::NAME;                              \
-  return NAME<Multiplicity, S>(INDICES);                                \
 }
 
 //
@@ -119,47 +105,6 @@ DEFINE_FACTORY_SPIN(S_z, (make_spin((Multiplicity-1)/2.0,
                                     spin_component::z,INDICES)))
 
 //
-// Specializations for ScalarType = double
-//
-
-namespace real {
-DEFINE_FACTORY_SCALAR_TYPE(c_dag, double)
-DEFINE_FACTORY_SCALAR_TYPE(c, double)
-DEFINE_FACTORY_SCALAR_TYPE(n, double)
-
-DEFINE_FACTORY_SCALAR_TYPE(a_dag, double)
-DEFINE_FACTORY_SCALAR_TYPE(a, double)
-
-DEFINE_FACTORY_SCALAR_TYPE(S_p, double)
-DEFINE_FACTORY_SCALAR_TYPE(S_m, double)
-DEFINE_FACTORY_SCALAR_TYPE(S_z, double)
-
-DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_p, double)
-DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_m, double)
-DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_z, double)
-} // namespace libcommute::dynamic_indices::real
-
-//
-// Specializations for ScalarType = std::complex<double>
-//
-
-namespace complex {
-DEFINE_FACTORY_SCALAR_TYPE(c_dag, std::complex<double>)
-DEFINE_FACTORY_SCALAR_TYPE(c, std::complex<double>)
-DEFINE_FACTORY_SCALAR_TYPE(n, std::complex<double>)
-
-DEFINE_FACTORY_SCALAR_TYPE(a_dag, std::complex<double>)
-DEFINE_FACTORY_SCALAR_TYPE(a, std::complex<double>)
-
-DEFINE_FACTORY_SCALAR_TYPE(S_p, std::complex<double>)
-DEFINE_FACTORY_SCALAR_TYPE(S_m, std::complex<double>)
-DEFINE_FACTORY_SCALAR_TYPE(S_z, std::complex<double>)
-
-DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_p, std::complex<double>)
-DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_m, std::complex<double>)
-DEFINE_FACTORY_SPIN_SCALAR_TYPE(S_z, std::complex<double>)
-
-//
 // In the complex case, we can additionally define S_x and S_y
 //
 
@@ -187,12 +132,13 @@ S_y(IndexTypes&&... indices) {
                                           S_m<Multiplicity>(INDICES));
 }
 
-} // namespace libcommute::dynamic_indices::complex
+// Make a complex expression out of a real one
+expr_complex make_complex(expr_real const& expr) {
+  return expr_complex(expr);
+}
 
 #undef DEFINE_FACTORY
 #undef DEFINE_FACTORY_SPIN
-#undef DEFINE_FACTORY_SCALAR_TYPE
-#undef DEFINE_FACTORY_SPIN_SCALAR_TYPE
 #undef INDICES
 
 } // namespace libcommute::dynamic_indices

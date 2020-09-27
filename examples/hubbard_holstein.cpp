@@ -58,11 +58,11 @@ int main() {
 
   // The following 'factory' functions make quantum operators with
   // statically typed indices and real coefficients.
-  using static_indices::real::c_dag; // Create an electron
-  using static_indices::real::c;     // Destroy an electron
-  using static_indices::real::n;     // Number of electrons
-  using static_indices::real::a_dag; // Create a phonon
-  using static_indices::real::a;     // Destroy a phonon
+  using static_indices::c_dag; // Create an electron
+  using static_indices::c;     // Destroy an electron
+  using static_indices::n;     // Number of electrons
+  using static_indices::a_dag; // Create a phonon
+  using static_indices::a;     // Destroy a phonon
 
   // Hopping terms of H
   for(auto spin : {"up", "down"}) {

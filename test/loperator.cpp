@@ -22,6 +22,7 @@
 #include <vector>
 
 using namespace libcommute;
+using namespace static_indices;
 
 TEST_CASE("Linear operator with constant coefficients",
           "[loperator]") {
@@ -40,8 +41,6 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("double") {
-    using namespace static_indices::real;
-
     auto expr1 = 3*c_dag("dn");
     auto expr2 = 3*c("up");
     auto expr = 2*expr1 - 2*expr2;
@@ -85,12 +84,10 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("complex") {
-    using namespace static_indices::complex;
-
     const std::complex<double> I(0,1);
 
-    auto expr1 = 3.0*c_dag("dn");
-    auto expr2 = 3.0*c("up");
+    auto expr1 = make_complex(3.0*c_dag("dn"));
+    auto expr2 = make_complex(3.0*c("up"));
     auto expr = 2.0*I*expr1 - 2.0*I*expr2;
 
     auto hs = make_hilbert_space(expr);
@@ -120,8 +117,6 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("my_complex") {
-    using namespace static_indices;
-
     const my_complex I(0, 1);
 
     auto expr1 = 3*c_dag<my_complex>("dn");
@@ -149,8 +144,6 @@ TEST_CASE("Linear operator with constant coefficients",
 
 TEST_CASE("Linear operator with parameter-dependent coefficients",
           "[parametric_loperator]") {
-
-  using namespace static_indices;
 
   auto expr1 = 3*c_dag<my_complex>("dn");
   auto expr2 = 3*c<my_complex>("up");

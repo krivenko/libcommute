@@ -26,7 +26,7 @@ using namespace libcommute;
 
 int main() {
 
-  using namespace static_indices::real; // For c(), c_dag() and n()
+  using namespace static_indices; // For c(), c_dag() and n()
 
   //
   // Build Hamiltonian of the 3-orbital Hubbard-Kanamori atom
