@@ -69,7 +69,7 @@ The simplest way to construct a :class:`hilbert_space` object is by calling
 .. code:: cpp
 
   using namespace libcommute;
-  using namespace static_indices::real; // For n()
+  using namespace static_indices; // For n()
 
   auto H = 2.0 * n("up", 0) * n("dn", 0);
 
@@ -92,7 +92,7 @@ generators at once.
 .. code:: cpp
 
     using namespace libcommute;
-    using namespace static_indices::real; // For a_dag() and a()
+    using namespace static_indices; // For a_dag() and a()
 
     auto H = 2.0 * (a_dag(0) * a(0) - 0.5) + 3.0 * (a_dag(1) * a(1) - 0.5);
 
