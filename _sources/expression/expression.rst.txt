@@ -511,8 +511,8 @@ taken to be different on odd and even chain links.
     // Hamiltonian of the atomic chain
     expression<double, int> H;
 
-    using static_indices::real::c_dag;
-    using static_indices::real::c;
+    using static_indices::c_dag;
+    using static_indices::c;
 
     // Length of the chain
     const int N = 10;

@@ -228,7 +228,7 @@ elementary space and the higher blank cells 7-63 are unused – set to zero.</p>
 <p>The simplest way to construct a <a class="reference internal" href="#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">hilbert_space</span></code></a> object is by calling
 <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> on an expression.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="p">;</span> <span class="c1">// For n()</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="p">;</span> <span class="c1">// For n()</span>
 
 <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">n</span><span class="p">(</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span><span class="p">(</span><span class="s">&quot;dn&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 
@@ -249,7 +249,7 @@ by passing an extra argument to <a class="reference internal" href="#_CPPv4I0Dp0
 code snippet shows how to set the truncated space dimension for all bosonic
 generators at once.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="p">;</span> <span class="c1">// For a_dag() and a()</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="p">;</span> <span class="c1">// For a_dag() and a()</span>
 
 <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">);</span>
 

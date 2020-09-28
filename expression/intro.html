@@ -223,8 +223,8 @@ lattice with only nearest-neighbour hopping allowed,</p>
 
   <span class="c1">// Use functions c_dag() and c() that return fermionic creation/annihilation</span>
   <span class="c1">// operators.</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">c_dag</span><span class="p">;</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">c</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">c_dag</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">c</span><span class="p">;</span>
 
   <span class="c1">// Iterate over spin projections</span>
   <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
@@ -263,8 +263,8 @@ lattice with only nearest-neighbour hopping allowed,</p>
 
   <span class="c1">// Use functions a_dag() and a() that return bosonic creation/annihilation</span>
   <span class="c1">// operators.</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">a_dag</span><span class="p">;</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">a</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">a_dag</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">a</span><span class="p">;</span>
 
   <span class="c1">// Iterate over all lattice sites</span>
   <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
@@ -300,7 +300,7 @@ Hamiltonian of the Holstein model <span class="math notranslate nohighlight">\(\
   <span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span> <span class="n">H_e_ph</span><span class="p">;</span>
 
   <span class="c1">// Use function n() that returns the fermionic number operator n = c_dag * c</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">real</span><span class="o">::</span><span class="n">n</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">n</span><span class="p">;</span>
 
   <span class="c1">// Iterate over spin projections</span>
   <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
