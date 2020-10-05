@@ -298,7 +298,9 @@ using the following BibTeX entry.
 ```
 @software{libcommute_v0_5,
   author       = {Igor Krivenko},
-  title        = {krivenko/libcommute: Release v0.5},
+  title        = {{libcommute - A quantum operator algebra DSL and
+                   exact diagonalization toolkit for C++11/14/17:
+                   Release v0.5}},
   month        = oct,
   year         = 2020,
   publisher    = {Zenodo},
