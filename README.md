@@ -4,6 +4,9 @@
 https://travis-ci.org/krivenko/libcommute)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-red)](
 https://krivenko.github.io/libcommute)
+[![DOI](https://zenodo.org/badge/186312779.svg)](
+https://zenodo.org/badge/latestdoi/186312779)
+
 
 *libcommute* is a C++11/14/17 template library made of two major parts.
 
@@ -293,7 +296,16 @@ If you find this library useful for your research, you can help me by citing it
 using the following BibTeX entry.
 
 ```
-TODO: Zenodo BibTeX entry here
+@software{libcommute_v0_5,
+  author       = {Igor Krivenko},
+  title        = {krivenko/libcommute: Release v0.5},
+  month        = oct,
+  year         = 2020,
+  publisher    = {Zenodo},
+  version      = {v0.5},
+  doi          = {10.5281/zenodo.4066422},
+  url          = {https://doi.org/10.5281/zenodo.4066422}
+}
 ```
 
 License
