@@ -140,6 +140,9 @@ template<typename T> struct linear_function {
                   "This constructor requires an odd number of arguments");
     construct_impl(std::forward<Args>(args)...);
   }
+  linear_function(double const_term, std::vector<std::pair<T, double>> terms) :
+    const_term(const_term), terms(std::move(terms))
+  {}
 
   // Reset contents
   template<typename... Args>

@@ -94,6 +94,17 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f1.terms.empty());
   CHECK_FALSE(f1.vanishing());
 
+  std::vector<std::pair<std::string, double>> terms =
+    {std::make_pair("obj1", 2.0), std::make_pair("obj2", 3.0)};
+  linear_function<std::string> f2(4.0, terms);
+  CHECK(f2.const_term == 4.0);
+  CHECK(f2.terms.size() == 2);
+  CHECK(f2.terms[0].first == std::string("obj1"));
+  CHECK(f2.terms[0].second == 2.0);
+  CHECK(f2.terms[1].first == std::string("obj2"));
+  CHECK(f2.terms[1].second == 3.0);
+  CHECK_FALSE(f2.vanishing());
+
   linear_function<std::string> f(4.0, "obj1", 2.0, "obj2", 3.0);
   CHECK(f.const_term == 4.0);
   CHECK(f.terms.size() == 2);
