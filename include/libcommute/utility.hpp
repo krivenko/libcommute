@@ -127,10 +127,27 @@ inline void print_tuple(std::ostream & os, std::tuple<T...> const& t) {
 inline void print_tuple(std::ostream & os, std::tuple<> const& t) {}
 
 //
+// Trivial copyable and non-copyable objects
+//
+
+struct copyable {};
+struct noncopyable {
+noncopyable() = default;
+~noncopyable() = default;
+noncopyable(noncopyable const&) = delete;
+noncopyable & operator=(noncopyable const&) = delete;
+};
+
+//
 // Linear function of basis objects
 //
 
-template<typename T> struct linear_function {
+template<typename T> struct linear_function :
+  std::conditional<
+    std::is_copy_constructible<T>::value,
+    copyable,
+    noncopyable
+  >::type {
 
   linear_function() = default;
   linear_function(double const_term) : const_term(const_term) {}
@@ -143,6 +160,11 @@ template<typename T> struct linear_function {
   linear_function(double const_term, std::vector<std::pair<T, double>> terms) :
     const_term(const_term), terms(std::move(terms))
   {}
+
+  linear_function(linear_function const&) = default;
+  linear_function(linear_function&&) noexcept = default;
+  linear_function & operator=(linear_function const&) = default;
+  linear_function & operator=(linear_function&&) = default;
 
   // Reset contents
   template<typename... Args>
