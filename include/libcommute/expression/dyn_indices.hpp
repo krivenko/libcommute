@@ -97,7 +97,7 @@ public:
     const size_t N = ind.indices_.size();
     for(size_t i = 0; i < N; ++i) {
       std::visit([&os](auto const& x) { os << x; }, ind.indices_[i]);
-      if(i < N-1) os << ",";
+      if(i + 1 < N) os << ",";
     }
     return os;
   }
