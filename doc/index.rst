@@ -1,3 +1,6 @@
+.. meta::
+  :google-site-verification: ewYtApGyJ_c2zLJ8i5YT1wFhpmo3qsrcUcYE-94WklA
+
 libcommute
 ==========
 
