@@ -149,6 +149,8 @@ template<typename T> struct linear_function :
     noncopyable
   >::type {
 
+  using basis_type = T;
+
   linear_function() = default;
   linear_function(double const_term) : const_term(const_term) {}
   template<typename... Args>
