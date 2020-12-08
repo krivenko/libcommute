@@ -80,6 +80,11 @@ public:
     for(auto const& p : generators) generators_.emplace_back(p->clone());
   }
 
+  // Construct from a vector of pointers to generators
+  monomial(std::vector<generator_type*> const& generators) {
+    for(auto p : generators) generators_.emplace_back(p->clone());
+  }
+
   // Value semantics
   monomial(monomial const& m) {
     generators_.reserve(m.generators_.size());
