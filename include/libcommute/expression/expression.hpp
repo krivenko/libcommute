@@ -667,8 +667,8 @@ private:
         is_swapped = false;
         for(size_t n = 1; n < m.size(); ++n) {
           // Pick a pair of generators in m, m[n-1] and m[n]
-          generator_t& prev_gen = m[n - 1];
-          generator_t& cur_gen = m[n];
+          generator_t const& prev_gen = m[n - 1];
+          generator_t const& cur_gen = m[n];
 
           if(prev_gen > cur_gen) { // Reordering is needed
             double c = swap_with(prev_gen, cur_gen, f);

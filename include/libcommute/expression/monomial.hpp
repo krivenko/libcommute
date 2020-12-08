@@ -150,7 +150,6 @@ public:
   inline generator_type const& operator[](size_t n) const {
     return *generators_[n];
   }
-  inline generator_type& operator[](size_t n) { return *generators_[n]; }
 
   // Equality
   friend bool operator==(monomial const& m1, monomial const& m2) {
