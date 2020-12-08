@@ -250,29 +250,33 @@ private:
     return monomial_part_size(std::forward<P1>(p1));
   }
 
+public:
+
   // Append generator
-  void append_generators(generator_type const& g) {
+  void append(generator_type const& g) {
     generators_.emplace_back(g.clone());
   }
   // Append generators from a monomial
-  void append_generators(monomial const& m) {
+  void append(monomial const& m) {
     for(auto const& g : m.generators_)
       generators_.emplace_back(g->clone());
   }
   // Append generators from a monomial range
-  void append_generators(range_type const& r) {
+  void append(range_type const& r) {
     for(auto it = r.first; it != r.second; ++it)
       generators_.emplace_back(it->clone());
   }
 
+private:
+
   // Append generators from a mixed list of monomials and monomial ranges
   template<typename P1, typename... PTail>
   void concat_impl(P1&& p1, PTail&&... p_tail) {
-    append_generators(p1);
+    append(p1);
     concat_impl(std::forward<PTail>(p_tail)...);
   }
   template<typename P1>
-  void concat_impl(P1&& p1) { append_generators(p1); }
+  void concat_impl(P1&& p1) { append(p1); }
 
   std::vector<gen_ptr_type> generators_;
 };
