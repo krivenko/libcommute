@@ -49,9 +49,9 @@ public:
   using scalar_type = ScalarType;
   using index_types = std::tuple<IndexTypes...>;
   using monomial_t = monomial<IndexTypes...>;
+  using monomials_map_t = std::map<monomial_t, ScalarType>;
 
 private:
-  using monomials_map_t = std::map<monomial_t, ScalarType>;
 
   // List of all monomials in this polynomial expression
   monomials_map_t monomials_;
