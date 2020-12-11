@@ -60,44 +60,61 @@ NAME(IndexTypes&&... indices) {                                           \
 //
 
 // Creation operator
-DEFINE_FACTORY(c_dag, (make_fermion(true, INDICES)))
+DEFINE_FACTORY(c_dag, (static_indices::make_fermion(true, INDICES)))
 // Annihilation operator
-DEFINE_FACTORY(c, (make_fermion(false, INDICES)))
+DEFINE_FACTORY(c, (static_indices::make_fermion(false, INDICES)))
 // Number of fermions
-DEFINE_FACTORY(n, (make_fermion(true, INDICES)), (make_fermion(false, INDICES)))
+DEFINE_FACTORY(n, (static_indices::make_fermion(true, INDICES)),
+                  (static_indices::make_fermion(false, INDICES))
+              )
 
 //
 // Free functions to make bosonic operators
 //
 
 // Creation operator
-DEFINE_FACTORY(a_dag, (make_boson(true, INDICES)))
+DEFINE_FACTORY(a_dag, (static_indices::make_boson(true, INDICES)))
 // Annihilation operator
-DEFINE_FACTORY(a, (make_boson(false, INDICES)))
+DEFINE_FACTORY(a, (static_indices::make_boson(false, INDICES)))
 
 //
 // Free functions to make spin operators (spin 1/2)
 //
 
 // Raising operator
-DEFINE_FACTORY(S_p, (make_spin(spin_component::plus, INDICES)))
+DEFINE_FACTORY(S_p, (static_indices::make_spin(spin_component::plus, INDICES)))
 // Lowering operator
-DEFINE_FACTORY(S_m, (make_spin(spin_component::minus, INDICES)))
+DEFINE_FACTORY(S_m, (static_indices::make_spin(spin_component::minus, INDICES)))
 // S_z
-DEFINE_FACTORY(S_z, (make_spin(spin_component::z, INDICES)))
+DEFINE_FACTORY(S_z, (static_indices::make_spin(spin_component::z, INDICES)))
 
 //
 // Free functions to make spin operators (arbitrary spin)
 //
 // Raising operator
-DEFINE_FACTORY_SPIN(S_p, (make_spin((Multiplicity-1)/2.0,
-                                    spin_component::plus, INDICES)))
+DEFINE_FACTORY_SPIN(S_p, (static_indices::make_spin(
+                                                    (Multiplicity-1)/2.0,
+                                                    spin_component::plus,
+                                                    INDICES
+                                                   )
+                         )
+                   )
 // Lowering operator
-DEFINE_FACTORY_SPIN(S_m, (make_spin((Multiplicity-1)/2.0,
-                                    spin_component::minus,INDICES)))
+DEFINE_FACTORY_SPIN(S_m, (static_indices::make_spin(
+                                                    (Multiplicity-1)/2.0,
+                                                    spin_component::minus,
+                                                    INDICES
+                                                   )
+                         )
+                   )
 // S_z
-DEFINE_FACTORY_SPIN(S_z, (make_spin((Multiplicity-1)/2.0,
-                                    spin_component::z,INDICES)))
+DEFINE_FACTORY_SPIN(S_z, (static_indices::make_spin(
+                                                    (Multiplicity-1)/2.0,
+                                                    spin_component::z,
+                                                    INDICES
+                                                   )
+                         )
+                   )
 
 //
 // In the complex case, we can additionally define S_x and S_y
