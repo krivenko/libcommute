@@ -71,6 +71,7 @@ Class definitions
   .. type:: scalar_type = ScalarType
   .. type:: index_types = std::tuple<IndexTypes...>
   .. type:: monomial_t = monomial<IndexTypes...>
+  .. type:: monomials_map_t = std::map<monomial_t, ScalarType>
 
   .. rubric:: Constructors
 
