@@ -69,8 +69,8 @@ DEFINE_FACTORY(c_dag, (dynamic_indices::make_fermion(true, INDICES)))
 // Annihilation operator
 DEFINE_FACTORY(c, (dynamic_indices::make_fermion(false, INDICES)))
 // Number of fermions
-DEFINE_FACTORY(n, (dynamic_indices::make_fermion(true, INDICES)),
-                  (dynamic_indices::make_fermion(false, INDICES)))
+DEFINE_FACTORY(n, (dynamic_indices::make_fermion(true, indices...)),
+                  (dynamic_indices::make_fermion(false, indices...)))
 
 //
 // Free functions to make bosonic operators
@@ -132,25 +132,25 @@ DEFINE_FACTORY_SPIN(S_z, (dynamic_indices::make_spin(
 template<typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (S_p(INDICES) + S_m(INDICES));
+  return std::complex<double>(0.5) * (S_p(indices...) + S_m(indices...));
 }
 template<typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (S_p(INDICES) - S_m(INDICES));
+  return std::complex<double>(0, -0.5) * (S_p(indices...) - S_m(indices...));
 }
 
 template<int Multiplicity, typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (S_p<Multiplicity>(INDICES) +
-                                      S_m<Multiplicity>(INDICES));
+  return std::complex<double>(0.5) * (S_p<Multiplicity>(indices...) +
+                                      S_m<Multiplicity>(indices...));
 }
 template<int Multiplicity, typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (S_p<Multiplicity>(INDICES) -
-                                          S_m<Multiplicity>(INDICES));
+  return std::complex<double>(0, -0.5) * (S_p<Multiplicity>(indices...) -
+                                          S_m<Multiplicity>(indices...));
 }
 
 // Make a complex expression out of a real one

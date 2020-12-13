@@ -342,9 +342,15 @@ typed index sequences step in. They are instantiations of the
 
     Construct an empty index sequence.
 
-  .. function:: dyn_indices_generic(indices_t indices)
+  .. function:: dyn_indices_generic(indices_t && indices)
+                dyn_indices_generic(indices_t const& indices)
 
     Construct an index sequence from a vector of indices.
+
+  .. function:: template<typename... Args> \
+                dyn_indices_generic(Args&&... args)
+
+    Construct an index sequence from an argument pack of indices.
 
   .. function:: dyn_indices_generic(dyn_indices_generic const&) = default
                 dyn_indices_generic(dyn_indices_generic&&) noexcept = default

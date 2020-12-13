@@ -13,6 +13,8 @@
 #ifndef LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
 #define LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
 
+#include "../metafunctions.hpp"
+
 #include <iostream>
 #include <string>
 #include <utility>
@@ -46,9 +48,22 @@ public:
 
   // Value semantics
   dyn_indices_generic() = default;
-  dyn_indices_generic(indices_t indices) : indices_(std::move(indices)) {}
+  explicit dyn_indices_generic(indices_t && indices) :
+    indices_(std::move(indices)) {}
+  explicit dyn_indices_generic(indices_t const& indices) : indices_(indices) {}
 
-  template<typename... Args> dyn_indices_generic(Args&&... args) {
+  template<typename Arg,
+           typename = std::enable_if_t<
+             (!std::is_same_v<remove_cvref_t<Arg>, indices_t>) &&
+             (!std::is_same_v<remove_cvref_t<Arg>, dyn_indices_generic>)
+             >
+           >
+  dyn_indices_generic(Arg&& arg) {
+    indices_.emplace_back(std::forward<Arg>(arg));
+  }
+
+  template<typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 1)>>
+  dyn_indices_generic(Args&&... args) {
     (indices_.emplace_back(std::forward<Args>(args)), ...);
   }
 
