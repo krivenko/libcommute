@@ -123,25 +123,27 @@ DEFINE_FACTORY_SPIN(S_z, (static_indices::make_spin(
 template<typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (S_p(indices...) + S_m(indices...));
+  return std::complex<double>(0.5) * (static_indices::S_p(indices...) +
+                                      static_indices::S_m(indices...));
 }
 template<typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (S_p(indices...) - S_m(indices...));
+  return std::complex<double>(0, -0.5) * (static_indices::S_p(indices...) -
+                                          static_indices::S_m(indices...));
 }
 
-template<int Multiplicity, typename... IndexTypes>
+template<int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (S_p<Multiplicity>(indices...) +
-                                      S_m<Multiplicity>(indices...));
+  return std::complex<double>(0.5) * (static_indices::S_p<Mult>(indices...) +
+                                      static_indices::S_m<Mult>(indices...));
 }
-template<int Multiplicity, typename... IndexTypes>
+template<int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (S_p<Multiplicity>(indices...) -
-                                          S_m<Multiplicity>(indices...));
+  return std::complex<double>(0,-0.5) * (static_indices::S_p<Mult>(indices...) -
+                                         static_indices::S_m<Mult>(indices...));
 }
 
 // Make a complex expression out of a real one

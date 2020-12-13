@@ -132,25 +132,27 @@ DEFINE_FACTORY_SPIN(S_z, (dynamic_indices::make_spin(
 template<typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (S_p(indices...) + S_m(indices...));
+  return std::complex<double>(0.5) * (dynamic_indices::S_p(indices...) +
+                                      dynamic_indices::S_m(indices...));
 }
 template<typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (S_p(indices...) - S_m(indices...));
+  return std::complex<double>(0, -0.5) * (dynamic_indices::S_p(indices...) -
+                                          dynamic_indices::S_m(indices...));
 }
 
-template<int Multiplicity, typename... IndexTypes>
+template<int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (S_p<Multiplicity>(indices...) +
-                                      S_m<Multiplicity>(indices...));
+  return std::complex<double>(0.5) * (dynamic_indices::S_p<Mult>(indices...) +
+                                      dynamic_indices::S_m<Mult>(indices...));
 }
-template<int Multiplicity, typename... IndexTypes>
+template<int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (S_p<Multiplicity>(indices...) -
-                                          S_m<Multiplicity>(indices...));
+  return std::complex<double>(0,-0.5) *(dynamic_indices::S_p<Mult>(indices...) -
+                                        dynamic_indices::S_m<Mult>(indices...));
 }
 
 // Make a complex expression out of a real one
