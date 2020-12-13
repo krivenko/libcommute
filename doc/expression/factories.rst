@@ -26,10 +26,23 @@ differing in the index types of the created expression being static/dynamic.
   * - :expr:`libcommute::dynamic_indices`
     - :expr:`expression<ScalarType, dynamic_indices::dyn_indices>`
 
-.. note:: By default, the scalar type of expressions returned by most factory
-          functions is ``double``. The only exceptions are factory functions
-          for spin component operators :math:`S_x` and :math:`S_y`, which
-          use the fixed scalar type ``std::complex<double>``.
+By default, the scalar type of expressions returned by most factory functions is
+``double``. The only exceptions are factory functions for spin component
+operators :math:`S_x` and :math:`S_y`, which use the fixed scalar type
+``std::complex<double>``.
+The following two functions can be used to manually convert real expressions
+into their complex analogs.
+
+.. function:: template<typename... IndexTypes> \
+              static_indices::expr_complex<IndexTypes...> \
+              make_complex(static_indices::expr_real<IndexTypes...> const& e)
+
+  Complexify a real expression with statically typed indices.
+
+.. function:: dynamic_indices::expr_complex \
+              make_complex(dynamic_indices::expr_real const& e)
+
+  Complexify a real expression with dynamic indices.
 
 .. _factories_static:
 
