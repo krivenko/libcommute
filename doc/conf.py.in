@@ -2,7 +2,7 @@
 # This file is part of libcommute, a quantum operator algebra DSL and
 # exact diagonalization toolkit for C++11/14/17.
 #
-# Copyright (C) 2016-2020 Igor Krivenko <igor.s.krivenko@gmail.com>
+# Copyright (C) 2016-2021 Igor Krivenko <igor.s.krivenko@gmail.com>
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'libcommute'
-copyright = '2016-2020, Igor Krivenko'
+copyright = '2016-2021, Igor Krivenko'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
