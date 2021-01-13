@@ -296,7 +296,7 @@ the elementary space to algebra generators acting in it.
 
   .. rubric:: Constructors
 
-  .. function:: elementary_space(IndexTypes const&... indices)
+  .. function:: template<typename... Args> elementary_space(Args&&... indices)
                 elementary_space(index_types const& indices)
                 elementary_space(index_types && indices)
 

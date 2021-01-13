@@ -35,7 +35,9 @@ public:
   using index_types = std::tuple<IndexTypes...>;
 
   // Value semantics
-  elementary_space(IndexTypes const&... indices) : indices_(indices...) {}
+  template<typename... Args>
+  elementary_space(Args&&... indices) :
+    indices_(std::forward<Args>(indices)...) {}
   elementary_space(index_types const& indices) : indices_(indices) {}
   elementary_space(index_types && indices) : indices_(std::move(indices)) {}
   elementary_space(elementary_space const&) = default;
