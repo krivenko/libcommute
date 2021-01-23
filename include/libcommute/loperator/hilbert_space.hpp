@@ -112,6 +112,11 @@ public:
     constructor_impl(std::forward<Args>(args)...);
   }
 
+  // Construct from a vector of pointers to elementary spaces
+  hilbert_space(std::vector<elementary_space_t*> const& elementary_spaces) {
+    for(auto p : elementary_spaces) add(*p);
+  }
+
   // Inspect polynomial expression `expr` and collect elementary spaces
   // associated to every algebra generator found in `expr`. Construction
   // of elementary spaces is performed by `es_constr` functor.

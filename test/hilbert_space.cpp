@@ -94,6 +94,12 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
 
     CHECK_THROWS_AS(hs_type(es_s32_i, es_s_i, es_s_i, es_f_dn),
                     hs_type::elementary_space_exists);
+
+    CHECK(hs_type(fermion_es) == hs_type(es_f_dn, es_f_up));
+    CHECK(hs_type(boson_es) == hs_type(es_b_x, es_b_y));
+    CHECK(hs_type(spin_es) == hs_type(es_s_i, es_s_j));
+    CHECK(hs_type(spin1_es) == hs_type(es_s1_i, es_s1_j));
+    CHECK(hs_type(spin32_es) == hs_type(es_s32_i, es_s32_j));
   }
 
   SECTION("Assignment") {
