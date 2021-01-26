@@ -13,12 +13,11 @@
 #ifndef LIBCOMMUTE_LOPERATOR_STATE_VECTOR_HPP_
 #define LIBCOMMUTE_LOPERATOR_STATE_VECTOR_HPP_
 
-#include "../metafunctions.hpp"
 #include "../scalar_traits.hpp"
 
+#include <algorithm>
 #include <cstdint>
-#include <type_traits>
-#include <utility>
+#include <vector>
 
 namespace libcommute {
 
@@ -26,57 +25,49 @@ namespace libcommute {
 using sv_index_type = std::uint64_t;
 
 //
-// Default (unoptimal) implementation of StateVector interface
+// Implementation of the StateVector interface for std::vector
 //
 
 // Get element type of a StateVector object
-template<typename StateVector>
-struct element_type {
-  using type = remove_cvref_t<decltype(std::declval<StateVector>()[0])>;
-};
+template<typename StateVector> struct element_type {};
+template<typename T> struct element_type<std::vector<T>> { using type = T; };
+
 template<typename StateVector>
 using element_type_t = typename element_type<StateVector>::type;
 
-// Get n-th state amplitude stored in a StateVector object
-template<typename StateVector>
-inline auto get_element(StateVector const& sv, sv_index_type n)
-  -> decltype(sv[n]) {
+// Get n-th state amplitude stored in a standard vector
+template<typename T>
+inline auto get_element(std::vector<T> const& sv, sv_index_type n) -> T const& {
   return sv[n];
 }
 
-// Add a constant to the n-th state amplitude stored in a StateVector object
-template<typename StateVector, typename T>
-inline void update_add_element(StateVector & sv, sv_index_type n, T&& value) {
+// Add a constant to the n-th state amplitude stored in a standard vector
+template<typename T1, typename T2>
+inline void update_add_element(std::vector<T1> & sv,
+                               sv_index_type n,
+                               T2 const& value) {
   add_assign(sv[n], value);
 }
 
-// Set all amplitudes stored in a StateVector object to zero
-template<typename StateVector>
-inline void set_zeros(StateVector & sv) {
-  sv_index_type size = sv.size();
-  using T = element_type_t<StateVector>;
-  for(sv_index_type n = 0; n < size; ++n)
-    sv[n] = scalar_traits<T>::make_const(0);
+// Set all amplitudes stored in a standard vector to zero
+template<typename T>
+inline void set_zeros(std::vector<T> & sv) {
+  std::fill(sv.begin(), sv.end(), scalar_traits<T>::make_const(0));
 }
 
-// Create a StateVector object of the same size as `sv`,
+// Create a standard vector of the same size as `sv`,
 // with all amplitudes set to zero
-template<typename StateVector>
-StateVector zeros_like(StateVector const& sv) {
-  StateVector res(sv.size());
-  set_zeros(res);
-  return res;
+template<typename T>
+std::vector<T> zeros_like(std::vector<T> const& sv) {
+  return std::vector<T>(sv.size(), scalar_traits<T>::make_const(0));
 }
 
 // Apply functor `f` to all index/non-zero amplitude pairs
-// in a StateVector object
-template<typename StateVector, typename Functor>
-inline void foreach(StateVector const& sv, Functor&& f) {
-  sv_index_type size = sv.size();
-  using T = element_type_t<StateVector>;
-  for(sv_index_type n = 0; n < size; ++n) {
-    // Emulate decltype(auto)
-    decltype(get_element(sv, n)) a = get_element(sv, n);
+// in a standard vector
+template<typename T, typename Functor>
+inline void foreach(std::vector<T> const& sv, Functor&& f) {
+  for(sv_index_type n = 0; n < sv.size(); ++n) {
+    auto const& a = sv[n];
     if(scalar_traits<T>::is_zero(a))
       continue;
     else

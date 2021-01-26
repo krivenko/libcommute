@@ -44,7 +44,7 @@ TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
     CHECK(std::is_same<element_type_t<decltype(v)>,
           std::complex<double>>::value);
     CHECK(get_element(v, 1) == 2.0);
-    update_add_element(v, 1, 4.0);
+    update_add_element(v, 1, 4);
     CHECK(get_element(v, 1) == 6.0);
     CHECK(zeros_like(v) == std::vector<std::complex<double>>{0, 0, 0});
     set_zeros(v);

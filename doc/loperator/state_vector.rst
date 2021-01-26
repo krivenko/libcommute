@@ -32,12 +32,8 @@ The table below shows the interface (a set of free functions and a
 metafunction) that needs be implemented for an object :expr:`sv` of type
 :type:`SV`.
 
-*libcommute* provides a default implementation of the ``StateVector`` concept
-(see *<libcommute/loperator/state_vector.hpp>*), which works without extra
-effort for :type:`std::vector` and similar container types having methods
-``size()`` and ``operator[]()``. Even if the default implementation works for
-your type, it might be beneficial to override some of the functions from
-the table to achieve optimal performance.
+*libcommute* provides an implementation of the ``StateVector`` concept for
+:type:`std::vector` (see *<libcommute/loperator/state_vector.hpp>*).
 
 .. list-table::
   :header-rows: 1
