@@ -223,8 +223,8 @@ public:
   sv_index_type operator[](sv_index_type index) const {
     auto it = root_to_subspace.find(ds.find_root(index));
     if(it == root_to_subspace.end())
-      throw std::runtime_error("Unexpected basis state index " +
-                               std::to_string(index));
+      throw std::out_of_range("Unexpected basis state index " +
+                              std::to_string(index));
     else
       return it->second;
   }
