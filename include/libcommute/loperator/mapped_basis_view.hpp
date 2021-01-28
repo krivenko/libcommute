@@ -37,10 +37,10 @@
 
 namespace libcommute {
 
-template<typename StateVector>
+template<typename StateVector, bool Ref = true>
 struct mapped_basis_view {
 
-  StateVector & state_vector;
+  typename std::conditional<Ref, StateVector &, StateVector>::type state_vector;
   using map_t = std::unordered_map<sv_index_type, sv_index_type>;
   map_t const& map;
 
@@ -48,21 +48,26 @@ struct mapped_basis_view {
     typename std::remove_const<StateVector>::type
   >::type;
 
-  mapped_basis_view(StateVector & sv, map_t const& map)
+  using constructor_arg_t = typename std::conditional<Ref,
+    StateVector &,
+    StateVector const&
+  >::type;
+
+  mapped_basis_view(constructor_arg_t sv, map_t const& map)
     : state_vector(sv), map(map)
   {}
 };
 
 // Get element type of the StateVector object adapted by a given
 // mapped_basis_view object.
-template<typename StateVector>
-struct element_type<mapped_basis_view<StateVector>> {
+template<typename StateVector, bool Ref>
+struct element_type<mapped_basis_view<StateVector, Ref>> {
   using type = typename mapped_basis_view<StateVector>::scalar_type;
 };
 
 // Get state amplitude of the adapted StateVector object at index view.map[n]
-template<typename StateVector>
-inline auto get_element(mapped_basis_view<StateVector> const& view,
+template<typename StateVector, bool Ref>
+inline auto get_element(mapped_basis_view<StateVector, Ref> const& view,
                         sv_index_type n)
   -> typename mapped_basis_view<StateVector>::scalar_type {
   return get_element(view.state_vector, view.map.at(n));
@@ -70,19 +75,18 @@ inline auto get_element(mapped_basis_view<StateVector> const& view,
 
 // Add a constant to a state amplitude stored in the adapted StateVector object
 // at index view.map[n].
-template<typename StateVector,
-         typename T>
+template<typename StateVector, bool Ref, typename T>
 inline
-void update_add_element(mapped_basis_view<StateVector> & view,
+void update_add_element(mapped_basis_view<StateVector, Ref> & view,
                         sv_index_type n,
                         T&& value) {
   update_add_element(view.state_vector, view.map.at(n), std::forward<T>(value));
 }
 
 // update_add_element() is not defined for constant views
-template<typename StateVector, typename T>
+template<typename StateVector, bool Ref, typename T>
 inline
-void update_add_element(mapped_basis_view<const StateVector> &,
+void update_add_element(mapped_basis_view<const StateVector, Ref> &,
                         sv_index_type,
                         T&&) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
@@ -90,21 +94,21 @@ void update_add_element(mapped_basis_view<const StateVector> &,
 }
 
 // zeros_like() is not defined for views
-template<typename StateVector>
-StateVector zeros_like(mapped_basis_view<StateVector> const&) {
+template<typename StateVector, bool Ref>
+StateVector zeros_like(mapped_basis_view<StateVector, Ref> const&) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "zeros_like() is not supported for views");
 }
 
 // Set all amplitudes stored in the adapted StateVector object to zero
-template<typename StateVector>
-inline void set_zeros(mapped_basis_view<StateVector> & view) {
+template<typename StateVector, bool Ref>
+inline void set_zeros(mapped_basis_view<StateVector, Ref> & view) {
   set_zeros(view.state_vector);
 }
 
 // set_zeros() is not defined for constant views
-template<typename StateVector>
-inline void set_zeros(mapped_basis_view<const StateVector> &) {
+template<typename StateVector, bool Ref>
+inline void set_zeros(mapped_basis_view<const StateVector, Ref> &) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "set_zeros() is not supported for constant views");
 }
@@ -112,8 +116,8 @@ inline void set_zeros(mapped_basis_view<const StateVector> &) {
 // Apply functor `f` to all index/non-zero amplitude pairs
 // in the adapted StateVector object. This functions iterates over all values
 // stored in view.map.
-template<typename StateVector, typename Functor>
-inline void foreach(mapped_basis_view<StateVector> const& view,
+template<typename StateVector, bool Ref, typename Functor>
+inline void foreach(mapped_basis_view<StateVector, Ref> const& view,
                     Functor&& f) {
   using T = element_type_t<StateVector>;
   for(auto const& p : view.map) {
@@ -253,6 +257,20 @@ public:
   mapped_basis_view<const StateVector>
   make_const_view(StateVector const& sv) const {
     return mapped_basis_view<const StateVector>(sv, map_);
+  }
+
+  // Make a non-constant basis mapping view by copying `sv`
+  template<typename StateVector>
+  mapped_basis_view<StateVector, false>
+  make_view_no_ref(StateVector & sv) const {
+    return mapped_basis_view<StateVector, false>(sv, map_);
+  }
+
+  // Make a constant basis mapping view by copying `sv`
+  template<typename StateVector>
+  mapped_basis_view<const StateVector, false>
+  make_const_view_no_ref(StateVector const& sv) const {
+    return mapped_basis_view<const StateVector, false>(sv, map_);
   }
 };
 

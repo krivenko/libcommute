@@ -136,9 +136,29 @@ a full Hilbert space, and it is desirable to store vector components only within
 that subspace. Such a situation naturally emerges when working with
 :ref:`invariant subspaces of operators <space_partition>`.
 
+.. class:: template<typename StateVector, bool Ref = true> mapped_basis_view
+
+  View of a :type:`StateVector` object that translates basis state indices
+  according to a certain mapping.
+
+  :type:`StateVector` - type of the underlying state vector object. Defining a
+  read-only view (such that prohibits :expr:`update_add_element()` operations)
+  requires using a ``const``-qualified type here. For example, one can use
+  ``StateVector = std::vector<double>`` for a read-write view, and
+  ``StateVector = const std::vector<double>`` for a read-only view.
+
+  .. _mapped_basis_view_Ref:
+
+  :type:`Ref` - by default, :type:`mapped_basis_view`
+  stores a reference to the underlying state vector. Setting this option to
+  ``false`` will result in a copy being created and stored instead. This feature
+  can be useful when the underlying type is already a view-like object similar
+  to ``Eigen::Map``.
+
 The mapped basis views should always be constructed by means of a special
 factory class :class:`basis_mapper` and its methods
-:func:`make_view()`/:func:`make_const_view()`.
+:func:`make_view()`/:func:`make_const_view()`/:func:`make_view_no_ref()`/
+:func:`make_const_view_no_ref`.
 
 .. class:: basis_mapper
 
@@ -219,12 +239,23 @@ factory class :class:`basis_mapper` and its methods
     Make a read/write or constant view of :expr:`sv`.
     Constant views will not be accepted by :expr:`update_add_element()`.
 
+  .. function:: template<typename StateVector> \
+                mapped_basis_view<StateVector, false> \
+                make_view_no_ref(StateVector & sv) const
+                template<typename StateVector> \
+                mapped_basis_view<const StateVector, false> \
+                make_const_view_no_ref(StateVector const& sv) const
+
+    Make a read/write or constant view
+    :ref:`holding a copy <mapped_basis_view_Ref>` of :expr:`sv`. Constant views
+    will not be accepted by :expr:`update_add_element()`.
+
     .. warning::
 
       To reduce memory footprint, :class:`mapped_basis_view` objects store
       a reference to the basis index map owned by their parent
-      :class:`basis_mapper` object. For this reason, they should never outlive
-      the mapper.
+      :class:`basis_mapper` object. For this reason, the views should never
+      outlive the mapper.
 
   .. rubric:: Other methods
 
