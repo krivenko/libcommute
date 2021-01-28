@@ -210,10 +210,10 @@ factory class :class:`basis_mapper` and its methods
   .. rubric:: :class:`mapped_basis_view` factory functions
 
   .. function:: template<typename StateVector> \
-                mapped_basis_view<StateVector, false> \
+                mapped_basis_view<StateVector> \
                 make_view(StateVector & sv) const
                 template<typename StateVector> \
-                mapped_basis_view<StateVector, true> \
+                mapped_basis_view<const StateVector> \
                 make_const_view(StateVector const& sv) const
 
     Make a read/write or constant view of :expr:`sv`.

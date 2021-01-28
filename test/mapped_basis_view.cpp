@@ -95,7 +95,7 @@ TEST_CASE("Basis-mapped view of a state vector",
   SECTION("mapped_basis_view") {
 
     SECTION("const") {
-      auto view = mapped_basis_view<state_vector, true>(st, map);
+      auto view = mapped_basis_view<const state_vector>(st, map);
 
       CHECK(std::is_same<element_type_t<decltype(view)>, double>::value);
       CHECK(get_element(view, 10) == 4);
@@ -135,14 +135,14 @@ TEST_CASE("Basis-mapped view of a state vector",
       auto Hop = make_loperator(Hex, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
-      Hop(mapped_basis_view<state_vector, true>(in1, map),
-          mapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<const state_vector>(in1, map),
+          mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, 0, 2, 2, 0, 0});
 
       state_vector in2{1, 1, 1, -1, 1, 1};
-      Hop(mapped_basis_view<state_vector, true>(in2, map),
-          mapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<const state_vector>(in2, map),
+          mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, 0, -2, 2, 0, 0});
     }
@@ -151,14 +151,14 @@ TEST_CASE("Basis-mapped view of a state vector",
       auto Hop = make_loperator(Hp, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
-      Hop(mapped_basis_view<state_vector, true>(in1, map),
-          mapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<const state_vector>(in1, map),
+          mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, 2, 0, 0, 2, 0});
 
       state_vector in2{1, 1, 1, 1, -1, 1};
-      Hop(mapped_basis_view<state_vector, true>(in2, map),
-          mapped_basis_view<state_vector, false>(out, map)
+      Hop(mapped_basis_view<const state_vector>(in2, map),
+          mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, -2, 0, 0, 2, 0});
     }
