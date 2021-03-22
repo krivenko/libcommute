@@ -45,6 +45,12 @@ are always canonically ordered, that need not be true in general.
     list initialization syntax. This constructor creates copies of the
     generators by calling :func:`generator::clone()`.
 
+  .. function:: monomial(std::vector<generator_type*> generators)
+
+    Construct a monomial from a vector of pointers to generators. This
+    constructor creates copies of the generators by calling
+    :func:`generator::clone()`.
+
   .. function:: monomial(std::initializer_list<gen_ptr_type> generators)
 
     Construct a monomial from a list of smart pointers to generators using the
@@ -90,7 +96,6 @@ are always canonically ordered, that need not be true in general.
     Reverse constant past-the-end iterator.
 
   .. function:: generator_type const& operator[](size_t n) const
-                generator_type& operator[](size_t n)
 
     Access an algebra generator by its position :expr:`n` in the monomial.
 
@@ -124,6 +129,14 @@ are always canonically ordered, that need not be true in general.
 
     Swap algebra generators at positions :expr:`n1` and :expr:`n2` within the
     list.
+
+  .. function:: void append(generator_type const& g)
+                void append(monomial const& m)
+                void append(std::pair<const_iterator, const_iterator> const& r)
+
+    Append a generator, a monomial or a range of generators specified by a
+    begin-end iterator pair :expr:`std::pair\<const_iterator, const_iterator>`
+    to this monomial.
 
   .. function:: template<typename... PartTypes> \
                 friend monomial concatenate(PartTypes&&... parts)

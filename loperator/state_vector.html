@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>State vectors &mdash; libcommute 0.5 documentation</title>
+  <title>State vectors &mdash; libcommute 0.6 documentation</title>
   
 
   
@@ -17,7 +17,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -52,7 +55,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> libcommute
+            <a href="../index.html" class="icon icon-home"> libcommute
           
 
           
@@ -65,7 +68,7 @@
             
             
               <div class="version">
-                0.5
+                0.6
               </div>
             
           
@@ -151,6 +154,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -164,7 +169,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/loperator/state_vector.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -193,7 +198,7 @@ Acceptable index values must be at least 64-bit wide unsigned integers since
 <em>libcommute</em> uses the following type for basis state indexing.</p>
 <dl class="cpp type">
 <dt id="_CPPv4N10libcommute13sv_index_typeE">
-<span id="_CPPv3N10libcommute13sv_index_typeE"></span><span id="_CPPv2N10libcommute13sv_index_typeE"></span><em class="property">using </em><code class="sig-name descname">sv_index_type</code> = std::uint64_t<a class="headerlink" href="#_CPPv4N10libcommute13sv_index_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute13sv_index_typeE"></span><span id="_CPPv2N10libcommute13sv_index_typeE"></span><em class="property"><span class="pre">using</span> </em><code class="sig-name descname"><span class="pre">sv_index_type</span></code> <span class="pre">=</span> <span class="pre">std</span><span class="pre">::</span><span class="pre">uint64_t</span><a class="headerlink" href="#_CPPv4N10libcommute13sv_index_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p><em>Defined in &lt;libcommute/loperator/state_vector.hpp&gt;</em></p>
 <p>Type of basis state indices.</p>
 </dd></dl>
@@ -201,12 +206,8 @@ Acceptable index values must be at least 64-bit wide unsigned integers since
 <p>The table below shows the interface (a set of free functions and a
 metafunction) that needs be implemented for an object <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">sv</span></code> of type
 <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">SV</span></code>.</p>
-<p><em>libcommute</em> provides a default implementation of the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept
-(see <em>&lt;libcommute/loperator/state_vector.hpp&gt;</em>), which works without extra
-effort for <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">std::vector</span></code> and similar container types having methods
-<code class="docutils literal notranslate"><span class="pre">size()</span></code> and <code class="docutils literal notranslate"><span class="pre">operator[]()</span></code>. Even if the default implementation works for
-your type, it might be beneficial to override some of the functions from
-the table to achieve optimal performance.</p>
+<p><em>libcommute</em> provides an implementation of the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept for
+<code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">std::vector</span></code> (see <em>&lt;libcommute/loperator/state_vector.hpp&gt;</em>).</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 33%" />
@@ -267,27 +268,27 @@ the non-zero elements. It is essentially a wrapper around
 only the part of its interface not covered by <code class="docutils literal notranslate"><span class="pre">StateVector</span></code>.</p>
 <dl class="cpp class">
 <dt id="_CPPv4I0EN10libcommute19sparse_state_vectorE">
-<span id="_CPPv3I0EN10libcommute19sparse_state_vectorE"></span><span id="_CPPv2I0EN10libcommute19sparse_state_vectorE"></span>template&lt;typename <code class="sig-name descname">ScalarType</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">sparse_state_vector</code><a class="headerlink" href="#_CPPv4I0EN10libcommute19sparse_state_vectorE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0EN10libcommute19sparse_state_vectorE"></span><span id="_CPPv2I0EN10libcommute19sparse_state_vectorE"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">ScalarType</span></code><span class="pre">&gt;</span><br /><em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">sparse_state_vector</span></code><a class="headerlink" href="#_CPPv4I0EN10libcommute19sparse_state_vectorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>State vector with a sparse storage of elements (quantum amplitudes).
 <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0EN10libcommute19sparse_state_vectorE" title="libcommute::sparse_state_vector::ScalarType"><span class="pre">ScalarType</span></a></code> is the type of the elements.</p>
 <dl class="cpp function">
 <dt id="_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorEv">
-<span id="_CPPv3N10libcommute19sparse_state_vector19sparse_state_vectorEv"></span><span id="_CPPv2N10libcommute19sparse_state_vector19sparse_state_vectorEv"></span><span id="libcommute::sparse_state_vector::sparse_state_vector"></span><code class="sig-name descname">sparse_state_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span> = delete<a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute19sparse_state_vector19sparse_state_vectorEv"></span><span id="_CPPv2N10libcommute19sparse_state_vector19sparse_state_vectorEv"></span><span id="libcommute::sparse_state_vector::sparse_state_vector"></span><code class="sig-name descname"><span class="pre">sparse_state_vector</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">=</span> <span class="pre">delete</span><a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorEv" title="Permalink to this definition">¶</a><br /></dt>
 <dt id="_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type">
-<span id="_CPPv3N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type"></span><span id="_CPPv2N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type"></span><span id="libcommute::sparse_state_vector::sparse_state_vector__sv_index_type"></span><code class="sig-name descname">sparse_state_vector</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a> <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type"></span><span id="_CPPv2N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type"></span><span id="libcommute::sparse_state_vector::sparse_state_vector__sv_index_type"></span><code class="sig-name descname"><span class="pre">sparse_state_vector</span></code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a> <em><span class="pre">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Construct a zero (empty) sparse vector with a given <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute19sparse_state_vector19sparse_state_vectorE13sv_index_type" title="libcommute::sparse_state_vector::sparse_state_vector::size"><span class="pre">size</span></a></code> –
 dimension of the corresponding Hilbert space.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK10libcommute19sparse_state_vector4sizeEv">
-<span id="_CPPv3NK10libcommute19sparse_state_vector4sizeEv"></span><span id="_CPPv2NK10libcommute19sparse_state_vector4sizeEv"></span><span id="libcommute::sparse_state_vector::sizeC"></span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a> <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute19sparse_state_vector4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute19sparse_state_vector4sizeEv"></span><span id="_CPPv2NK10libcommute19sparse_state_vector4sizeEv"></span><span id="libcommute::sparse_state_vector::sizeC"></span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a> <code class="sig-name descname"><span class="pre">size</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK10libcommute19sparse_state_vector4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Size (dimension) of the vector.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4N10libcommute19sparse_state_vectorixE13sv_index_type">
-<span id="_CPPv3N10libcommute19sparse_state_vectorixE13sv_index_type"></span><span id="_CPPv2N10libcommute19sparse_state_vectorixE13sv_index_type"></span><span id="libcommute::sparse_state_vector::subscript-operator__sv_index_type"></span><a class="reference internal" href="#_CPPv4I0EN10libcommute19sparse_state_vectorE" title="libcommute::sparse_state_vector::ScalarType">ScalarType</a> &amp;<code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a> <em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vectorixE13sv_index_type" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute19sparse_state_vectorixE13sv_index_type"></span><span id="_CPPv2N10libcommute19sparse_state_vectorixE13sv_index_type"></span><span id="libcommute::sparse_state_vector::subscript-operator__sv_index_type"></span><a class="reference internal" href="#_CPPv4I0EN10libcommute19sparse_state_vectorE" title="libcommute::sparse_state_vector::ScalarType"><span class="pre">ScalarType</span></a> <span class="pre">&amp;</span><code class="sig-name descname"><span class="pre">operator[]</span></code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a> <em><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vectorixE13sv_index_type" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Access the <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute19sparse_state_vectorixE13sv_index_type" title="libcommute::sparse_state_vector::operator[]::n"><span class="pre">n</span></a></code>-th element. If it is zero (missing from the storage),
 then a new value-initialized element will be inserted and a reference to
 it will be returned.</p>
@@ -301,7 +302,7 @@ references returned by it.</p>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK10libcommute19sparse_state_vector10n_nonzerosEv">
-<span id="_CPPv3NK10libcommute19sparse_state_vector10n_nonzerosEv"></span><span id="_CPPv2NK10libcommute19sparse_state_vector10n_nonzerosEv"></span><span id="libcommute::sparse_state_vector::n_nonzerosC"></span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a> <code class="sig-name descname">n_nonzeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute19sparse_state_vector10n_nonzerosEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute19sparse_state_vector10n_nonzerosEv"></span><span id="_CPPv2NK10libcommute19sparse_state_vector10n_nonzerosEv"></span><span id="libcommute::sparse_state_vector::n_nonzerosC"></span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a> <code class="sig-name descname"><span class="pre">n_nonzeros</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK10libcommute19sparse_state_vector10n_nonzerosEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the number of non-zero (stored) elements.</p>
 </dd></dl>
 
@@ -310,28 +311,46 @@ references returned by it.</p>
 </div>
 <div class="section" id="mapped-basis-view">
 <span id="id3"></span><h2>Mapped basis view<a class="headerlink" href="#mapped-basis-view" title="Permalink to this headline">¶</a></h2>
-<p><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code> is another utility type modelling the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code>
+<p><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code></a> is another utility type modelling the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code>
 concept. It is a view of a state vector, which translates basis state
 index arguments of <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">get_element</span><span class="pre">(</span><span class="pre">)</span></code> and <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">update_add_element</span><span class="pre">(</span><span class="pre">)</span></code>
 according to a predefined map <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a></code> -&gt; <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a></code>.
 The element access functions throw <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">out_of_range</span></code> if their index
 argument is missing from the map.</p>
-<p><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code> can be used in situations
+<p><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code></a> can be used in situations
 where a <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator</span></a> acts in a small subspace of
 a full Hilbert space, and it is desirable to store vector components only within
 that subspace. Such a situation naturally emerges when working with
 <a class="reference internal" href="space_partition.html#space-partition"><span class="std std-ref">invariant subspaces of operators</span></a>.</p>
+<dl class="cpp class">
+<dt id="_CPPv4I0_bEN10libcommute17mapped_basis_viewE">
+<span id="_CPPv3I0_bEN10libcommute17mapped_basis_viewE"></span><span id="_CPPv2I0_bEN10libcommute17mapped_basis_viewE"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">StateVector</span></code><span class="pre">,</span> <span class="pre">bool</span> <code class="sig-name descname"><span class="pre">Ref</span></code> <span class="pre">=</span> <span class="pre">true</span><span class="pre">&gt;</span><br /><em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">mapped_basis_view</span></code><a class="headerlink" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>View of a <a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view::StateVector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">StateVector</span></code></a> object that translates basis state indices
+according to a certain mapping.</p>
+<p><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view::StateVector"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">StateVector</span></code></a> - type of the underlying state vector object. Defining a
+read-only view (such that prohibits <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">update_add_element</span><span class="pre">(</span><span class="pre">)</span></code> operations)
+requires using a <code class="docutils literal notranslate"><span class="pre">const</span></code>-qualified type here. For example, one can use
+<code class="docutils literal notranslate"><span class="pre">StateVector</span> <span class="pre">=</span> <span class="pre">std::vector&lt;double&gt;</span></code> for a read-write view, and
+<code class="docutils literal notranslate"><span class="pre">StateVector</span> <span class="pre">=</span> <span class="pre">const</span> <span class="pre">std::vector&lt;double&gt;</span></code> for a read-only view.</p>
+<p id="mapped-basis-view-ref"><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view::Ref"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">Ref</span></code></a> - by default, <a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">mapped_basis_view</span></code></a>
+stores a reference to the underlying state vector. Setting this option to
+<code class="docutils literal notranslate"><span class="pre">false</span></code> will result in a copy being created and stored instead. This feature
+can be useful when the underlying type is already a view-like object similar
+to <code class="docutils literal notranslate"><span class="pre">Eigen::Map</span></code>.</p>
+</dd></dl>
+
 <p>The mapped basis views should always be constructed by means of a special
 factory class <a class="reference internal" href="#_CPPv4N10libcommute12basis_mapperE" title="libcommute::basis_mapper"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">basis_mapper</span></code></a> and its methods
-<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_view()</span></code>/<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_const_view()</span></code>.</p>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_view()</span></code>/<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_const_view()</span></code>/<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_view_no_ref()</span></code>/
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_const_view_no_ref()</span></code>.</p>
 <dl class="cpp class">
 <dt id="_CPPv4N10libcommute12basis_mapperE">
-<span id="_CPPv3N10libcommute12basis_mapperE"></span><span id="_CPPv2N10libcommute12basis_mapperE"></span><span id="libcommute::basis_mapper"></span><em class="property">class </em><code class="sig-name descname">basis_mapper</code><a class="headerlink" href="#_CPPv4N10libcommute12basis_mapperE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Factory class for <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code>.</p>
+<span id="_CPPv3N10libcommute12basis_mapperE"></span><span id="_CPPv2N10libcommute12basis_mapperE"></span><span id="libcommute::basis_mapper"></span><em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">basis_mapper</span></code><a class="headerlink" href="#_CPPv4N10libcommute12basis_mapperE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Factory class for <a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code></a>.</p>
 <p class="rubric">Constructors</p>
 <dl class="cpp function">
 <dt id="_CPPv4N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE">
-<span id="_CPPv3N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE"></span><span id="_CPPv2N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE"></span><span id="libcommute::basis_mapper::basis_mapper__std::vector:sv_index_type:CR"></span><code class="sig-name descname">basis_mapper</code><span class="sig-paren">(</span>std::vector&lt;<a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a>&gt; <em class="property">const</em> &amp;<em>basis_state_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE"></span><span id="_CPPv2N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE"></span><span id="libcommute::basis_mapper::basis_mapper__std::vector:sv_index_type:CR"></span><code class="sig-name descname"><span class="pre">basis_mapper</span></code><span class="sig-paren">(</span><span class="pre">std</span><span class="pre">::</span><span class="pre">vector</span><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a><span class="pre">&gt;</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">basis_state_indices</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Build a mapping from a list of basis states <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4N10libcommute12basis_mapper12basis_mapperERKNSt6vectorI13sv_index_typeEE" title="libcommute::basis_mapper::basis_mapper::basis_state_indices"><span class="pre">basis_state_indices</span></a></code>
 to their positions within the list.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="o">&gt;</span> <span class="n">basis_indices</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
@@ -354,7 +373,7 @@ to their positions within the list.</p>
 
 <dl class="cpp function">
 <dt id="_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType">
-<span id="_CPPv3I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType"></span><span id="_CPPv2I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType"></span>template&lt;typename <code class="sig-name descname">HSType</code>, typename <code class="sig-name descname">LOpScalarType</code>, int... <code class="sig-name descname">LOpAlgebraIDs</code>&gt;<br /><code class="sig-name descname">basis_mapper</code><span class="sig-paren">(</span><a class="reference internal" href="loperator.html#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a>&lt;<a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::LOpScalarType">LOpScalarType</a>, <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::LOpAlgebraIDs">LOpAlgebraIDs</a>...&gt; <em class="property">const</em> &amp;<em>O</em>, <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::HSType">HSType</a> <em class="property">const</em> &amp;<em>hs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType"></span><span id="_CPPv2I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">HSType</span></code><span class="pre">,</span> <span class="pre">typename</span> <code class="sig-name descname"><span class="pre">LOpScalarType</span></code><span class="pre">,</span> <span class="pre">int</span><span class="pre">...</span> <code class="sig-name descname"><span class="pre">LOpAlgebraIDs</span></code><span class="pre">&gt;</span><br /><code class="sig-name descname"><span class="pre">basis_mapper</span></code><span class="sig-paren">(</span><a class="reference internal" href="loperator.html#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><span class="pre">loperator</span></a><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::LOpScalarType"><span class="pre">LOpScalarType</span></a><span class="pre">,</span> <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::LOpAlgebraIDs"><span class="pre">LOpAlgebraIDs</span></a><span class="pre">...</span><span class="pre">&gt;</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">O</span></em>, <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::HSType"><span class="pre">HSType</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">hs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Build a mapping from a set of all basis states contributing to
 <span class="math notranslate nohighlight">\(\hat O|0\rangle\)</span>.</p>
 <p>Operator <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::O"><span class="pre">O</span></a></code> acts in the Hilbert space <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType" title="libcommute::basis_mapper::basis_mapper::hs"><span class="pre">hs</span></a></code>.
@@ -366,7 +385,7 @@ order.</p>
 
 <dl class="cpp function">
 <dt id="_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei">
-<span id="_CPPv3I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei"></span><span id="_CPPv2I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei"></span>template&lt;typename <code class="sig-name descname">HSType</code>, typename <code class="sig-name descname">LOpScalarType</code>, int... <code class="sig-name descname">LOpAlgebraIDs</code>&gt;<br /><code class="sig-name descname">basis_mapper</code><span class="sig-paren">(</span>std::vector&lt;<a class="reference internal" href="loperator.html#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator">loperator</a>&lt;<a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="libcommute::basis_mapper::basis_mapper::LOpScalarType">LOpScalarType</a>, <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="libcommute::basis_mapper::basis_mapper::LOpAlgebraIDs">LOpAlgebraIDs</a>...&gt;&gt; <em class="property">const</em> &amp;<em>O_list</em>, <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="libcommute::basis_mapper::basis_mapper::HSType">HSType</a> <em class="property">const</em> &amp;<em>hs</em>, int <em>N</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei"></span><span id="_CPPv2I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">HSType</span></code><span class="pre">,</span> <span class="pre">typename</span> <code class="sig-name descname"><span class="pre">LOpScalarType</span></code><span class="pre">,</span> <span class="pre">int</span><span class="pre">...</span> <code class="sig-name descname"><span class="pre">LOpAlgebraIDs</span></code><span class="pre">&gt;</span><br /><code class="sig-name descname"><span class="pre">basis_mapper</span></code><span class="sig-paren">(</span><span class="pre">std</span><span class="pre">::</span><span class="pre">vector</span><span class="pre">&lt;</span><a class="reference internal" href="loperator.html#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><span class="pre">loperator</span></a><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="libcommute::basis_mapper::basis_mapper::LOpScalarType"><span class="pre">LOpScalarType</span></a><span class="pre">,</span> <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="libcommute::basis_mapper::basis_mapper::LOpAlgebraIDs"><span class="pre">LOpAlgebraIDs</span></a><span class="pre">...</span><span class="pre">&gt;</span><span class="pre">&gt;</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">O_list</span></em>, <a class="reference internal" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="libcommute::basis_mapper::basis_mapper::HSType"><span class="pre">HSType</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">hs</span></em>, <span class="pre">int</span> <em><span class="pre">N</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00_DpiEN10libcommute12basis_mapper12basis_mapperERKNSt6vectorI9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEEERK6HSTypei" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Given a list of operators
 <span class="math notranslate nohighlight">\(\{\hat O_1, \hat O_2, \hat O_3, \ldots, \hat O_M\}\)</span>, build a mapping
 from all basis states contributing to all states
@@ -381,39 +400,49 @@ order.</p>
 subspace of a fermionic/bosonic Hilbert space.</p>
 </dd></dl>
 
-<p class="rubric"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code> factory functions</p>
+<p class="rubric"><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code></a> factory functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorXL0EEER11StateVector">
-<span id="_CPPv3I0ENK10libcommute12basis_mapper9make_viewER11StateVector"></span><span id="_CPPv2I0ENK10libcommute12basis_mapper9make_viewER11StateVector"></span>template&lt;typename <code class="sig-name descname">StateVector</code>&gt;<br />mapped_basis_view&lt;<a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorXL0EEER11StateVector" title="libcommute::basis_mapper::make_view::StateVector">StateVector</a>, false&gt; <code class="sig-name descname">make_view</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorXL0EEER11StateVector" title="libcommute::basis_mapper::make_view::StateVector">StateVector</a> &amp;<em>sv</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorXL0EEER11StateVector" title="Permalink to this definition">¶</a><br /></dt>
-<dt id="_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewI11StateVectorXL1EEERK11StateVector">
-<span id="_CPPv3I0ENK10libcommute12basis_mapper15make_const_viewERK11StateVector"></span><span id="_CPPv2I0ENK10libcommute12basis_mapper15make_const_viewERK11StateVector"></span>template&lt;typename <code class="sig-name descname">StateVector</code>&gt;<br />mapped_basis_view&lt;<a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewI11StateVectorXL1EEERK11StateVector" title="libcommute::basis_mapper::make_const_view::StateVector">StateVector</a>, true&gt; <code class="sig-name descname">make_const_view</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewI11StateVectorXL1EEERK11StateVector" title="libcommute::basis_mapper::make_const_view::StateVector">StateVector</a> <em class="property">const</em> &amp;<em>sv</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewI11StateVectorXL1EEERK11StateVector" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Make a read/write or constant view of <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewI11StateVectorXL1EEERK11StateVector" title="libcommute::basis_mapper::make_const_view::sv"><span class="pre">sv</span></a></code>.
+<dt id="_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorER11StateVector">
+<span id="_CPPv3I0ENK10libcommute12basis_mapper9make_viewER11StateVector"></span><span id="_CPPv2I0ENK10libcommute12basis_mapper9make_viewER11StateVector"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">StateVector</span></code><span class="pre">&gt;</span><br /><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><span class="pre">mapped_basis_view</span></a><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorER11StateVector" title="libcommute::basis_mapper::make_view::StateVector"><span class="pre">StateVector</span></a><span class="pre">&gt;</span> <code class="sig-name descname"><span class="pre">make_view</span></code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorER11StateVector" title="libcommute::basis_mapper::make_view::StateVector"><span class="pre">StateVector</span></a> <span class="pre">&amp;</span><em><span class="pre">sv</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4I0ENK10libcommute12basis_mapper9make_viewE17mapped_basis_viewI11StateVectorER11StateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewIK11StateVectorERK11StateVector">
+<span id="_CPPv3I0ENK10libcommute12basis_mapper15make_const_viewERK11StateVector"></span><span id="_CPPv2I0ENK10libcommute12basis_mapper15make_const_viewERK11StateVector"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">StateVector</span></code><span class="pre">&gt;</span><br /><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><span class="pre">mapped_basis_view</span></a><span class="pre">&lt;</span><em class="property"><span class="pre">const</span></em> <a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewIK11StateVectorERK11StateVector" title="libcommute::basis_mapper::make_const_view::StateVector"><span class="pre">StateVector</span></a><span class="pre">&gt;</span> <code class="sig-name descname"><span class="pre">make_const_view</span></code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewIK11StateVectorERK11StateVector" title="libcommute::basis_mapper::make_const_view::StateVector"><span class="pre">StateVector</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">sv</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewIK11StateVectorERK11StateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Make a read/write or constant view of <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper15make_const_viewE17mapped_basis_viewIK11StateVectorERK11StateVector" title="libcommute::basis_mapper::make_const_view::sv"><span class="pre">sv</span></a></code>.
 Constant views will not be accepted by <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">update_add_element</span><span class="pre">(</span><span class="pre">)</span></code>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK10libcommute12basis_mapper16make_view_no_refE17mapped_basis_viewI11StateVectorXL0EEER11StateVector">
+<span id="_CPPv3I0ENK10libcommute12basis_mapper16make_view_no_refER11StateVector"></span><span id="_CPPv2I0ENK10libcommute12basis_mapper16make_view_no_refER11StateVector"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">StateVector</span></code><span class="pre">&gt;</span><br /><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><span class="pre">mapped_basis_view</span></a><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper16make_view_no_refE17mapped_basis_viewI11StateVectorXL0EEER11StateVector" title="libcommute::basis_mapper::make_view_no_ref::StateVector"><span class="pre">StateVector</span></a><span class="pre">,</span> <span class="pre">false</span><span class="pre">&gt;</span> <code class="sig-name descname"><span class="pre">make_view_no_ref</span></code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper16make_view_no_refE17mapped_basis_viewI11StateVectorXL0EEER11StateVector" title="libcommute::basis_mapper::make_view_no_ref::StateVector"><span class="pre">StateVector</span></a> <span class="pre">&amp;</span><em><span class="pre">sv</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4I0ENK10libcommute12basis_mapper16make_view_no_refE17mapped_basis_viewI11StateVectorXL0EEER11StateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0ENK10libcommute12basis_mapper22make_const_view_no_refE17mapped_basis_viewIK11StateVectorXL0EEERK11StateVector">
+<span id="_CPPv3I0ENK10libcommute12basis_mapper22make_const_view_no_refERK11StateVector"></span><span id="_CPPv2I0ENK10libcommute12basis_mapper22make_const_view_no_refERK11StateVector"></span><span class="pre">template&lt;</span><span class="pre">typename</span> <code class="sig-name descname"><span class="pre">StateVector</span></code><span class="pre">&gt;</span><br /><a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><span class="pre">mapped_basis_view</span></a><span class="pre">&lt;</span><em class="property"><span class="pre">const</span></em> <a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper22make_const_view_no_refE17mapped_basis_viewIK11StateVectorXL0EEERK11StateVector" title="libcommute::basis_mapper::make_const_view_no_ref::StateVector"><span class="pre">StateVector</span></a><span class="pre">,</span> <span class="pre">false</span><span class="pre">&gt;</span> <code class="sig-name descname"><span class="pre">make_const_view_no_ref</span></code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper22make_const_view_no_refE17mapped_basis_viewIK11StateVectorXL0EEERK11StateVector" title="libcommute::basis_mapper::make_const_view_no_ref::StateVector"><span class="pre">StateVector</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">sv</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4I0ENK10libcommute12basis_mapper22make_const_view_no_refE17mapped_basis_viewIK11StateVectorXL0EEERK11StateVector" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Make a read/write or constant view
+<a class="reference internal" href="#mapped-basis-view-ref"><span class="std std-ref">holding a copy</span></a> of <code class="xref cpp cpp-expr docutils literal notranslate"><a class="reference internal" href="#_CPPv4I0ENK10libcommute12basis_mapper22make_const_view_no_refE17mapped_basis_viewIK11StateVectorXL0EEERK11StateVector" title="libcommute::basis_mapper::make_const_view_no_ref::sv"><span class="pre">sv</span></a></code>. Constant views
+will not be accepted by <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">update_add_element</span><span class="pre">(</span><span class="pre">)</span></code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>To reduce memory footprint, <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code> objects store
+<p>To reduce memory footprint, <a class="reference internal" href="#_CPPv4I0_bEN10libcommute17mapped_basis_viewE" title="libcommute::mapped_basis_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mapped_basis_view</span></code></a> objects store
 a reference to the basis index map owned by their parent
-<a class="reference internal" href="#_CPPv4N10libcommute12basis_mapperE" title="libcommute::basis_mapper"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">basis_mapper</span></code></a> object. For this reason, they should never outlive
-the mapper.</p>
+<a class="reference internal" href="#_CPPv4N10libcommute12basis_mapperE" title="libcommute::basis_mapper"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">basis_mapper</span></code></a> object. For this reason, the views should never
+outlive the mapper.</p>
 </div>
 </dd></dl>
 
 <p class="rubric">Other methods</p>
 <dl class="cpp function">
 <dt id="_CPPv4NK10libcommute12basis_mapper4sizeEv">
-<span id="_CPPv3NK10libcommute12basis_mapper4sizeEv"></span><span id="_CPPv2NK10libcommute12basis_mapper4sizeEv"></span><span id="libcommute::basis_mapper::sizeC"></span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a> <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute12basis_mapper4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute12basis_mapper4sizeEv"></span><span id="_CPPv2NK10libcommute12basis_mapper4sizeEv"></span><span id="libcommute::basis_mapper::sizeC"></span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a> <code class="sig-name descname"><span class="pre">size</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK10libcommute12basis_mapper4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Number of elements in the index map.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK10libcommute12basis_mapper3mapEv">
-<span id="_CPPv3NK10libcommute12basis_mapper3mapEv"></span><span id="_CPPv2NK10libcommute12basis_mapper3mapEv"></span><span id="libcommute::basis_mapper::mapC"></span>std::unordered_map&lt;<a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a>, <a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a>&gt; <em class="property">const</em> &amp;<code class="sig-name descname">map</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute12basis_mapper3mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute12basis_mapper3mapEv"></span><span id="_CPPv2NK10libcommute12basis_mapper3mapEv"></span><span id="libcommute::basis_mapper::mapC"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">unordered_map</span><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a><span class="pre">,</span> <a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a><span class="pre">&gt;</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><code class="sig-name descname"><span class="pre">map</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK10libcommute12basis_mapper3mapEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Direct access to the underlying index map.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK10libcommute12basis_mapper11inverse_mapEv">
-<span id="_CPPv3NK10libcommute12basis_mapper11inverse_mapEv"></span><span id="_CPPv2NK10libcommute12basis_mapper11inverse_mapEv"></span><span id="libcommute::basis_mapper::inverse_mapC"></span>std::unordered_map&lt;<a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a>, <a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type">sv_index_type</a>&gt; <code class="sig-name descname">inverse_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10libcommute12basis_mapper11inverse_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute12basis_mapper11inverse_mapEv"></span><span id="_CPPv2NK10libcommute12basis_mapper11inverse_mapEv"></span><span id="libcommute::basis_mapper::inverse_mapC"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">unordered_map</span><span class="pre">&lt;</span><a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a><span class="pre">,</span> <a class="reference internal" href="#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="pre">sv_index_type</span></a><span class="pre">&gt;</span> <code class="sig-name descname"><span class="pre">inverse_map</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK10libcommute12basis_mapper11inverse_mapEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Build and return an inverse index map. Depending on map’s size, building
 the inverse can be an expensive operation. Calling this method on a
 non-invertible map is undefined behavior.</p>
@@ -429,37 +458,29 @@ non-invertible map is undefined behavior.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="space_partition.html" class="btn btn-neutral float-right" title="Finding invariant subspaces of a linear operator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="monomial_action.html" class="btn btn-neutral float-left" title="Advanced: Linear operator representation of a user-defined algebra" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="space_partition.html" class="btn btn-neutral float-right" title="Finding invariant subspaces of a linear operator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="monomial_action.html" class="btn btn-neutral float-left" title="Advanced: Linear operator representation of a user-defined algebra" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016-2021, Igor Krivenko
+        &#169; Copyright 2016-2021, Igor Krivenko.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

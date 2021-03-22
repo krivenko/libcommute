@@ -213,6 +213,8 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
     f(x_1, \ldots, x_n) = c + c_1 x_1 + \ldots + c_n x_n.
 
+  .. type:: basis_type = T
+
   .. member:: double const_term = 0;
 
     Constant term :math:`c`.
@@ -233,6 +235,12 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
     Construct a linear function from a sequence of arguments
     :math:`c, x_1, c_1, x_2, c_2, \ldots, x_n, c_n`.
+
+  .. function:: linear_function(double const_term, \
+                                std::vector<std::pair<T, double>> terms)
+
+    Construct a linear function from a constant term and a list of pairs
+    :math:`(x_1, c_1), \ldots, (x_n, c_n)`.
 
   .. function:: void set(double const_term, Args&&... args)
 
