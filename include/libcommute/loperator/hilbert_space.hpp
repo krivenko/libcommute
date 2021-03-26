@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iterator>
 #include <limits>
 #include <map>
 #include <stdexcept>
@@ -178,9 +179,18 @@ public:
     recompute_bit_ranges();
   }
 
-  // Is a given elementary space found in this Hilbert space
+  // Is a given elementary space found in this Hilbert space?
   bool has(elementary_space_t const& es) const {
     return elementary_spaces_.count(es.clone()) == 1;
+  }
+
+  // Linear index of a given elementary space in this Hilbert space
+  int index(elementary_space_t const& es) const {
+    auto it = elementary_spaces_.find(es.clone());
+    if(it == elementary_spaces_.end())
+      throw elementary_space_not_found(es);
+    else
+      return std::distance(elementary_spaces_.begin(), it);
   }
 
   // Bit range spanned by elementary space

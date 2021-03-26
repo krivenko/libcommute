@@ -196,6 +196,10 @@ does not matter -- they will be reordered automatically.
 
     Is elementary space :expr:`es` part of the product?
 
+  .. function:: int index(elementary_space<IndexTypes...> const& es) const
+
+    Position of a given elementary space in the product.
+
   .. function:: std::pair<int, int> bit_range( \
                 elementary_space<IndexTypes...> const& es) const
 
