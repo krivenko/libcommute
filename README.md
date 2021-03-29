@@ -21,6 +21,9 @@ https://zenodo.org/badge/latestdoi/186312779)
   This feature provides a basis for writing highly performant Exact
   Diagonalization (ED) codes without loss of flexibility.
 
+Python bindings for *libcommute* are available as a
+[separate project](https://github.com/krivenko/pycommute).
+
 Dependencies
 ------------
 
