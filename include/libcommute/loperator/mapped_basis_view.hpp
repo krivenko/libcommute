@@ -262,15 +262,15 @@ public:
   // Make a non-constant basis mapping view by copying `sv`
   template<typename StateVector>
   mapped_basis_view<StateVector, false>
-  make_view_no_ref(StateVector & sv) const {
-    return mapped_basis_view<StateVector, false>(sv, map_);
+  make_view_no_ref(StateVector sv) const {
+    return mapped_basis_view<StateVector, false>(std::move(sv), map_);
   }
 
   // Make a constant basis mapping view by copying `sv`
   template<typename StateVector>
   mapped_basis_view<const StateVector, false>
-  make_const_view_no_ref(StateVector const& sv) const {
-    return mapped_basis_view<const StateVector, false>(sv, map_);
+  make_const_view_no_ref(StateVector sv) const {
+    return mapped_basis_view<const StateVector, false>(std::move(sv), map_);
   }
 };
 
