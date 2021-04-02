@@ -241,10 +241,10 @@ factory class :class:`basis_mapper` and its methods
 
   .. function:: template<typename StateVector> \
                 mapped_basis_view<StateVector, false> \
-                make_view_no_ref(StateVector & sv) const
+                make_view_no_ref(StateVector sv) const
                 template<typename StateVector> \
                 mapped_basis_view<const StateVector, false> \
-                make_const_view_no_ref(StateVector const& sv) const
+                make_const_view_no_ref(StateVector sv) const
 
     Make a read/write or constant view
     :ref:`holding a copy <mapped_basis_view_Ref>` of :expr:`sv`. Constant views
