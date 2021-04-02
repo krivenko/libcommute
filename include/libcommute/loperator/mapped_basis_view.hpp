@@ -119,7 +119,7 @@ inline void set_zeros(mapped_basis_view<const StateVector, Ref> &) {
 template<typename StateVector, bool Ref, typename Functor>
 inline void foreach(mapped_basis_view<StateVector, Ref> const& view,
                     Functor&& f) {
-  using T = element_type_t<StateVector>;
+  using T = typename mapped_basis_view<StateVector, Ref>::scalar_type;
   for(auto const& p : view.map) {
     // Emulate decltype(auto)
     decltype(get_element(view.state_vector, p.second)) a =
