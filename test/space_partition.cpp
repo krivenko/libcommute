@@ -356,4 +356,50 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
       }
     }
   }
+
+  SECTION("find_connections") {
+
+    std::vector<expression<double, std::string, int>> expr = {
+      {},
+      c_dag("up", 0) * c("dn", 1),
+      c_dag("up", 0) * c("dn", 1) + c_dag("dn", 0) * c("dn", 1),
+      c_dag("dn", 1) * c_dag("up", 1),
+      n("up", 2)
+    };
+
+    auto sp = space_partition(Hop, hs);
+    auto op = make_loperator(expr[1] + expr[2] + expr[3] + expr[4], hs);
+    auto conns = sp.find_connections(op, hs);
+
+    connections_map conns_ref;
+    std::vector<double> in_state(sp.dim());
+    foreach(hs, [&](sv_index_type i) {
+      in_state[i] = 1.0;
+      auto out_state = op(in_state);
+      foreach(out_state, [&](sv_index_type f, double a) {
+        if(std::abs(a) < 1e-10) return;
+        conns_ref.insert(std::make_pair(sp[i], sp[f]));
+      });
+      in_state[i] = 0;
+    });
+
+    CHECK(conns == conns_ref);
+
+    for(auto const& expr1 : expr) {
+      for(auto const& expr2 : expr) {
+        auto conns1 = sp.find_connections(make_loperator(expr1, hs), hs);
+        auto conns2 = sp.find_connections(make_loperator(expr2, hs), hs);
+        auto conns = sp.find_connections(make_loperator(expr1 + expr2, hs), hs);
+
+        connections_map conns_ref;
+        std::set_union(conns1.begin(),
+                       conns1.end(),
+                       conns2.begin(),
+                       conns2.end(),
+                       std::inserter(conns_ref, conns_ref.end()));
+
+        CHECK(conns == conns_ref);
+      }
+    }
+  }
 }
