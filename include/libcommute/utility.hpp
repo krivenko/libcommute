@@ -164,7 +164,7 @@ template<typename T> struct linear_function :
   {}
 
   linear_function(linear_function const&) = default;
-  linear_function(linear_function&&) noexcept = default;
+  linear_function(linear_function&&) = default;
   linear_function & operator=(linear_function const&) = default;
   linear_function & operator=(linear_function&&) = default;
 
