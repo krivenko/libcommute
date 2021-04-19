@@ -101,6 +101,7 @@ Contents
     expression/index
     loperator/index
     examples/index
+    changelog
     genindex
     search
 
