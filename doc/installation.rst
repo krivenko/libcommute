@@ -56,9 +56,10 @@ itself. The following command completes installation of library's files into
 
 Documentation of *libcommute* can optionally be built and installed using the
 ``DOCUMENTATION`` CMake flag (requires
-`Sphinx <https://www.sphinx-doc.org>`_,
+`Sphinx 2.1.0 or newer <https://www.sphinx-doc.org>`_,
 `Read the Docs Sphinx theme <http://sphinx-rtd-theme.readthedocs.io/en/stable>`_
-and `MathJax <https://www.mathjax.org/>`_).
+, `MathJax <https://www.mathjax.org/>`_ and
+`MyST Parser <https://myst-parser.readthedocs.io/en/latest/>`_).
 
 The table below gives a complete lists of supported CMake options with their
 meaning.

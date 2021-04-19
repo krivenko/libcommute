@@ -75,12 +75,12 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
 if(DOCUMENTATION)
   message(STATUS "Building documentation")
 
-  # Detect Sphinx and sphinx_rtd_theme
+  # Detect Sphinx, sphinx_rtd_theme and myst-parser
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
   find_package(PythonInterp 3 REQUIRED)
-  find_package(Sphinx 2.0.0 REQUIRED)
+  find_package(Sphinx 2.1.0 REQUIRED)
   find_package(SphinxRTDTheme 0.3.0 REQUIRED)
-
+  find_package(MySTParser REQUIRED)
   add_subdirectory(doc)
 endif(DOCUMENTATION)
 
