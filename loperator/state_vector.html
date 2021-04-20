@@ -219,13 +219,13 @@ metafunction) that needs be implemented for an object <code class="xref cpp cpp-
 <thead>
 <tr class="row-odd"><th class="head"><p>Function/metafunction</p></th>
 <th class="head"><p>Description</p></th>
-<th class="head"><p>Default implementation</p></th>
+<th class="head"><p>Implementation for <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">vector</span><span class="pre">&lt;</span><span class="pre">T</span><span class="pre">&gt;</span></code></p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">element_type</span><span class="pre">&lt;</span><span class="pre">SV</span><span class="pre">&gt;</span><span class="pre">::</span><span class="pre">type</span></code></p></td>
 <td><p>The type of the elements.</p></td>
-<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">decltype(</span><span class="pre">std</span><span class="pre">::</span><span class="pre">declval</span><span class="pre">&lt;</span><span class="pre">SV</span><span class="pre">&gt;</span><span class="pre">(</span><span class="pre">)</span><span class="pre">[</span><span class="pre">0</span><span class="pre">]</span><span class="pre">)</span></code></p></td>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">T</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">get_element</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">,</span> <span class="pre">n</span><span class="pre">)</span></code></p></td>
 <td><p>Return the <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">n</span></code>-th element of <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">sv</span></code>.</p></td>
@@ -242,7 +242,7 @@ will fall back to the simple addition.</p>
 </tr>
 <tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">set_zeros</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">)</span></code></p></td>
 <td><p>Fill <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">sv</span></code> with zeros.</p></td>
-<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">sv</span><span class="pre">[</span><span class="pre">n</span><span class="pre">]</span> <span class="pre">=</span> <span class="pre">zero</span></code> in a for-loop.</p>
+<td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">fill</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">.</span><span class="pre">begin</span><span class="pre">(</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">sv</span><span class="pre">.</span><span class="pre">end</span><span class="pre">(</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">zero</span><span class="pre">)</span></code>.</p>
 <p>The zero value is created by
 <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">make_const</span><span class="pre">(</span><span class="pre">0</span><span class="pre">)</span></code> as described in “<a class="reference internal" href="../expression/expression.html#custom-scalar-type"><span class="std std-ref">Custom scalar types</span></a>”.</p>
 </td>
@@ -250,8 +250,7 @@ will fall back to the simple addition.</p>
 <tr class="row-even"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">zeros_like</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">)</span></code></p></td>
 <td><p>Return an object of the same type and size as <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">sv</span></code> but filled with
 zeros.</p></td>
-<td><p>Creates a new object as <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">res</span> <span class="pre">=</span> <span class="pre">SV</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">.</span><span class="pre">size</span><span class="pre">(</span><span class="pre">)</span><span class="pre">)</span></code> and calls
-<code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">set_zeros</span><span class="pre">(</span><span class="pre">res</span><span class="pre">)</span></code>,</p></td>
+<td><p>Creates a new object as <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">std</span><span class="pre">::</span><span class="pre">vector</span><span class="pre">&lt;</span><span class="pre">T</span><span class="pre">&gt;</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">.</span><span class="pre">size</span><span class="pre">(</span><span class="pre">)</span><span class="pre">,</span> <span class="pre">zero</span><span class="pre">)</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">foreach</span><span class="pre">(</span><span class="pre">sv</span><span class="pre">,</span> <span class="pre">f</span><span class="pre">)</span></code></p></td>
 <td><p>Apply a function-like object <code class="xref cpp cpp-expr docutils literal notranslate"><span class="pre">f</span></code> to all basis state index/non-zero
@@ -261,6 +260,11 @@ as detected by <code class="xref cpp cpp-expr docutils literal notranslate"><spa
 </tr>
 </tbody>
 </table>
+<p>Inclusion of <em>&lt;libcommute/loperator/state_vector_eigen3.hpp&gt;</em> makes some
+<a class="reference external" href="https://eigen.tuxfamily.org/">Eigen 3</a> types (<a class="reference external" href="https://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html#TutorialMatrixVectors">column vectors</a>,
+<a class="reference external" href="https://eigen.tuxfamily.org/dox/classEigen_1_1VectorBlock.html">vector blocks</a>,
+<a class="reference external" href="https://eigen.tuxfamily.org/dox/group__TutorialBlockOperations.html#TutorialBlockOperationsSyntaxColumnRows">column-like matrix blocks</a> and one-dimensional <a class="reference external" href="https://eigen.tuxfamily.org/dox/classEigen_1_1Map.html">Eigen::Map views</a>)
+compatible with the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept as well.</p>
 </div>
 <div class="section" id="sparse-state-vector">
 <span id="id2"></span><h2>Sparse state vector<a class="headerlink" href="#sparse-state-vector" title="Permalink to this headline">¶</a></h2>

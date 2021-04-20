@@ -40,10 +40,10 @@ metafunction) that needs be implemented for an object :expr:`sv` of type
 
   * - Function/metafunction
     - Description
-    - Default implementation
+    - Implementation for :expr:`std::vector<T>`
   * - :expr:`element_type<SV>::type`
     - The type of the elements.
-    - :expr:`decltype(std::declval<SV>()[0])`
+    - :expr:`T`
 
   * - :expr:`get_element(sv, n)`
     - Return the :expr:`n`-th element of :expr:`sv`.
@@ -60,7 +60,7 @@ metafunction) that needs be implemented for an object :expr:`sv` of type
 
   * - :expr:`set_zeros(sv)`
     - Fill :expr:`sv` with zeros.
-    - :expr:`sv[n] = zero` in a for-loop.
+    - :expr:`std::fill(sv.begin(), sv.end(), zero)`.
 
       The zero value is created by
       :expr:`make_const(0)` as described in ":ref:`custom_scalar_type`".
@@ -68,14 +68,34 @@ metafunction) that needs be implemented for an object :expr:`sv` of type
   * - :expr:`zeros_like(sv)`
     - Return an object of the same type and size as :expr:`sv` but filled with
       zeros.
-    - Creates a new object as :expr:`res = SV(sv.size())` and calls
-      :expr:`set_zeros(res)`,
+    - Creates a new object as :expr:`std::vector<T>(sv.size(), zero)`.
 
   * - :expr:`foreach(sv, f)`
     - Apply a function-like object :expr:`f` to all basis state index/non-zero
       element pairs :expr:`(n, a)` in :expr:`sv`.
     - In a for-loop, calls :expr:`f(n, a)` for all non-zero elements :expr:`a`
       as detected by :expr:`is_zero()` (see ":ref:`custom_scalar_type`").
+
+Inclusion of *<libcommute/loperator/state_vector_eigen3.hpp>* makes some
+`Eigen 3 <https://eigen.tuxfamily.org/>`_ types (`column vectors`_,
+`vector blocks`_,
+`column-like matrix blocks`_ and one-dimensional `Eigen::Map views`_)
+compatible with the ``StateVector`` concept as well.
+
+.. _column vectors:
+  https://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html
+  #TutorialMatrixVectors
+
+.. _vector blocks:
+  https://eigen.tuxfamily.org/dox/classEigen_1_1VectorBlock.html
+
+.. _column-like matrix blocks:
+  https://eigen.tuxfamily.org/dox/group__TutorialBlockOperations.html
+  #TutorialBlockOperationsSyntaxColumnRows
+
+.. _Eigen::Map views:
+  https://eigen.tuxfamily.org/dox/classEigen_1_1Map.html
+
 
 .. _sparse_state_vector:
 
