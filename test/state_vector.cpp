@@ -19,12 +19,14 @@
 
 using namespace libcommute;
 
-TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
+TEST_CASE("Implementation of StateVector interface for std::vector",
+          "[state_vector]") {
 
   SECTION("real") {
     std::vector<double> v{1, 2, 3};
 
     CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
+    CHECK(std::is_same<element_type_t<const decltype(v)>, double>::value);
     CHECK(get_element(v, 1) == 2);
     update_add_element(v, 1, 4.0);
     CHECK(get_element(v, 1) == 6);
@@ -42,6 +44,8 @@ TEST_CASE("Implementation of StateVector interface", "[state_vector]") {
     std::vector<std::complex<double>> v{1, 2, 3};
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
+          std::complex<double>>::value);
+    CHECK(std::is_same<element_type_t<const decltype(v)>,
           std::complex<double>>::value);
     CHECK(get_element(v, 1) == 2.0);
     update_add_element(v, 1, 4);

@@ -30,13 +30,13 @@ using sv_index_type = std::uint64_t;
 
 // Get element type of a StateVector object
 template<typename StateVector> struct element_type {};
+template<typename StateVector>
+using element_type_t = typename element_type<StateVector>::type;
+
 template<typename T> struct element_type<std::vector<T>> { using type = T; };
 template<typename T> struct element_type<const std::vector<T>> {
   using type = T;
 };
-
-template<typename StateVector>
-using element_type_t = typename element_type<StateVector>::type;
 
 // Get n-th state amplitude stored in a standard vector
 template<typename T>
