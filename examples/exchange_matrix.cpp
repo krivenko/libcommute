@@ -56,7 +56,7 @@ int main() {
   // we are going to construct the matrix representation <\phi|Hop|\psi>.
 
   // Preallocate state vectors.
-  // Other containers, such as Eigen::Vector could be used instead.
+  // Other containers, such as Eigen::VectorXd could be used instead.
   std::vector<double> phi(4), psi(4);
   // Iterate over basis states
   for(int i = 0; i < 4; ++i) {

@@ -71,6 +71,18 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
         DESTINATION share/pkgconfig
 )
 
+# Optionally find Eigen 3
+if(NOT POLICY CMP0074)
+  set(Eigen3_DIR ${Eigen3_ROOT}/share/eigen3/cmake)
+endif(NOT POLICY CMP0074)
+find_package(Eigen3 CONFIG)
+if(Eigen3_FOUND)
+  if(NOT Eigen3_VERSION)
+    set(Eigen3_VERSION "${EIGEN3_VERSION_STRING}")
+  endif(NOT Eigen3_VERSION)
+  message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
+endif(Eigen3_FOUND)
+
 # Build documentation
 if(DOCUMENTATION)
   message(STATUS "Building documentation")

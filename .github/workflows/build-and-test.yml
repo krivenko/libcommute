@@ -21,11 +21,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install clang
-      if: matrix.cxx_compiler.name == 'clang'
+    - name: Install Eigen 3
       run: |
            sudo apt-get update -q
-           sudo apt-get install clang-10
+           sudo apt-get install libeigen3-dev
+
+    - name: Install clang
+      if: matrix.cxx_compiler.name == 'clang'
+      run: sudo apt-get install clang-10
 
     - name: Set up Python 3.8
       if: matrix.cxx_compiler.name == 'clang'

@@ -86,4 +86,7 @@ meaning.
 | ``MathJax_ROOT``           | Path to MathJax installation (directory         |
 |                            | containing ``MathJax.js``).                     |
 +----------------------------+-------------------------------------------------+
+| ``Eigen3_ROOT``            | Path to Eigen 3 installation (required to build |
+|                            | some optional unit tests).                      |
++----------------------------+-------------------------------------------------+
 
