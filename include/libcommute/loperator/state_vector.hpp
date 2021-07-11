@@ -61,7 +61,7 @@ inline void set_zeros(std::vector<T> & sv) {
 // Create a standard vector of the same size as `sv`,
 // with all amplitudes set to zero
 template<typename T>
-std::vector<T> zeros_like(std::vector<T> const& sv) {
+inline std::vector<T> zeros_like(std::vector<T> const& sv) {
   return std::vector<T>(sv.size(), scalar_traits<T>::make_const(0));
 }
 

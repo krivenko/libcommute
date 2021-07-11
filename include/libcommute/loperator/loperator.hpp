@@ -252,7 +252,7 @@ private:
 
 // Factory function for loperator
 template<typename ScalarType, typename... IndexTypes>
-loperator<ScalarType, fermion, boson, spin>
+inline loperator<ScalarType, fermion, boson, spin>
 make_loperator(expression<ScalarType, IndexTypes...> const& expr,
                hilbert_space<IndexTypes...> const& hs) {
   return loperator<ScalarType, fermion, boson, spin>(expr, hs);
@@ -260,7 +260,7 @@ make_loperator(expression<ScalarType, IndexTypes...> const& expr,
 
 // Factory function for parametric_loperator
 template<typename ScalarType, typename... IndexTypes>
-parametric_loperator<ScalarType, fermion, boson, spin>
+inline parametric_loperator<ScalarType, fermion, boson, spin>
 make_param_loperator(expression<ScalarType, IndexTypes...> const& expr,
                      hilbert_space<IndexTypes...> const& hs) {
   return parametric_loperator<ScalarType, fermion, boson, spin>(expr, hs);

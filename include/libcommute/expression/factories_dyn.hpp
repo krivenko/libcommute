@@ -156,7 +156,7 @@ S_y(IndexTypes&&... indices) {
 }
 
 // Make a complex expression out of a real one
-expr_complex make_complex(expr_real const& expr) {
+inline expr_complex make_complex(expr_real const& expr) {
   return expr_complex(expr);
 }
 

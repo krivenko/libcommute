@@ -155,7 +155,7 @@ protected:
 // Check if g1 and g2 belong to the same algebra
 // and call g1.swap_with(g2, f) accordingly
 template<typename... IndexTypes>
-double
+inline double
 swap_with(generator<IndexTypes...> const& g1,
           generator<IndexTypes...> const& g2,
           linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
@@ -171,7 +171,7 @@ swap_with(generator<IndexTypes...> const& g1,
 // Check if g1 and g2 belong to the same algebra
 // and call g1.simplify_prod(g2, f) accordingly
 template<typename... IndexTypes>
-bool
+inline bool
 simplify_prod(generator<IndexTypes...> const& g1,
               generator<IndexTypes...> const& g2,
               linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {

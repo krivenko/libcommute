@@ -148,7 +148,8 @@ S_y(IndexTypes&&... indices) {
 
 // Make a complex expression out of a real one
 template<typename... IndexTypes>
-expr_complex<IndexTypes...> make_complex(expr_real<IndexTypes...> const& expr) {
+inline expr_complex<IndexTypes...>
+make_complex(expr_real<IndexTypes...> const& expr) {
   return expr_complex<IndexTypes...>(expr);
 }
 

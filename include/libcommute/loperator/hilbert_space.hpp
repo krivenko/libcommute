@@ -284,7 +284,7 @@ private:
 template<typename ScalarType,
          typename... IndexTypes,
          typename ESConstructor = default_es_constructor>
-hilbert_space<IndexTypes...>
+inline hilbert_space<IndexTypes...>
 make_hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
                    ESConstructor&& es_constr = {}) {
   return hilbert_space<IndexTypes...>(expr,

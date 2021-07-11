@@ -125,6 +125,7 @@ inline void set_zeros(Eigen::DenseBase<Derived> & sv) {
 }
 
 template<typename Derived>
+inline
 Eigen::Matrix<typename Derived::Scalar, Eigen::Dynamic, 1, 0, Eigen::Dynamic, 1>
 zeros_like(Eigen::DenseBase<Derived> const& sv) {
   using ret_t = Eigen::Matrix<typename Derived::Scalar,

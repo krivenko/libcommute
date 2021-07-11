@@ -95,7 +95,7 @@ void update_add_element(mapped_basis_view<const StateVector, Ref> &,
 
 // zeros_like() is not defined for views
 template<typename StateVector, bool Ref>
-StateVector zeros_like(mapped_basis_view<StateVector, Ref> const&) {
+inline StateVector zeros_like(mapped_basis_view<StateVector, Ref> const&) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "zeros_like() is not supported for views");
 }

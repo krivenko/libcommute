@@ -26,14 +26,14 @@ namespace libcommute {
 static constexpr struct {} hc;
 
 template<typename ScalarType, typename... IndexTypes>
-expression<ScalarType, IndexTypes...>
+inline expression<ScalarType, IndexTypes...>
 operator+(expression<ScalarType, IndexTypes...> const& expr,
           decltype(hc) const&) {
   return expr + conj(expr);
 }
 
 template<typename ScalarType, typename... IndexTypes>
-expression<ScalarType, IndexTypes...>
+inline expression<ScalarType, IndexTypes...>
 operator-(expression<ScalarType, IndexTypes...> const& expr,
 decltype(hc) const&) {
   return expr - conj(expr);
