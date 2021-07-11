@@ -30,11 +30,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -207,315 +208,162 @@ expression and applied to the vacuum state for a few values of <span class="math
 <p>The crucial point here is that the slow task of constructing
 <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code> is performed only once. Substitution of <span class="math notranslate nohighlight">\(\lambda\)</span>
 values is delayed until the moment the operator acts on the state.</p>
-<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">  1</span>
-<span class="normal">  2</span>
-<span class="normal">  3</span>
-<span class="normal">  4</span>
-<span class="normal">  5</span>
-<span class="normal">  6</span>
-<span class="normal">  7</span>
-<span class="normal">  8</span>
-<span class="normal">  9</span>
-<span class="normal"> 10</span>
-<span class="normal"> 11</span>
-<span class="normal"> 12</span>
-<span class="normal"> 13</span>
-<span class="normal"> 14</span>
-<span class="normal"> 15</span>
-<span class="normal"> 16</span>
-<span class="normal"> 17</span>
-<span class="normal"> 18</span>
-<span class="normal"> 19</span>
-<span class="normal"> 20</span>
-<span class="normal"> 21</span>
-<span class="normal"> 22</span>
-<span class="normal"> 23</span>
-<span class="normal"> 24</span>
-<span class="normal"> 25</span>
-<span class="normal"> 26</span>
-<span class="normal"> 27</span>
-<span class="normal"> 28</span>
-<span class="normal"> 29</span>
-<span class="normal"> 30</span>
-<span class="normal"> 31</span>
-<span class="normal"> 32</span>
-<span class="normal"> 33</span>
-<span class="normal"> 34</span>
-<span class="normal"> 35</span>
-<span class="normal"> 36</span>
-<span class="normal"> 37</span>
-<span class="normal"> 38</span>
-<span class="normal"> 39</span>
-<span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
-<span class="normal"> 43</span>
-<span class="normal"> 44</span>
-<span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;initializer_list&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
-
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">libcommute</span><span class="p">;</span>
-
-<span class="c1">// Polynomial of one real variable - a (very) basic implementation.</span>
-<span class="c1">// For production code, it is strongly advised to use optimized libraries</span>
-<span class="c1">// such as &#39;polynomial&#39; from Boost Math Toolkit.</span>
-<span class="k">class</span> <span class="nc">polynomial</span> <span class="p">{</span>
-
-  <span class="c1">// Polynomial coefficients {C_0, C_1, C_2, ..., C_n}.</span>
-  <span class="c1">// P_n(x) = C_0 + C_1 x + C_2 x^2 + ... + C_n * x^n.</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">coefficients</span><span class="p">;</span>
-
-<span class="k">public</span><span class="o">:</span>
-
-  <span class="c1">// Construct zero polynomial of degree n</span>
-  <span class="n">polynomial</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">coefficients</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
-
-  <span class="c1">// Construct from a list of coefficients</span>
-  <span class="n">polynomial</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">:</span>
-    <span class="n">coefficients</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span> <span class="p">{}</span>
-
-  <span class="c1">// Degree of this polynomial</span>
-  <span class="kt">int</span> <span class="n">degree</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-
-  <span class="c1">// Read-only access to the coefficients</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">coeffs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">coefficients</span><span class="p">;</span> <span class="p">}</span>
-
-  <span class="c1">// Evaluate P_n(x)</span>
-  <span class="kt">double</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-    <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">double</span> <span class="n">x_n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">coefficients</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">sum</span> <span class="o">+=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">x_n</span><span class="p">;</span>
-      <span class="n">x_n</span> <span class="o">*=</span> <span class="n">x</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="c1">// Addition of polynomials</span>
-  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">degree</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
-    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">max_degree</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="c1">// Subtraction of polynomials</span>
-  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">degree</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
-    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">max_degree</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="c1">// Multiplication of polynomials</span>
-  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">degree</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="c1">// Multiplication by a constant pre-factor</span>
-  <span class="k">friend</span> <span class="n">polynomial</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">polynomial</span> <span class="nf">res</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">res</span><span class="p">.</span><span class="n">coefficients</span><span class="p">)</span> <span class="n">c</span> <span class="o">*=</span> <span class="n">x</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// Specialize struct scalar_traits to let libcommute know about our polynomial</span>
-<span class="c1">// type so that it can be used as a coefficient type of libcommute::expression.</span>
-<span class="k">namespace</span> <span class="n">libcommute</span> <span class="p">{</span>
-
-<span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">struct</span> <span class="nc">scalar_traits</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="c1">// Zero value test</span>
-  <span class="k">static</span> <span class="kt">bool</span> <span class="n">is_zero</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">p</span><span class="p">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="p">{</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="c1">// Make a constant polynomial from a double value</span>
-  <span class="k">static</span> <span class="n">polynomial</span> <span class="n">make_const</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">polynomial</span><span class="p">{</span><span class="n">x</span><span class="p">};</span> <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-
-  <span class="c1">//</span>
-  <span class="c1">// Displaced harmonic oscillator</span>
-  <span class="c1">//</span>
-
-  <span class="c1">// Oscillator frequency \omega_0 = 2.</span>
-  <span class="n">polynomial</span> <span class="n">w0</span><span class="p">{</span><span class="mi">2</span><span class="p">};</span>
-  <span class="c1">// Displacement as a linear function of an external parameter,</span>
-  <span class="c1">// g(\lambda) = 3\lambda.</span>
-  <span class="n">polynomial</span> <span class="n">g</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
-
-  <span class="c1">// Hamiltonian of the oscillator</span>
-  <span class="k">using</span> <span class="k">namespace</span> <span class="n">static_indices</span><span class="p">;</span> <span class="c1">// For a_dag() and a()</span>
-  <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">w0</span> <span class="o">+</span> <span class="n">w0</span><span class="o">*</span><span class="p">(</span><span class="n">a_dag</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="p">);</span>
-
-  <span class="c1">// H will act in the Hilbert space &#39;hs&#39;. Since we are working with a boson,</span>
-  <span class="c1">// we have to truncate the Hilbert space and allow a finite number of</span>
-  <span class="c1">// excitations (here, N = 0, 1, ..., 2^4 - 1).</span>
-  <span class="k">auto</span> <span class="n">hs</span> <span class="o">=</span> <span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">boson_es_constructor</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
-
-  <span class="c1">// Parametric quantum operator (depends on parameter \lambda)</span>
-  <span class="k">auto</span> <span class="n">Hop</span> <span class="o">=</span> <span class="n">make_param_loperator</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
-
-  <span class="c1">//</span>
-  <span class="c1">// Check that</span>
-  <span class="c1">// H|0&gt; = \omega_0 (1/2 + g(\lambda)^2) |0&gt; - \omega_0 g(\lambda) |1&gt;</span>
-  <span class="c1">// for a few values of \lambda.</span>
-  <span class="c1">//</span>
-
-  <span class="c1">// Initial state |0&gt;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ket0</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
-  <span class="n">ket0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
-
-  <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">lambda</span> <span class="p">:</span> <span class="p">{</span><span class="mf">.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">})</span> <span class="p">{</span>
-    <span class="c1">// Act with H(\lambda) upon |0&gt;</span>
-    <span class="k">auto</span> <span class="n">ket</span> <span class="o">=</span> <span class="n">Hop</span><span class="p">(</span><span class="n">ket0</span><span class="p">,</span> <span class="n">lambda</span><span class="p">);</span>
-
-    <span class="c1">// Print all non-zero elements of |ket&gt;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">lambda = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">lambda</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; :|ket&gt; = &quot;</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ket</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">ket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; +(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="linenos">  2</span><span class="cp">#include</span> <span class="cpf">&lt;initializer_list&gt;</span><span class="cp"></span>
+<span class="linenos">  3</span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="linenos">  4</span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="linenos">  5</span>
+<span class="linenos">  6</span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span><span class="k">using</span> <span class="k">namespace</span> <span class="nn">libcommute</span><span class="p">;</span>
+<span class="linenos">  9</span>
+<span class="linenos"> 10</span><span class="c1">// Polynomial of one real variable - a (very) basic implementation.</span>
+<span class="linenos"> 11</span><span class="c1">// For production code, it is strongly advised to use optimized libraries</span>
+<span class="linenos"> 12</span><span class="c1">// such as &#39;polynomial&#39; from Boost Math Toolkit.</span>
+<span class="linenos"> 13</span><span class="k">class</span> <span class="nc">polynomial</span> <span class="p">{</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span>  <span class="c1">// Polynomial coefficients {C_0, C_1, C_2, ..., C_n}.</span>
+<span class="linenos"> 16</span>  <span class="c1">// P_n(x) = C_0 + C_1 x + C_2 x^2 + ... + C_n * x^n.</span>
+<span class="linenos"> 17</span>  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">coefficients</span><span class="p">;</span>
+<span class="linenos"> 18</span>
+<span class="linenos"> 19</span><span class="k">public</span><span class="o">:</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span>  <span class="c1">// Construct zero polynomial of degree n</span>
+<span class="linenos"> 22</span>  <span class="n">polynomial</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="o">:</span> <span class="n">coefficients</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span>  <span class="c1">// Construct from a list of coefficients</span>
+<span class="linenos"> 25</span>  <span class="n">polynomial</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">:</span>
+<span class="linenos"> 26</span>    <span class="n">coefficients</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span> <span class="p">{}</span>
+<span class="linenos"> 27</span>
+<span class="linenos"> 28</span>  <span class="c1">// Degree of this polynomial</span>
+<span class="linenos"> 29</span>  <span class="kt">int</span> <span class="n">degree</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">coefficients</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span>  <span class="c1">// Read-only access to the coefficients</span>
+<span class="linenos"> 32</span>  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">coeffs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">coefficients</span><span class="p">;</span> <span class="p">}</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span>  <span class="c1">// Evaluate P_n(x)</span>
+<span class="linenos"> 35</span>  <span class="kt">double</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<span class="linenos"> 36</span>    <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 37</span>    <span class="kt">double</span> <span class="n">x_n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="linenos"> 38</span>    <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">coefficients</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 39</span>      <span class="n">sum</span> <span class="o">+=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">x_n</span><span class="p">;</span>
+<span class="linenos"> 40</span>      <span class="n">x_n</span> <span class="o">*=</span> <span class="n">x</span><span class="p">;</span>
+<span class="linenos"> 41</span>    <span class="p">}</span>
+<span class="linenos"> 42</span>    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="linenos"> 43</span>  <span class="p">}</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span>  <span class="c1">// Addition of polynomials</span>
+<span class="linenos"> 46</span>  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<span class="linenos"> 47</span>    <span class="kt">int</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">degree</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
+<span class="linenos"> 48</span>    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">max_degree</span><span class="p">);</span>
+<span class="linenos"> 49</span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 50</span>      <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>
+<span class="linenos"> 51</span>        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span>
+<span class="linenos"> 52</span>        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+<span class="linenos"> 53</span>    <span class="p">}</span>
+<span class="linenos"> 54</span>    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="linenos"> 55</span>  <span class="p">}</span>
+<span class="linenos"> 56</span>
+<span class="linenos"> 57</span>  <span class="c1">// Subtraction of polynomials</span>
+<span class="linenos"> 58</span>  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<span class="linenos"> 59</span>    <span class="kt">int</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">degree</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
+<span class="linenos"> 60</span>    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">max_degree</span><span class="p">);</span>
+<span class="linenos"> 61</span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_degree</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 62</span>      <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>
+<span class="linenos"> 63</span>        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span>
+<span class="linenos"> 64</span>        <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">?</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+<span class="linenos"> 65</span>    <span class="p">}</span>
+<span class="linenos"> 66</span>    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="linenos"> 67</span>  <span class="p">}</span>
+<span class="linenos"> 68</span>
+<span class="linenos"> 69</span>  <span class="c1">// Multiplication of polynomials</span>
+<span class="linenos"> 70</span>  <span class="n">polynomial</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<span class="linenos"> 71</span>    <span class="n">polynomial</span> <span class="nf">result</span><span class="p">(</span><span class="n">degree</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">());</span>
+<span class="linenos"> 72</span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 73</span>      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">p</span><span class="p">.</span><span class="n">degree</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 74</span>        <span class="n">result</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coefficients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos"> 75</span>      <span class="p">}</span>
+<span class="linenos"> 76</span>    <span class="p">}</span>
+<span class="linenos"> 77</span>    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="linenos"> 78</span>  <span class="p">}</span>
+<span class="linenos"> 79</span>
+<span class="linenos"> 80</span>  <span class="c1">// Multiplication by a constant pre-factor</span>
+<span class="linenos"> 81</span>  <span class="k">friend</span> <span class="n">polynomial</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 82</span>    <span class="n">polynomial</span> <span class="nf">res</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="linenos"> 83</span>    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">res</span><span class="p">.</span><span class="n">coefficients</span><span class="p">)</span> <span class="n">c</span> <span class="o">*=</span> <span class="n">x</span><span class="p">;</span>
+<span class="linenos"> 84</span>    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="linenos"> 85</span>  <span class="p">}</span>
+<span class="linenos"> 86</span><span class="p">};</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span><span class="c1">// Specialize struct scalar_traits to let libcommute know about our polynomial</span>
+<span class="linenos"> 89</span><span class="c1">// type so that it can be used as a coefficient type of libcommute::expression.</span>
+<span class="linenos"> 90</span><span class="k">namespace</span> <span class="nn">libcommute</span> <span class="p">{</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span><span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">struct</span> <span class="nc">scalar_traits</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="linenos"> 93</span>  <span class="c1">// Zero value test</span>
+<span class="linenos"> 94</span>  <span class="k">static</span> <span class="kt">bool</span> <span class="nf">is_zero</span><span class="p">(</span><span class="n">polynomial</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos"> 95</span>    <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">p</span><span class="p">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="p">{</span>
+<span class="linenos"> 96</span>      <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="linenos"> 97</span>    <span class="p">}</span>
+<span class="linenos"> 98</span>    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="linenos"> 99</span>  <span class="p">}</span>
+<span class="linenos">100</span>  <span class="c1">// Make a constant polynomial from a double value</span>
+<span class="linenos">101</span>  <span class="k">static</span> <span class="n">polynomial</span> <span class="nf">make_const</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">polynomial</span><span class="p">{</span><span class="n">x</span><span class="p">};</span> <span class="p">}</span>
+<span class="linenos">102</span><span class="p">};</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span><span class="p">}</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span>  <span class="c1">//</span>
+<span class="linenos">109</span>  <span class="c1">// Displaced harmonic oscillator</span>
+<span class="linenos">110</span>  <span class="c1">//</span>
+<span class="linenos">111</span>
+<span class="linenos">112</span>  <span class="c1">// Oscillator frequency \omega_0 = 2.</span>
+<span class="linenos">113</span>  <span class="n">polynomial</span> <span class="n">w0</span><span class="p">{</span><span class="mi">2</span><span class="p">};</span>
+<span class="linenos">114</span>  <span class="c1">// Displacement as a linear function of an external parameter,</span>
+<span class="linenos">115</span>  <span class="c1">// g(\lambda) = 3\lambda.</span>
+<span class="linenos">116</span>  <span class="n">polynomial</span> <span class="n">g</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="linenos">117</span>
+<span class="linenos">118</span>  <span class="c1">// Hamiltonian of the oscillator</span>
+<span class="linenos">119</span>  <span class="k">using</span> <span class="k">namespace</span> <span class="nn">static_indices</span><span class="p">;</span> <span class="c1">// For a_dag() and a()</span>
+<span class="linenos">120</span>  <span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">w0</span> <span class="o">+</span> <span class="n">w0</span><span class="o">*</span><span class="p">(</span><span class="n">a_dag</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="o">&lt;</span><span class="n">polynomial</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="p">);</span>
+<span class="linenos">121</span>
+<span class="linenos">122</span>  <span class="c1">// H will act in the Hilbert space &#39;hs&#39;. Since we are working with a boson,</span>
+<span class="linenos">123</span>  <span class="c1">// we have to truncate the Hilbert space and allow a finite number of</span>
+<span class="linenos">124</span>  <span class="c1">// excitations (here, N = 0, 1, ..., 2^4 - 1).</span>
+<span class="linenos">125</span>  <span class="k">auto</span> <span class="n">hs</span> <span class="o">=</span> <span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">boson_es_constructor</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+<span class="linenos">126</span>
+<span class="linenos">127</span>  <span class="c1">// Parametric quantum operator (depends on parameter \lambda)</span>
+<span class="linenos">128</span>  <span class="k">auto</span> <span class="n">Hop</span> <span class="o">=</span> <span class="n">make_param_loperator</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+<span class="linenos">129</span>
+<span class="linenos">130</span>  <span class="c1">//</span>
+<span class="linenos">131</span>  <span class="c1">// Check that</span>
+<span class="linenos">132</span>  <span class="c1">// H|0&gt; = \omega_0 (1/2 + g(\lambda)^2) |0&gt; - \omega_0 g(\lambda) |1&gt;</span>
+<span class="linenos">133</span>  <span class="c1">// for a few values of \lambda.</span>
+<span class="linenos">134</span>  <span class="c1">//</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span>  <span class="c1">// Initial state |0&gt;</span>
+<span class="linenos">137</span>  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ket0</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+<span class="linenos">138</span>  <span class="n">ket0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span>  <span class="k">for</span><span class="p">(</span><span class="kt">double</span> <span class="nl">lambda</span> <span class="p">:</span> <span class="p">{</span><span class="mf">.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">})</span> <span class="p">{</span>
+<span class="linenos">141</span>    <span class="c1">// Act with H(\lambda) upon |0&gt;</span>
+<span class="linenos">142</span>    <span class="k">auto</span> <span class="n">ket</span> <span class="o">=</span> <span class="n">Hop</span><span class="p">(</span><span class="n">ket0</span><span class="p">,</span> <span class="n">lambda</span><span class="p">);</span>
+<span class="linenos">143</span>
+<span class="linenos">144</span>    <span class="c1">// Print all non-zero elements of |ket&gt;</span>
+<span class="linenos">145</span>    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">lambda = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">lambda</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; :|ket&gt; = &quot;</span><span class="p">;</span>
+<span class="linenos">146</span>    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ket</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="linenos">147</span>      <span class="k">if</span><span class="p">(</span><span class="n">ket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">148</span>        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; +(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;)|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
+<span class="linenos">149</span>    <span class="p">}</span>
+<span class="linenos">150</span>    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">151</span>  <span class="p">}</span>
+<span class="linenos">152</span>
+<span class="linenos">153</span>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="linenos">154</span><span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div>
 
 
