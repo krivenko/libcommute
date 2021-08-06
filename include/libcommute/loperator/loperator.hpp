@@ -68,9 +68,14 @@ public:
   loperator_base& operator=(loperator_base&&) noexcept = default;
   ~loperator_base() = default;
 
-protected:
+private:
 
   std::vector<std::pair<monomial_action_t, scalar_type>> m_actions_;
+
+protected:
+
+  inline std::vector<std::pair<monomial_action_t, scalar_type>> const&
+  m_actions() const { return m_actions_; }
 };
 
 //
@@ -123,7 +128,7 @@ private:
     foreach(src,
             [&,this](sv_index_type in_index,
                      element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
-      for(auto const& ma : this->m_actions_) {
+      for(auto const& ma : base::m_actions()) {
         sv_index_type index = in_index;
         auto coeff = scalar_traits<ScalarType>::make_const(1);
         bool nonzero = ma.first.act(index, coeff);
@@ -166,7 +171,7 @@ public:
   operator()(StateVector const& sv, CoeffArgs&&... args) const {
     StateVector res = zeros_like(sv);
     std::vector<evaluated_coeff_t<CoeffArgs...>> evaluated_coeffs;
-    evaluated_coeffs.reserve(base::m_actions_.size());
+    evaluated_coeffs.reserve(base::m_actions().size());
     act_impl(sv, res, evaluated_coeffs, std::forward<CoeffArgs>(args)...);
     return res;
   }
@@ -185,7 +190,7 @@ public:
                          CoeffArgs&&... args) const {
     set_zeros(dst);
     std::vector<evaluated_coeff_t<CoeffArgs...>> evaluated_coeffs;
-    evaluated_coeffs.reserve(base::m_actions_.size());
+    evaluated_coeffs.reserve(base::m_actions().size());
     act_impl(src, dst, evaluated_coeffs, std::forward<CoeffArgs>(args)...);
   }
 
@@ -216,7 +221,7 @@ public:
   inline loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...>
   at(CoeffArgs&&... args) const {
         loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> lop;
-    for(auto const& m : base::m_actions_) {
+    for(auto const& m : base::m_actions()) {
       lop.add_monomial_action(m.first,
                               m.second(std::forward<CoeffArgs>(args)...));
     }
@@ -233,18 +238,20 @@ private:
     std::vector<evaluated_coeff_t<CoeffArgs...>> & evaluated_coeffs,
     CoeffArgs&&... args) const {
 
+    auto const& m_act = base::m_actions();
+
     // Evaluate coefficients
-    for(auto const& a : base::m_actions_)
+    for(auto const& a : m_act)
       evaluated_coeffs.emplace_back(a.second(std::forward<CoeffArgs>(args)...));
 
     // Apply monomials
     foreach(src, [&,this](sv_index_type in_index,
                           element_type_t<StateVector> const& a) {
-      for(size_t n = 0; n < base::m_actions_.size(); ++n) {
+      for(size_t n = 0; n < m_act.size(); ++n) {
         sv_index_type index = in_index;
         auto coeff =
           scalar_traits<evaluated_coeff_t<CoeffArgs...>>::make_const(1);
-        bool nz = base::m_actions_[n].first.act(index, coeff);
+        bool nz = m_act[n].first.act(index, coeff);
         if(nz) {
           update_add_element(dst, index, evaluated_coeffs[n] * coeff * a);
         }

@@ -58,7 +58,7 @@ public:
   // in this elementary space
   int n_bits() const override { return n_bits_; }
 
-protected:
+private:
 
   // This space is spanned by bosonic states |0>, |1>, ..., |2^{n_bits}-1>
   int n_bits_;

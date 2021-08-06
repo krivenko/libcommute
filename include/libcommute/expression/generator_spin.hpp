@@ -132,16 +132,18 @@ public:
     (c_ == spin_component::plus ? spin_component::minus : spin_component::plus)
     );
     double spin = (multiplicity_-1)/2.0;
-    f.set(0, make_unique<generator_spin>(spin, new_c, base::indices_), 1);
+    f.set(0, make_unique<generator_spin>(spin, new_c, base::indices()), 1);
   }
 
-protected:
+private:
+
   // Multiplicity, 2S+1
   int multiplicity_;
 
   // Creation or annihilation operator?
   spin_component c_;
 
+protected:
   // Check two generators of the same algebra for equality
   bool equal(base const& g) const override {
     auto const& b_g = dynamic_cast<generator_spin const&>(g);
@@ -189,7 +191,7 @@ protected:
       case spin_component::z: os << "z"; break;
     }
     os << "(";
-    print_tuple(os, this->indices_);
+    print_tuple(os, this->indices());
     return os << ")";
   }
 

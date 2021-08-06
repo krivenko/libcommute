@@ -71,12 +71,15 @@ public:
 
   // Return the Hermitian conjugate of this generator via f
   void conj(linear_function_t & f) const override {
-    f.set(0, make_unique<generator_boson>(!dagger_, base::indices_), 1);
+    f.set(0, make_unique<generator_boson>(!dagger_, base::indices()), 1);
   }
 
-protected:
+private:
+
   // Creation or annihilation operator?
   bool dagger_;
+
+protected:
 
   // Check two generators of the same algebra for equality
   bool equal(base const& g) const override {
@@ -105,7 +108,7 @@ protected:
   // Print to stream
   std::ostream & print(std::ostream & os) const override {
     os << "A" << (this->dagger_ ? "+" : "") << "(";
-    print_tuple(os, this->indices_);
+    print_tuple(os, this->indices());
     return os << ")";
   }
 };

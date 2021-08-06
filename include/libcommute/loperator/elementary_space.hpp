@@ -83,9 +83,11 @@ public:
   // Indices accessor
   index_types const& indices() const { return indices_; }
 
-protected:
+private:
 
   index_types indices_;
+
+protected:
 
   // Check two elementary spaces for equality
   virtual bool equal(elementary_space const& es) const {

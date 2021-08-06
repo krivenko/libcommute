@@ -62,7 +62,7 @@ public:
   // in this elementary space
   int n_bits() const override { return n_bits_; }
 
-protected:
+private:
 
   // Multiplicity, 2S+1
   int multiplicity_;
@@ -70,6 +70,8 @@ protected:
   // n_bits_ is the smallest positive number such that 2^{n_bits_} - 1
   // exceed multiplicity of the respective spin algebra.
   int n_bits_;
+
+protected:
 
   // Equality
   bool equal(base const& es) const override {

@@ -82,8 +82,8 @@ public:
     auto const& L_n_ = dynamic_cast<generator_virasoro const&>(L_n);
 
     // Extract indices from L_m and L_n
-    int m = std::get<0>(base::indices_);
-    int n = std::get<0>(L_n_.indices_);
+    int m = std::get<0>(base::indices());
+    int n = std::get<0>(L_n_.indices());
 
     // Write linear terms of the transformed expressions into 'f'
     f.set(m == -n ? (central_charge * (m*m*m - m)) : 0, // Constant term
@@ -118,13 +118,13 @@ public:
 
   // Hermitian conjugate: (L_n)^\dagger = L_{-n}
   void conj(linear_function_t & f) const final {
-    int conj_n = - std::get<0>(base::indices_);
+    int conj_n = - std::get<0>(base::indices());
     f.set(0, make_unique<generator_virasoro>(conj_n), 1);
   }
 
   // Print L_n to stream
   std::ostream & print(std::ostream & os) const final {
-    int n = std::get<0>(base::indices_);
+    int n = std::get<0>(base::indices());
     return os << "L(" << n << ")";
   }
 };

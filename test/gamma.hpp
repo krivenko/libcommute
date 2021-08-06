@@ -55,7 +55,7 @@ public:
   swap_with(base const& g2, linear_function_t & f) const final {
     assert(*this > g2);
     bool diag = base::equal(g2);
-    f.set(diag * (std::get<0>(indices_) == 0 ? 2 : -2));
+    f.set(diag * (std::get<0>(base::indices()) == 0 ? 2 : -2));
     return -1;
   }
 
@@ -64,7 +64,7 @@ public:
   bool
   simplify_prod(base const& g2, linear_function_t & f) const final {
     if(*this == g2) {
-      f.set(std::get<0>(indices_) == 0 ? 1 : -1);
+      f.set(std::get<0>(base::indices()) == 0 ? 1 : -1);
       return true;
     } else
       return false;
@@ -72,7 +72,7 @@ public:
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian
   void conj(linear_function_t & f) const final {
-    f.set(0, clone(), std::get<0>(indices_) == 0 ? 1 : -1);
+    f.set(0, clone(), std::get<0>(base::indices()) == 0 ? 1 : -1);
   }
 };
 

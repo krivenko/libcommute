@@ -129,9 +129,11 @@ public:
     return g.print(os);
   }
 
-protected:
+private:
 
   index_types indices_;
+
+protected:
 
   // Check two generators of the same algebra for equality
   virtual bool equal(generator const& g) const {
