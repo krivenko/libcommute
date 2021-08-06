@@ -47,6 +47,7 @@ public:
   elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
   elementary_space_gamma& operator=(elementary_space_gamma&&) noexcept
     = default;
+  ~elementary_space_gamma() final = default;
 
   std::unique_ptr<base> clone() const final {
     return make_unique<elementary_space_gamma>(*this);

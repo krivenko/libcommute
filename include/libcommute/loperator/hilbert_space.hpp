@@ -154,6 +154,8 @@ public:
   }
   hilbert_space& operator=(hilbert_space&&) noexcept = default;
 
+  ~hilbert_space() = default;
+
   // Equality
   inline friend bool operator==(hilbert_space const& hs1,
                                 hilbert_space const& hs2) {

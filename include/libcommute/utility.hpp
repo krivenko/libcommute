@@ -135,7 +135,9 @@ struct noncopyable {
 noncopyable() = default;
 ~noncopyable() = default;
 noncopyable(noncopyable const&) = delete;
+noncopyable(noncopyable &&) noexcept = default;
 noncopyable & operator=(noncopyable const&) = delete;
+noncopyable & operator=(noncopyable &&) noexcept = default;
 };
 
 //
@@ -167,6 +169,7 @@ template<typename T> struct linear_function :
   linear_function(linear_function&&) = default;
   linear_function & operator=(linear_function const&) = default;
   linear_function & operator=(linear_function&&) = default;
+  ~linear_function() = default;
 
   // Reset contents
   template<typename... Args>

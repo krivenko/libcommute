@@ -76,6 +76,7 @@ public:
   expression(expression&&) noexcept = default;
   expression& operator=(expression const&) = default;
   expression& operator=(expression&&) noexcept = default;
+  ~expression() = default;
 
   // Construct from an expression of a different scalar type
   template<typename S>
@@ -966,6 +967,7 @@ public:
   const_iterator(const_iterator&&) noexcept = default;
   const_iterator& operator=(const_iterator const&) = default;
   const_iterator& operator=(const_iterator&&) noexcept = default;
+  ~const_iterator() = default;
 
   // Increments
   const_iterator& operator++() { ++m_it_; return *this;}

@@ -100,6 +100,8 @@ public:
   }
   monomial& operator=(monomial&&) noexcept = default;
 
+  ~monomial() = default;
+
   // Number of generators in this monomial
   inline size_t size() const { return generators_.size(); }
 
@@ -303,6 +305,7 @@ public:
   const_iterator(const_iterator&&) noexcept = default;
   const_iterator& operator=(const_iterator const&) = default;
   const_iterator& operator=(const_iterator&&) noexcept = default;
+  ~const_iterator() = default;
 
   // Increments
   const_iterator& operator++() { ++v_it_; return *this;}

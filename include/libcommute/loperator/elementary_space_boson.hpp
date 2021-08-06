@@ -44,6 +44,7 @@ public:
   elementary_space_boson& operator=(elementary_space_boson const&) = default;
   elementary_space_boson& operator=(elementary_space_boson&&) noexcept
     = default;
+  ~elementary_space_boson() override = default;
 
   // Make a smart pointer that manages a copy of this elementary space
   std::unique_ptr<base> clone() const override {

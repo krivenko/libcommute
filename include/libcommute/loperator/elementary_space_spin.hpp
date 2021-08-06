@@ -48,6 +48,7 @@ public:
   elementary_space_spin(elementary_space_spin&&) noexcept = default;
   elementary_space_spin& operator=(elementary_space_spin const&) = default;
   elementary_space_spin& operator=(elementary_space_spin&&) noexcept = default;
+  ~elementary_space_spin() override = default;
 
   // Make a smart pointer that manages a copy of this elementary space
   std::unique_ptr<base> clone() const override {

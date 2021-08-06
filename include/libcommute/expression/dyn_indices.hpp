@@ -71,6 +71,7 @@ public:
   dyn_indices_generic(dyn_indices_generic&&) noexcept = default;
   dyn_indices_generic& operator=(dyn_indices_generic const&) = default;
   dyn_indices_generic& operator=(dyn_indices_generic&&) noexcept = default;
+  ~dyn_indices_generic() = default;
 
   // Index sequence length
   size_t size() const { return indices_.size(); }

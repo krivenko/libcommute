@@ -43,6 +43,7 @@ public:
     = default;
   elementary_space_fermion& operator=(elementary_space_fermion&&) noexcept
     = default;
+  ~elementary_space_fermion() override = default;
 
   // Make a smart pointer that manages a copy of this elementary space
   std::unique_ptr<base> clone() const override {

@@ -66,6 +66,7 @@ public:
   loperator_base(loperator_base&&) noexcept = default;
   loperator_base& operator=(loperator_base const&) = default;
   loperator_base& operator=(loperator_base&&) noexcept = default;
+  ~loperator_base() = default;
 
 protected:
 
@@ -90,6 +91,7 @@ public:
   loperator(loperator&&) noexcept = default;
   loperator& operator=(loperator const&) = default;
   loperator& operator=(loperator&&) noexcept = default;
+  ~loperator() = default;
 
   // Act on state and return the resulting state.
   template<typename StateVector>
@@ -152,6 +154,7 @@ public:
   parametric_loperator(parametric_loperator&&) noexcept = default;
   parametric_loperator& operator=(parametric_loperator const&) = default;
   parametric_loperator& operator=(parametric_loperator&&) noexcept = default;
+  ~parametric_loperator() = default;
 
   // Act on state and return the resulting state.
   //

@@ -40,7 +40,11 @@ public:
   // Since all 4 gamma matrices act in the same elementary space,
   // we can initialize the base class with any number
   elementary_space_gamma() : base(0) {}
-
+  elementary_space_gamma(elementary_space_gamma const&) = default;
+  elementary_space_gamma(elementary_space_gamma &&) noexcept = default;
+  elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
+  elementary_space_gamma& operator=(elementary_space_gamma &&) noexcept
+    = default;
   ~elementary_space_gamma() final = default;
 
   // Virtual copy-constructor.

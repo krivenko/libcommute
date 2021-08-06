@@ -196,7 +196,12 @@ struct ST2 { int a; };
 
 struct ST3 {
   int a;
+
+  ST3(ST3 const&) = default;
+  ST3(ST3 &&) noexcept = default;
   ST3 & operator=(ST3 const&) = default;
+  ST3 & operator=(ST3 &&) noexcept = default;
+  ~ST3() = default;
 
   ST3 & operator+=(ST1 const& x) { a += x.a; return *this; }
   ST3 operator+(ST2 const& x) { return {a + 2*x.a}; }
