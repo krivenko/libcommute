@@ -26,7 +26,7 @@
 #include <memory>
 #include <vector>
 
-std::complex<double> I(0,1);
+std::complex<double> const I(0,1);
 
 namespace libcommute {
 

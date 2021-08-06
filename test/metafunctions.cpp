@@ -54,8 +54,10 @@ TEST_CASE("remove_cvref<T> metafunction", "[remove_cvref]") {
 double f(int x) { return 0; }
 
 // Lambda-functions
-auto lambda1 = [](int x) -> double { return 0; };
-auto lambda2 = [](int x, std::string const& s) -> std::string { return ""; };
+auto const lambda1 = [](int x) -> double { return 0; };
+auto const lambda2 = [](int x, std::string const& s) -> std::string {
+  return "";
+};
 
 // Functor
 struct MyFunctor {
@@ -70,8 +72,10 @@ public:
 };
 
 // std::function
-auto std_f1 = std::function<double(int)>(lambda1);
-auto std_f2 = std::function<std::string(int x, std::string const& s)>(lambda2);
+auto const std_f1 = std::function<double(int)>(lambda1);
+auto const std_f2 = std::function<std::string(int x, std::string const& s)>(
+  lambda2
+);
 
 template<typename RefT, typename T, typename... Args>
 void check_invoke_result() {
