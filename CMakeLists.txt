@@ -96,6 +96,13 @@ if(DOCUMENTATION)
   add_subdirectory(doc)
 endif(DOCUMENTATION)
 
+# Enable static analysis
+option(STATIC_ANALYSIS "Run static analysis tools on C++ sources" OFF)
+if(STATIC_ANALYSIS)
+  message(STATUS "Static analysis enabled")
+  include(cmake/StaticAnalysis.cmake)
+endif(STATIC_ANALYSIS)
+
 # Build unit tests
 if(TESTS)
   enable_testing()

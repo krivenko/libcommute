@@ -36,6 +36,9 @@ jobs:
       with:
         python-version: 3.8
 
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
     - name: Install Sphinx and Read the Docs Sphinx Theme
       if: matrix.cxx_compiler.name == 'clang'
       run: |
@@ -54,6 +57,7 @@ jobs:
            CXX="${{ matrix.cxx_compiler.cxx }}" cmake ..                     \
              -DCMAKE_BUILD_TYPE=Debug                                        \
              -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE}/installed            \
+             -DSTATIC_ANALYSIS=ON                                            \
              -DTESTS=ON                                                      \
              -DEXAMPLES=ON                                                   \
              -DDOCUMENTATION=${DOCS}

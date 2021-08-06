@@ -10,6 +10,11 @@
 
 # Build Catch2 main object file
 add_library(catch2 OBJECT catch2/catch2-main.cpp)
+# Exclude Catch2 from static analysis
+if(STATIC_ANALYSIS)
+  set_property(TARGET catch2 PROPERTY CXX_CLANG_TIDY)
+  set_property(TARGET catch2 PROPERTY CXX_CPPCHECK)
+endif(STATIC_ANALYSIS)
 
 set(TESTS
   utility
