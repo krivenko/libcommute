@@ -97,8 +97,8 @@ int main() {
   //
 
   // Index of the |0, g> basis vector
-  int gs_index = hs.basis_state_index(es_boson, 0) + // n = 0
-                 hs.basis_state_index(es_spin, 0);   // 0 -> g
+  auto gs_index = hs.basis_state_index(es_boson, 0) + // n = 0
+                  hs.basis_state_index(es_spin, 0);   // 0 -> g
 
   // Set |\phi> = |0, g>
   std::fill(phi.begin(), phi.end(), 0);
@@ -118,11 +118,11 @@ int main() {
   for(int n = 1; n <= 20; ++n) {
 
     // Index of basis state |n - 1, e>
-    int n1_e_index = hs.basis_state_index(es_boson, n - 1) + // n - 1
-                     hs.basis_state_index(es_spin, 1);       // 1 -> e
+    auto n1_e_index = hs.basis_state_index(es_boson, n - 1) + // n - 1
+                      hs.basis_state_index(es_spin, 1);       // 1 -> e
     // Index of basis state |n, g>
-    int n_g_index = hs.basis_state_index(es_boson, n) +      // n
-                    hs.basis_state_index(es_spin, 0);        // 0 -> g
+    auto n_g_index = hs.basis_state_index(es_boson, n) +      // n
+                     hs.basis_state_index(es_spin, 0);        // 0 -> g
 
     // Set \phi to be the "+" dressed state
     std::fill(phi.begin(), phi.end(), 0);

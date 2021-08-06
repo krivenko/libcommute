@@ -39,7 +39,8 @@ public:
   elementary_space_spin() = delete;
   template<typename... Args>
   elementary_space_spin(double spin, Args&&... indices)
-    : base(std::forward<Args>(indices)...), multiplicity_(2*spin+1) {
+    : base(std::forward<Args>(indices)...),
+      multiplicity_(static_cast<int>(2*spin+1)) {
     // Multiplicity has to be integer
     assert(2*spin == int(spin*2));
     n_bits_ = std::ceil(std::log2(multiplicity_));

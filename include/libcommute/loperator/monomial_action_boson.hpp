@@ -107,7 +107,7 @@ public:
         bool dagger =
           dynamic_cast<generator_boson<IndexTypes...> const&>(*it).dagger();
 
-        std::int64_t n_change = dagger ? power : -power;
+        auto n_change = static_cast<std::int64_t>(dagger ? power : -power);
         std::int64_t state_change = n_change * (std::int64_t(1) << shift);
 
         updates_.emplace_back(single_boson_update_t{
@@ -140,12 +140,13 @@ public:
 
     if(vanishing_) return false;
 
-    for(int b = updates_.size() - 1; b >= 0; --b) {
+    for(std::size_t b = updates_.size(); b-- != 0;) {
       auto const& update = updates_[b];
 
-      int64_t n_part = (index >> update.shift) & update.mask;
-      int64_t new_n_part = n_part + update.n_change;
-      if(new_n_part < 0 || new_n_part > int64_t(update.n_max))
+      auto n_part = static_cast<std::int64_t>((index >> update.shift) &
+                                              update.mask);
+      std::int64_t new_n_part = n_part + update.n_change;
+      if(new_n_part < 0 || new_n_part > std::int64_t(update.n_max))
         return false;
 
       if(update.n_change > 0) {

@@ -51,7 +51,9 @@ public:
     base(std::forward<Args>(indices)...), multiplicity_(2), c_(c) {}
   template<typename... Args>
   generator_spin(double spin, spin_component c, Args&&... indices) :
-    base(std::forward<Args>(indices)...), multiplicity_(2*spin+1), c_(c) {
+    base(std::forward<Args>(indices)...),
+    multiplicity_(static_cast<int>(2*spin+1)),
+    c_(c) {
       // Multiplicity has to be integer
       assert(2*spin == int(spin*2));
     }

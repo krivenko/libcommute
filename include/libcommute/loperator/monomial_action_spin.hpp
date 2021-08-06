@@ -132,9 +132,9 @@ public:
   inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
 
-    for(int b = updates_.size() - 1; b >= 0; --b) {
+    for(std::size_t b = updates_.size(); b-- != 0;) {
       auto const& update = updates_[b];
-      std::int64_t n = (index >> update.shift) & update.mask;
+      sv_index_type n = (index >> update.shift) & update.mask;
       switch(update.c) {
         case plus: {
           if(n + update.power > update.s2) return false;
@@ -148,7 +148,7 @@ public:
         }
         break;
         case minus: {
-          if(n - std::int64_t(update.power) < 0) return false;
+          if(n < update.power) return false;
           for(sv_index_type d = 0; d < update.power; ++d)
             mul_assign(coeff,
               scalar_traits<ScalarType>::make_const(
@@ -159,7 +159,7 @@ public:
         }
         break;
         case z: {
-          if((update.s2 % 2 == 0) && n == std::int64_t(update.s2 / 2))
+          if((update.s2 % 2 == 0) && n == update.s2 / 2)
             return false;
           mul_assign(coeff,
             scalar_traits<ScalarType>::make_const(

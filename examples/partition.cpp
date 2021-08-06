@@ -150,7 +150,7 @@ int main() {
       basis_states_in_subspace_24.push_back(index);
   });
 
-  int sp24_dim = basis_states_in_subspace_24.size();
+  auto sp24_dim = basis_states_in_subspace_24.size();
   std::cout << "Subspace 24 is " <<  sp24_dim << "-dimensional" << std::endl;
 
   // Make a mapper object

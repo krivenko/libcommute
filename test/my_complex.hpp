@@ -53,9 +53,9 @@ struct my_complex {
     return {c1.re*c2.re - c1.im*c2.im, c1.re*c2.im + c1.im*c2.re};
   }
 
-  float operator()(int m) const { return re*m; }
+  float operator()(int m) const { return re * static_cast<float>(m); }
   my_complex operator()(int m1, int m2) const {
-    return {(m1+m2)*re, (m1-m2)*im};
+    return {static_cast<float>(m1+m2)*re, static_cast<float>(m1-m2)*im};
   }
 };
 

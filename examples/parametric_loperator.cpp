@@ -40,14 +40,14 @@ class polynomial {
 public:
 
   // Construct zero polynomial of degree n
-  polynomial(int n) : coefficients(n + 1, 0) {}
+  polynomial(std::size_t n) : coefficients(n + 1, 0) {}
 
   // Construct from a list of coefficients
   polynomial(std::initializer_list<double> coeffs) :
     coefficients(coeffs) {}
 
   // Degree of this polynomial
-  int degree() const { return coefficients.size() - 1; }
+  std::size_t degree() const { return coefficients.size() - 1; }
 
   // Read-only access to the coefficients
   std::vector<double> const& coeffs() const { return coefficients; }
@@ -65,9 +65,9 @@ public:
 
   // Addition of polynomials
   polynomial operator+(polynomial const& p) const {
-    int max_degree = std::max(degree(), p.degree());
+    auto max_degree = std::max(degree(), p.degree());
     polynomial result(max_degree);
-    for(int i = 0; i <= max_degree; ++i) {
+    for(std::size_t i = 0; i <= max_degree; ++i) {
       result.coefficients[i] =
         (i <= degree() ? coefficients[i] : 0) +
         (i <= p.degree() ? p.coefficients[i] : 0);
@@ -77,9 +77,9 @@ public:
 
   // Subtraction of polynomials
   polynomial operator-(polynomial const& p) const {
-    int max_degree = std::max(degree(), p.degree());
+    auto max_degree = std::max(degree(), p.degree());
     polynomial result(max_degree);
-    for(int i = 0; i <= max_degree; ++i) {
+    for(std::size_t i = 0; i <= max_degree; ++i) {
       result.coefficients[i] =
         (i <= degree() ? coefficients[i] : 0) -
         (i <= p.degree() ? p.coefficients[i] : 0);
@@ -90,8 +90,8 @@ public:
   // Multiplication of polynomials
   polynomial operator*(polynomial const& p) const {
     polynomial result(degree() + p.degree());
-    for(int i = 0; i <= degree(); ++i) {
-      for(int j = 0; j <= p.degree(); ++j) {
+    for(std::size_t i = 0; i <= degree(); ++i) {
+      for(std::size_t j = 0; j <= p.degree(); ++j) {
         result.coefficients[i+j] += coefficients[i] * p.coefficients[j];
       }
     }
