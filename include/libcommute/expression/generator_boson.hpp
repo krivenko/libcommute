@@ -49,7 +49,7 @@ public:
   generator_boson(generator_boson&&) noexcept = default;
   generator_boson& operator=(generator_boson const&) = default;
   generator_boson& operator=(generator_boson&&) noexcept = default;
-  ~generator_boson() override {}
+  ~generator_boson() override = default;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const override {

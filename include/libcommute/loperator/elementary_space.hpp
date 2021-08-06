@@ -44,7 +44,7 @@ public:
   elementary_space(elementary_space&&) noexcept = default;
   elementary_space& operator=(elementary_space const&) = default;
   elementary_space& operator=(elementary_space&&) noexcept = default;
-  virtual ~elementary_space() {}
+  virtual ~elementary_space() = default;
 
   // Make a smart pointer that manages a copy of this elementary space
   virtual std::unique_ptr<elementary_space> clone() const = 0;

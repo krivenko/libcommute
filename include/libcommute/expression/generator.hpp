@@ -46,7 +46,7 @@ public:
   generator(generator&&) noexcept = default;
   generator& operator=(generator const&) = default;
   generator& operator=(generator&&) noexcept = default;
-  virtual ~generator() {}
+  virtual ~generator() = default;
 
   // Get ID of the algebra this generator belongs to
   virtual int algebra_id() const = 0;

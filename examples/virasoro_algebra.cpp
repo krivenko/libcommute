@@ -59,7 +59,7 @@ public:
   generator_virasoro(generator_virasoro&&) noexcept = default;
   generator_virasoro& operator=(generator_virasoro const&) = default;
   generator_virasoro& operator=(generator_virasoro&&) noexcept = default;
-  ~generator_virasoro() final {}
+  ~generator_virasoro() final = default;
 
   // Virtual copy-constructor: Make a smart pointer managing
   // a copy of this generator

@@ -41,7 +41,7 @@ public:
   // we can initialize the base class with any number
   elementary_space_gamma() : base(0) {}
 
-  ~elementary_space_gamma() final {}
+  ~elementary_space_gamma() final = default;
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this elementary space

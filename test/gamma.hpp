@@ -43,7 +43,7 @@ public:
   generator_gamma(generator_gamma&&) noexcept = default;
   generator_gamma& operator=(generator_gamma const&) = default;
   generator_gamma& operator=(generator_gamma&&) noexcept = default;
-  ~generator_gamma() final {}
+  ~generator_gamma() final = default;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const final {

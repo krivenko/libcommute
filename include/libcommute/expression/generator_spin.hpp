@@ -60,7 +60,7 @@ public:
   generator_spin(generator_spin&&) noexcept = default;
   generator_spin& operator=(generator_spin const&) = default;
   generator_spin& operator=(generator_spin&&) noexcept = default;
-  ~generator_spin() override {}
+  ~generator_spin() override = default;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const override {

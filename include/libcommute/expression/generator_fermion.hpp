@@ -49,7 +49,7 @@ public:
   generator_fermion(generator_fermion&&) noexcept = default;
   generator_fermion& operator=(generator_fermion const&) = default;
   generator_fermion& operator=(generator_fermion&&) noexcept = default;
-  ~generator_fermion() override {}
+  ~generator_fermion() override = default;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const override {
