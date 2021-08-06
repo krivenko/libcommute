@@ -39,7 +39,7 @@ class generator_fermion : public generator<IndexTypes...> {
 public:
 
   // Get ID of the algebra this generator belongs to
-  virtual int algebra_id() const override { return fermion; }
+  int algebra_id() const override { return fermion; }
 
   // Value semantics
   template<typename... Args>
@@ -49,15 +49,15 @@ public:
   generator_fermion(generator_fermion&&) noexcept = default;
   generator_fermion& operator=(generator_fermion const&) = default;
   generator_fermion& operator=(generator_fermion&&) noexcept = default;
-  virtual ~generator_fermion() {}
+  ~generator_fermion() override {}
 
   // Make a smart pointer that manages a copy of this generator
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const override {
     return make_unique<generator_fermion>(*this);
   }
 
   // c = -1, f(g) = \delta(g1, g2^+)
-  virtual double
+  double
   swap_with(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
@@ -66,7 +66,7 @@ public:
     return -1;
   }
 
-  virtual bool
+  bool
   simplify_prod(base const& g2, linear_function_t & f) const override {
     assert(!(*this > g2));
     if(*this == g2) {
@@ -80,7 +80,7 @@ public:
   inline bool dagger() const { return dagger_; }
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t & f) const override {
+  void conj(linear_function_t & f) const override {
     f.set(0, make_unique<generator_fermion>(!dagger_, base::indices_), 1);
   }
 
@@ -89,13 +89,13 @@ protected:
   bool dagger_;
 
   // Check two generators of the same algebra for equality
-  virtual bool equal(base const& g) const override {
+  bool equal(base const& g) const override {
     auto const& f_g =  dynamic_cast<generator_fermion const&>(g);
     return dagger_ == f_g.dagger_ && base::equal(g);
   }
 
   // Ordering
-  virtual bool less(base const& g) const override {
+  bool less(base const& g) const override {
     auto const& f_g =  dynamic_cast<generator_fermion const&>(g);
     // Example: c+_1 < c+_2 < c+_3 < c_3 < c_2 < c_1
     if(this->dagger_ != f_g.dagger_)
@@ -103,7 +103,7 @@ protected:
     else
       return this->dagger_ ? base::less(g) : base::greater(g);
   }
-  virtual bool greater(base const& g) const override {
+  bool greater(base const& g) const override {
     auto const& f_g =  dynamic_cast<generator_fermion const&>(g);
     // Example: c_1 > c_2 > c_3 > c+_3 > c+_2 > c+_1
     if(this->dagger_ != f_g.dagger_)
@@ -113,7 +113,7 @@ protected:
   }
 
   // Print to stream
-  virtual std::ostream & print(std::ostream & os) const override {
+  std::ostream & print(std::ostream & os) const override {
     os << "C" << (this->dagger_ ? "+" : "") << "(";
     print_tuple(os, this->indices_);
     return os << ")";

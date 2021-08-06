@@ -50,16 +50,16 @@ public:
   elementary_space_spin& operator=(elementary_space_spin&&) noexcept = default;
 
   // Make a smart pointer that manages a copy of this elementary space
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const override {
     return make_unique<elementary_space_spin>(*this);
   }
 
   // ID of the algebra this elementary space is associated with
-  virtual int algebra_id() const override { return spin; }
+  int algebra_id() const override { return spin; }
 
   // The minimal number of binary digits needed to represent any state
   // in this elementary space
-  virtual int n_bits() const override { return n_bits_; }
+  int n_bits() const override { return n_bits_; }
 
 protected:
 
@@ -71,20 +71,20 @@ protected:
   int n_bits_;
 
   // Equality
-  virtual bool equal(base const& es) const override {
+  bool equal(base const& es) const override {
     auto const& es_s = dynamic_cast<elementary_space_spin const&>(es);
     return this->multiplicity_ == es_s.multiplicity_ && base::equal(es);
   }
 
   // Ordering
-  virtual bool less(base const& es) const override {
+  bool less(base const& es) const override {
     auto const& es_s =  dynamic_cast<elementary_space_spin const&>(es);
     if(this->multiplicity_ != es_s.multiplicity_)
       return this->multiplicity_ < es_s.multiplicity_;
     else
       return base::less(es);
   }
-  virtual bool greater(base const& es) const override {
+  bool greater(base const& es) const override {
     auto const& es_s =  dynamic_cast<elementary_space_spin const&>(es);
     if(this->multiplicity_ != es_s.multiplicity_)
       return this->multiplicity_ > es_s.multiplicity_;

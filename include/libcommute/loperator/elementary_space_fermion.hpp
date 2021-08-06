@@ -45,16 +45,16 @@ public:
     = default;
 
   // Make a smart pointer that manages a copy of this elementary space
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const override {
     return make_unique<elementary_space_fermion>(*this);
   }
 
   // ID of the algebra this elementary space is associated with
-  virtual int algebra_id() const override { return fermion; }
+  int algebra_id() const override { return fermion; }
 
   // The minimal number of binary digits needed to represent any state
   // in this elementary space
-  virtual int n_bits() const override { return 1; }
+  int n_bits() const override { return 1; }
 };
 
 namespace static_indices {

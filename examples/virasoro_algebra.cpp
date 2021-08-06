@@ -47,7 +47,7 @@ public:
 
   // This function must return a unique algebra ID shared by all generators
   // of a particular algebra.
-  virtual int algebra_id() const override {
+  int algebra_id() const final {
     // Use the lowest algebra ID available to user-defined algebras
     return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
   }
@@ -59,11 +59,11 @@ public:
   generator_virasoro(generator_virasoro&&) noexcept = default;
   generator_virasoro& operator=(generator_virasoro const&) = default;
   generator_virasoro& operator=(generator_virasoro&&) noexcept = default;
-  virtual ~generator_virasoro() {}
+  ~generator_virasoro() final {}
 
   // Virtual copy-constructor: Make a smart pointer managing
   // a copy of this generator
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const final {
     return make_unique<generator_virasoro>(*this);
   }
 
@@ -74,8 +74,8 @@ public:
   // L_m * L_n -> L_n * L_m + (m-n)*L_{m+n} + c(m^3 - m)\delta(m,-n)
   //
   // L_m will be passed to swap_with() as *this, i.e. L_m.swap_with(L_n, f).
-  virtual double
-  swap_with(base const& L_n, linear_function_t & f) const override {
+  double
+  swap_with(base const& L_n, linear_function_t & f) const final {
     // Ensure that L_m > L_n, or equivalently m > n.
     assert(*this > L_n);
 
@@ -103,8 +103,8 @@ public:
   //
   // L_m will be passed to simplify_prod() as *this,
   // i.e. L_m.simplify_prod(L_n, f).
-  virtual bool
-  simplify_prod(base const& L_n, linear_function_t & f) const override {
+  bool
+  simplify_prod(base const& L_n, linear_function_t & f) const final {
     // Ensure that L_m <= L_n, or equivalently m <= n.
     assert(!(*this > L_n));
 
@@ -117,13 +117,13 @@ public:
   }
 
   // Hermitian conjugate: (L_n)^\dagger = L_{-n}
-  virtual void conj(linear_function_t & f) const override {
+  void conj(linear_function_t & f) const final {
     int conj_n = - std::get<0>(base::indices_);
     f.set(0, make_unique<generator_virasoro>(conj_n), 1);
   }
 
   // Print L_n to stream
-  virtual std::ostream & print(std::ostream & os) const override {
+  std::ostream & print(std::ostream & os) const final {
     int n = std::get<0>(base::indices_);
     return os << "L(" << n << ")";
   }

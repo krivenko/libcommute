@@ -36,7 +36,7 @@ public:
     return ss.str() == ref_;
   }
 
-  virtual std::string describe() const override {
+  std::string describe() const override {
     return "prints " + ref_ ;
   }
 };

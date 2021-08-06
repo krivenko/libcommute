@@ -36,12 +36,12 @@ public:
   elementary_space_padding(Args&&... indices) :
     elementary_space<IndexTypes...>(std::forward<Args>(indices)...) {}
 
-  virtual std::unique_ptr<elementary_space<IndexTypes...>>
-  clone() const override {
+  std::unique_ptr<elementary_space<IndexTypes...>>
+  clone() const final {
     return make_unique<elementary_space_padding>(*this);
   }
-  virtual int algebra_id() const override { return fermion-2; }
-  virtual int n_bits() const override { return 2; }
+  int algebra_id() const final { return fermion-2; }
+  int n_bits() const final { return 2; }
 };
 
 //

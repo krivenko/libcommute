@@ -35,7 +35,7 @@ class generator_gamma : public generator<int> {
 
 public:
 
-  virtual int algebra_id() const override { return libcommute::gamma; }
+  int algebra_id() const override { return libcommute::gamma; }
 
   // Value semantics
   generator_gamma(int index) : base(index) {}
@@ -43,16 +43,16 @@ public:
   generator_gamma(generator_gamma&&) noexcept = default;
   generator_gamma& operator=(generator_gamma const&) = default;
   generator_gamma& operator=(generator_gamma&&) noexcept = default;
-  virtual ~generator_gamma() {}
+  ~generator_gamma() final {}
 
   // Make a smart pointer that manages a copy of this generator
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const final {
     return make_unique<generator_gamma>(*this);
   }
 
   // c = -1, f(g) = 2\eta(g1, g2)
-  virtual double
-  swap_with(base const& g2, linear_function_t & f) const override {
+  double
+  swap_with(base const& g2, linear_function_t & f) const final {
     assert(*this > g2);
     bool diag = base::equal(g2);
     f.set(diag * (std::get<0>(indices_) == 0 ? 2 : -2));
@@ -61,8 +61,8 @@ public:
 
   // (\Gamma^0)^2 = I_4
   // (\Gamma^k)^2 = -I_4 for k=1,2,3
-  virtual bool
-  simplify_prod(base const& g2, linear_function_t & f) const override {
+  bool
+  simplify_prod(base const& g2, linear_function_t & f) const final {
     if(*this == g2) {
       f.set(std::get<0>(indices_) == 0 ? 1 : -1);
       return true;
@@ -71,7 +71,7 @@ public:
   }
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian
-  virtual void conj(linear_function_t & f) const override {
+  void conj(linear_function_t & f) const final {
     f.set(0, clone(), std::get<0>(indices_) == 0 ? 1 : -1);
   }
 };

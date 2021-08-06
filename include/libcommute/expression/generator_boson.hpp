@@ -39,7 +39,7 @@ class generator_boson : public generator<IndexTypes...> {
 public:
 
   // Get ID of the algebra this generator belongs to
-  virtual int algebra_id() const override { return boson; }
+  int algebra_id() const override { return boson; }
 
   // Value semantics
   template<typename... Args>
@@ -49,15 +49,15 @@ public:
   generator_boson(generator_boson&&) noexcept = default;
   generator_boson& operator=(generator_boson const&) = default;
   generator_boson& operator=(generator_boson&&) noexcept = default;
-  virtual ~generator_boson() {}
+  ~generator_boson() override {}
 
   // Make a smart pointer that manages a copy of this generator
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const override {
     return make_unique<generator_boson>(*this);
   }
 
   // c = 1, f(g) = \delta(g1, g2^+)
-  virtual double
+  double
   swap_with(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_boson const&>(g2);
@@ -70,7 +70,7 @@ public:
   inline bool dagger() const { return dagger_; }
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t & f) const override {
+  void conj(linear_function_t & f) const override {
     f.set(0, make_unique<generator_boson>(!dagger_, base::indices_), 1);
   }
 
@@ -79,13 +79,13 @@ protected:
   bool dagger_;
 
   // Check two generators of the same algebra for equality
-  virtual bool equal(base const& g) const override {
+  bool equal(base const& g) const override {
     auto const& b_g =  dynamic_cast<generator_boson const&>(g);
     return dagger_ == b_g.dagger_ && base::equal(g);
   }
 
   // Ordering
-  virtual bool less(base const& g) const override {
+  bool less(base const& g) const override {
     auto const& b_g =  dynamic_cast<generator_boson const&>(g);
     // Example: a+_1 < a+_2 < a+_3 < a_3 < a_2 < a_1
     if(this->dagger_ != b_g.dagger_)
@@ -93,7 +93,7 @@ protected:
     else
       return this->dagger_ ? base::less(g) : base::greater(g);
   }
-  virtual bool greater(base const& g) const override {
+  bool greater(base const& g) const override {
     auto const& b_g =  dynamic_cast<generator_boson const&>(g);
     // Example: a_1 > a_2 > a_3 > a+_3 > a+_2 > a+_1
     if(this->dagger_ != b_g.dagger_)
@@ -103,7 +103,7 @@ protected:
   }
 
   // Print to stream
-  virtual std::ostream & print(std::ostream & os) const override {
+  std::ostream & print(std::ostream & os) const override {
     os << "A" << (this->dagger_ ? "+" : "") << "(";
     print_tuple(os, this->indices_);
     return os << ")";

@@ -46,16 +46,16 @@ public:
     = default;
 
   // Make a smart pointer that manages a copy of this elementary space
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const override {
     return make_unique<elementary_space_boson>(*this);
   }
 
   // ID of the algebra this elementary space is associated with
-  virtual int algebra_id() const override { return boson; }
+  int algebra_id() const override { return boson; }
 
   // The minimal number of binary digits needed to represent any state
   // in this elementary space
-  virtual int n_bits() const override { return n_bits_; }
+  int n_bits() const override { return n_bits_; }
 
 protected:
 

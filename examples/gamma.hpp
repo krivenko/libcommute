@@ -43,14 +43,14 @@ class generator_gamma : public generator<int> {
 public:
 
   // Algebra ID of this generator
-  virtual int algebra_id() const override { return libcommute::gamma; }
+  int algebra_id() const final { return libcommute::gamma; }
 
   // Constructor: Just pass the index to the base class
   generator_gamma(int index) : base(index) {}
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this generator
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const final {
     // With C++14 or newer, libcommute::make_unique() will be resolved to
     // std::make_unique(). Otherwise, a custom implementation will be used.
     return make_unique<generator_gamma>(*this);
@@ -61,8 +61,8 @@ public:
   // canonical order,
   //
   // g1 * g2 -> -g2 * g1 + 2\eta(g1, g2)
-  virtual double
-  swap_with(base const& g2, linear_function_t & f) const override {
+  double
+  swap_with(base const& g2, linear_function_t & f) const final {
 
     // Do g1 and g2 have the same indices?
     bool diag = base::equal(g2);
@@ -84,8 +84,8 @@ public:
   // It tries to simplify squares of gamma matrices,
   // (\gamma^0)^2 = I_4
   // (\gamma^k)^2 = -I_4 for k = 1,2,3
-  virtual bool
-  simplify_prod(base const& g2, linear_function_t & f) const override {
+  bool
+  simplify_prod(base const& g2, linear_function_t & f) const final {
     if(*this == g2) {
       // Replace the square with a constant
       int index = std::get<0>(base::indices());
@@ -98,7 +98,7 @@ public:
 
   // Hermitian conjugate of this generator as a linear function of generators.
   // \gamma^0 is Hermitian and \gamma^k are anti-Hermitian
-  virtual void conj(linear_function_t & f) const override {
+  void conj(linear_function_t & f) const final {
     int index = std::get<0>(base::indices());
     if(index == 0) {
       // f(g) = 0 + 1*(*this)
@@ -110,7 +110,7 @@ public:
   }
 
   // Stream output function
-  virtual std::ostream & print(std::ostream & os) const override {
+  std::ostream & print(std::ostream & os) const final {
     int index = std::get<0>(base::indices());
     return os << "\\gamma^" << index;
   }

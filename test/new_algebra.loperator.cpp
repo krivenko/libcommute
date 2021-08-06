@@ -48,12 +48,12 @@ public:
   elementary_space_gamma& operator=(elementary_space_gamma&&) noexcept
     = default;
 
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const final {
     return make_unique<elementary_space_gamma>(*this);
   }
 
-  virtual int algebra_id() const override { return libcommute::gamma; }
-  virtual int n_bits() const override { return 2; }
+  int algebra_id() const final { return libcommute::gamma; }
+  int n_bits() const final { return 2; }
 };
 
 //

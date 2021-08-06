@@ -43,7 +43,7 @@ class generator_spin : public generator<IndexTypes...> {
 public:
 
   // Get ID of the algebra this generator belongs to
-  virtual int algebra_id() const override { return libcommute::spin; }
+  int algebra_id() const override { return libcommute::spin; }
 
   // Value semantics
   template<typename... Args>
@@ -60,15 +60,15 @@ public:
   generator_spin(generator_spin&&) noexcept = default;
   generator_spin& operator=(generator_spin const&) = default;
   generator_spin& operator=(generator_spin&&) noexcept = default;
-  virtual ~generator_spin() {}
+  ~generator_spin() override {}
 
   // Make a smart pointer that manages a copy of this generator
-  virtual std::unique_ptr<base> clone() const override {
+  std::unique_ptr<base> clone() const override {
     return make_unique<generator_spin>(*this);
   }
 
   // Generators with different indices or multiplicities commute.
-  virtual double
+  double
   swap_with(base const& g2, linear_function_t & f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
@@ -90,7 +90,7 @@ public:
   // S_+ * S_z = -1/2 S_+
   // S_- * S_z = 1/2 S_-
   // S_+ * S_- = 1/2 + S_z
-  virtual bool
+  bool
   simplify_prod(base const& g2, linear_function_t & f) const override {
     assert(!(*this > g2));
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
@@ -115,7 +115,7 @@ public:
     return true;
   }
 
-  virtual bool reduce_power(int power, linear_function_t & f) const override {
+  bool reduce_power(int power, linear_function_t & f) const override {
     assert(power > 2);
     // Raising and lowering operators are nilpotent
     return c_ != spin_component::z && power >= multiplicity_;
@@ -127,7 +127,7 @@ public:
   inline spin_component component() const { return c_; }
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t & f) const override {
+  void conj(linear_function_t & f) const override {
     spin_component new_c = (c_ == spin_component::z ? spin_component::z :
     (c_ == spin_component::plus ? spin_component::minus : spin_component::plus)
     );
@@ -143,7 +143,7 @@ protected:
   spin_component c_;
 
   // Check two generators of the same algebra for equality
-  virtual bool equal(base const& g) const override {
+  bool equal(base const& g) const override {
     auto const& b_g = dynamic_cast<generator_spin const&>(g);
     return multiplicity_ == b_g.multiplicity_ &&
                       c_ == b_g.c_ &&
@@ -151,7 +151,7 @@ protected:
   }
 
   // Ordering
-  virtual bool less(base const& g) const override {
+  bool less(base const& g) const override {
     auto const& s_g = dynamic_cast<generator_spin const&>(g);
     // Example: S1/2+_1 < S1/2-_1 < S1/2z_1 < S1/2+_2 < S1/2-_2 < S1/2z_2 <
     //          S3/2+_1 < S3/2-_1 < S3/2z_1 < S3/2+_2 < S3/2-_2 < S3/2z_2
@@ -162,7 +162,7 @@ protected:
     else
       return this->c_ < s_g.c_;
   }
-  virtual bool greater(base const& g) const override {
+  bool greater(base const& g) const override {
     auto const& s_g = dynamic_cast<generator_spin const&>(g);
     // Example: S3/2z_2 > S3/2-_2 > S3/2+_2 > S3/2z_1 > S3/2-_1 > S3/2+_1 >
     //          S1/2z_2 > S1/2-_2 > S1/2+_2 > S1/2z_1 > S1/2-_1 > S1/2+_1
@@ -175,7 +175,7 @@ protected:
   }
 
   // Print to stream
-  virtual std::ostream & print(std::ostream & os) const override {
+  std::ostream & print(std::ostream & os) const override {
     os << "S";
     if(multiplicity_ != 2) {
       if(multiplicity_ % 2 == 0)
