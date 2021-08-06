@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_TEST_PRINT_MATCHER_HPP_
 #define LIBCOMMUTE_TEST_PRINT_MATCHER_HPP_
 
-#include "catch2/catch.hpp"
+#include <catch.hpp>
 
 #include <sstream>
 #include <string>

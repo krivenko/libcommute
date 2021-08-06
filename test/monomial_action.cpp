@@ -11,7 +11,7 @@
  *
  ******************************************************************************/
 
-#include "catch2/catch.hpp"
+#include <catch.hpp>
 
 #include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_boson.hpp>

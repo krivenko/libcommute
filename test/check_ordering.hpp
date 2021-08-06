@@ -13,7 +13,7 @@
 #ifndef LIBCOMMUTE_TEST_CHECK_ORDERING_HPP_
 #define LIBCOMMUTE_TEST_CHECK_ORDERING_HPP_
 
-#include "catch2/catch.hpp"
+#include <catch.hpp>
 
 #include <type_traits>
 #include <vector>

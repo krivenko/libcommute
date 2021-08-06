@@ -16,6 +16,9 @@ if(STATIC_ANALYSIS)
   set_property(TARGET catch2 PROPERTY CXX_CPPCHECK)
 endif(STATIC_ANALYSIS)
 
+# Make catch.hpp visible as a system header
+include_directories(BEFORE SYSTEM catch2)
+
 set(TESTS
   utility
   metafunctions

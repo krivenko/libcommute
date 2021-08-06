@@ -11,7 +11,7 @@
  *
  ******************************************************************************/
 
-#include "catch2/catch.hpp"
+#include <catch.hpp>
 
 #include <libcommute/expression/factories.hpp>
 #include <libcommute/loperator/space_partition.hpp>
