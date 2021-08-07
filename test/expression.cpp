@@ -113,7 +113,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
                 3.0*a(0, "x") + 2.0*a_dag(0, "y");
 
     CHECK_FALSE(expr.begin() == expr.end());
-    CHECK(expr.begin() != expr0.end());
+    CHECK(expr.begin() != expr.end());
 
     std::vector<mon_type> ref_mons = {
       mon_type(),
