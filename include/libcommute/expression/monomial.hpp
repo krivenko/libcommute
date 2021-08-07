@@ -72,30 +72,49 @@ public:
 
   // Construct from a list of pointers to generators
   explicit monomial(std::initializer_list<generator_type*> generators) {
-    for(auto p : generators) generators_.emplace_back(p->clone());
+    generators_.reserve(generators.size());
+    std::transform(generators.begin(),
+                   generators.end(),
+                   std::back_inserter(generators_),
+                   [](generator_type* p) { return p->clone(); });
   }
 
   // Construct from a list of smart pointers to generators
   explicit monomial(std::initializer_list<gen_ptr_type> generators) {
-    for(auto const& p : generators) generators_.emplace_back(p->clone());
+    generators_.reserve(generators.size());
+    std::transform(generators.begin(),
+                   generators.end(),
+                   std::back_inserter(generators_),
+                   [](gen_ptr_type const& p) { return p->clone(); });
   }
 
   // Construct from a vector of pointers to generators
   explicit monomial(std::vector<generator_type*> const& generators) {
-    for(auto p : generators) generators_.emplace_back(p->clone());
+    generators_.reserve(generators.size());
+    std::transform(generators.begin(),
+                   generators.end(),
+                   std::back_inserter(generators_),
+                   [](generator_type* p) { return p->clone(); });
   }
 
   // Value semantics
   monomial(monomial const& m) {
     generators_.reserve(m.generators_.size());
-    for(gen_ptr_type const& g : m.generators_)
-      generators_.emplace_back(g->clone());
+    std::transform(m.generators_.begin(),
+                   m.generators_.end(),
+                   std::back_inserter(generators_),
+                   [](gen_ptr_type const& g) { return g->clone(); });
   }
   monomial(monomial&&) noexcept = default;
+  // cppcheck-suppress operatorEqRetRefThis
   monomial& operator=(monomial const& m) {
     generators_.clear();
-    for(gen_ptr_type const& g : m.generators_)
-      generators_.emplace_back(g->clone());
+    generators_.reserve(m.generators_.size());
+    std::transform(m.generators_.begin(),
+                   m.generators_.end(),
+                   std::back_inserter(generators_),
+                   [](gen_ptr_type const& g) { return g->clone(); }
+    );
     return *this;
   }
   monomial& operator=(monomial&&) noexcept = default;
@@ -260,8 +279,11 @@ public:
   }
   // Append generators from a monomial
   void append(monomial const& m) {
-    for(auto const& g : m.generators_)
-      generators_.emplace_back(g->clone());
+    generators_.reserve(generators_.size() + m.size());
+    std::transform(m.generators_.begin(),
+                   m.generators_.end(),
+                   std::back_inserter(generators_),
+                   [](gen_ptr_type const& g) { return g->clone(); });
   }
   // Append generators from a monomial range
   void append(range_type const& r) {

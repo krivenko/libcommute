@@ -47,6 +47,7 @@ public:
   loperator_base(expression<scalar_type, IndexTypes...> const& expr,
                  hilbert_space<IndexTypes...> const& hs) {
     for(auto const& m : expr) {
+      // cppcheck-suppress useStlAlgorithm
       m_actions_.emplace_back(
         monomial_action_t(std::make_pair(m.monomial.begin(), m.monomial.end()),
                           hs),
@@ -241,7 +242,9 @@ private:
     auto const& m_act = base::m_actions();
 
     // Evaluate coefficients
+    evaluated_coeffs.reserve(m_act.size());
     for(auto const& a : m_act)
+      // cppcheck-suppress useStlAlgorithm
       evaluated_coeffs.emplace_back(a.second(std::forward<CoeffArgs>(args)...));
 
     // Apply monomials

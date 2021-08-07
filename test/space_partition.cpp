@@ -347,11 +347,16 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         if(f_sp.size() == 0) continue;
 
         // Check if op maps i_sp to only one subspace
-        int n = 0;
-        for(auto const& f_sp_ref : cl) {
-          if(std::includes(f_sp_ref.cbegin(), f_sp_ref.cend(),
-                           f_sp.cbegin(), f_sp.cend())) ++n;
-        }
+        auto n = std::count_if(
+          cl.begin(),
+          cl.end(),
+          [&f_sp](std::set<sv_index_type> const& f_sp_ref) {
+            return std::includes(f_sp_ref.cbegin(),
+                                 f_sp_ref.cend(),
+                                 f_sp.cbegin(),
+                                 f_sp.cend());
+          }
+        );
         CHECK(n == 1);
       }
     }

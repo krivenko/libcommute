@@ -20,7 +20,9 @@
 #include <libcommute/expression/generator_boson.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 
+#include <algorithm>
 #include <initializer_list>
+#include <iterator>
 #include <vector>
 
 using namespace libcommute;
@@ -377,7 +379,7 @@ TEST_CASE("Algebra generators", "[generator]") {
                                 spin_ops,
                                 spin1_ops,
                                 spin32_ops}) {
-      for(auto const& op : op_list) all_ops.push_back(op);
+      std::copy(op_list.begin(), op_list.end(), std::back_inserter(all_ops));
     }
 
     check_equality(all_ops);

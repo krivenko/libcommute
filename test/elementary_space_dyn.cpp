@@ -19,6 +19,8 @@
 #include <libcommute/loperator/elementary_space_boson.hpp>
 #include <libcommute/loperator/elementary_space_spin.hpp>
 
+#include <algorithm>
+#include <iterator>
 #include <vector>
 
 using namespace libcommute;
@@ -107,7 +109,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
                                 spin_es,
                                 spin1_es,
                                 spin32_es}) {
-      for(auto const& es : es_list) all_es.push_back(es);
+      std::copy(es_list.begin(), es_list.end(), std::back_inserter(all_es));
     }
     check_equality(all_es);
     check_less_greater(all_es);

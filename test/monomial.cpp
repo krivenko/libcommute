@@ -48,6 +48,7 @@ TEST_CASE("Monomials", "[monomial]") {
 
   // Monomial of order 1
   for(auto p0 : basis_gens)
+    // cppcheck-suppress useStlAlgorithm
     monomials.emplace_back(mon_type{p0});
   CHECK(monomials.back().size() == 1);
   CHECK_FALSE(monomials.back().empty());
@@ -56,6 +57,7 @@ TEST_CASE("Monomials", "[monomial]") {
   // Monomial of order 2
   for(auto p0 : basis_gens)
     for(auto p1 : basis_gens)
+      // cppcheck-suppress useStlAlgorithm
       monomials.emplace_back(mon_type{p0, p1});
   CHECK(monomials.back().size() == 2);
   CHECK_FALSE(monomials.back().empty());
@@ -65,6 +67,7 @@ TEST_CASE("Monomials", "[monomial]") {
   for(auto p0 : basis_gens)
     for(auto p1 : basis_gens)
       for(auto p2 : basis_gens)
+        // cppcheck-suppress useStlAlgorithm
         monomials.emplace_back(mon_type{p0, p1, p2});
   CHECK(monomials.back().size() == 3);
   CHECK_FALSE(monomials.back().empty());
@@ -75,6 +78,7 @@ TEST_CASE("Monomials", "[monomial]") {
     for(auto p1 : basis_gens)
       for(auto p2 : basis_gens)
         for(auto p3 : basis_gens)
+          // cppcheck-suppress useStlAlgorithm
           monomials.emplace_back(mon_type{p0, p1, p2, p3});
   CHECK(monomials.back().size() == 4);
   CHECK_FALSE(monomials.back().empty());

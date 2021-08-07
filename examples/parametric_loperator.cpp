@@ -101,7 +101,9 @@ public:
   // Multiplication by a constant
   polynomial operator*(double x) const {
     polynomial res(*this);
-    for(auto& c : res.coefficients) c *= x;
+    std::for_each(res.coefficients.begin(),
+                  res.coefficients.end(),
+                  [x](double & c) { c *= x; });
     return res;
   }
 
@@ -118,10 +120,9 @@ namespace libcommute {
 template<> struct scalar_traits<polynomial> {
   // Zero value test
   static bool is_zero(polynomial const& p) {
-    for(double c : p.coeffs()) {
-      if(c != 0) return false;
-    }
-    return true;
+    return std::all_of(p.coeffs().begin(),
+                       p.coeffs().end(),
+                       [](double c) { return c == 0; });
   }
   // Make a constant polynomial from a double value
   static polynomial make_const(double x) { return polynomial{x}; }
