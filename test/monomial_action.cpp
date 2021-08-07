@@ -308,6 +308,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     }
   }
   SECTION("1 operator") {
+    // NOLINTNEXTLINE(modernize-loop-convert)
     for(unsigned int i = 0; i < gens.size(); ++i) {
       mon_type mon{gens[i]->clone()};
       check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);

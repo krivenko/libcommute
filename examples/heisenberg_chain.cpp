@@ -68,6 +68,7 @@ int main() {
 
   // List of spin operators {S_0, S_1, ..., S_{N-1}}
   std::vector<vector_expr_t> S;
+  S.reserve(N);
   for(int i = 0; i < N; ++i)
     S.push_back({S_x(i), S_y(i), S_z(i)});
 

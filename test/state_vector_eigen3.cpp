@@ -200,6 +200,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
   SECTION("Map<VectorXd>") {
     std::vector<double> v{0, 1, 2, 3, 4};
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     auto m = Eigen::Map<Eigen::VectorXd>(v.data() + 1, 3, 1);
 
     CHECK(std::is_same<element_type_t<decltype(m)>, double>::value);
@@ -208,6 +209,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     SECTION("foreach()") {
       std::vector<double> v{5, 1, 2, 0, 4, 5};
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       auto m = Eigen::Map<Eigen::VectorXd>(v.data() + 1, 4, 1);
       foreach(m, [](int i, double a) { CHECK(i + 1 == a); });
     }
@@ -215,6 +217,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
   SECTION("Map<VectorXcd>") {
     std::vector<std::complex<double>> v{0, 1, 2, 3, 4};
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     auto m = Eigen::Map<Eigen::VectorXcd>(v.data() + 1, 3, 1);
 
     CHECK(std::is_same<element_type_t<decltype(m)>,
@@ -225,6 +228,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     SECTION("foreach()") {
       std::vector<std::complex<double>> v{5, 1, 2, 0, 4, 5};
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       auto m = Eigen::Map<Eigen::VectorXcd>(v.data() + 1, 4, 1);
       foreach(m, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);

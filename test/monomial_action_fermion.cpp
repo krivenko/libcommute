@@ -85,6 +85,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
     }
   }
   SECTION("1 operator") {
+    // NOLINTNEXTLINE(modernize-loop-convert)
     for(unsigned int i = 0; i < gens.size(); ++i) {
       mon_type mon(gens[i]);
       check_monomial_action<ma_type>(mon,
