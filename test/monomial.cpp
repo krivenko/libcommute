@@ -95,7 +95,7 @@ TEST_CASE("Monomials", "[monomial]") {
   SECTION("Copy and assignment") {
     auto m1 = mon_type(Cdag_dn, A_y, Sp_i, S1z_j);
     auto m2 = mon_type(S1z_j, S1z_j);
-    m2 = m1;
+    m2 = m1; // cppcheck-suppress redundantInitialization
     auto m3 = mon_type(m1);
     CHECK(m2 == m1);
     CHECK(m3 == m1);

@@ -147,6 +147,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
 
     SECTION("Postfix increment/decrement") {
       // Forward iteration
+      // cppcheck-suppress postfixOperator
       for(it = expr.begin(); it != expr.end(); it++, n++) {
         auto val = *it;
         CHECK(val.monomial == ref_mons[n]);
@@ -155,6 +156,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
         CHECK(it->coeff == ref_coeffs[n]);
       }
       // Backward iteration
+      // cppcheck-suppress postfixOperator
       for(it--, n--; n >= 0; it--, n--) {
         auto val = *it;
         CHECK(val.monomial == ref_mons[n]);

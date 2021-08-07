@@ -32,7 +32,7 @@ TEST_CASE("c_str_to_string_t<T> metafunction", "[c_str_to_string_t]") {
                      std::string>::value);
 
   const char * hw = "Hello, world!";
-  auto & hw_ref = hw;
+  auto & hw_ref = hw; // cppcheck-suppress constVariable
   auto const& hw_cref = hw;
   auto && hw_rref = hw;
   CHECK(std::is_same<c_str_to_string_t<decltype(hw_ref)>, std::string>::value);

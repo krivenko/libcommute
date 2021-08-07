@@ -34,6 +34,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
           "[state_vector]") {
 
   SECTION("VectorXd") {
+    // cppcheck-suppress constStatement
     Eigen::VectorXd v(3); v << 1, 2, 3;
 
     CHECK(std::is_same<element_type_t<Eigen::VectorXd>, double>::value);
@@ -41,12 +42,14 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(v, 2.0);
 
     SECTION("foreach()") {
+      // cppcheck-suppress constStatement
       Eigen::VectorXd v_fe(4); v_fe << 1, 2, 0, 4;
       foreach(v_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
   SECTION("VectorXcd") {
+    // cppcheck-suppress constStatement
     Eigen::VectorXcd v(3); v << 1, 2, 3;
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
@@ -56,6 +59,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(v, 2.0);
 
     SECTION("foreach()") {
+      // cppcheck-suppress constStatement
       Eigen::VectorXcd v_fe(4); v_fe << 1, 2, 0, 4;
       foreach(v_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
@@ -64,6 +68,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
   }
 
   SECTION("Segment of VectorXd") {
+    // cppcheck-suppress constStatement
     Eigen::VectorXd v(5); v << 1, 2, 3, 4, 5;
     auto vs = v.segment(1, 3);
 
@@ -72,6 +77,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(vs, 3.0);
 
     SECTION("foreach()") {
+      // cppcheck-suppress constStatement
       Eigen::VectorXd v_fe(6); v_fe << 10, 1, 2, 0, 4, 5;
       auto vs_fe = v_fe.segment(1, 4);
       foreach(vs_fe, [](int i, double a) { CHECK(i + 1 == a); });
@@ -79,6 +85,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
   }
 
   SECTION("Segment of VectorXd") {
+    // cppcheck-suppress constStatement
     Eigen::VectorXcd v(5); v << 1, 2, 3, 4, 5;
     auto vs = v.segment(1, 3);
 
@@ -89,6 +96,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(vs, 3.0);
 
     SECTION("foreach()") {
+      // cppcheck-suppress constStatement
       Eigen::VectorXcd v_fe(6); v_fe << 10, 1, 2, 0, 4, 5;
       auto vs_fe = v_fe.segment(1, 4);
       foreach(vs_fe, [](int i, std::complex<double> a) {
@@ -101,7 +109,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     Eigen::MatrixXd m(3, 3);
     m << 1, 2, 3,
          4, 5, 6,
-         7, 8, 9;
+         7, 8, 9; // cppcheck-suppress constStatement
     auto v = m.col(1);
 
     CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
@@ -111,19 +119,21 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     SECTION("foreach()") {
       Eigen::MatrixXd m_fe(4, 4);
+      // cppcheck-suppress constStatement
       m_fe << 9, 1, 9, 9,
               9, 2, 9, 9,
               9, 0, 9, 9,
-              9, 4, 9, 9;
+              9, 4, 9, 9; // cppcheck-suppress constStatement
       foreach(m_fe.col(1), [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
   SECTION("One column of MatrixXcd") {
     Eigen::MatrixXcd m(3, 3);
+    // cppcheck-suppress constStatement
     m << 1, 2, 3,
          4, 5, 6,
-         7, 8, 9;
+         7, 8, 9; // cppcheck-suppress constStatement
     auto v = m.col(1);
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
@@ -137,7 +147,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
       m_fe << 9, 1, 9, 9,
               9, 2, 9, 9,
               9, 0, 9, 9,
-              9, 4, 9, 9;
+              9, 4, 9, 9; // cppcheck-suppress constStatement
       foreach(m_fe.col(1), [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
@@ -150,7 +160,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
          6,   7,  8,  9, 10,
          11, 12, 13, 14, 15,
          16, 17, 18, 19, 20,
-         21, 22, 23, 24, 25;
+         21, 22, 23, 24, 25; // cppcheck-suppress constStatement
     auto v = m.block(1, 2, 3, 1);
 
     CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
@@ -163,7 +173,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
               6,   7, 1,  9, 10,
               11, 12, 2, 14, 15,
               16, 17, 0, 19, 20,
-              21, 22, 4, 24, 25;
+              21, 22, 4, 24, 25; // cppcheck-suppress constStatement
       auto v_fe = m_fe.block(1, 2, 4, 1);
       foreach(v_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
@@ -175,7 +185,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
          6,   7,  8,  9, 10,
          11, 12, 13, 14, 15,
          16, 17, 18, 19, 20,
-         21, 22, 23, 24, 25;
+         21, 22, 23, 24, 25; // cppcheck-suppress constStatement
     auto v = m.block(1, 2, 3, 1);
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
@@ -190,7 +200,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
               6,   7, 1,  9, 10,
               11, 12, 2, 14, 15,
               16, 17, 0, 19, 20,
-              21, 22, 4, 24, 25;
+              21, 22, 4, 24, 25; // cppcheck-suppress constStatement
       auto v_fe = m_fe.block(1, 2, 4, 1);
       foreach(v_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
