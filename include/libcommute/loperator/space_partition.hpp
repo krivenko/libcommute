@@ -176,6 +176,9 @@ public:
 
       // Take one C^+ - connection
       // C^+|lower_subspace> = |upper_subspace>
+
+      // C++17 structured bindings would be the real solution here
+      // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
       sv_index_type lower_subspace, upper_subspace;
       std::tie(lower_subspace, upper_subspace) = *std::begin(Cd_conn);
 

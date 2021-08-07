@@ -615,6 +615,8 @@ private:
   static void store_monomial(monomial_t&& m,
                              scalar_type coeff,
                              monomials_map_t& target) {
+    // C++17 structured bindings would be the real solution here
+    // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
     bool is_new_monomial;
     typename monomials_map_t::iterator it;
     std::tie(it, is_new_monomial) = target.emplace(m, coeff);
@@ -637,7 +639,6 @@ private:
     using generator_t = generator<IndexTypes...>;
 
     if(m.size() >= 2) {
-      bool is_swapped;
       typename generator_t::linear_function_t f;
 
       // Process linear terms
@@ -664,6 +665,7 @@ private:
         }
       };
 
+      bool is_swapped = false;
       do {
         is_swapped = false;
         for(size_t n = 1; n < m.size(); ++n) {

@@ -52,7 +52,7 @@ TEST_CASE("Different algebra IDs", "[monomial_action_IDs]") {
       auto ma = monomial_action<>(std::make_pair(const_m.begin(), const_m.end()),
                                   hs);
 
-      sv_index_type out_index;
+      sv_index_type out_index = {};
       double coeff = 10;
       for(sv_index_type in_index = 0; in_index < (1 << 7); ++in_index) {
         out_index = in_index;
