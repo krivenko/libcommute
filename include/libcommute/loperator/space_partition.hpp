@@ -74,10 +74,10 @@ public:
     : ds(get_dim(hs)) {
     using scalar_type =
       typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
-    sv_index_type dim = get_dim(hs);
+    sv_index_type d = get_dim(hs);
 
-    sparse_state_vector<scalar_type> in_state(dim);
-    sparse_state_vector<scalar_type> out_state(dim);
+    sparse_state_vector<scalar_type> in_state(d);
+    sparse_state_vector<scalar_type> out_state(d);
     foreach(hs, [&](sv_index_type in_index) {
       in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       h(in_state, out_state);
@@ -104,10 +104,10 @@ public:
     : ds(get_dim(hs)) {
     using scalar_type =
       typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
-    sv_index_type dim = get_dim(hs);
+    sv_index_type d = get_dim(hs);
 
-    sparse_state_vector<scalar_type> in_state(dim);
-    sparse_state_vector<scalar_type> out_state(dim);
+    sparse_state_vector<scalar_type> in_state(d);
+    sparse_state_vector<scalar_type> out_state(d);
     foreach(hs, [&](sv_index_type in_index) {
       in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       h(in_state, out_state);
@@ -143,11 +143,11 @@ public:
     matrix_elements_map<scalar_type> Cd_elements, C_elements;
     std::multimap<sv_index_type, sv_index_type> Cd_conn, C_conn;
 
-    sv_index_type dim = get_dim(hs);
+    sv_index_type d = get_dim(hs);
 
     // Fill connection multimaps
-    sparse_state_vector<scalar_type> in_state(dim);
-    sparse_state_vector<scalar_type> out_state(dim);
+    sparse_state_vector<scalar_type> in_state(d);
+    sparse_state_vector<scalar_type> out_state(d);
     foreach(hs, [&](sv_index_type in_index) {
       in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       sv_index_type in_subspace = ds.find_root(in_index);
@@ -246,10 +246,10 @@ public:
 
     connections_map connections;
 
-    sv_index_type dim = get_dim(hs);
+    sv_index_type d = get_dim(hs);
 
-    sparse_state_vector<scalar_type> in_state(dim);
-    sparse_state_vector<scalar_type> out_state(dim);
+    sparse_state_vector<scalar_type> in_state(d);
+    sparse_state_vector<scalar_type> out_state(d);
     foreach(hs, [&](sv_index_type in_index) {
       sv_index_type in_subspace =
         root_to_subspace.find(ds.find_root(in_index))->second;

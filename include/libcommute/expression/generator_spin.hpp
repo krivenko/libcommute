@@ -133,8 +133,8 @@ public:
     spin_component new_c = (c_ == spin_component::z ? spin_component::z :
     (c_ == spin_component::plus ? spin_component::minus : spin_component::plus)
     );
-    double spin = (multiplicity_-1)/2.0;
-    f.set(0, make_unique<generator_spin>(spin, new_c, base::indices()), 1);
+    double s = (multiplicity_-1)/2.0;
+    f.set(0, make_unique<generator_spin>(s, new_c, base::indices()), 1);
   }
 
 private:
