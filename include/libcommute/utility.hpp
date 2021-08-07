@@ -35,6 +35,7 @@ namespace libcommute {
 //
 
 template<typename T> struct c_str_to_string { using type = remove_cvref_t<T>; };
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
 template<size_t N> struct c_str_to_string<const char (&)[N]> {
   using type = std::string;
 };
