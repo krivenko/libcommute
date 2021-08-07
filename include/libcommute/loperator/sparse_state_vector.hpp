@@ -32,7 +32,7 @@ template<typename ScalarType> class sparse_state_vector {
 public:
 
   sparse_state_vector() = delete;
-  sparse_state_vector(sv_index_type size) : size_(size) {}
+  explicit sparse_state_vector(sv_index_type size) : size_(size) {}
 
   // Size of the vector
   inline sv_index_type size() const { return size_; }

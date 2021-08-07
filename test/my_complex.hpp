@@ -26,6 +26,7 @@ struct my_complex {
   my_complex() = delete;
 
   my_complex(float re, float im) : re(re), im(im) {}
+  // cppcheck-suppress noExplicitConstructor
   my_complex(float re) : re(re), im(0) {}
 
   friend bool operator==(my_complex const& c1, my_complex const& c2) {

@@ -35,7 +35,7 @@ public:
   // Value semantics
   elementary_space_fermion() = delete;
   template<typename... Args>
-  elementary_space_fermion(Args&&... indices)
+  explicit elementary_space_fermion(Args&&... indices)
     : base(std::forward<Args>(indices)...) {}
   elementary_space_fermion(elementary_space_fermion const&) = default;
   elementary_space_fermion(elementary_space_fermion&&) noexcept = default;
@@ -64,7 +64,9 @@ namespace static_indices {
 template<typename... IndexTypes>
 inline elementary_space_fermion<c_str_to_string_t<IndexTypes>...>
 make_space_fermion(IndexTypes&&... indices) {
-  return {std::forward<IndexTypes>(indices)...};
+  return elementary_space_fermion<c_str_to_string_t<IndexTypes>...>(
+    std::forward<IndexTypes>(indices)...
+  );
 }
 
 } // namespace libcommute::static_indices
@@ -80,7 +82,9 @@ namespace dynamic_indices {
 template<typename... IndexTypes>
 inline elementary_space_fermion<dyn_indices>
 make_space_fermion(IndexTypes&&... indices) {
-  return {dyn_indices(std::forward<IndexTypes>(indices)...)};
+  return elementary_space_fermion<dyn_indices>(
+    dyn_indices(std::forward<IndexTypes>(indices)...)
+  );
 }
 
 } // namespace libcommute::dynamic_indices

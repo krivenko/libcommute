@@ -34,7 +34,7 @@ class disjoint_sets {
 
 public:
 
-  disjoint_sets(std::size_t n_sets)
+  explicit disjoint_sets(std::size_t n_sets)
     : parents_(n_sets), ranks_(n_sets, 0), n_sets_(n_sets) {
     std::iota(parents_.begin(), parents_.end(), 0);
   }

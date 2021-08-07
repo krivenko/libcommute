@@ -46,7 +46,7 @@ struct unknown_generator : public std::runtime_error {
     ss << "Action of generator " << g << " on a state vector is undefined";
     return ss.str();
   }
-  unknown_generator(generator<IndexTypes...> const& g) :
+  explicit unknown_generator(generator<IndexTypes...> const& g) :
     std::runtime_error(make_what(g)),
     generator_ptr(g.clone())
   {}

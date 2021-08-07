@@ -46,7 +46,7 @@ public:
   int algebra_id() const final { return libcommute::gamma; }
 
   // Constructor: Just pass the index to the base class
-  generator_gamma(int index) : base(index) {}
+  explicit generator_gamma(int index) : base(index) {}
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this generator

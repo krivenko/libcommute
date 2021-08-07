@@ -155,7 +155,7 @@ template<typename T> struct linear_function :
   using basis_type = T;
 
   linear_function() = default;
-  linear_function(double const_term) : const_term(const_term) {}
+  explicit linear_function(double const_term) : const_term(const_term) {}
   template<typename... Args>
   linear_function(double const_term, Args&&... args) : const_term(const_term) {
     static_assert(sizeof...(Args)%2 == 0,

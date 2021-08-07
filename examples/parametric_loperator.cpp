@@ -40,10 +40,10 @@ class polynomial {
 public:
 
   // Construct zero polynomial of degree n
-  polynomial(std::size_t n) : coefficients(n + 1, 0) {}
+  explicit polynomial(std::size_t n) : coefficients(n + 1, 0) {}
 
   // Construct from a list of coefficients
-  polynomial(std::initializer_list<double> coeffs) :
+  explicit polynomial(std::initializer_list<double> coeffs) :
     coefficients(coeffs) {}
 
   // Degree of this polynomial
@@ -98,11 +98,16 @@ public:
     return result;
   }
 
-  // Multiplication by a constant pre-factor
-  friend polynomial operator*(double x, polynomial const& p) {
-    polynomial res(p);
+  // Multiplication by a constant
+  polynomial operator*(double x) const {
+    polynomial res(*this);
     for(auto& c : res.coefficients) c *= x;
     return res;
+  }
+
+  // Multiplication by a constant pre-factor
+  friend polynomial operator*(double x, polynomial const& p) {
+    return p * x;
   }
 };
 

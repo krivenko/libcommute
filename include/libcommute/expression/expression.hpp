@@ -80,6 +80,7 @@ public:
 
   // Construct from an expression of a different scalar type
   template<typename S>
+  // cppcheck-suppress noExplicitConstructor
   expression(expression<S, IndexTypes...> const& x) {
    static_assert(std::is_constructible<scalar_type, S>::value,
                  "Incompatible scalar type in construction");
@@ -106,6 +107,7 @@ public:
 private:
 
   // Internal: Construct from a linear function of generators
+  explicit
   expression(typename monomial_t::generator_type::linear_function_t const& f) {
     if(!scalar_traits<ScalarType>::is_zero(f.const_term))
       monomials_.emplace(monomial_t{}, f.const_term);

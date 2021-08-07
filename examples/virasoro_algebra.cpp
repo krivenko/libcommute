@@ -53,7 +53,7 @@ public:
   }
 
   // Construct generator with a given index 'n'
-  generator_virasoro(int n) : base(n) {}
+  explicit generator_virasoro(int n) : base(n) {}
   // Standard constructors, assignments and destructor
   generator_virasoro(generator_virasoro const&) = default;
   generator_virasoro(generator_virasoro&&) noexcept = default;

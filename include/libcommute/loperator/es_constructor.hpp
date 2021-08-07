@@ -42,7 +42,7 @@ struct es_construction_failure : public std::runtime_error {
        << g;
     return ss.str();
   }
-  es_construction_failure(generator<IndexTypes...> const& g) :
+  explicit es_construction_failure(generator<IndexTypes...> const& g) :
     std::runtime_error(make_what(g)),
     generator_ptr(g.clone())
   {}
@@ -107,7 +107,8 @@ public:
 
   es_constructor_impl() = default;
   template<typename Arg>
-  inline es_constructor_impl(Arg&& arg) : base(std::forward<Arg>(arg)) {}
+  inline explicit es_constructor_impl(Arg&& arg) : base(std::forward<Arg>(arg))
+  {}
 
   template<typename... IndexTypes>
   inline  std::unique_ptr<elementary_space<IndexTypes...>>
@@ -134,6 +135,7 @@ class es_constructor : public detail::es_constructor_impl<AlgebraIDs...> {
 public:
 
   template<typename... Args>
+  // cppcheck-suppress noExplicitConstructor
   inline es_constructor(Args&&... args) : base(std::forward<Args>(args)...) {}
 };
 
@@ -158,7 +160,8 @@ template<> class es_constructor<boson> {
 
 public:
   es_constructor() = delete;
-  es_constructor(int bits_per_boson) : bits_per_boson_(bits_per_boson) {}
+  explicit es_constructor(int bits_per_boson) : bits_per_boson_(bits_per_boson)
+  {}
 
   template<typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>

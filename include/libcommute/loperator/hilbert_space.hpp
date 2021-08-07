@@ -76,7 +76,7 @@ public:
 
   struct elementary_space_exists : public std::runtime_error {
     es_ptr_type elementary_space_ptr;
-    elementary_space_exists(elementary_space_t const& es) :
+    explicit elementary_space_exists(elementary_space_t const& es) :
       std::runtime_error("Elementary space already exists"),
       elementary_space_ptr(es.clone())
     {}
@@ -84,7 +84,7 @@ public:
 
   struct elementary_space_not_found : public std::runtime_error {
     es_ptr_type elementary_space_ptr;
-    elementary_space_not_found(elementary_space_t const& es) :
+    explicit elementary_space_not_found(elementary_space_t const& es) :
       std::runtime_error("Elementary space not found"),
       elementary_space_ptr(es.clone())
     {}
@@ -92,7 +92,7 @@ public:
 
   struct hilbert_space_too_big : public std::runtime_error {
     int n_bits;
-    hilbert_space_too_big(int n_bits) :
+    explicit hilbert_space_too_big(int n_bits) :
       std::runtime_error("Hilbert space size is not representable "
                          "by a " + std::to_string(max_n_bits) +
                          "-bit integer (n_bits = " +
@@ -114,6 +114,7 @@ public:
   }
 
   // Construct from a vector of pointers to elementary spaces
+  explicit
   hilbert_space(std::vector<elementary_space_t*> const& elementary_spaces) {
     for(auto p : elementary_spaces) add(*p);
   }
@@ -122,8 +123,8 @@ public:
   // associated to every algebra generator found in `expr`. Construction
   // of elementary spaces is performed by `es_constr` functor.
   template<typename ScalarType, typename ESConstructor = default_es_constructor>
-  hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
-                ESConstructor&& es_constr = {}) {
+  explicit hilbert_space(expression<ScalarType, IndexTypes...> const& expr,
+                         ESConstructor&& es_constr = {}) {
     for(auto const& m : expr) {
       for(auto const& g : m.monomial) {
         elementary_spaces_.emplace(es_constr(g), bit_range_t(0, 0));

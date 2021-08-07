@@ -33,7 +33,7 @@ class elementary_space_padding : public elementary_space<IndexTypes...> {
 public:
   elementary_space_padding() = delete;
   template<typename... Args>
-  elementary_space_padding(Args&&... indices) :
+  explicit elementary_space_padding(Args&&... indices) :
     elementary_space<IndexTypes...>(std::forward<Args>(indices)...) {}
 
   std::unique_ptr<elementary_space<IndexTypes...>>

@@ -38,7 +38,7 @@ public:
   int algebra_id() const override { return libcommute::gamma; }
 
   // Value semantics
-  generator_gamma(int index) : base(index) {}
+  explicit generator_gamma(int index) : base(index) {}
   generator_gamma(generator_gamma const&) = default;
   generator_gamma(generator_gamma&&) noexcept = default;
   generator_gamma& operator=(generator_gamma const&) = default;

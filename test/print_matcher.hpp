@@ -27,7 +27,7 @@ template<typename T> class PrintMatcher : public Catch::MatcherBase<T> {
   std::string const& ref_;
 
 public:
-  PrintMatcher(std::string const& ref) : ref_(ref) {}
+  explicit PrintMatcher(std::string const& ref) : ref_(ref) {}
 
   // Performs the test for this matcher
   bool match(T const& x) const override {
@@ -41,6 +41,8 @@ public:
   }
 };
 template<typename T>
-inline PrintMatcher<T> Prints(std::string const& ref) { return {ref}; }
+inline PrintMatcher<T> Prints(std::string const& ref) {
+  return PrintMatcher<T>(ref);
+}
 
 #endif

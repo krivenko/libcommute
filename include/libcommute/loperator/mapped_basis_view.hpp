@@ -175,7 +175,7 @@ public:
 
   // Build a mapping from a list of basis states
   // to their positions within the list
-  basis_mapper(std::vector<sv_index_type> const& basis_state_indices) {
+  explicit basis_mapper(std::vector<sv_index_type> const& basis_state_indices) {
     std::transform(
       basis_state_indices.begin(),
       basis_state_indices.end(),
