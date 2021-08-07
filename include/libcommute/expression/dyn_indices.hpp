@@ -74,7 +74,7 @@ public:
   ~dyn_indices_generic() = default;
 
   // Index sequence length
-  size_t size() const { return indices_.size(); }
+  [[nodiscard]] size_t size() const { return indices_.size(); }
 
   // Equality
   inline friend bool operator==(dyn_indices_generic const& ind1,
