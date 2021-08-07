@@ -41,7 +41,7 @@ void check_equal_maps_up_to_value_permutation(
     values2.emplace(p.second);
   }
   CHECK(keys1 == keys2);
-  CHECK(values2 == values2);
+  CHECK(values1 == values2);
 }
 
 TEST_CASE("Basis-mapped view of a state vector",
