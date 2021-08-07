@@ -35,8 +35,8 @@ TEST_CASE("Implementation of StateVector interface for std::vector",
     CHECK(v == std::vector<double>{0, 0, 0});
 
     SECTION("foreach()") {
-      std::vector<double> v{1, 2, 0, 4};
-      foreach(v, [](int i, double a) { CHECK(i + 1 == a); });
+      std::vector<double> v_fe{1, 2, 0, 4};
+      foreach(v_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
@@ -55,8 +55,8 @@ TEST_CASE("Implementation of StateVector interface for std::vector",
     CHECK(v == std::vector<std::complex<double>>{0, 0, 0});
 
     SECTION("foreach()") {
-      std::vector<std::complex<double>> v{1, 2, 0, 4};
-      foreach(v, [](int i, std::complex<double> a) {
+      std::vector<std::complex<double>> v_fe{1, 2, 0, 4};
+      foreach(v_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
     }

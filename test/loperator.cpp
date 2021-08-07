@@ -73,13 +73,13 @@ TEST_CASE("Linear operator with constant coefficients",
     SECTION("complex state vector") {
       using state_vector = std::vector<std::complex<double>>;
 
-      const state_vector in{1, 1, 1, 1};
-      state_vector out(4);
+      const state_vector in_c{1, 1, 1, 1};
+      state_vector out_c(4);
 
-      CHECK(lop(in) == state_vector{-6, 12, 0, 6});
-      CHECK(lop *in == state_vector{-6, 12, 0, 6});
-      lop(in, out);
-      CHECK(out == state_vector{-6, 12, 0, 6});
+      CHECK(lop(in_c) == state_vector{-6, 12, 0, 6});
+      CHECK(lop * in_c == state_vector{-6, 12, 0, 6});
+      lop(in_c, out_c);
+      CHECK(out_c == state_vector{-6, 12, 0, 6});
     }
   }
 

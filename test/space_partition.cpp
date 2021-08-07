@@ -389,16 +389,17 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
       for(auto const& expr2 : expr) {
         auto conns1 = sp.find_connections(make_loperator(expr1, hs), hs);
         auto conns2 = sp.find_connections(make_loperator(expr2, hs), hs);
-        auto conns = sp.find_connections(make_loperator(expr1 + expr2, hs), hs);
+        auto conns12 = sp.find_connections(make_loperator(expr1 + expr2, hs),
+                                           hs);
 
-        connections_map conns_ref;
+        connections_map conns12_ref;
         std::set_union(conns1.begin(),
                        conns1.end(),
                        conns2.begin(),
                        conns2.end(),
-                       std::inserter(conns_ref, conns_ref.end()));
+                       std::inserter(conns12_ref, conns12_ref.end()));
 
-        CHECK(conns == conns_ref);
+        CHECK(conns12 == conns12_ref);
       }
     }
   }

@@ -41,8 +41,8 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(v, 2.0);
 
     SECTION("foreach()") {
-      Eigen::VectorXd v(4); v << 1, 2, 0, 4;
-      foreach(v, [](int i, double a) { CHECK(i + 1 == a); });
+      Eigen::VectorXd v_fe(4); v_fe << 1, 2, 0, 4;
+      foreach(v_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
@@ -56,8 +56,8 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(v, 2.0);
 
     SECTION("foreach()") {
-      Eigen::VectorXcd v(4); v << 1, 2, 0, 4;
-      foreach(v, [](int i, std::complex<double> a) {
+      Eigen::VectorXcd v_fe(4); v_fe << 1, 2, 0, 4;
+      foreach(v_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
     }
@@ -72,9 +72,9 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(vs, 3.0);
 
     SECTION("foreach()") {
-      Eigen::VectorXd v(6); v << 10, 1, 2, 0, 4, 5;
-      auto vs = v.segment(1, 4);
-      foreach(vs, [](int i, double a) { CHECK(i + 1 == a); });
+      Eigen::VectorXd v_fe(6); v_fe << 10, 1, 2, 0, 4, 5;
+      auto vs_fe = v_fe.segment(1, 4);
+      foreach(vs_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
@@ -89,9 +89,9 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(vs, 3.0);
 
     SECTION("foreach()") {
-      Eigen::VectorXcd v(6); v << 10, 1, 2, 0, 4, 5;
-      auto vs = v.segment(1, 4);
-      foreach(vs, [](int i, std::complex<double> a) {
+      Eigen::VectorXcd v_fe(6); v_fe << 10, 1, 2, 0, 4, 5;
+      auto vs_fe = v_fe.segment(1, 4);
+      foreach(vs_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
     }
@@ -110,12 +110,12 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(v, 5.0);
 
     SECTION("foreach()") {
-      Eigen::MatrixXd m(4, 4);
-      m << 9, 1, 9, 9,
-           9, 2, 9, 9,
-           9, 0, 9, 9,
-           9, 4, 9, 9;
-      foreach(m.col(1), [](int i, double a) { CHECK(i + 1 == a); });
+      Eigen::MatrixXd m_fe(4, 4);
+      m_fe << 9, 1, 9, 9,
+              9, 2, 9, 9,
+              9, 0, 9, 9,
+              9, 4, 9, 9;
+      foreach(m_fe.col(1), [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
@@ -133,12 +133,12 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(v, 5.0);
 
     SECTION("foreach()") {
-      Eigen::MatrixXcd m(4, 4);
-      m << 9, 1, 9, 9,
-           9, 2, 9, 9,
-           9, 0, 9, 9,
-           9, 4, 9, 9;
-      foreach(m.col(1), [](int i, std::complex<double> a) {
+      Eigen::MatrixXcd m_fe(4, 4);
+      m_fe << 9, 1, 9, 9,
+              9, 2, 9, 9,
+              9, 0, 9, 9,
+              9, 4, 9, 9;
+      foreach(m_fe.col(1), [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
     }
@@ -158,14 +158,14 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(v, 13.0);
 
     SECTION("foreach()") {
-      Eigen::MatrixXd m(5, 5);
-      m << 1,   2, 5,  4,  5,
-           6,   7, 1,  9, 10,
-           11, 12, 2, 14, 15,
-           16, 17, 0, 19, 20,
-           21, 22, 4, 24, 25;
-      auto v = m.block(1, 2, 4, 1);
-      foreach(v, [](int i, double a) { CHECK(i + 1 == a); });
+      Eigen::MatrixXd m_fe(5, 5);
+      m_fe << 1,   2, 5,  4,  5,
+              6,   7, 1,  9, 10,
+              11, 12, 2, 14, 15,
+              16, 17, 0, 19, 20,
+              21, 22, 4, 24, 25;
+      auto v_fe = m_fe.block(1, 2, 4, 1);
+      foreach(v_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
@@ -185,14 +185,14 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(v, 13.0);
 
     SECTION("foreach()") {
-      Eigen::MatrixXcd m(5, 5);
-      m << 1,   2, 5,  4,  5,
-           6,   7, 1,  9, 10,
-           11, 12, 2, 14, 15,
-           16, 17, 0, 19, 20,
-           21, 22, 4, 24, 25;
-      auto v = m.block(1, 2, 4, 1);
-      foreach(v, [](int i, std::complex<double> a) {
+      Eigen::MatrixXcd m_fe(5, 5);
+      m_fe << 1,   2, 5,  4,  5,
+              6,   7, 1,  9, 10,
+              11, 12, 2, 14, 15,
+              16, 17, 0, 19, 20,
+              21, 22, 4, 24, 25;
+      auto v_fe = m_fe.block(1, 2, 4, 1);
+      foreach(v_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
     }
@@ -208,10 +208,10 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXd>(m, 2.0);
 
     SECTION("foreach()") {
-      std::vector<double> v{5, 1, 2, 0, 4, 5};
+      std::vector<double> v_fe{5, 1, 2, 0, 4, 5};
       // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      auto m = Eigen::Map<Eigen::VectorXd>(v.data() + 1, 4, 1);
-      foreach(m, [](int i, double a) { CHECK(i + 1 == a); });
+      auto m_fe = Eigen::Map<Eigen::VectorXd>(v_fe.data() + 1, 4, 1);
+      foreach(m_fe, [](int i, double a) { CHECK(i + 1 == a); });
     }
   }
 
@@ -227,10 +227,10 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     test_functions<Eigen::VectorXcd>(m, 2.0);
 
     SECTION("foreach()") {
-      std::vector<std::complex<double>> v{5, 1, 2, 0, 4, 5};
+      std::vector<std::complex<double>> v_fe{5, 1, 2, 0, 4, 5};
       // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      auto m = Eigen::Map<Eigen::VectorXcd>(v.data() + 1, 4, 1);
-      foreach(m, [](int i, std::complex<double> a) {
+      auto m_fe = Eigen::Map<Eigen::VectorXcd>(v_fe.data() + 1, 4, 1);
+      foreach(m_fe, [](int i, std::complex<double> a) {
         CHECK(double(i + 1) == a);
       });
     }

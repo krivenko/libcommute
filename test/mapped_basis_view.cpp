@@ -165,7 +165,6 @@ TEST_CASE("Basis-mapped view of a state vector",
   }
 
   SECTION("basis_mapper") {
-    state_vector st{1, 1, 1, 1, 1, 1};
 
     SECTION("basis_state_indices") {
       std::vector<sv_index_type> basis_indices{3, 5, 6, 9, 10, 12};
@@ -214,19 +213,19 @@ TEST_CASE("Basis-mapped view of a state vector",
     SECTION("Compositions/bosons") {
       using O_list_t = std::vector<loperator<double, fermion, boson, spin>>;
 
-      auto hs = make_hilbert_space(a_dag(1) + a_dag(2) + a_dag(3) + a_dag(4),
-                                   boson_es_constructor(4));
+      auto hs_b = make_hilbert_space(a_dag(1) + a_dag(2) + a_dag(3) + a_dag(4),
+                                     boson_es_constructor(4));
 
       O_list_t O_list{
-        make_loperator(a_dag(1), hs),
-        make_loperator(a_dag(2), hs),
-        make_loperator(a_dag(3), hs),
-        make_loperator(a_dag(4), hs)
+        make_loperator(a_dag(1), hs_b),
+        make_loperator(a_dag(2), hs_b),
+        make_loperator(a_dag(3), hs_b),
+        make_loperator(a_dag(4), hs_b)
       };
 
       std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
       for(int N = 0; N < 10; ++N) {
-        basis_mapper mapper(O_list, hs, N);
+        basis_mapper mapper(O_list, hs_b, N);
         CHECK(mapper.size() == map_size_ref[N]);
       }
     }
