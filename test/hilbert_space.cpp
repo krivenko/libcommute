@@ -287,7 +287,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(make_hilbert_space(expr) == hs1);
 
     SECTION("foreach()") {
-      size_t count = 0;
+      std::size_t count = 0;
       foreach(hs1, [&count](int i) { count += i; });
       CHECK(count == 2016);
     }

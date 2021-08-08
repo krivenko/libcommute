@@ -200,7 +200,7 @@ Class definitions
 
     Direct read-only access to the list of monomials.
 
-  .. function:: size_t size() const
+  .. function:: std::size_t size() const
 
     Number of monomials in this polynomial expression.
 
@@ -361,7 +361,7 @@ typed index sequences step in. They are instantiations of the
 
     Copy/move-constructors and assignments
 
-  .. function:: size_t size() const
+  .. function:: std::size_t size() const
 
     Number of indices in the sequence.
 

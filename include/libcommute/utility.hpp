@@ -36,7 +36,7 @@ namespace libcommute {
 
 template<typename T> struct c_str_to_string { using type = remove_cvref_t<T>; };
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-template<size_t N> struct c_str_to_string<char const (&)[N]> {
+template<std::size_t N> struct c_str_to_string<char const (&)[N]> {
   using type = std::string;
 };
 template<> struct c_str_to_string<char const *> {
@@ -105,7 +105,7 @@ template<typename T> struct not_in_type_list<T> : std::true_type {};
 
 namespace detail {
 
-template<size_t N> struct print_tuple_impl {
+template<std::size_t N> struct print_tuple_impl {
   template<typename... T>
   static void apply(std::ostream & os, std::tuple<T...> const& t) {
     os << std::get<sizeof...(T) - 1 - N>(t) << ",";

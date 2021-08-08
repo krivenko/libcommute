@@ -139,7 +139,7 @@ public:
   inline monomials_map_t & get_monomials() { return monomials_; }
 
   // Number of monomials
-  inline size_t size() const { return monomials_.size(); }
+  inline std::size_t size() const { return monomials_.size(); }
 
   // Set expression to zero
   inline void clear() { monomials_.clear(); }
@@ -670,7 +670,7 @@ private:
       bool is_swapped = false;
       do {
         is_swapped = false;
-        for(size_t n = 1; n < m.size(); ++n) {
+        for(std::size_t n = 1; n < m.size(); ++n) {
           // Pick a pair of generators in m, m[n-1] and m[n]
           generator_t const& prev_gen = m[n - 1];
           generator_t const& cur_gen = m[n];

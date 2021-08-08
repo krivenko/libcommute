@@ -25,8 +25,8 @@
 // T is a pointer
 template<typename T>
 void check_equality_impl(std::vector<T> const& v, std::true_type) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
+  for(std::size_t i1 = 0; i1 < v.size(); ++i1) {
+    for(std::size_t i2 = 0; i2 < v.size(); ++i2) {
       CHECK((*v[i1] == *v[i2]) == (i1 == i2));
       CHECK((*v[i1] != *v[i2]) == (i1 != i2));
     }
@@ -36,8 +36,8 @@ void check_equality_impl(std::vector<T> const& v, std::true_type) {
 // T is not a pointer
 template<typename T>
 void check_equality_impl(std::vector<T> const& v, std::false_type) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
+  for(std::size_t i1 = 0; i1 < v.size(); ++i1) {
+    for(std::size_t i2 = 0; i2 < v.size(); ++i2) {
       CHECK((v[i1] == v[i2]) == (i1 == i2));
       CHECK((v[i1] != v[i2]) == (i1 != i2));
     }
@@ -57,8 +57,8 @@ void check_equality(std::vector<T> const& v) {
 
 template<typename T>
 void check_less_greater_impl(std::vector<T> const& v, std::true_type) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
+  for(std::size_t i1 = 0; i1 < v.size(); ++i1) {
+    for(std::size_t i2 = 0; i2 < v.size(); ++i2) {
       CHECK((*v[i1] < *v[i2]) == (i1 < i2));
       CHECK((*v[i1] > *v[i2]) == (i1 > i2));
     }
@@ -67,8 +67,8 @@ void check_less_greater_impl(std::vector<T> const& v, std::true_type) {
 
 template<typename T>
 void check_less_greater_impl(std::vector<T> const& v, std::false_type) {
-  for(size_t i1 = 0; i1 < v.size(); ++i1) {
-    for(size_t i2 = 0; i2 < v.size(); ++i2) {
+  for(std::size_t i1 = 0; i1 < v.size(); ++i1) {
+    for(std::size_t i2 = 0; i2 < v.size(); ++i2) {
       CHECK((v[i1] < v[i2]) == (i1 < i2));
       CHECK((v[i1] > v[i2]) == (i1 > i2));
     }

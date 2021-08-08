@@ -122,7 +122,7 @@ public:
   ~monomial() = default;
 
   // Number of generators in this monomial
-  inline size_t size() const { return generators_.size(); }
+  inline std::size_t size() const { return generators_.size(); }
 
   // Is this monomial empty?
   inline bool empty() const { return generators_.empty(); }
@@ -168,7 +168,7 @@ public:
   }
 
   // Element access
-  inline generator_type const& operator[](size_t n) const {
+  inline generator_type const& operator[](std::size_t n) const {
     return *generators_[n];
   }
 
@@ -219,7 +219,7 @@ public:
   }
 
   // Swap a pair of generators in this monomial
-  void swap_generators(size_t n1, size_t n2) {
+  void swap_generators(std::size_t n1, std::size_t n2) {
     assert(n1 < size());
     assert(n2 < size());
     std::swap(generators_[n1], generators_[n2]);
@@ -248,13 +248,13 @@ private:
   //
 
   // Size of a generator is 1
-  static constexpr size_t monomial_part_size(generator_type const& m) {
+  static constexpr std::size_t monomial_part_size(generator_type const& m) {
     return 1;
   }
   // Size of a complete monomial
-  static size_t monomial_part_size(monomial const& m) { return m.size(); }
+  static std::size_t monomial_part_size(monomial const& m) { return m.size(); }
   // Size of a range within a monomial
-  static size_t
+  static std::size_t
   monomial_part_size(range_type const& range) {
     return std::distance(range.first, range.second);
   }
@@ -262,12 +262,12 @@ private:
   // Total number of generators in a mixed list of generators,
   // monomials and monomial ranges
   template<typename P1, typename... PTail>
-  static size_t concat_parts_total_size(P1&& p1, PTail&&... p_tail) {
+  static std::size_t concat_parts_total_size(P1&& p1, PTail&&... p_tail) {
     return monomial_part_size(std::forward<P1>(p1)) +
            concat_parts_total_size(std::forward<PTail>(p_tail)...);
   }
   template<typename P1>
-  static size_t concat_parts_total_size(P1&& p1) {
+  static std::size_t concat_parts_total_size(P1&& p1) {
     return monomial_part_size(std::forward<P1>(p1));
   }
 
@@ -346,15 +346,15 @@ public:
   }
 
   // Arithmetics
-  const_iterator& operator+=(size_t n) { v_it_ += n ; return *this; }
-  const_iterator& operator-=(size_t n) { v_it_ -= n ; return *this; }
-  friend const_iterator operator+(const_iterator const& it, size_t n) {
+  const_iterator& operator+=(std::size_t n) { v_it_ += n ; return *this; }
+  const_iterator& operator-=(std::size_t n) { v_it_ -= n ; return *this; }
+  friend const_iterator operator+(const_iterator const& it, std::size_t n) {
     return const_iterator(it.v_it_ + n);
   }
-  friend const_iterator operator+(size_t n, const_iterator const& it) {
+  friend const_iterator operator+(std::size_t n, const_iterator const& it) {
     return const_iterator(it.v_it_ + n);
   }
-  friend const_iterator operator-(const_iterator const& it, size_t n) {
+  friend const_iterator operator-(const_iterator const& it, std::size_t n) {
     return const_iterator(it.v_it_ - n);
   }
   friend difference_type operator-(const_iterator const& it1,
@@ -375,7 +375,7 @@ public:
   // Dereference
   reference operator*() const { return **v_it_; }
   pointer operator->() const { return *v_it_; }
-  reference operator[](size_t n) const { return *v_it_[n]; }
+  reference operator[](std::size_t n) const { return *v_it_[n]; }
 
   // swap()
   friend void swap(const_iterator& lhs, const_iterator& rhs) {

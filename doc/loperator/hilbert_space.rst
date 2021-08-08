@@ -219,7 +219,7 @@ does not matter -- they will be reordered automatically.
     product. Throws :class:`std::runtime_error` if there is no elementary spaces
     with the given ID in the product.
 
-  .. function:: size_t size() const
+  .. function:: std::size_t size() const
 
     The number of elementary spaces in the product.
 
@@ -228,8 +228,8 @@ does not matter -- they will be reordered automatically.
     The total number of used bits in the binary representation of a basis state
     index.
 
-  .. function:: size_t dim() const
-                friend size_t get_dim(hilbert_space const& hs)
+  .. function:: std::size_t dim() const
+                friend std::size_t get_dim(hilbert_space const& hs)
 
     The dimension of this Hilbert space computed as a product of dimensions
     of the elementary spaces.

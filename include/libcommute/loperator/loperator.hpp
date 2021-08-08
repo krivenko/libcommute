@@ -252,7 +252,7 @@ private:
     // Apply monomials
     foreach(src, [&,this](sv_index_type in_index,
                           element_type_t<StateVector> const& a) {
-      for(size_t n = 0; n < m_act.size(); ++n) {
+      for(std::size_t n = 0; n < m_act.size(); ++n) {
         sv_index_type index = in_index;
         auto coeff =
           scalar_traits<evaluated_coeff_t<CoeffArgs...>>::make_const(1);

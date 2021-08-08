@@ -217,15 +217,15 @@ public:
   }
 
   // Number of elementary spaces
-  size_t size() const { return elementary_spaces_.size(); }
+  std::size_t size() const { return elementary_spaces_.size(); }
 
   // The minimal number of binary digits needed to represent any state
   // in this Hilbert space
   int total_n_bits() const { return bit_range_end_ + 1; }
 
   // Dimension of this Hilbert space
-  size_t dim() const { return size_t(1) << total_n_bits(); }
-  friend size_t get_dim(hilbert_space const& hs) { return hs.dim(); }
+  std::size_t dim() const { return std::size_t(1) << total_n_bits(); }
+  friend std::size_t get_dim(hilbert_space const& hs) { return hs.dim(); }
 
   // Apply functor `f` to all basis state indices
   template<typename Functor>

@@ -47,8 +47,8 @@ using linear_function_t = gen_type::linear_function_t;
 void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
                                     bool one_half = false) {
   linear_function_t f;
-  for(size_t i = 0; i < v.size(); ++i) {
-    for(size_t j = i + 1; j < v.size(); ++j) {
+  for(std::size_t i = 0; i < v.size(); ++i) {
+    for(std::size_t j = i + 1; j < v.size(); ++j) {
       double c = v[j]->swap_with(*v[i], f);
       if(one_half) {
         if(j%3 == 1 && i == j - 1) { // S_- S_+ = 1/2 - S_z
@@ -83,8 +83,8 @@ void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
 void check_generator_spin_simplify_prod(std::vector<gen_type*> const& v,
                                         bool one_half = false) {
   linear_function_t f;
-  for(size_t i = 0; i < v.size(); ++i) {
-    for(size_t j = i; j < v.size(); ++j) {
+  for(std::size_t i = 0; i < v.size(); ++i) {
+    for(std::size_t j = i; j < v.size(); ++j) {
       bool c = v[i]->simplify_prod(*v[j], f);
       if(one_half) {
         if(i%3 == 0 && j == i) { // S_+ * S_+ = 0
@@ -183,7 +183,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
-    for(size_t i = 0; i < fermion_ops.size(); ++i) {
+    for(std::size_t i = 0; i < fermion_ops.size(); ++i) {
       auto fermion_gen_p =
         dynamic_cast<generator_fermion<dyn_indices>*>(fermion_ops[i]);
       CHECK(fermion_gen_p->dagger() == (i < 2));
@@ -199,8 +199,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     }
 
     linear_function_t f;
-    for(size_t i = 0; i < fermion_ops.size(); ++i) {
-      for(size_t j = i + 1; j < fermion_ops.size(); ++j) {
+    for(std::size_t i = 0; i < fermion_ops.size(); ++i) {
+      for(std::size_t j = i + 1; j < fermion_ops.size(); ++j) {
         double c = fermion_ops[j]->swap_with(*fermion_ops[i], f);
         CHECK(c == -1);
         CHECK_LINEAR_FUNCTION_0(f, ((j == 2 && i == 1) || (j == 3 && i == 0)));
@@ -222,7 +222,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
       CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
-    for(size_t i = 0; i < boson_ops.size(); ++i) {
+    for(std::size_t i = 0; i < boson_ops.size(); ++i) {
       auto boson_gen_p =
         dynamic_cast<generator_boson<dyn_indices>*>(boson_ops[i]);
       CHECK(boson_gen_p->dagger() == (i < 2));
@@ -238,8 +238,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     }
 
     linear_function_t f;
-    for(size_t i = 0; i < boson_ops.size(); ++i) {
-      for(size_t j = i + 1; j < boson_ops.size(); ++j) {
+    for(std::size_t i = 0; i < boson_ops.size(); ++i) {
+      for(std::size_t j = i + 1; j < boson_ops.size(); ++j) {
         double c = boson_ops[j]->swap_with(*boson_ops[i], f);
         CHECK(c == 1);
         CHECK_LINEAR_FUNCTION_0(f, ((j == 2 && i == 1) || (j == 3 && i == 0)));
@@ -388,8 +388,8 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
 
     // Check that generators from different algebras commute
     linear_function_t f;
-    for(size_t i = 0; i < all_ops.size(); ++i) {
-      for(size_t j = i + 1; j < all_ops.size(); ++j) {
+    for(std::size_t i = 0; i < all_ops.size(); ++i) {
+      for(std::size_t j = i + 1; j < all_ops.size(); ++j) {
         double c = swap_with(*all_ops[j], *all_ops[i], f);
         if(all_ops[j]->algebra_id() != all_ops[i]->algebra_id()) {
           CHECK(c == 1);

@@ -59,10 +59,10 @@ public:
   }
 
   // Size of 'parents' array
-  inline size_t size() const { return parents_.size(); }
+  inline std::size_t size() const { return parents_.size(); }
 
   // Number of disjoint sets
-  inline size_t n_sets() const { return n_sets_; }
+  inline std::size_t n_sets() const { return n_sets_; }
 
   // Find representative element of the set containing x (with path compression)
   std::size_t find_root(std::size_t x) const {

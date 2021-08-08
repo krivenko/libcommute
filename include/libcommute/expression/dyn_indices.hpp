@@ -74,7 +74,7 @@ public:
   ~dyn_indices_generic() = default;
 
   // Index sequence length
-  [[nodiscard]] size_t size() const { return indices_.size(); }
+  [[nodiscard]] std::size_t size() const { return indices_.size(); }
 
   // Equality
   inline friend bool operator==(dyn_indices_generic const& ind1,
@@ -110,8 +110,8 @@ public:
   // Stream output
   friend std::ostream & operator<<(std::ostream & os,
                                    dyn_indices_generic const& ind) {
-    size_t const N = ind.indices_.size();
-    for(size_t i = 0; i < N; ++i) {
+    std::size_t const N = ind.indices_.size();
+    for(std::size_t i = 0; i < N; ++i) {
       std::visit([&os](auto const& x) { os << x; }, ind.indices_[i]);
       if(i + 1 < N) os << ",";
     }
