@@ -84,7 +84,7 @@ TEST_CASE("Basis-mapped view of a state vector",
   state_vector st{0, 1, 2, 3, 4, 5};
 
   using foreach_res_t = std::map<sv_index_type, double>;
-  const foreach_res_t foreach_res_ref = {
+  foreach_res_t const foreach_res_ref = {
     std::make_pair(5, 2.0),
     std::make_pair(6, 4.0),
     std::make_pair(9, 6.0),
@@ -95,7 +95,7 @@ TEST_CASE("Basis-mapped view of a state vector",
   SECTION("mapped_basis_view") {
 
     SECTION("const") {
-      auto view = mapped_basis_view<const state_vector>(st, map);
+      auto view = mapped_basis_view<state_vector const>(st, map);
 
       CHECK(std::is_same<element_type_t<decltype(view)>, double>::value);
       CHECK(get_element(view, 10) == 4);
@@ -135,13 +135,13 @@ TEST_CASE("Basis-mapped view of a state vector",
       auto Hop = make_loperator(Hex, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
-      Hop(mapped_basis_view<const state_vector>(in1, map),
+      Hop(mapped_basis_view<state_vector const>(in1, map),
           mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, 0, 2, 2, 0, 0});
 
       state_vector in2{1, 1, 1, -1, 1, 1};
-      Hop(mapped_basis_view<const state_vector>(in2, map),
+      Hop(mapped_basis_view<state_vector const>(in2, map),
           mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, 0, -2, 2, 0, 0});
@@ -151,13 +151,13 @@ TEST_CASE("Basis-mapped view of a state vector",
       auto Hop = make_loperator(Hp, hs);
 
       state_vector in1{1, 1, 1, 1, 1, 1};
-      Hop(mapped_basis_view<const state_vector>(in1, map),
+      Hop(mapped_basis_view<state_vector const>(in1, map),
           mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, 2, 0, 0, 2, 0});
 
       state_vector in2{1, 1, 1, 1, -1, 1};
-      Hop(mapped_basis_view<const state_vector>(in2, map),
+      Hop(mapped_basis_view<state_vector const>(in2, map),
           mapped_basis_view<state_vector>(out, map)
       );
       CHECK(out == state_vector{0, -2, 0, 0, 2, 0});

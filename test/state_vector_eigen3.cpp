@@ -38,7 +38,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     Eigen::VectorXd v(3); v << 1, 2, 3;
 
     CHECK(std::is_same<element_type_t<Eigen::VectorXd>, double>::value);
-    CHECK(std::is_same<element_type_t<const Eigen::VectorXd>, double>::value);
+    CHECK(std::is_same<element_type_t<Eigen::VectorXd const>, double>::value);
     test_functions<Eigen::VectorXd>(v, 2.0);
 
     SECTION("foreach()") {
@@ -54,7 +54,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
           std::complex<double>>::value);
-    CHECK(std::is_same<element_type_t<const decltype(v)>,
+    CHECK(std::is_same<element_type_t<decltype(v) const>,
           std::complex<double>>::value);
     test_functions<Eigen::VectorXcd>(v, 2.0);
 
@@ -73,7 +73,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     auto vs = v.segment(1, 3);
 
     CHECK(std::is_same<element_type_t<decltype(vs)>, double>::value);
-    CHECK(std::is_same<element_type_t<const decltype(vs)>, double>::value);
+    CHECK(std::is_same<element_type_t<decltype(vs) const>, double>::value);
     test_functions<Eigen::VectorXd>(vs, 3.0);
 
     SECTION("foreach()") {
@@ -91,7 +91,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     CHECK(std::is_same<element_type_t<decltype(vs)>,
                        std::complex<double>>::value);
-    CHECK(std::is_same<element_type_t<const decltype(vs)>,
+    CHECK(std::is_same<element_type_t<decltype(vs) const>,
                        std::complex<double>>::value);
     test_functions<Eigen::VectorXcd>(vs, 3.0);
 
@@ -114,7 +114,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     auto v = m.col(1);
 
     CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
-    CHECK(std::is_same<element_type_t<const decltype(v)>,
+    CHECK(std::is_same<element_type_t<decltype(v) const>,
           double>::value);
     test_functions<Eigen::VectorXd>(v, 5.0);
 
@@ -139,7 +139,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
                        std::complex<double>>::value);
-    CHECK(std::is_same<element_type_t<const decltype(v)>,
+    CHECK(std::is_same<element_type_t<decltype(v) const>,
                        std::complex<double>>::value);
     test_functions<Eigen::VectorXcd>(v, 5.0);
 
@@ -167,7 +167,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     auto v = m.block(1, 2, 3, 1);
 
     CHECK(std::is_same<element_type_t<decltype(v)>, double>::value);
-    CHECK(std::is_same<element_type_t<const decltype(v)>, double>::value);
+    CHECK(std::is_same<element_type_t<decltype(v) const>, double>::value);
     test_functions<Eigen::VectorXd>(v, 13.0);
 
     SECTION("foreach()") {
@@ -195,7 +195,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     CHECK(std::is_same<element_type_t<decltype(v)>,
                        std::complex<double>>::value);
-    CHECK(std::is_same<element_type_t<const decltype(v)>,
+    CHECK(std::is_same<element_type_t<decltype(v) const>,
                        std::complex<double>>::value);
     test_functions<Eigen::VectorXcd>(v, 13.0);
 
@@ -220,7 +220,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
     auto m = Eigen::Map<Eigen::VectorXd>(v.data() + 1, 3, 1);
 
     CHECK(std::is_same<element_type_t<decltype(m)>, double>::value);
-    CHECK(std::is_same<element_type_t<const decltype(m)>, double>::value);
+    CHECK(std::is_same<element_type_t<decltype(m) const>, double>::value);
     test_functions<Eigen::VectorXd>(m, 2.0);
 
     SECTION("foreach()") {
@@ -238,7 +238,7 @@ TEST_CASE("Implementation of StateVector interface for Eigen3 types",
 
     CHECK(std::is_same<element_type_t<decltype(m)>,
                        std::complex<double>>::value);
-    CHECK(std::is_same<element_type_t<const decltype(m)>,
+    CHECK(std::is_same<element_type_t<decltype(m) const>,
                        std::complex<double>>::value);
     test_functions<Eigen::VectorXcd>(m, 2.0);
 

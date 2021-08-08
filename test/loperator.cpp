@@ -32,7 +32,7 @@ TEST_CASE("Linear operator with constant coefficients",
     auto hs = make_hilbert_space(expr0);
     auto lop = make_loperator(expr0, hs);
 
-    const std::vector<double> in;
+    std::vector<double> const in;
     CHECK(lop(in) == in);
     CHECK(lop * in == in);
     std::vector<double> out;
@@ -52,7 +52,7 @@ TEST_CASE("Linear operator with constant coefficients",
 
     using state_vector = std::vector<double>;
 
-    const state_vector in{1, 1, 1, 1};
+    state_vector const in{1, 1, 1, 1};
     state_vector out(4);
 
     CHECK(lop1(in) == state_vector{0, 3, 0, 3});
@@ -73,7 +73,7 @@ TEST_CASE("Linear operator with constant coefficients",
     SECTION("complex state vector") {
       using state_vector = std::vector<std::complex<double>>;
 
-      const state_vector in_c{1, 1, 1, 1};
+      state_vector const in_c{1, 1, 1, 1};
       state_vector out_c(4);
 
       CHECK(lop(in_c) == state_vector{-6, 12, 0, 6});
@@ -84,7 +84,7 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("complex") {
-    const std::complex<double> I(0,1);
+    std::complex<double> const I(0,1);
 
     auto expr1 = make_complex(3.0*c_dag("dn"));
     auto expr2 = make_complex(3.0*c("up"));
@@ -97,7 +97,7 @@ TEST_CASE("Linear operator with constant coefficients",
 
     using state_vector = std::vector<std::complex<double>>;
 
-    const state_vector in{1, 1, 1, 1};
+    state_vector const in{1, 1, 1, 1};
     state_vector out(4);
 
     CHECK(lop1(in) == state_vector{0, 3, 0, 3});
@@ -117,7 +117,7 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("my_complex") {
-    const my_complex I(0, 1);
+    my_complex const I(0, 1);
 
     auto expr1 = 3*c_dag<my_complex>("dn");
     auto expr2 = 3*c<my_complex>("up");
@@ -130,7 +130,7 @@ TEST_CASE("Linear operator with constant coefficients",
 
     using state_vector = std::vector<my_complex>;
 
-    const state_vector in{1, 1, 1, 1};
+    state_vector const in{1, 1, 1, 1};
     state_vector out(4, 0);
 
     lop1(in, out);
@@ -157,7 +157,7 @@ TEST_CASE("Linear operator with parameter-dependent coefficients",
   using state_vector = std::vector<my_complex>;
 
   SECTION("1 argument") {
-    const state_vector in{1, 1, 1, 1};
+    state_vector const in{1, 1, 1, 1};
     state_vector out(4, 0);
 
     lop1(in, out, 5);
@@ -198,7 +198,7 @@ TEST_CASE("Linear operator with parameter-dependent coefficients",
   }
 
   SECTION("2 arguments") {
-    const state_vector in{1, 1, 1, 1};
+    state_vector const in{1, 1, 1, 1};
     state_vector out(4, 0);
 
     lop1(in, out, 5, 5);

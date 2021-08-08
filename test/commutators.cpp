@@ -37,7 +37,7 @@ template<typename ScalarType> void make_commutators_test_case() {
   };
 
   SECTION("Fermions") {
-    const int N = 4;
+    int const N = 4;
 
     for(int i = 0; i < N; ++i) {
       for(int j = 0; j < N; ++j) {
@@ -54,7 +54,7 @@ template<typename ScalarType> void make_commutators_test_case() {
   }
 
   SECTION("Bosons") {
-    const int N = 4;
+    int const N = 4;
 
     for(int i = 0; i < N; ++i) {
       for(int j = 0; j < N; ++j) {
@@ -71,7 +71,7 @@ template<typename ScalarType> void make_commutators_test_case() {
   }
 
   SECTION("Spin") {
-    const int N = 4;
+    int const N = 4;
 
     for(int i = 0; i < N; ++i) {
       for(int j = 0; j < N; ++j) {

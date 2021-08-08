@@ -35,10 +35,10 @@ int main() {
   using namespace static_indices;
 
   // Orbital degeneracy of the shell (t_{2g} triplet)
-  const int n_orbs = 3;
+  int const n_orbs = 3;
   // Coulomb integrals U and J
-  const double U = 4.0;
-  const double J = 0.2;
+  double const U = 4.0;
+  double const J = 0.2;
 
   // Kanamori Hamiltonian (Eq. (2))
   static_indices::expr_real<
@@ -90,7 +90,7 @@ int main() {
   // Integrals of motion N, S^2 and L^2 (Eq. (4)).
   //
 
-  const std::complex<double> I(0, 1);
+  std::complex<double> const I(0, 1);
 
   // Total number of particles
   decltype(H_K) N;

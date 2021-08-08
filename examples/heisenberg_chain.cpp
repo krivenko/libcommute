@@ -62,9 +62,9 @@ int main() {
   using namespace static_indices;
 
   // Number of spins in the chain
-  const int N = 20;
+  int const N = 20;
   // Heisenberg exchange constant
-  const double g = 2;
+  double const g = 2;
 
   // List of spin operators {S_0, S_1, ..., S_{N-1}}
   std::vector<vector_expr_t> S;

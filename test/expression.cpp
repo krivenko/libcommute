@@ -256,7 +256,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
               S1[0] * S2[1] - S1[1] * S2[0]};
     };
 
-    const int N = 6;
+    int const N = 6;
     std::vector<vec_expr_t> S;
     S.reserve(N);
     for(int i = 0; i < N; ++i)

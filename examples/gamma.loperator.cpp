@@ -109,7 +109,7 @@ public:
   inline bool act(sv_index_type & index,
                   ScalarType & coeff) const {
 
-    const std::complex<double> I(0,1);
+    std::complex<double> const I(0,1);
 
     // Act with all matrices in the product, right to left
     for(int i : index_sequence) {
@@ -156,7 +156,7 @@ int main() {
   // Hilbert space made of one elementary space for gamma matrices.
   hilbert_space<int> hs{elementary_space_gamma()};
 
-  const std::complex<double> I(0,1);
+  std::complex<double> const I(0,1);
 
   // Expression for \gamma^5
   auto gamma5 = I * make_gamma(0)

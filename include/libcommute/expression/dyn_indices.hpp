@@ -110,7 +110,7 @@ public:
   // Stream output
   friend std::ostream & operator<<(std::ostream & os,
                                    dyn_indices_generic const& ind) {
-    const size_t N = ind.indices_.size();
+    size_t const N = ind.indices_.size();
     for(size_t i = 0; i < N; ++i) {
       std::visit([&os](auto const& x) { os << x; }, ind.indices_[i]);
       if(i + 1 < N) os << ",";

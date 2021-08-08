@@ -108,8 +108,8 @@ TEST_CASE("Addition", "[plus]") {
   SECTION("double and complex") {
     auto expr_r = c_dag(1, "up");
     using ref_t = expression<std::complex<double>, int, std::string>;
-    const std::complex<double> Id(1,0);
-    const std::complex<double> I(0,1);
+    std::complex<double> const Id(1,0);
+    std::complex<double> const I(0,1);
 
     // Result type
     CHECK(std::is_same<decltype(expr_r + 2.0*I), ref_t>::value);

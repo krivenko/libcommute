@@ -40,7 +40,7 @@ struct element_type<Eigen::Matrix<ScalarType, Rows, 1, Opts, MRows, 1>> {
 };
 
 template<typename ScalarType, int Rows, int Opts, int MRows>
-struct element_type<const Eigen::Matrix<ScalarType, Rows, 1, Opts, MRows, 1>> {
+struct element_type<Eigen::Matrix<ScalarType, Rows, 1, Opts, MRows, 1> const> {
   using type = ScalarType;
 };
 
@@ -52,7 +52,7 @@ struct element_type<Eigen::VectorBlock<XprType>> {
 };
 
 template<typename XprType>
-struct element_type<const Eigen::VectorBlock<XprType>> {
+struct element_type<Eigen::VectorBlock<XprType> const> {
   using type = typename XprType::Scalar;
 };
 
@@ -64,7 +64,7 @@ struct element_type<Eigen::Block<XprType, BlockRows, 1, InnerPanel>> {
 };
 
 template<typename XprType, int BlockRows, bool InnerPanel>
-struct element_type<const Eigen::Block<XprType, BlockRows, 1, InnerPanel>> {
+struct element_type<Eigen::Block<XprType, BlockRows, 1, InnerPanel> const> {
   using type = typename XprType::Scalar;
 };
 
@@ -79,10 +79,10 @@ struct element_type<Eigen::Block<XprType,
 };
 
 template<typename XprType, int BlockRows, bool InnerPanel>
-struct element_type<const Eigen::Block<XprType,
-                                       BlockRows,
-                                       Eigen::Dynamic,
-                                       InnerPanel>> {
+struct element_type<Eigen::Block<XprType,
+                                 BlockRows,
+                                 Eigen::Dynamic,
+                                 InnerPanel> const> {
   using type = typename XprType::Scalar;
 };
 
@@ -97,7 +97,7 @@ struct element_type<
 
 template<typename ScalarType, int Rows, int Opts, int MRows>
 struct element_type<
-    const Eigen::Map<Eigen::Matrix<ScalarType, Rows, 1, Opts, MRows, 1>>
+    Eigen::Map<Eigen::Matrix<ScalarType, Rows, 1, Opts, MRows, 1>> const
   > {
   using type = ScalarType;
 };

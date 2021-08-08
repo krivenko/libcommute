@@ -33,15 +33,15 @@ using namespace libcommute;
 int main() {
 
   // Planck constant
-  const double hbar = 1.0;
+  double const hbar = 1.0;
   // Angular frequency of the cavity mode
-  const double w_c = 1.0;
+  double const w_c = 1.0;
   // Atomic transition frequency
-  const double w_a = 1.1;
+  double const w_a = 1.1;
   // Atom-field coupling constant
-  const double Omega = 0.2;
+  double const Omega = 0.2;
   // Detuning
-  const double delta = w_a - w_c;
+  double const delta = w_a - w_c;
 
   // For a_dag(), a(), S_p(), S_m() and S_z()
   using namespace static_indices;
@@ -63,7 +63,7 @@ int main() {
   hilbert_space</* Our operators have no indices */> hs(es_spin, es_boson);
 
   // Ground state energy
-  const double E_gs = -hbar * w_a / 2;
+  double const E_gs = -hbar * w_a / 2;
 
   // Excited energy levels E_{\pm}(n)
   auto energy = [=](int pm, int n) {

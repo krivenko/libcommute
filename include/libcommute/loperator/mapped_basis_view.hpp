@@ -86,7 +86,7 @@ void update_add_element(mapped_basis_view<StateVector, Ref> & view,
 // update_add_element() is not defined for constant views
 template<typename StateVector, bool Ref, typename T>
 inline
-void update_add_element(mapped_basis_view<const StateVector, Ref> &,
+void update_add_element(mapped_basis_view<StateVector const, Ref> &,
                         sv_index_type,
                         T&&) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
@@ -108,7 +108,7 @@ inline void set_zeros(mapped_basis_view<StateVector, Ref> & view) {
 
 // set_zeros() is not defined for constant views
 template<typename StateVector, bool Ref>
-inline void set_zeros(mapped_basis_view<const StateVector, Ref> &) {
+inline void set_zeros(mapped_basis_view<StateVector const, Ref> &) {
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "set_zeros() is not supported for constant views");
 }
@@ -254,9 +254,9 @@ public:
 
   // Make a constant basis mapping view
   template<typename StateVector>
-  mapped_basis_view<const StateVector>
+  mapped_basis_view<StateVector const>
   make_const_view(StateVector const& sv) const {
-    return mapped_basis_view<const StateVector>(sv, map_);
+    return mapped_basis_view<StateVector const>(sv, map_);
   }
 
   // Make a non-constant basis mapping view by copying `sv`
@@ -268,9 +268,9 @@ public:
 
   // Make a constant basis mapping view by copying `sv`
   template<typename StateVector>
-  mapped_basis_view<const StateVector, false>
+  mapped_basis_view<StateVector const, false>
   make_const_view_no_ref(StateVector sv) const {
-    return mapped_basis_view<const StateVector, false>(std::move(sv), map_);
+    return mapped_basis_view<StateVector const, false>(std::move(sv), map_);
   }
 };
 

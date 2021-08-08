@@ -931,7 +931,7 @@ private:
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
-        auto z = scalar_traits<ScalarType>::make_const(0);
+        auto const z = scalar_traits<ScalarType>::make_const(0);
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, z - alpha);
       } else {
         sub_assign(it->second, alpha);

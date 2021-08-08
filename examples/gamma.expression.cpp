@@ -45,7 +45,7 @@ int main() {
   }
 
   // \gamma^5
-  const std::complex<double> I(0,1);
+  std::complex<double> const I(0,1);
   auto gamma5 = I * make_gamma(0)
                   * make_gamma(1)
                   * make_gamma(2)

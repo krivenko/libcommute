@@ -28,10 +28,10 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
   using namespace static_indices;
 
   // 3 orbital Hubbard-Kanamori atom
-  const int n_orbs = 3;
-  const double mu = 0.7;
-  const double U = 3.0;
-  const double J = 0.3;
+  int const n_orbs = 3;
+  double const mu = 0.7;
+  double const U = 3.0;
+  double const J = 0.3;
 
   // Hamiltonian
   expression<double, std::string, int> H;

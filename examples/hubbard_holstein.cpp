@@ -37,15 +37,15 @@ int main() {
   //
 
   // Linear sizes of the lattice
-  const int Nx = 10;
-  const int Ny = 10;
+  int const Nx = 10;
+  int const Ny = 10;
 
   // Hopping constant
-  const double t = 0.5;
+  double const t = 0.5;
   // Coulomb repulsion
-  const double U = 2.0;
+  double const U = 2.0;
   // Electron-phonon coupling constant
-  const double g = 0.1;
+  double const g = 0.1;
 
   // Expression with real coefficients 'H' will represent the Hamiltonian.
   // It is initially set to zero by its default-constructor.

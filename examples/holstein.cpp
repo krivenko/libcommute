@@ -30,10 +30,10 @@ int main() {
 
   // Number of lattice sites in each direction
   // (the total number of sites is N*N)
-  const int N = 10;
+  int const N = 10;
 
   // Electron hopping constant - energy parameter of the TB model
-  const double t = 2.0;
+  double const t = 2.0;
 
   // TB Hamiltonian as an expression with real coefficients and
   // statically-typed indices. In this case, the indices are a pair of
@@ -69,7 +69,7 @@ int main() {
   }
 
   // Frequency of the localized phonon
-  const double w0 = 0.5;
+  double const w0 = 0.5;
 
   //
   // Hamiltonian of phonons localized at lattice sites.
@@ -91,7 +91,7 @@ int main() {
   }
 
   // Electron-phonon coupling constant
-  const double g = 0.1;
+  double const g = 0.1;
 
   //
   // Hamiltonian of electron-phonon coupling.

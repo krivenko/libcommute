@@ -32,10 +32,10 @@ int main() {
   // Build Hamiltonian of the 3-orbital Hubbard-Kanamori atom
   //
 
-  const int n_orbs = 3;
-  const double mu = 0.7;  // Chemical
-  const double U = 3.0;   // Coulomb repulsion
-  const double J = 0.3;   // Hund interaction
+  int const n_orbs = 3;
+  double const mu = 0.7;  // Chemical
+  double const U = 3.0;   // Coulomb repulsion
+  double const J = 0.3;   // Hund interaction
 
   // Hamiltonian
   expression<double, std::string, int> H;

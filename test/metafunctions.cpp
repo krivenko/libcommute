@@ -33,7 +33,7 @@ TEST_CASE("make_unique<T>()", "[make_unique]") {
 
 TEST_CASE("remove_cvref<T> metafunction", "[remove_cvref]") {
   CHECK(std::is_same<typename remove_cvref<int>::type, int>::value);
-  CHECK(std::is_same<typename remove_cvref<const int>::type, int>::value);
+  CHECK(std::is_same<typename remove_cvref<int const>::type, int>::value);
   CHECK(std::is_same<typename remove_cvref<int&>::type, int>::value);
   CHECK(std::is_same<typename remove_cvref<int&&>::type, int>::value);
   CHECK(std::is_same<typename remove_cvref<int const&>::type, int>::value);
@@ -41,8 +41,8 @@ TEST_CASE("remove_cvref<T> metafunction", "[remove_cvref]") {
   CHECK(std::is_same<typename remove_cvref<int volatile&>::type, int>::value);
   CHECK(std::is_same<typename remove_cvref<int volatile&&>::type, int>::value);
   CHECK(std::is_same<remove_cvref_t<int>, int>::value);
-  CHECK(std::is_same<remove_cvref_t<const int>, int>::value);
-  CHECK(std::is_same<remove_cvref_t<const int>, int>::value);
+  CHECK(std::is_same<remove_cvref_t<int const>, int>::value);
+  CHECK(std::is_same<remove_cvref_t<int&>, int>::value);
   CHECK(std::is_same<remove_cvref_t<int&&>, int>::value);
   CHECK(std::is_same<remove_cvref_t<int const&>, int>::value);
   CHECK(std::is_same<remove_cvref_t<int volatile>, int>::value);

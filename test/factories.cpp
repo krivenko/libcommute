@@ -174,8 +174,8 @@ TEST_CASE("Factory functions", "[factories]") {
   }
 
   SECTION("complex") {
-    const std::complex<double> c1(1.0);
-    const std::complex<double> I(0, 1.0);
+    std::complex<double> const c1(1.0);
+    std::complex<double> const I(0, 1.0);
 
     SECTION("fermion") {
       auto c_dag_1_up = make_complex(c_dag(1, "up"));
