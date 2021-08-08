@@ -221,8 +221,8 @@ itself. The following command completes installation of library’s files into
 meaning.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 36%" />
-<col style="width: 64%" />
+<col style="width: 39%" />
+<col style="width: 61%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Option name</p></th>
@@ -236,14 +236,14 @@ installed into.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CMAKE_BUILD_TYPE</span></code></p></td>
 <td><p>CMake build type (<code class="docutils literal notranslate"><span class="pre">Release</span></code>, <code class="docutils literal notranslate"><span class="pre">Debug</span></code> or
-<code class="docutils literal notranslate"><span class="pre">RelWithDebInfo</span></code>) used to compile unit tests
-and examples.</p></td>
+<code class="docutils literal notranslate"><span class="pre">RelWithDebInfo</span></code>) used to compile unit
+tests and examples.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TESTS=[ON|OFF]</span></code></p></td>
 <td><p>Enable/disable compilation of unit tests.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXAMPLES=[ON|OFF]</span></code></p></td>
-<td><p>Enable/disable compilation of example programs.</p></td>
+<td><p>Enable/disable compilation of examples.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DOCUMENTATION=[ON|OFF]</span></code></p></td>
 <td><p>Enable/disable generation of <em>libcommute</em>’s
@@ -257,8 +257,18 @@ Sphinx documentation.</p></td>
 containing <code class="docutils literal notranslate"><span class="pre">MathJax.js</span></code>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Eigen3_ROOT</span></code></p></td>
-<td><p>Path to Eigen 3 installation (required to build
-some optional unit tests).</p></td>
+<td><p>Path to Eigen 3 installation (required to
+build some optional unit tests).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">STATIC_ANALYSIS=[ON|OFF]</span></code></p></td>
+<td><p>[DEV] Run static analysis tools on C++
+sources of unit tests and examples.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CLANG_TIDY_EXECUTABLE</span></code></p></td>
+<td><p>[DEV] Path to the <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> executable.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CPPCHECK_EXECUTABLE</span></code></p></td>
+<td><p>[DEV] Path to the <code class="docutils literal notranslate"><span class="pre">cppcheck</span></code> executable.</p></td>
 </tr>
 </tbody>
 </table>

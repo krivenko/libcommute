@@ -64,29 +64,35 @@ Documentation of *libcommute* can optionally be built and installed using the
 The table below gives a complete lists of supported CMake options with their
 meaning.
 
-+----------------------------+-------------------------------------------------+
-| Option name                | Description                                     |
-+============================+=================================================+
-| ``CMAKE_INSTALL_PREFIX``   | Path to the directory *libcommute* will be      |
-|                            | installed into.                                 |
-+----------------------------+-------------------------------------------------+
-| ``CMAKE_BUILD_TYPE``       | CMake build type (``Release``, ``Debug`` or     |
-|                            | ``RelWithDebInfo``) used to compile unit tests  |
-|                            | and examples.                                   |
-+----------------------------+-------------------------------------------------+
-| ``TESTS=[ON|OFF]``         | Enable/disable compilation of unit tests.       |
-+----------------------------+-------------------------------------------------+
-| ``EXAMPLES=[ON|OFF]``      | Enable/disable compilation of example programs. |
-+----------------------------+-------------------------------------------------+
-| ``DOCUMENTATION=[ON|OFF]`` | Enable/disable generation of *libcommute*'s     |
-|                            | Sphinx documentation.                           |
-+----------------------------+-------------------------------------------------+
-| ``Sphinx_ROOT``            | Path to Sphinx installation.                    |
-+----------------------------+-------------------------------------------------+
-| ``MathJax_ROOT``           | Path to MathJax installation (directory         |
-|                            | containing ``MathJax.js``).                     |
-+----------------------------+-------------------------------------------------+
-| ``Eigen3_ROOT``            | Path to Eigen 3 installation (required to build |
-|                            | some optional unit tests).                      |
-+----------------------------+-------------------------------------------------+
-
++------------------------------+-----------------------------------------------+
+| Option name                  | Description                                   |
++==============================+===============================================+
+| ``CMAKE_INSTALL_PREFIX``     | Path to the directory *libcommute* will be    |
+|                              | installed into.                               |
++------------------------------+-----------------------------------------------+
+| ``CMAKE_BUILD_TYPE``         | CMake build type (``Release``, ``Debug`` or   |
+|                              | ``RelWithDebInfo``) used to compile unit      |
+|                              | tests and examples.                           |
++------------------------------+-----------------------------------------------+
+| ``TESTS=[ON|OFF]``           | Enable/disable compilation of unit tests.     |
++------------------------------+-----------------------------------------------+
+| ``EXAMPLES=[ON|OFF]``        | Enable/disable compilation of examples.       |
++------------------------------+-----------------------------------------------+
+| ``DOCUMENTATION=[ON|OFF]``   | Enable/disable generation of *libcommute*'s   |
+|                              | Sphinx documentation.                         |
++------------------------------+-----------------------------------------------+
+| ``Sphinx_ROOT``              | Path to Sphinx installation.                  |
++------------------------------+-----------------------------------------------+
+| ``MathJax_ROOT``             | Path to MathJax installation (directory       |
+|                              | containing ``MathJax.js``).                   |
++------------------------------+-----------------------------------------------+
+| ``Eigen3_ROOT``              | Path to Eigen 3 installation (required to     |
+|                              | build some optional unit tests).              |
++------------------------------+-----------------------------------------------+
+| ``STATIC_ANALYSIS=[ON|OFF]`` | [DEV] Run static analysis tools on C++        |
+|                              | sources of unit tests and examples.           |
++------------------------------+-----------------------------------------------+
+| ``CLANG_TIDY_EXECUTABLE``    | [DEV] Path to the ``clang-tidy`` executable.  |
++------------------------------+-----------------------------------------------+
+| ``CPPCHECK_EXECUTABLE``      | [DEV] Path to the ``cppcheck`` executable.    |
++------------------------------+-----------------------------------------------+

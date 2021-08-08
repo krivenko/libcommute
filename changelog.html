@@ -179,11 +179,15 @@
 <div class="section" id="unreleased">
 <h2>[Unreleased]<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>New method <code class="docutils literal notranslate"><span class="pre">space_partition.find_connections()</span></code>.</p></li>
 <li><p>Added an implementation of the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept for some
 <a class="reference external" href="https://eigen.tuxfamily.org/">Eigen 3</a> types (vectors, vector segments,
 column-like matrix blocks and one-dimensional <code class="docutils literal notranslate"><span class="pre">Eigen::Map</span></code> views).
 The corresponding header file is <code class="docutils literal notranslate"><span class="pre">loperator/state_vector_eigen3.hpp</span></code>.</p></li>
+<li><p>New method <code class="docutils literal notranslate"><span class="pre">space_partition.find_connections()</span></code>.</p></li>
+<li><p>New CMake option <code class="docutils literal notranslate"><span class="pre">STATIC_ANALYSIS</span></code>. When enabled, the <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cppcheck</span></code> static analysis tools will be run on the C++ sources of unit
+tests and examples as part of build process.</p></li>
+<li><p>Minor bugfixes and improvements in coding style.</p></li>
 </ul>
 </div>
 <div class="section" id="id1">

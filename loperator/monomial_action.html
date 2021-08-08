@@ -219,23 +219,24 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
   <span class="c1">// Since all 4 gamma matrices act in the same elementary space,</span>
   <span class="c1">// we can initialize the base class with any number</span>
   <span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="o">:</span> <span class="n">base</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
-
-  <span class="o">~</span><span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="n">elementary_space_gamma</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="n">elementary_space_gamma</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="o">&amp;&amp;</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="n">elementary_space_gamma</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="n">elementary_space_gamma</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="o">&amp;&amp;</span><span class="p">)</span> <span class="k">noexcept</span>
+    <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="o">~</span><span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="k">override</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 
   <span class="c1">// Virtual copy-constructor.</span>
   <span class="c1">// Make a smart pointer that manages a copy of this elementary space</span>
-  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">make_unique</span><span class="o">&lt;</span><span class="n">elementary_space_gamma</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="c1">// Algebra ID, must be the same with generator_gamma::algebra_id()</span>
-  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">algebra_id</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">int</span> <span class="n">algebra_id</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="p">;</span> <span class="p">}</span>
 
   <span class="c1">// We need 2 bits to enumerate all 4 = 2^2 basis vectors</span>
-  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">n_bits</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="p">}</span> <span class="c1">// namespace libcommute</span>
+  <span class="kt">int</span> <span class="n">n_bits</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
 </pre></div>
 </div>
 </li>
@@ -243,7 +244,11 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
 specialization will describe how a product
 <span class="math notranslate nohighlight">\(\gamma^\mu \gamma^\nu \gamma^\kappa \ldots\)</span> acts on a single basis
 state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)</span>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="nn">libcommute</span> <span class="p">{</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Action of a product of gamma matrices (a gamma-matrix monomial)</span>
+<span class="c1">// on a basis vector.</span>
+<span class="c1">//</span>
+
+<span class="k">namespace</span> <span class="nn">libcommute</span> <span class="p">{</span>
 
 <span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">class</span> <span class="nc">monomial_action</span><span class="o">&lt;</span><span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span> <span class="p">{</span>
 
@@ -316,10 +321,6 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
     <span class="c1">// Returning &#39;false&#39; in cases when it is zero would help improve</span>
     <span class="c1">// performance.</span>
     <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="p">}</span> <span class="c1">// namespace libcommute</span>
 </pre></div>
 </div>
 <p>In general, <a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial_action</span></code></a> is defined as follows.</p>
@@ -355,7 +356,11 @@ zero and <code class="docutils literal notranslate"><span class="pre">true</span
 </li>
 <li><p>Make a <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator object</span></a> with the new algebra ID and
 apply it to 4-dimensional state vectors as usual.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="k">using</span> <span class="k">namespace</span> <span class="nn">libcommute</span><span class="p">;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="k">using</span> <span class="k">namespace</span> <span class="nn">libcommute</span><span class="p">;</span>
 
   <span class="c1">// Hilbert space made of one elementary space for gamma matrices.</span>
   <span class="n">hilbert_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">hs</span><span class="p">{</span><span class="n">elementary_space_gamma</span><span class="p">()};</span>
@@ -392,10 +397,6 @@ apply it to 4-dimensional state vectors as usual.</p>
     <span class="c1">// Print the result</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;gamma5|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt; = &quot;</span><span class="p">;</span>
     <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;+&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">phi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
 </pre></div>
 </div>
 </li>
