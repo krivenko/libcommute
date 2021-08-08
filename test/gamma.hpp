@@ -28,7 +28,7 @@ namespace libcommute {
 // Use the lowest algebra ID available to user-defined algebras
 static constexpr int gamma = LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
 
-class generator_gamma : public generator<int> {
+class generator_gamma final : public generator<int> {
 
   using base = generator<int>;
   using linear_function_t = typename base::linear_function_t;

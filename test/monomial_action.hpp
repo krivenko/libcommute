@@ -29,7 +29,7 @@ namespace libcommute {
 //   n_bits() = 2
 //
 template<typename... IndexTypes>
-class elementary_space_padding : public elementary_space<IndexTypes...> {
+class elementary_space_padding final : public elementary_space<IndexTypes...> {
 public:
   elementary_space_padding() = delete;
   template<typename... Args>
