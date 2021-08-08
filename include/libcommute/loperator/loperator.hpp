@@ -90,6 +90,8 @@ class loperator : public loperator_base<ScalarType, AlgebraIDs...> {
 
 public:
 
+  loperator() = default;
+
   using base::base;
 
   // Value semantics
