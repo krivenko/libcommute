@@ -45,19 +45,19 @@ public:
   elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
   elementary_space_gamma& operator=(elementary_space_gamma &&) noexcept
     = default;
-  ~elementary_space_gamma() final = default;
+  ~elementary_space_gamma() override = default;
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this elementary space
-  std::unique_ptr<base> clone() const final {
+  std::unique_ptr<base> clone() const override {
     return make_unique<elementary_space_gamma>(*this);
   }
 
   // Algebra ID, must be the same with generator_gamma::algebra_id()
-  int algebra_id() const final { return libcommute::gamma; }
+  int algebra_id() const override { return libcommute::gamma; }
 
   // We need 2 bits to enumerate all 4 = 2^2 basis vectors
-  int n_bits() const final { return 2; }
+  int n_bits() const override { return 2; }
 };
 
 } // namespace libcommute

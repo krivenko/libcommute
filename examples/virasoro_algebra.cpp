@@ -47,7 +47,7 @@ public:
 
   // This function must return a unique algebra ID shared by all generators
   // of a particular algebra.
-  int algebra_id() const final {
+  int algebra_id() const override {
     // Use the lowest algebra ID available to user-defined algebras
     return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
   }
@@ -59,11 +59,11 @@ public:
   generator_virasoro(generator_virasoro&&) noexcept = default;
   generator_virasoro& operator=(generator_virasoro const&) = default;
   generator_virasoro& operator=(generator_virasoro&&) noexcept = default;
-  ~generator_virasoro() final = default;
+  ~generator_virasoro() override = default;
 
   // Virtual copy-constructor: Make a smart pointer managing
   // a copy of this generator
-  std::unique_ptr<base> clone() const final {
+  std::unique_ptr<base> clone() const override {
     return make_unique<generator_virasoro>(*this);
   }
 
@@ -75,7 +75,7 @@ public:
   //
   // L_m will be passed to swap_with() as *this, i.e. L_m.swap_with(L_n, f).
   double
-  swap_with(base const& L_n, linear_function_t & f) const final {
+  swap_with(base const& L_n, linear_function_t & f) const override {
     // Ensure that L_m > L_n, or equivalently m > n.
     assert(*this > L_n);
 
@@ -104,7 +104,7 @@ public:
   // L_m will be passed to simplify_prod() as *this,
   // i.e. L_m.simplify_prod(L_n, f).
   bool
-  simplify_prod(base const& L_n, linear_function_t & f) const final {
+  simplify_prod(base const& L_n, linear_function_t & f) const override {
     // Ensure that L_m <= L_n, or equivalently m <= n.
     assert(!(*this > L_n));
 
@@ -117,13 +117,13 @@ public:
   }
 
   // Hermitian conjugate: (L_n)^\dagger = L_{-n}
-  void conj(linear_function_t & f) const final {
+  void conj(linear_function_t & f) const override {
     int conj_n = - std::get<0>(base::indices());
     f.set(0, make_unique<generator_virasoro>(conj_n), 1);
   }
 
   // Print L_n to stream
-  std::ostream & print(std::ostream & os) const final {
+  std::ostream & print(std::ostream & os) const override {
     int n = std::get<0>(base::indices());
     return os << "L(" << n << ")";
   }

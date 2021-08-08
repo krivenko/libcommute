@@ -43,14 +43,14 @@ class generator_gamma : public generator<int> {
 public:
 
   // Algebra ID of this generator
-  int algebra_id() const final { return libcommute::gamma; }
+  int algebra_id() const override { return libcommute::gamma; }
 
   // Constructor: Just pass the index to the base class
   explicit generator_gamma(int index) : base(index) {}
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this generator
-  std::unique_ptr<base> clone() const final {
+  std::unique_ptr<base> clone() const override {
     // With C++14 or newer, libcommute::make_unique() will be resolved to
     // std::make_unique(). Otherwise, a custom implementation will be used.
     return make_unique<generator_gamma>(*this);
@@ -62,7 +62,7 @@ public:
   //
   // g1 * g2 -> -g2 * g1 + 2\eta(g1, g2)
   double
-  swap_with(base const& g2, linear_function_t & f) const final {
+  swap_with(base const& g2, linear_function_t & f) const override {
 
     // Do g1 and g2 have the same indices?
     bool diag = base::equal(g2);
@@ -85,7 +85,7 @@ public:
   // (\gamma^0)^2 = I_4
   // (\gamma^k)^2 = -I_4 for k = 1,2,3
   bool
-  simplify_prod(base const& g2, linear_function_t & f) const final {
+  simplify_prod(base const& g2, linear_function_t & f) const override {
     if(*this == g2) {
       // Replace the square with a constant
       int index = std::get<0>(base::indices());
@@ -98,7 +98,7 @@ public:
 
   // Hermitian conjugate of this generator as a linear function of generators.
   // \gamma^0 is Hermitian and \gamma^k are anti-Hermitian
-  void conj(linear_function_t & f) const final {
+  void conj(linear_function_t & f) const override {
     int index = std::get<0>(base::indices());
     if(index == 0) {
       // f(g) = 0 + 1*(*this)
@@ -110,7 +110,7 @@ public:
   }
 
   // Stream output function
-  std::ostream & print(std::ostream & os) const final {
+  std::ostream & print(std::ostream & os) const override {
     int index = std::get<0>(base::indices());
     return os << "\\gamma^" << index;
   }
