@@ -253,7 +253,7 @@ factory class :class:`basis_mapper` and its methods
                 mapped_basis_view<StateVector> \
                 make_view(StateVector & sv) const
                 template<typename StateVector> \
-                mapped_basis_view<const StateVector> \
+                mapped_basis_view<StateVector const> \
                 make_const_view(StateVector const& sv) const
 
     Make a read/write or constant view of :expr:`sv`.
@@ -263,7 +263,7 @@ factory class :class:`basis_mapper` and its methods
                 mapped_basis_view<StateVector, false> \
                 make_view_no_ref(StateVector sv) const
                 template<typename StateVector> \
-                mapped_basis_view<const StateVector, false> \
+                mapped_basis_view<StateVector const, false> \
                 make_const_view_no_ref(StateVector sv) const
 
     Make a read/write or constant view

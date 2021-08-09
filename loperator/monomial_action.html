@@ -215,15 +215,14 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
   <span class="k">using</span> <span class="n">base</span> <span class="o">=</span> <span class="n">elementary_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
 
 <span class="k">public</span><span class="o">:</span>
-
   <span class="c1">// Since all 4 gamma matrices act in the same elementary space,</span>
   <span class="c1">// we can initialize the base class with any number</span>
   <span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="o">:</span> <span class="n">base</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
   <span class="n">elementary_space_gamma</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-  <span class="n">elementary_space_gamma</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="o">&amp;&amp;</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="n">elementary_space_gamma</span><span class="p">(</span><span class="n">elementary_space_gamma</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
   <span class="n">elementary_space_gamma</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-  <span class="n">elementary_space_gamma</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">elementary_space_gamma</span> <span class="o">&amp;&amp;</span><span class="p">)</span> <span class="k">noexcept</span>
-    <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="n">elementary_space_gamma</span><span class="o">&amp;</span>
+  <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">elementary_space_gamma</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
   <span class="o">~</span><span class="n">elementary_space_gamma</span><span class="p">()</span> <span class="k">override</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 
   <span class="c1">// Virtual copy-constructor.</span>
@@ -237,6 +236,9 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
 
   <span class="c1">// We need 2 bits to enumerate all 4 = 2^2 basis vectors</span>
   <span class="kt">int</span> <span class="n">n_bits</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace libcommute</span>
 </pre></div>
 </div>
 </li>
@@ -244,20 +246,20 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
 specialization will describe how a product
 <span class="math notranslate nohighlight">\(\gamma^\mu \gamma^\nu \gamma^\kappa \ldots\)</span> acts on a single basis
 state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)</span>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Action of a product of gamma matrices (a gamma-matrix monomial)</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//</span>
+<span class="c1">// Action of a product of gamma matrices (a gamma-matrix monomial)</span>
 <span class="c1">// on a basis vector.</span>
 <span class="c1">//</span>
 
 <span class="k">namespace</span> <span class="nn">libcommute</span> <span class="p">{</span>
 
-<span class="k">template</span><span class="o">&lt;&gt;</span> <span class="k">class</span> <span class="nc">monomial_action</span><span class="o">&lt;</span><span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="k">template</span> <span class="o">&lt;&gt;</span> <span class="k">class</span> <span class="nc">monomial_action</span><span class="o">&lt;</span><span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span> <span class="p">{</span>
 
   <span class="c1">// Indices of matrices in the product, right to left.</span>
   <span class="c1">// This order is chosen because the matrix on the right acts on a state first</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">index_sequence</span><span class="p">;</span>
 
 <span class="k">public</span><span class="o">:</span>
-
   <span class="c1">// m_range is a pair of iterators over a list of generator_gamma objects.</span>
   <span class="c1">// This range represents the product of gamma matrices we want to act with.</span>
   <span class="n">monomial_action</span><span class="p">(</span><span class="n">monomial</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">range_type</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">m_range</span><span class="p">,</span>
@@ -286,41 +288,44 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
   <span class="c1">// &#39;coeff&#39; must be multiplied by the overall constant factor acquired as</span>
   <span class="c1">// a result of monomial action.</span>
   <span class="c1">//</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">ScalarType</span><span class="o">&gt;</span>
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">act</span><span class="p">(</span><span class="n">sv_index_type</span> <span class="o">&amp;</span> <span class="n">index</span><span class="p">,</span>
-                  <span class="n">ScalarType</span> <span class="o">&amp;</span> <span class="n">coeff</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">ScalarType</span><span class="o">&gt;</span>
+  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">act</span><span class="p">(</span><span class="n">sv_index_type</span><span class="o">&amp;</span> <span class="n">index</span><span class="p">,</span> <span class="n">ScalarType</span><span class="o">&amp;</span> <span class="n">coeff</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
 
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 
     <span class="c1">// Act with all matrices in the product, right to left</span>
     <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">index_sequence</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">switch</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
-          <span class="c1">// Action of \gamma^0</span>
-          <span class="c1">// It is diagonal =&gt; &#39;index&#39; does not change</span>
-          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">,</span><span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
-          <span class="c1">// Action of \gamma^1</span>
-          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">-1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
-          <span class="c1">// Action of \gamma^2</span>
-          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="o">-</span><span class="n">I</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="o">-</span><span class="n">I</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
-          <span class="c1">// Action of \gamma^3</span>
-          <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
-          <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+        <span class="c1">// Action of \gamma^0</span>
+        <span class="c1">// It is diagonal =&gt; &#39;index&#39; does not change</span>
+        <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">-1</span><span class="p">,</span> <span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+        <span class="c1">// Action of \gamma^1</span>
+        <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">-1</span><span class="p">,</span> <span class="mi">-1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+        <span class="c1">// Action of \gamma^2</span>
+        <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="o">-</span><span class="n">I</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="o">-</span><span class="n">I</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+        <span class="c1">// Action of \gamma^3</span>
+        <span class="n">coeff</span> <span class="o">*=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">-1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">sv_index_type</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>
     <span class="c1">// This &#39;true&#39; signals that the action result is not identically zero.</span>
     <span class="c1">// Returning &#39;false&#39; in cases when it is zero would help improve</span>
     <span class="c1">// performance.</span>
     <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace libcommute</span>
 </pre></div>
 </div>
 <p>In general, <a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial_action</span></code></a> is defined as follows.</p>
@@ -356,26 +361,22 @@ zero and <code class="docutils literal notranslate"><span class="pre">true</span
 </li>
 <li><p>Make a <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator object</span></a> with the new algebra ID and
 apply it to 4-dimensional state vectors as usual.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
 
   <span class="k">using</span> <span class="k">namespace</span> <span class="nn">libcommute</span><span class="p">;</span>
 
   <span class="c1">// Hilbert space made of one elementary space for gamma matrices.</span>
   <span class="n">hilbert_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">hs</span><span class="p">{</span><span class="n">elementary_space_gamma</span><span class="p">()};</span>
 
-  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="k">const</span> <span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 
   <span class="c1">// Expression for \gamma^5</span>
-  <span class="k">auto</span> <span class="n">gamma5</span> <span class="o">=</span> <span class="n">I</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-                  <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">gamma5</span> <span class="o">=</span>
+      <span class="n">I</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">make_gamma</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 
   <span class="c1">// Linear operator representation of \gamma^5</span>
-  <span class="k">auto</span> <span class="n">gamma5op</span> <span class="o">=</span> <span class="n">loperator</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span>
-                            <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span><span class="p">(</span><span class="n">gamma5</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">gamma5op</span> <span class="o">=</span>
+      <span class="n">loperator</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span><span class="p">(</span><span class="n">gamma5</span><span class="p">,</span> <span class="n">hs</span><span class="p">);</span>
 
   <span class="c1">//</span>
   <span class="c1">// Build the explicit matrix representation of \gamma^5</span>
@@ -397,6 +398,13 @@ apply it to 4-dimensional state vectors as usual.</p>
     <span class="c1">// Print the result</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;gamma5|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt; = &quot;</span><span class="p">;</span>
     <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;+&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">phi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;|&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </li>

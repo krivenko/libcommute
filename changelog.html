@@ -184,10 +184,13 @@
 column-like matrix blocks and one-dimensional <code class="docutils literal notranslate"><span class="pre">Eigen::Map</span></code> views).
 The corresponding header file is <code class="docutils literal notranslate"><span class="pre">loperator/state_vector_eigen3.hpp</span></code>.</p></li>
 <li><p>New method <code class="docutils literal notranslate"><span class="pre">space_partition.find_connections()</span></code>.</p></li>
+<li><p>Rename the <code class="docutils literal notranslate"><span class="pre">constexpr</span></code> integer <code class="docutils literal notranslate"><span class="pre">LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID</span></code> to
+<code class="docutils literal notranslate"><span class="pre">min_user_defined_algebra_id</span></code> so that it does not appear to be a macro.</p></li>
 <li><p>New CMake option <code class="docutils literal notranslate"><span class="pre">STATIC_ANALYSIS</span></code>. When enabled, the <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> and
 <code class="docutils literal notranslate"><span class="pre">cppcheck</span></code> static analysis tools will be run on the C++ sources of unit
 tests and examples as part of build process.</p></li>
-<li><p>Minor bugfixes and improvements in coding style.</p></li>
+<li><p>Minor bugfixes in unit tests and improvements in coding style.</p></li>
+<li><p>Reformatted C++ sources using <code class="docutils literal notranslate"><span class="pre">clang-format</span></code> and a style based on <code class="docutils literal notranslate"><span class="pre">LLVM</span></code>.</p></li>
 </ul>
 </div>
 <div class="section" id="id1">

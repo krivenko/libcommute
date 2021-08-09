@@ -9,10 +9,13 @@ All notable changes to this project will be documented in this file.
   column-like matrix blocks and one-dimensional ``Eigen::Map`` views).
   The corresponding header file is ``loperator/state_vector_eigen3.hpp``.
 - New method ``space_partition.find_connections()``.
+- Rename the `constexpr` integer `LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID` to
+  `min_user_defined_algebra_id` so that it does not appear to be a macro.
 - New CMake option ``STATIC_ANALYSIS``. When enabled, the ``clang-tidy`` and
   ``cppcheck`` static analysis tools will be run on the C++ sources of unit
   tests and examples as part of build process.
-- Minor bugfixes and improvements in coding style.
+- Minor bugfixes in unit tests and improvements in coding style.
+- Reformatted C++ sources using ``clang-format`` and a style based on ``LLVM``.
 
 ## [0.6.1] - 2021-03-30
 

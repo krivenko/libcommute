@@ -95,13 +95,13 @@ are always canonically ordered, that need not be true in general.
 
     Reverse constant past-the-end iterator.
 
-  .. function:: generator_type const& operator[](size_t n) const
+  .. function:: generator_type const& operator[](std::size_t n) const
 
     Access an algebra generator by its position :expr:`n` in the monomial.
 
   .. rubric:: Other methods and friend functions
 
-  .. function:: size_t size() const
+  .. function:: std::size_t size() const
 
     Number of algebra generators in the monomial.
 
@@ -125,7 +125,7 @@ are always canonically ordered, that need not be true in general.
     Is this monomial canonically ordered? In other words, does its algebra
     generator list satisfy :math:`g_{i_1} < g_{i_2} < \ldots < g_{i_n}`?
 
-  .. function:: void swap_generators(size_t n1, size_t n2)
+  .. function:: void swap_generators(std::size_t n1, std::size_t n2)
 
     Swap algebra generators at positions :expr:`n1` and :expr:`n2` within the
     list.

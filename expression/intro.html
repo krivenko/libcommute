@@ -218,10 +218,10 @@ lattice with only nearest-neighbour hopping allowed,</p>
 
   <span class="c1">// Number of lattice sites in each direction</span>
   <span class="c1">// (the total number of sites is N*N)</span>
-  <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="k">const</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
 
   <span class="c1">// Electron hopping constant - energy parameter of the TB model</span>
-  <span class="k">const</span> <span class="kt">double</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="k">const</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
 
   <span class="c1">// TB Hamiltonian as an expression with real coefficients and</span>
   <span class="c1">// statically-typed indices. In this case, the indices are a pair of</span>
@@ -245,8 +245,7 @@ lattice with only nearest-neighbour hopping allowed,</p>
             <span class="c1">// nearest-neighbors. The modulus operation accounts for</span>
             <span class="c1">// periodic boundary conditions on the lattice.</span>
             <span class="k">if</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">ix</span> <span class="o">-</span> <span class="n">jx</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">iy</span> <span class="o">==</span> <span class="n">jy</span><span class="p">)</span> <span class="o">||</span>
-               <span class="p">(</span><span class="n">ix</span> <span class="o">==</span> <span class="n">jx</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">iy</span> <span class="o">-</span> <span class="n">jy</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="p">)</span> <span class="p">{</span>
+               <span class="p">(</span><span class="n">ix</span> <span class="o">==</span> <span class="n">jx</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">iy</span> <span class="o">-</span> <span class="n">jy</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
               <span class="c1">// Add a hopping term</span>
               <span class="n">H_e</span> <span class="o">+=</span> <span class="o">-</span><span class="n">t</span> <span class="o">*</span> <span class="n">c_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">spin</span><span class="p">);</span>
             <span class="p">}</span>
@@ -254,13 +253,14 @@ lattice with only nearest-neighbour hopping allowed,</p>
         <span class="p">}</span>
       <span class="p">}</span>
     <span class="p">}</span>
+  <span class="p">}</span>
 </pre></div>
 </div>
 <p>Now, let us add a harmonic oscillator at each lattice site (a localized phonon),</p>
 <div class="math notranslate nohighlight">
 \[\hat H_\text{ph} = \omega_0 \sum_i a^\dagger_i a_i.\]</div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// Frequency of the localized phonon</span>
-  <span class="k">const</span> <span class="kt">double</span> <span class="n">w0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="k">const</span> <span class="n">w0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
 
   <span class="c1">//</span>
   <span class="c1">// Hamiltonian of phonons localized at lattice sites.</span>
@@ -299,7 +299,7 @@ Hamiltonian of the Holstein model <span class="math notranslate nohighlight">\(\
 <div class="math notranslate nohighlight">
 \[\hat H_H = \hat H_\text{e} + \hat H_\text{ph} + \hat H_\text{e-ph}.\]</div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// Electron-phonon coupling constant</span>
-  <span class="k">const</span> <span class="kt">double</span> <span class="n">g</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="k">const</span> <span class="n">g</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
 
   <span class="c1">//</span>
   <span class="c1">// Hamiltonian of electron-phonon coupling.</span>

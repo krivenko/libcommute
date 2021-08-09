@@ -200,7 +200,7 @@ Class definitions
 
     Direct read-only access to the list of monomials.
 
-  .. function:: size_t size() const
+  .. function:: std::size_t size() const
 
     Number of monomials in this polynomial expression.
 
@@ -361,7 +361,7 @@ typed index sequences step in. They are instantiations of the
 
     Copy/move-constructors and assignments
 
-  .. function:: size_t size() const
+  .. function:: std::size_t size() const
 
     Number of indices in the sequence.
 
@@ -522,9 +522,9 @@ taken to be different on odd and even chain links.
     using static_indices::c;
 
     // Length of the chain
-    const int N = 10;
+    int const N = 10;
     // Hopping matrix element
-    const double v = 1.0;
+    double const v = 1.0;
 
     // Add hopping terms
     for(int a = 0; a < N - 1; ++a) {
@@ -537,7 +537,7 @@ taken to be different on odd and even chain links.
     // constants on all even links of the chain.
 
     // Hopping matrix element on the even links
-    const double w = 0.5;
+    double const w = 0.5;
 
     // Transformation operation
     auto update_hopping_element = [v, w](decltype(H)::monomial_t const& m,

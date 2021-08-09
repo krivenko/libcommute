@@ -40,7 +40,7 @@ Now, let us add a harmonic oscillator at each lattice site (a localized phonon),
 
 .. literalinclude:: ../../examples/holstein.cpp
   :language: cpp
-  :lines: 71-91
+  :lines: 70-90
 
 .. note::
 
@@ -65,7 +65,7 @@ Hamiltonian of the Holstein model :math:`\hat H_H`,
 
 .. literalinclude:: ../../examples/holstein.cpp
   :language: cpp
-  :lines: 93-
+  :lines: 92-
 
 Now that we have the complete Hamiltonian object, we could proceed along one
 of the following routes.
