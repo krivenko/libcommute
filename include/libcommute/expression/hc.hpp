@@ -23,19 +23,20 @@ namespace libcommute {
 //
 // Inspired by https://github.com/dafer45/TBTK
 //
-static constexpr struct {} hc;
+static constexpr struct {
+} hc;
 
-template<typename ScalarType, typename... IndexTypes>
+template <typename ScalarType, typename... IndexTypes>
 inline expression<ScalarType, IndexTypes...>
 operator+(expression<ScalarType, IndexTypes...> const& expr,
           decltype(hc) const&) {
   return expr + conj(expr);
 }
 
-template<typename ScalarType, typename... IndexTypes>
+template <typename ScalarType, typename... IndexTypes>
 inline expression<ScalarType, IndexTypes...>
 operator-(expression<ScalarType, IndexTypes...> const& expr,
-decltype(hc) const&) {
+          decltype(hc) const&) {
   return expr - conj(expr);
 }
 

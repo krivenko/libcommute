@@ -76,7 +76,7 @@ int main() {
   expr_t H;
   for(int i = 0; i < N; ++i) {
     // Index shift modulo N ensures periodic boundary conditions.
-    H += g * dot(S[i], S[(i+1)%N]);
+    H += g * dot(S[i], S[(i + 1) % N]);
   }
 
   // Total spin of the chain
@@ -92,25 +92,27 @@ int main() {
   // Higher charge Q_3 (1st line of Eq. (10)).
   expr_t Q3;
   for(int i = 0; i < N; ++i) {
-    Q3 += dot(cross(S[i], S[(i+1)%N]), S[(i+2)%N]);
+    Q3 += dot(cross(S[i], S[(i + 1) % N]), S[(i + 2) % N]);
   }
   std::cout << "[H, Q3] = " << (H * Q3 - Q3 * H) << std::endl;
 
   // Higher charge Q_4 (2nd line of Eq. (10)).
   expr_t Q4;
   for(int i = 0; i < N; ++i) {
-    Q4 += 4.0*dot(cross(cross(S[i], S[(i+1)%N]), S[(i+2)%N]), S[(i+3)%N]);
-    Q4 += dot(S[i], S[(i+2)%N]);
+    Q4 += 4.0 * dot(cross(cross(S[i], S[(i + 1) % N]), S[(i + 2) % N]),
+                    S[(i + 3) % N]);
+    Q4 += dot(S[i], S[(i + 2) % N]);
   }
   std::cout << "[H, Q4] = " << (H * Q4 - Q4 * H) << std::endl;
 
   // Higher charge Q_5 (3rd line of Eq. (10)).
   expr_t Q5;
   for(int i = 0; i < N; ++i) {
-    Q5 += 4.0*dot(cross(cross(cross(S[i], S[(i+1)%N]), S[(i+2)%N]), S[(i+3)%N]),
-              S[(i+4)%N]);
-    Q5 += dot(cross(S[i], S[(i+2)%N]), S[(i+3)%N]);
-    Q5 += dot(cross(S[i], S[(i+1)%N]), S[(i+3)%N]);
+    Q5 += 4.0 * dot(cross(cross(cross(S[i], S[(i + 1) % N]), S[(i + 2) % N]),
+                          S[(i + 3) % N]),
+                    S[(i + 4) % N]);
+    Q5 += dot(cross(S[i], S[(i + 2) % N]), S[(i + 3) % N]);
+    Q5 += dot(cross(S[i], S[(i + 1) % N]), S[(i + 3) % N]);
   }
   std::cout << "[H, Q5] = " << (H * Q5 - Q5 * H) << std::endl;
 

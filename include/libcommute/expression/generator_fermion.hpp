@@ -13,10 +13,10 @@
 #ifndef LIBCOMMUTE_EXPRESSION_GENERATOR_FERMION_HPP_
 #define LIBCOMMUTE_EXPRESSION_GENERATOR_FERMION_HPP_
 
-#include "generator.hpp"
 #include "../algebra_ids.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
+#include "generator.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -30,21 +30,20 @@ namespace libcommute {
 // Generator of the fermionic algebra
 //
 
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 class generator_fermion : public generator<IndexTypes...> {
 
   using base = generator<IndexTypes...>;
   using linear_function_t = typename base::linear_function_t;
 
 public:
-
   // Get ID of the algebra this generator belongs to
   int algebra_id() const override { return fermion; }
 
   // Value semantics
-  template<typename... Args>
-  generator_fermion(bool dagger, Args&&... indices) :
-    base(std::forward<Args>(indices)...), dagger_(dagger) {}
+  template <typename... Args>
+  generator_fermion(bool dagger, Args&&... indices)
+    : base(std::forward<Args>(indices)...), dagger_(dagger) {}
   generator_fermion(generator_fermion const&) = default;
   generator_fermion(generator_fermion&&) noexcept = default;
   generator_fermion& operator=(generator_fermion const&) = default;
@@ -57,8 +56,7 @@ public:
   }
 
   // c = -1, f(g) = \delta(g1, g2^+)
-  double
-  swap_with(base const& g2, linear_function_t & f) const override {
+  double swap_with(base const& g2, linear_function_t& f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
     auto delta = static_cast<double>(base::equal(g2) && dagger_ != g2_.dagger_);
@@ -66,8 +64,7 @@ public:
     return -1;
   }
 
-  bool
-  simplify_prod(base const& g2, linear_function_t & f) const override {
+  bool simplify_prod(base const& g2, linear_function_t& f) const override {
     assert(!(*this > g2));
     if(*this == g2) {
       f.set(0);
@@ -80,26 +77,24 @@ public:
   inline bool dagger() const { return dagger_; }
 
   // Return the Hermitian conjugate of this generator via f
-  void conj(linear_function_t & f) const override {
+  void conj(linear_function_t& f) const override {
     f.set(0, make_unique<generator_fermion>(!dagger_, base::indices()), 1);
   }
 
 private:
-
   // Creation or annihilation operator?
   bool dagger_;
 
 protected:
-
   // Check two generators of the same algebra for equality
   bool equal(base const& g) const override {
-    auto const& f_g =  dynamic_cast<generator_fermion const&>(g);
+    auto const& f_g = dynamic_cast<generator_fermion const&>(g);
     return dagger_ == f_g.dagger_ && base::equal(g);
   }
 
   // Ordering
   bool less(base const& g) const override {
-    auto const& f_g =  dynamic_cast<generator_fermion const&>(g);
+    auto const& f_g = dynamic_cast<generator_fermion const&>(g);
     // Example: c+_1 < c+_2 < c+_3 < c_3 < c_2 < c_1
     if(this->dagger_ != f_g.dagger_)
       return (this->dagger_ > f_g.dagger_);
@@ -107,7 +102,7 @@ protected:
       return this->dagger_ ? base::less(g) : base::greater(g);
   }
   bool greater(base const& g) const override {
-    auto const& f_g =  dynamic_cast<generator_fermion const&>(g);
+    auto const& f_g = dynamic_cast<generator_fermion const&>(g);
     // Example: c_1 > c_2 > c_3 > c+_3 > c+_2 > c+_1
     if(this->dagger_ != f_g.dagger_)
       return (this->dagger_ < f_g.dagger_);
@@ -116,7 +111,7 @@ protected:
   }
 
   // Print to stream
-  std::ostream & print(std::ostream & os) const override {
+  std::ostream& print(std::ostream& os) const override {
     os << "C" << (this->dagger_ ? "+" : "") << "(";
     print_tuple(os, this->indices());
     return os << ")";
@@ -124,7 +119,7 @@ protected:
 };
 
 // Check if generator belongs to the fermionic algebra
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline bool is_fermion(generator<IndexTypes...> const& gen) {
   return gen.algebra_id() == fermion;
 }
@@ -132,13 +127,13 @@ inline bool is_fermion(generator<IndexTypes...> const& gen) {
 namespace static_indices {
 
 // Convenience factory function
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline generator_fermion<c_str_to_string_t<IndexTypes>...>
 make_fermion(bool dagger, IndexTypes&&... indices) {
   return {dagger, std::forward<IndexTypes>(indices)...};
 }
 
-} // namespace libcommute::static_indices
+} // namespace static_indices
 } // namespace libcommute
 
 #if __cplusplus >= 201703L
@@ -148,13 +143,13 @@ namespace libcommute {
 namespace dynamic_indices {
 
 // Convenience factory functions for dynamic indices
-template<typename... IndexTypes>
-inline generator_fermion<dyn_indices>
-make_fermion(bool dagger, IndexTypes&&... indices) {
+template <typename... IndexTypes>
+inline generator_fermion<dyn_indices> make_fermion(bool dagger,
+                                                   IndexTypes&&... indices) {
   return {dagger, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 
-} // namespace libcommute::dynamic_indices
+} // namespace dynamic_indices
 } // namespace libcommute
 #endif
 

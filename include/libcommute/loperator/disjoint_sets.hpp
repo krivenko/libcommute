@@ -33,7 +33,6 @@ class disjoint_sets {
   std::size_t n_sets_;
 
 public:
-
   explicit disjoint_sets(std::size_t n_sets)
     : parents_(n_sets), ranks_(n_sets, 0), n_sets_(n_sets) {
     std::iota(parents_.begin(), parents_.end(), 0);
@@ -68,9 +67,7 @@ public:
   std::size_t find_root(std::size_t x) const {
     assert(x < size());
     std::size_t p = parents_[x];
-    if(parents_[p] != p) {
-      parents_[x] = p = find_root(p);
-    }
+    if(parents_[p] != p) { parents_[x] = p = find_root(p); }
     return p;
   }
 
@@ -109,7 +106,8 @@ public:
 
   // Compress all sets (make every element represented by its parent)
   void compress_sets() {
-    for(std::size_t x : parents_) find_root(x);
+    for(std::size_t x : parents_)
+      find_root(x);
   }
 
   // Normalize all sets (make every representative be the smallest in its set)

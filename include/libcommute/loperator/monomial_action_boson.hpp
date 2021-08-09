@@ -13,11 +13,11 @@
 #ifndef LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_BOSON_HPP_
 #define LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_BOSON_HPP_
 
+#include "../expression/generator_boson.hpp"
 #include "elementary_space_boson.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
 #include "state_vector.hpp"
-#include "../expression/generator_boson.hpp"
 
 #include <cmath>
 #include <cstdint>
@@ -34,7 +34,7 @@
 
 namespace libcommute {
 
-template<> class monomial_action<boson> {
+template <> class monomial_action<boson> {
 
   // Update of a single bosonic mode
   struct single_boson_update_t {
@@ -71,25 +71,23 @@ template<> class monomial_action<boson> {
   }
 
 public:
-
-  template<typename... IndexTypes>
+  template <typename... IndexTypes>
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs) {
     sv_index_type sqr_roots_size = 0;
 
     auto it = m_range.first;
-    auto next_it = it; ++next_it;
+    auto next_it = it;
+    ++next_it;
     auto end_it = m_range.second;
 
     sv_index_type power = 1;
-    for(;it != end_it; ++it, ++next_it) {
-      if(!is_boson(*it))
-        throw unknown_generator<IndexTypes...>(*it);
+    for(; it != end_it; ++it, ++next_it) {
+      if(!is_boson(*it)) throw unknown_generator<IndexTypes...>(*it);
 
       if(next_it == end_it || *next_it != *it) {
         elementary_space_boson<IndexTypes...> es(0, it->indices());
-        if(!hs.has(es))
-          throw unknown_generator<IndexTypes...>(*it);
+        if(!hs.has(es)) throw unknown_generator<IndexTypes...>(*it);
 
         bit_range_t const& bit_range = hs.bit_range(es);
         int shift = bit_range.first;
@@ -105,18 +103,17 @@ public:
         }
 
         bool dagger =
-          dynamic_cast<generator_boson<IndexTypes...> const&>(*it).dagger();
+            dynamic_cast<generator_boson<IndexTypes...> const&>(*it).dagger();
 
         auto n_change = static_cast<std::int64_t>(dagger ? power : -power);
         std::int64_t state_change = n_change * (std::int64_t(1) << shift);
 
-        updates_.emplace_back(single_boson_update_t{
-          shift,
-          (sv_index_type(1) << n_bits) - 1,
-          n_change,
-          n_max,
-          state_change
-        });
+        updates_.emplace_back(
+            single_boson_update_t{shift,
+                                  (sv_index_type(1) << n_bits) - 1,
+                                  n_change,
+                                  n_max,
+                                  state_change});
 
         power = 1;
       } else
@@ -124,41 +121,39 @@ public:
     }
 
     if(!updates_.empty()) {
-      sqr_roots_size = std::min(
-        sqr_roots_size,
-        sv_index_type(LIBCOMMUTE_BOSON_MAX_NUM_PRECOMPUTED_SQRT)
-      );
+      sqr_roots_size =
+          std::min(sqr_roots_size,
+                   sv_index_type(LIBCOMMUTE_BOSON_MAX_NUM_PRECOMPUTED_SQRT));
       sqr_roots_.resize(sqr_roots_size);
       for(sv_index_type n = 0; n < sqr_roots_size; ++n)
         sqr_roots_[n] = std::sqrt(double(n));
     }
   }
 
-  template<typename ScalarType>
-  inline bool act(sv_index_type & index,
-                  ScalarType & coeff) const {
+  template <typename ScalarType>
+  inline bool act(sv_index_type& index, ScalarType& coeff) const {
 
     if(vanishing_) return false;
 
     for(std::size_t b = updates_.size(); b-- != 0;) {
       auto const& update = updates_[b];
 
-      auto n_part = static_cast<std::int64_t>((index >> update.shift) &
-                                              update.mask);
+      auto n_part =
+          static_cast<std::int64_t>((index >> update.shift) & update.mask);
       std::int64_t new_n_part = n_part + update.n_change;
       if(new_n_part < 0 || new_n_part > std::int64_t(update.n_max))
         return false;
 
       if(update.n_change > 0) {
         for(int d = 1; d <= update.n_change; ++d)
-          mul_assign(coeff,
-            scalar_traits<ScalarType>::make_const(sqr_root(n_part + d))
-          );
+          mul_assign(
+              coeff,
+              scalar_traits<ScalarType>::make_const(sqr_root(n_part + d)));
       } else {
-        for(int d = 0; d <= -update.n_change-1; ++d)
-          mul_assign(coeff,
-            scalar_traits<ScalarType>::make_const(sqr_root(n_part - d))
-          );
+        for(int d = 0; d <= -update.n_change - 1; ++d)
+          mul_assign(
+              coeff,
+              scalar_traits<ScalarType>::make_const(sqr_root(n_part - d)));
       }
       index += update.state_change;
     }

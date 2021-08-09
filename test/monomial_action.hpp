@@ -28,31 +28,29 @@ namespace libcommute {
 //   algebra_id() = fermion::algebra_id()-2
 //   n_bits() = 2
 //
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 class elementary_space_padding final : public elementary_space<IndexTypes...> {
 public:
   elementary_space_padding() = delete;
-  template<typename... Args>
-  explicit elementary_space_padding(Args&&... indices) :
-    elementary_space<IndexTypes...>(std::forward<Args>(indices)...) {}
+  template <typename... Args>
+  explicit elementary_space_padding(Args&&... indices)
+    : elementary_space<IndexTypes...>(std::forward<Args>(indices)...) {}
 
-  std::unique_ptr<elementary_space<IndexTypes...>>
-  clone() const final {
+  std::unique_ptr<elementary_space<IndexTypes...>> clone() const final {
     return make_unique<elementary_space_padding>(*this);
   }
-  int algebra_id() const final { return fermion-2; }
+  int algebra_id() const final { return fermion - 2; }
   int n_bits() const final { return 2; }
 };
 
 //
 // Reference action of a monomial on a basis state with a given index
 //
-template<typename RefGenAction, typename... IndexTypes>
+template <typename RefGenAction, typename... IndexTypes>
 bool ref_monomial_action(monomial<IndexTypes...> const& mon,
                          RefGenAction const& ga,
-                         sv_index_type & index,
-                         double & coeff
-                         ) {
+                         sv_index_type& index,
+                         double& coeff) {
   for(auto it = mon.rbegin(); it != mon.rend(); ++it) {
     bool nonzero = ga(*it, index, coeff);
     if(!nonzero) return false;
@@ -63,12 +61,11 @@ bool ref_monomial_action(monomial<IndexTypes...> const& mon,
 //
 // Check action of a monomial
 //
-template<typename MAType, typename RefGenAction, typename... IndexTypes>
+template <typename MAType, typename RefGenAction, typename... IndexTypes>
 void check_monomial_action(monomial<IndexTypes...> const& mon,
                            hilbert_space<IndexTypes...> const& hs,
                            RefGenAction const& ga,
-                           std::vector<sv_index_type> const& in_index_list
-                          ) {
+                           std::vector<sv_index_type> const& in_index_list) {
   MAType ma(std::make_pair(mon.begin(), mon.end()), hs);
 
   for(auto in_index : in_index_list) {
@@ -79,10 +76,7 @@ void check_monomial_action(monomial<IndexTypes...> const& mon,
     // Reference
     double coeff_ref = 2;
     sv_index_type out_index_ref = in_index;
-    bool nonzero_ref = ref_monomial_action(mon,
-                                           ga,
-                                           out_index_ref,
-                                           coeff_ref);
+    bool nonzero_ref = ref_monomial_action(mon, ga, out_index_ref, coeff_ref);
     // Checks
     CHECK(nonzero == nonzero_ref);
     if(nonzero_ref != false) {

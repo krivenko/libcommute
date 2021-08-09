@@ -30,45 +30,59 @@ struct ST1m2 {}; // Result type of ST1{} - ST2{}
 struct ST1t2 {}; // Result type of ST1{} * ST2{}
 struct STum {};  // Result type of -ST1{}
 
-ST1 operator+(ST1 const&, ST1 const&) { return ST1{}; }
-ST1p2 operator+(ST1 const&, ST2 const&) { return ST1p2{}; }
+ST1 operator+(ST1 const&, ST1 const&) {
+  return ST1{};
+}
+ST1p2 operator+(ST1 const&, ST2 const&) {
+  return ST1p2{};
+}
 
-ST1 operator-(ST1 const&, ST1 const&) { return ST1{}; }
-ST1m2 operator-(ST1 const&, ST2 const&) { return ST1m2{}; }
+ST1 operator-(ST1 const&, ST1 const&) {
+  return ST1{};
+}
+ST1m2 operator-(ST1 const&, ST2 const&) {
+  return ST1m2{};
+}
 
-ST1 operator*(ST1 const&, ST1 const&) { return ST1{}; }
-ST1t2 operator*(ST1 const&, ST2 const&) { return ST1t2{}; }
+ST1 operator*(ST1 const&, ST1 const&) {
+  return ST1{};
+}
+ST1t2 operator*(ST1 const&, ST2 const&) {
+  return ST1t2{};
+}
 
-STum operator-(ST1 const&) { return STum{}; }
+STum operator-(ST1 const&) {
+  return STum{};
+}
 
 namespace libcommute {
 
-template<> struct scalar_traits<ST1> {
+template <> struct scalar_traits<ST1> {
   static ST1 make_const(double x) { return ST1{}; }
   static bool is_zero(ST1 const& x) { return true; }
 };
 
-template<> struct scalar_traits<ST2> {
+template <> struct scalar_traits<ST2> {
   static ST2 make_const(double x) { return ST2{}; }
   static bool is_zero(ST2 const& x) { return true; }
 };
 
-template<> struct scalar_traits<ST1p2> {
+template <> struct scalar_traits<ST1p2> {
   static ST1p2 make_const(double x) { return ST1p2{}; }
   static bool is_zero(ST1p2 const& x) { return true; }
 };
 
-template<> struct scalar_traits<ST1m2> {
+template <> struct scalar_traits<ST1m2> {
   static ST1m2 make_const(double x) { return ST1m2{}; }
   static bool is_zero(ST1m2 const& x) { return true; }
 };
 
-template<> struct scalar_traits<ST1t2> {
+template <> struct scalar_traits<ST1t2> {
   static ST1t2 make_const(double x) { return ST1t2{}; }
   static bool is_zero(ST1t2 const& x) { return true; }
 };
 
-}
+} // namespace libcommute
 
 TEST_CASE("Result types of arithmetic operations with mixed scalar types",
           "[mixed_types]") {
@@ -78,8 +92,8 @@ TEST_CASE("Result types of arithmetic operations with mixed scalar types",
   SECTION("Addition") {
     CHECK(std::is_same<decltype(expr1 + expr1), expression<ST1>>::value);
     CHECK(std::is_same<decltype(expr1 + expr2), expression<ST1p2>>::value);
-    CHECK(std::is_same<decltype(expr1 += expr1), expression<ST1> &>::value);
-    CHECK(std::is_same<decltype(expr1 += expr2), expression<ST1> &>::value);
+    CHECK(std::is_same<decltype(expr1 += expr1), expression<ST1>&>::value);
+    CHECK(std::is_same<decltype(expr1 += expr2), expression<ST1>&>::value);
   }
 
   SECTION("Addition of a constant") {
@@ -87,15 +101,15 @@ TEST_CASE("Result types of arithmetic operations with mixed scalar types",
     CHECK(std::is_same<decltype(ST1{} + expr1), expression<ST1>>::value);
     CHECK(std::is_same<decltype(ST1{} + expr2), expression<ST1p2>>::value);
     CHECK(std::is_same<decltype(expr1 + ST2{}), expression<ST1p2>>::value);
-    CHECK(std::is_same<decltype(expr1 += ST1{}), expression<ST1> &>::value);
-    CHECK(std::is_same<decltype(expr1 += ST2{}), expression<ST1> &>::value);
+    CHECK(std::is_same<decltype(expr1 += ST1{}), expression<ST1>&>::value);
+    CHECK(std::is_same<decltype(expr1 += ST2{}), expression<ST1>&>::value);
   }
 
   SECTION("Subtraction") {
     CHECK(std::is_same<decltype(expr1 - expr1), expression<ST1>>::value);
     CHECK(std::is_same<decltype(expr1 - expr2), expression<ST1m2>>::value);
-    CHECK(std::is_same<decltype(expr1 -= expr1), expression<ST1> &>::value);
-    CHECK(std::is_same<decltype(expr1 -= expr2), expression<ST1> &>::value);
+    CHECK(std::is_same<decltype(expr1 -= expr1), expression<ST1>&>::value);
+    CHECK(std::is_same<decltype(expr1 -= expr2), expression<ST1>&>::value);
   }
 
   SECTION("Subtraction of a constant") {
@@ -103,15 +117,15 @@ TEST_CASE("Result types of arithmetic operations with mixed scalar types",
     CHECK(std::is_same<decltype(ST1{} - expr1), expression<ST1>>::value);
     CHECK(std::is_same<decltype(ST1{} - expr2), expression<ST1m2>>::value);
     CHECK(std::is_same<decltype(expr1 - ST2{}), expression<ST1m2>>::value);
-    CHECK(std::is_same<decltype(expr1 -= ST1{}), expression<ST1> &>::value);
-    CHECK(std::is_same<decltype(expr1 -= ST2{}), expression<ST1> &>::value);
+    CHECK(std::is_same<decltype(expr1 -= ST1{}), expression<ST1>&>::value);
+    CHECK(std::is_same<decltype(expr1 -= ST2{}), expression<ST1>&>::value);
   }
 
   SECTION("Multiplication") {
     CHECK(std::is_same<decltype(expr1 * expr1), expression<ST1>>::value);
     CHECK(std::is_same<decltype(expr1 * expr2), expression<ST1t2>>::value);
-    CHECK(std::is_same<decltype(expr1 *= expr1), expression<ST1> &>::value);
-    CHECK(std::is_same<decltype(expr1 *= expr2), expression<ST1> &>::value);
+    CHECK(std::is_same<decltype(expr1 *= expr1), expression<ST1>&>::value);
+    CHECK(std::is_same<decltype(expr1 *= expr2), expression<ST1>&>::value);
   }
 
   SECTION("Multiplication by a constant") {
@@ -119,8 +133,8 @@ TEST_CASE("Result types of arithmetic operations with mixed scalar types",
     CHECK(std::is_same<decltype(ST1{} * expr1), expression<ST1>>::value);
     CHECK(std::is_same<decltype(ST1{} * expr2), expression<ST1t2>>::value);
     CHECK(std::is_same<decltype(expr1 * ST2{}), expression<ST1t2>>::value);
-    CHECK(std::is_same<decltype(expr1 *= ST1{}), expression<ST1> &>::value);
-    CHECK(std::is_same<decltype(expr1 *= ST2{}), expression<ST1> &>::value);
+    CHECK(std::is_same<decltype(expr1 *= ST1{}), expression<ST1>&>::value);
+    CHECK(std::is_same<decltype(expr1 *= ST2{}), expression<ST1>&>::value);
   }
 
   SECTION("Unary minus") {

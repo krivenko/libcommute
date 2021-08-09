@@ -19,17 +19,17 @@
 
 #include "version.hpp"
 
-#include "expression/generator_fermion.hpp"
-#include "expression/generator_boson.hpp"
-#include "expression/generator_spin.hpp"
 #include "expression/expression.hpp"
 #include "expression/factories.hpp"
-#include "loperator/elementary_space_fermion.hpp"
+#include "expression/generator_boson.hpp"
+#include "expression/generator_fermion.hpp"
+#include "expression/generator_spin.hpp"
 #include "loperator/elementary_space_boson.hpp"
+#include "loperator/elementary_space_fermion.hpp"
 #include "loperator/elementary_space_spin.hpp"
 #include "loperator/loperator.hpp"
-#include "loperator/space_partition.hpp"
 #include "loperator/mapped_basis_view.hpp"
+#include "loperator/space_partition.hpp"
 
 // C++17-only headers
 #if __cplusplus >= 201703L

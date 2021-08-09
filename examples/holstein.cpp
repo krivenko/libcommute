@@ -57,8 +57,7 @@ int main() {
             // nearest-neighbors. The modulus operation accounts for
             // periodic boundary conditions on the lattice.
             if((std::abs(ix - jx) % N == 1 && iy == jy) ||
-               (ix == jx && std::abs(iy - jy) % N == 1)
-            ) {
+               (ix == jx && std::abs(iy - jy) % N == 1)) {
               // Add a hopping term
               H_e += -t * c_dag(ix, iy, spin) * c(jx, jy, spin);
             }

@@ -16,31 +16,29 @@
 #include "../utility.hpp"
 
 #include <cassert>
-#include <stdexcept>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <tuple>
 #include <utility>
 
 namespace libcommute {
 
-template<typename... IndexTypes> class elementary_space;
+template <typename... IndexTypes> class elementary_space;
 
 //
 // Abstract algebra generator
 //
 
-template<typename... IndexTypes>
-class generator {
+template <typename... IndexTypes> class generator {
 
 public:
-
   using index_types = std::tuple<IndexTypes...>;
 
   // Linear combination of generators
   using linear_function_t = linear_function<std::unique_ptr<generator>>;
 
-  template<typename... Args>
+  template <typename... Args>
   generator(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
   generator(generator const&) = default;
   generator(generator&&) noexcept = default;
@@ -92,8 +90,7 @@ public:
   // to the product g1 * g2 to put it into the canonical order.
   // swap_with() returns the constant 'c' and writes the linear function f(g)
   // into its second argument. 'c' is allowed to be zero.
-  virtual double
-  swap_with(generator const& g2, linear_function_t & f) const = 0;
+  virtual double swap_with(generator const& g2, linear_function_t& f) const = 0;
 
   // Given a pair g1 = *this and g2 such that g1 * g2 is in the canonical order
   // (g1 <= g2), optionally apply a simplifying transformation
@@ -101,8 +98,7 @@ public:
   // If a simplification is actually possible, simplified_prod() must return
   // true and write the linear function f(g) into its second argument. Otherwise
   // return false.
-  virtual bool
-  simplify_prod(generator const& g2, linear_function_t & f) const {
+  virtual bool simplify_prod(generator const& g2, linear_function_t& f) const {
     assert(!(*this > g2));
     return false;
   }
@@ -114,40 +110,34 @@ public:
   // return false.
   //
   // N.B. Simplifications for power = 2 must be carried out by simplify_prod().
-  virtual bool reduce_power(int power, linear_function_t & f) const {
+  virtual bool reduce_power(int power, linear_function_t& f) const {
     assert(power > 2);
     return false;
   }
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t & f) const {
-    f.set(0, clone(), 1.0);
-  }
+  virtual void conj(linear_function_t& f) const { f.set(0, clone(), 1.0); }
 
   // Stream output
-  friend std::ostream & operator<<(std::ostream & os, generator const& g) {
+  friend std::ostream& operator<<(std::ostream& os, generator const& g) {
     return g.print(os);
   }
 
 private:
-
   index_types indices_;
 
 protected:
-
   // Check two generators of the same algebra for equality
   virtual bool equal(generator const& g) const {
     return indices_ == g.indices_;
   }
   // Ordering
-  virtual bool less(generator const& g) const {
-    return indices_ < g.indices_;
-  }
+  virtual bool less(generator const& g) const { return indices_ < g.indices_; }
   virtual bool greater(generator const& g) const {
     return indices_ > g.indices_;
   }
   // Print to stream
-  virtual std::ostream & print(std::ostream & os) const {
+  virtual std::ostream& print(std::ostream& os) const {
     os << "g^" << algebra_id() << "(";
     print_tuple(os, this->indices_);
     return os << ")";
@@ -156,11 +146,11 @@ protected:
 
 // Check if g1 and g2 belong to the same algebra
 // and call g1.swap_with(g2, f) accordingly
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline double
 swap_with(generator<IndexTypes...> const& g1,
           generator<IndexTypes...> const& g2,
-          linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
+          linear_function<std::unique_ptr<generator<IndexTypes...>>>& f) {
   if(g1.algebra_id() == g2.algebra_id()) {
     return g1.swap_with(g2, f);
   } else {
@@ -172,11 +162,11 @@ swap_with(generator<IndexTypes...> const& g1,
 
 // Check if g1 and g2 belong to the same algebra
 // and call g1.simplify_prod(g2, f) accordingly
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline bool
 simplify_prod(generator<IndexTypes...> const& g1,
               generator<IndexTypes...> const& g2,
-              linear_function<std::unique_ptr<generator<IndexTypes...>>> & f) {
+              linear_function<std::unique_ptr<generator<IndexTypes...>>>& f) {
   if(g1.algebra_id() == g2.algebra_id()) {
     return g1.simplify_prod(g2, f);
   } else {

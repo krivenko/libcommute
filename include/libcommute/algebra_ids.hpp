@@ -34,26 +34,23 @@ static constexpr int LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID = 0;
 
 namespace detail {
 
-template<int ID1, int ID2, int... IDsTail>
-struct algebra_ids_ordered_impl {
-  static constexpr bool value = (ID1 < ID2) &&
-                            algebra_ids_ordered_impl<ID2, IDsTail...>::value;
+template <int ID1, int ID2, int... IDsTail> struct algebra_ids_ordered_impl {
+  static constexpr bool value =
+      (ID1 < ID2) && algebra_ids_ordered_impl<ID2, IDsTail...>::value;
 };
-template<int ID1, int ID2>
-struct algebra_ids_ordered_impl<ID1, ID2> {
+template <int ID1, int ID2> struct algebra_ids_ordered_impl<ID1, ID2> {
   static constexpr bool value = ID1 < ID2;
 };
 
-} // namespace libcommute::detail
+} // namespace detail
 
-template<int... AlgebraIDs>
-struct algebra_ids_ordered : detail::algebra_ids_ordered_impl<AlgebraIDs...>
-{};
+template <int... AlgebraIDs>
+struct algebra_ids_ordered : detail::algebra_ids_ordered_impl<AlgebraIDs...> {};
 // List of 1 ID is always ordered
-template<int AlgebraID>
+template <int AlgebraID>
 struct algebra_ids_ordered<AlgebraID> : std::true_type {};
 // List of zero IDs is always ordered
-template<> struct algebra_ids_ordered<> : std::true_type {};
+template <> struct algebra_ids_ordered<> : std::true_type {};
 
 } // namespace libcommute
 

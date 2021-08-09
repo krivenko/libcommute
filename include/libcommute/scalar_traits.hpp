@@ -16,9 +16,9 @@
 #include "metafunctions.hpp"
 
 #include <cassert>
+#include <cmath>
 #include <complex>
 #include <limits>
-#include <cmath>
 #include <type_traits>
 #include <utility>
 
@@ -31,22 +31,21 @@
 namespace libcommute {
 
 // Metafunction to detect complex types
-template<typename T> struct is_complex : std::false_type {};
-template<typename T> struct is_complex<std::complex<T>> : std::true_type {};
+template <typename T> struct is_complex : std::false_type {};
+template <typename T> struct is_complex<std::complex<T>> : std::true_type {};
 
 // Enable template instantiation if Trait<T>::value is true
-template<template<typename> class Trait, typename T>
+template <template <typename> class Trait, typename T>
 using with_trait = typename std::enable_if<Trait<T>::value>::type;
 
 // Traits of types that can be used as the ScalarType parameter of `expression`.
 // User-defined scalar types need to spcialize this structure.
-template<typename S, typename = void> struct scalar_traits {};
+template <typename S, typename = void> struct scalar_traits {};
 
 //
 // Integral types
 //
-template<typename S>
-struct scalar_traits<S, with_trait<std::is_integral, S>> {
+template <typename S> struct scalar_traits<S, with_trait<std::is_integral, S>> {
   // Zero value test
   static bool is_zero(S const& x) { return x == 0; }
   // Make a constant from a double value
@@ -61,12 +60,12 @@ struct scalar_traits<S, with_trait<std::is_integral, S>> {
 //
 // Floating point types
 //
-template<typename S>
+template <typename S>
 struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
   // Zero value test
   static bool is_zero(S const& x) {
     return std::abs(x) < LIBCOMMUTE_FLOATING_POINT_TOL_EPS *
-                         std::numeric_limits<S>::epsilon();
+                             std::numeric_limits<S>::epsilon();
   }
   // Make a constant from a double value
   static S make_const(double x) { return x; }
@@ -77,8 +76,7 @@ struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
 //
 // Complex types
 //
-template<typename S>
-struct scalar_traits<S, with_trait<is_complex, S>> {
+template <typename S> struct scalar_traits<S, with_trait<is_complex, S>> {
   // Zero value test
   static bool is_zero(S const& x) {
     using real_t = typename S::value_type;
@@ -96,19 +94,18 @@ struct scalar_traits<S, with_trait<is_complex, S>> {
 //
 
 // Type of unary minus result
-template<typename S>
-using minus_type = decltype(-std::declval<S>());
+template <typename S> using minus_type = decltype(-std::declval<S>());
 
 // Type of sum of two objects with types S1 and S2
-template<typename S1, typename S2>
+template <typename S1, typename S2>
 using sum_type = decltype(std::declval<S1>() + std::declval<S2>());
 
 // Type of difference of two objects with types S1 and S2
-template<typename S1, typename S2>
+template <typename S1, typename S2>
 using diff_type = decltype(std::declval<S1>() - std::declval<S2>());
 
 // Type of product of two objects with types S1 and S2
-template<typename S1, typename S2>
+template <typename S1, typename S2>
 using mul_type = decltype(std::declval<S1>() * std::declval<S2>());
 
 //
@@ -116,11 +113,14 @@ using mul_type = decltype(std::declval<S1>() * std::declval<S2>());
 // structure that detect whether 'S1 OP S2' is a valid expression.
 //
 #define DEFINE_HAS_OP(NAME, OP)                                                \
-template<typename S1, typename S2, typename = void> struct has_##NAME          \
-  : std::false_type {};                                                        \
-template<typename S1, typename S2> struct has_##NAME <S1, S2,                  \
-    void_t<decltype(std::declval<S1&>() OP std::declval<S2>())>                \
-  > : std::true_type {};
+  template <typename S1, typename S2, typename = void>                         \
+  struct has_##NAME : std::false_type {};                                      \
+  template <typename S1, typename S2>                                          \
+  struct has_##NAME<                                                           \
+      S1,                                                                      \
+      S2,                                                                      \
+      void_t<decltype(std::declval<S1&>() OP std::declval<S2>())>>             \
+    : std::true_type {};
 
 DEFINE_HAS_OP(add_assign, +=)
 DEFINE_HAS_OP(sub_assign, -=)
@@ -133,21 +133,21 @@ DEFINE_HAS_OP(mul_assign, *=)
 // otherwise.
 //
 #define DEFINE_OP_ASSIGN_FUNC(NAME, COMPOUND_OP, OP)                           \
-template<typename S1, typename S2>                                             \
-inline S1 & NAME##_assign_impl(S1 & a, S2 const& b, std::true_type) {          \
-  return a COMPOUND_OP b;                                                      \
-}                                                                              \
+  template <typename S1, typename S2>                                          \
+  inline S1& NAME##_assign_impl(S1& a, S2 const& b, std::true_type) {          \
+    return a COMPOUND_OP b;                                                    \
+  }                                                                            \
                                                                                \
-template<typename S1, typename S2>                                             \
-inline S1 & NAME##_assign_impl(S1 & a, S2 const& b, std::false_type) {         \
-  a = a OP b;                                                                  \
-  return a;                                                                    \
-}                                                                              \
+  template <typename S1, typename S2>                                          \
+  inline S1& NAME##_assign_impl(S1& a, S2 const& b, std::false_type) {         \
+    a = a OP b;                                                                \
+    return a;                                                                  \
+  }                                                                            \
                                                                                \
-template<typename S1, typename S2>                                             \
-inline S1 & NAME##_assign(S1 & a, S2 const& b) {                               \
-  return NAME##_assign_impl(a, b, has_##NAME##_assign<S1, S2>());              \
-}
+  template <typename S1, typename S2>                                          \
+  inline S1& NAME##_assign(S1& a, S2 const& b) {                               \
+    return NAME##_assign_impl(a, b, has_##NAME##_assign<S1, S2>());            \
+  }
 
 DEFINE_OP_ASSIGN_FUNC(add, +=, +)
 DEFINE_OP_ASSIGN_FUNC(sub, -=, -)

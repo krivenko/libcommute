@@ -13,16 +13,16 @@
 
 #include <catch.hpp>
 
-#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
-#include <libcommute/loperator/elementary_space_fermion.hpp>
 #include <libcommute/loperator/elementary_space_boson.hpp>
+#include <libcommute/loperator/elementary_space_fermion.hpp>
 #include <libcommute/loperator/elementary_space_spin.hpp>
 #include <libcommute/loperator/hilbert_space.hpp>
-#include <libcommute/loperator/monomial_action_fermion.hpp>
 #include <libcommute/loperator/monomial_action_boson.hpp>
+#include <libcommute/loperator/monomial_action_fermion.hpp>
 #include <libcommute/loperator/monomial_action_spin.hpp>
 
 #include "./monomial_action.hpp"
@@ -43,14 +43,13 @@ TEST_CASE("Different algebra IDs", "[monomial_action_IDs]") {
     using namespace static_indices;
 
     hs_type hs(make_space_fermion("dn", 0),
-            make_space_boson(4, "x", 0),
-            make_space_spin(1.0, "i", 0)
-          );
+               make_space_boson(4, "x", 0),
+               make_space_spin(1.0, "i", 0));
 
     SECTION("Constant monomial") {
       mon_type const_m{};
-      auto ma = monomial_action<>(std::make_pair(const_m.begin(), const_m.end()),
-                                  hs);
+      auto ma =
+          monomial_action<>(std::make_pair(const_m.begin(), const_m.end()), hs);
 
       sv_index_type out_index = {};
       double coeff = 10;
@@ -73,9 +72,9 @@ TEST_CASE("Different algebra IDs", "[monomial_action_IDs]") {
       mon_type m1{make_fermion(true, "dn", 0),
                   make_spin(1, spin_component::plus, "i", 0)};
 
-      CHECK_NOTHROW(monomial_action<fermion, spin>(
-        std::make_pair(m1.begin(), m1.end()), hs)
-      );
+      CHECK_NOTHROW(
+          monomial_action<fermion, spin>(std::make_pair(m1.begin(), m1.end()),
+                                         hs));
 
       mon_type m2{make_fermion(true, "dn", 0),
                   make_boson(false, "x", 0),
@@ -115,8 +114,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
              make_space_boson(2, 1),
              make_space_spin(0.5, 0),
              make_space_spin(1.0, 1),
-             make_space_spin(1.5, 2)
-        );
+             make_space_spin(1.5, 2));
 
   //
   // Algebra generators
@@ -146,67 +144,66 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
   //
 
   // Fermions
-  auto ref_c_dag_c_action = [](generator<int> const& g,
-                              sv_index_type & index,
-                              double & coeff) {
-    int ind = std::get<0>(g.indices());
-    bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
-    std::bitset<total_n_bits> in_bitset(index);
-    if(dagger && in_bitset.test(ind)) return false;
-    if(!dagger && !in_bitset.test(ind)) return false;
+  auto ref_c_dag_c_action =
+      [](generator<int> const& g, sv_index_type& index, double& coeff) {
+        int ind = std::get<0>(g.indices());
+        bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
+        std::bitset<total_n_bits> in_bitset(index);
+        if(dagger && in_bitset.test(ind)) return false;
+        if(!dagger && !in_bitset.test(ind)) return false;
 
-    int n = 0;
-    for(int i = 0; i < ind; ++i) n += in_bitset[i];
-    index = dagger ? in_bitset.set(ind).to_ulong() :
-                     in_bitset.reset(ind).to_ulong();
-    coeff *= (n%2 == 0 ? 1 : -1);
-    return true;
-  };
+        int n = 0;
+        for(int i = 0; i < ind; ++i)
+          n += in_bitset[i];
+        index = dagger ? in_bitset.set(ind).to_ulong() :
+                         in_bitset.reset(ind).to_ulong();
+        coeff *= (n % 2 == 0 ? 1 : -1);
+        return true;
+      };
 
   // Bosons
-  auto ref_a_dag_a_action = [&](generator<int> const& g,
-                              sv_index_type & index,
-                              double & coeff) {
-    int ind = std::get<0>(g.indices());
-    bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
+  auto ref_a_dag_a_action =
+      [&](generator<int> const& g, sv_index_type& index, double& coeff) {
+        int ind = std::get<0>(g.indices());
+        bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
 
-    static std::vector<bit_range_t> bit_ranges = {{2, 3}, {4, 5}};
+        static std::vector<bit_range_t> bit_ranges = {{2, 3}, {4, 5}};
 
-    auto const& bit_range = bit_ranges[ind];
-    int n_bits = bit_range.second - bit_range.first + 1;
-    int n_max = (1 << n_bits) - 1;
+        auto const& bit_range = bit_ranges[ind];
+        int n_bits = bit_range.second - bit_range.first + 1;
+        int n_max = (1 << n_bits) - 1;
 
-    std::bitset<total_n_bits> in_bitset(index);
+        std::bitset<total_n_bits> in_bitset(index);
 
-    int n = 0;
-    for(int i = 0; i < n_bits; ++i) {
-      n += in_bitset.test(bit_range.first + i) * (1 << i);
-    }
+        int n = 0;
+        for(int i = 0; i < n_bits; ++i) {
+          n += in_bitset.test(bit_range.first + i) * (1 << i);
+        }
 
-    if(dagger) {
-      ++n;
-      if(n > n_max) return false;
-      coeff *= std::sqrt(n);
-    } else {
-      --n;
-      if(n < 0) return false;
-      coeff *= std::sqrt(n+1);
-    }
+        if(dagger) {
+          ++n;
+          if(n > n_max) return false;
+          coeff *= std::sqrt(n);
+        } else {
+          --n;
+          if(n < 0) return false;
+          coeff *= std::sqrt(n + 1);
+        }
 
-    std::bitset<total_n_bits> out_bitset(index);
-    std::bitset<total_n_bits> n_bitset((unsigned int)n);
-    for(int i = 0; i < n_bits; ++i) {
-      out_bitset[bit_range.first + i] = n_bitset[i];
-    }
-    index = out_bitset.to_ulong();
+        std::bitset<total_n_bits> out_bitset(index);
+        std::bitset<total_n_bits> n_bitset((unsigned int)n);
+        for(int i = 0; i < n_bits; ++i) {
+          out_bitset[bit_range.first + i] = n_bitset[i];
+        }
+        index = out_bitset.to_ulong();
 
-    return true;
-  };
+        return true;
+      };
 
   // Spins
   auto ref_spin_action = [&](generator<int> const& g,
-                             sv_index_type & index,
-                             double & coeff) {
+                             sv_index_type& index,
+                             double& coeff) {
     int ind = std::get<0>(g.indices());
     double s = dynamic_cast<generator_spin<int> const&>(g).spin();
     spin_component c = dynamic_cast<generator_spin<int> const&>(g).component();
@@ -224,20 +221,20 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     }
 
     switch(c) {
-      case plus:
-        m += 1;
-        if(m > s) return false;
-        coeff *= std::sqrt(s*(s+1) - (m-1)*m);
-        break;
-      case minus:
-        m -= 1;
-        if(m < -s) return false;
-        coeff *= std::sqrt(s*(s+1) - (m+1)*m);
-        break;
-      case z:
-        if(m == 0) return false;
-        coeff *= m;
-        break;
+    case plus:
+      m += 1;
+      if(m > s) return false;
+      coeff *= std::sqrt(s * (s + 1) - (m - 1) * m);
+      break;
+    case minus:
+      m -= 1;
+      if(m < -s) return false;
+      coeff *= std::sqrt(s * (s + 1) - (m + 1) * m);
+      break;
+    case z:
+      if(m == 0) return false;
+      coeff *= m;
+      break;
     }
 
     std::bitset<total_n_bits> out_bitset(index);
@@ -252,19 +249,15 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
 
   // General case
 
-  auto ref_action = [&](generator<int> const& g,
-                        sv_index_type & index,
-                        double & coeff) {
-    switch(g.algebra_id()) {
-      case fermion:
-        return ref_c_dag_c_action(g, index, coeff);
-      case boson:
-        return ref_a_dag_a_action(g, index, coeff);
-      case spin:
-        return ref_spin_action(g, index, coeff);
-    }
-    return false;
-  };
+  auto ref_action =
+      [&](generator<int> const& g, sv_index_type& index, double& coeff) {
+        switch(g.algebra_id()) {
+        case fermion: return ref_c_dag_c_action(g, index, coeff);
+        case boson: return ref_a_dag_a_action(g, index, coeff);
+        case spin: return ref_spin_action(g, index, coeff);
+        }
+        return false;
+      };
 
   //
   // Build list of state indices
@@ -339,9 +332,9 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
       for(unsigned int j = 0; j < gens.size(); ++j) {
         for(unsigned int k = 0; k < gens.size(); ++k) {
           for(unsigned int l = 0; l < gens.size(); ++l) {
-            if(!(*gens[i] < *gens[j]) ||
-               !(*gens[j] < *gens[k]) ||
-               !(*gens[k] < *gens[l])) continue;
+            if(!(*gens[i] < *gens[j]) || !(*gens[j] < *gens[k]) ||
+               !(*gens[k] < *gens[l]))
+              continue;
             mon_type mon{gens[i]->clone(),
                          gens[j]->clone(),
                          gens[k]->clone(),

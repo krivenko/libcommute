@@ -19,17 +19,15 @@
 
 #include <map>
 #include <set>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 using namespace libcommute;
 
-template<typename Key, typename Value>
+template <typename Key, typename Value>
 void check_equal_maps_up_to_value_permutation(
-  std::unordered_map<Key, Value> const& m1,
-  std::unordered_map<Key, Value> const& m2
-)
-{
+    std::unordered_map<Key, Value> const& m1,
+    std::unordered_map<Key, Value> const& m2) {
   std::set<Key> keys1, keys2;
   std::set<Value> values1, values2;
   for(auto const& p : m1) {
@@ -44,8 +42,7 @@ void check_equal_maps_up_to_value_permutation(
   CHECK(values1 == values2);
 }
 
-TEST_CASE("Basis-mapped view of a state vector",
-          "[mapped_basis_view]") {
+TEST_CASE("Basis-mapped view of a state vector", "[mapped_basis_view]") {
 
   using namespace static_indices;
   using state_vector = std::vector<double>;
@@ -84,13 +81,11 @@ TEST_CASE("Basis-mapped view of a state vector",
   state_vector st{0, 1, 2, 3, 4, 5};
 
   using foreach_res_t = std::map<sv_index_type, double>;
-  foreach_res_t const foreach_res_ref = {
-    std::make_pair(5, 2.0),
-    std::make_pair(6, 4.0),
-    std::make_pair(9, 6.0),
-    std::make_pair(10, 8.0),
-    std::make_pair(12, 10.0)
-  };
+  foreach_res_t const foreach_res_ref = {std::make_pair(5, 2.0),
+                                         std::make_pair(6, 4.0),
+                                         std::make_pair(9, 6.0),
+                                         std::make_pair(10, 8.0),
+                                         std::make_pair(12, 10.0)};
 
   SECTION("mapped_basis_view") {
 
@@ -102,7 +97,7 @@ TEST_CASE("Basis-mapped view of a state vector",
 
       foreach_res_t foreach_res;
       auto f = [&foreach_res](sv_index_type n, double a) {
-        foreach_res[n] = 2*a;
+        foreach_res[n] = 2 * a;
       };
       foreach(view, f);
       CHECK(foreach_res == foreach_res_ref);
@@ -116,7 +111,7 @@ TEST_CASE("Basis-mapped view of a state vector",
 
       foreach_res_t foreach_res;
       auto f = [&foreach_res](sv_index_type n, double a) {
-        foreach_res[n] = 2*a;
+        foreach_res[n] = 2 * a;
       };
       foreach(view, f);
       CHECK(foreach_res == foreach_res_ref);
@@ -136,14 +131,12 @@ TEST_CASE("Basis-mapped view of a state vector",
 
       state_vector in1{1, 1, 1, 1, 1, 1};
       Hop(mapped_basis_view<state_vector const>(in1, map),
-          mapped_basis_view<state_vector>(out, map)
-      );
+          mapped_basis_view<state_vector>(out, map));
       CHECK(out == state_vector{0, 0, 2, 2, 0, 0});
 
       state_vector in2{1, 1, 1, -1, 1, 1};
       Hop(mapped_basis_view<state_vector const>(in2, map),
-          mapped_basis_view<state_vector>(out, map)
-      );
+          mapped_basis_view<state_vector>(out, map));
       CHECK(out == state_vector{0, 0, -2, 2, 0, 0});
     }
 
@@ -152,14 +145,12 @@ TEST_CASE("Basis-mapped view of a state vector",
 
       state_vector in1{1, 1, 1, 1, 1, 1};
       Hop(mapped_basis_view<state_vector const>(in1, map),
-          mapped_basis_view<state_vector>(out, map)
-      );
+          mapped_basis_view<state_vector>(out, map));
       CHECK(out == state_vector{0, 2, 0, 0, 2, 0});
 
       state_vector in2{1, 1, 1, 1, -1, 1};
       Hop(mapped_basis_view<state_vector const>(in2, map),
-          mapped_basis_view<state_vector>(out, map)
-      );
+          mapped_basis_view<state_vector>(out, map));
       CHECK(out == state_vector{0, -2, 0, 0, 2, 0});
     }
   }
@@ -172,17 +163,16 @@ TEST_CASE("Basis-mapped view of a state vector",
       CHECK(mapper.size() == 6);
       CHECK(mapper.map() == map);
       std::unordered_map<sv_index_type, sv_index_type> inv_map;
-      for(auto i : {3, 5, 6, 9, 10, 12}) inv_map[inv_map.size()] = i;
+      for(auto i : {3, 5, 6, 9, 10, 12})
+        inv_map[inv_map.size()] = i;
       CHECK(mapper.inverse_map() == inv_map);
     }
 
     SECTION("O|vac>") {
-      auto P = c_dag("dn", 1) * c_dag("dn", 2) +
-               c_dag("dn", 1) * c_dag("up", 1) +
-               c_dag("dn", 2) * c_dag("up", 1) +
-               c_dag("dn", 1) * c_dag("up", 2) +
-               c_dag("dn", 2) * c_dag("up", 2) +
-               c_dag("up", 1) * c_dag("up", 2);
+      auto P =
+          c_dag("dn", 1) * c_dag("dn", 2) + c_dag("dn", 1) * c_dag("up", 1) +
+          c_dag("dn", 2) * c_dag("up", 1) + c_dag("dn", 1) * c_dag("up", 2) +
+          c_dag("dn", 2) * c_dag("up", 2) + c_dag("up", 1) * c_dag("up", 2);
       basis_mapper mapper(make_loperator(P, hs), hs);
       CHECK(mapper.size() == 6);
       check_equal_maps_up_to_value_permutation(mapper.map(), map);
@@ -195,12 +185,10 @@ TEST_CASE("Basis-mapped view of a state vector",
       CHECK(mapper_empty.size() == 1);
       CHECK(mapper_empty.map().at(0) == 0);
 
-      O_list_t O_list{
-        make_loperator(c_dag("dn", 1), hs),
-        make_loperator(c_dag("dn", 2), hs),
-        make_loperator(c_dag("up", 1), hs),
-        make_loperator(c_dag("up", 2), hs)
-      };
+      O_list_t O_list{make_loperator(c_dag("dn", 1), hs),
+                      make_loperator(c_dag("dn", 2), hs),
+                      make_loperator(c_dag("up", 1), hs),
+                      make_loperator(c_dag("up", 2), hs)};
 
       basis_mapper mapper_N0(O_list, hs, 0);
       CHECK(mapper_N0.size() == 1);
@@ -216,12 +204,10 @@ TEST_CASE("Basis-mapped view of a state vector",
       auto hs_b = make_hilbert_space(a_dag(1) + a_dag(2) + a_dag(3) + a_dag(4),
                                      boson_es_constructor(4));
 
-      O_list_t O_list{
-        make_loperator(a_dag(1), hs_b),
-        make_loperator(a_dag(2), hs_b),
-        make_loperator(a_dag(3), hs_b),
-        make_loperator(a_dag(4), hs_b)
-      };
+      O_list_t O_list{make_loperator(a_dag(1), hs_b),
+                      make_loperator(a_dag(2), hs_b),
+                      make_loperator(a_dag(3), hs_b),
+                      make_loperator(a_dag(4), hs_b)};
 
       std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
       for(int N = 0; N < 10; ++N) {

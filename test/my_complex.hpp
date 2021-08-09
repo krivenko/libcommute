@@ -21,7 +21,8 @@
 // Non-default-constructible mock scalar type
 //
 struct my_complex {
-  float re; float im;
+  float re;
+  float im;
 
   my_complex() = delete;
 
@@ -34,48 +35,53 @@ struct my_complex {
   }
 
   // Arithmetics
-  my_complex operator-() const {return {-re, -im};}
+  my_complex operator-() const { return {-re, -im}; }
 
-  friend my_complex operator+(my_complex c, float x) {return {c.re + x, c.im};}
-  friend my_complex operator+(float x, my_complex c) {return c + x;}
+  friend my_complex operator+(my_complex c, float x) {
+    return {c.re + x, c.im};
+  }
+  friend my_complex operator+(float x, my_complex c) { return c + x; }
   friend my_complex operator+(my_complex c1, my_complex c2) {
     return {c1.re + c2.re, c1.im + c2.im};
   }
 
-  friend my_complex operator-(my_complex c, float x) {return {c.re-x, c.im};}
-  friend my_complex operator-(float x, my_complex c) {return {-c.re+x, -c.im};}
+  friend my_complex operator-(my_complex c, float x) {
+    return {c.re - x, c.im};
+  }
+  friend my_complex operator-(float x, my_complex c) {
+    return {-c.re + x, -c.im};
+  }
   friend my_complex operator-(my_complex c1, my_complex c2) {
     return {c1.re - c2.re, c1.im - c2.im};
   }
 
-  friend my_complex operator*(my_complex c, float x) {return {c.re*x, c.im*x};}
-  friend my_complex operator*(float x, my_complex c) {return c*x;}
+  friend my_complex operator*(my_complex c, float x) {
+    return {c.re * x, c.im * x};
+  }
+  friend my_complex operator*(float x, my_complex c) { return c * x; }
   friend my_complex operator*(my_complex c1, my_complex c2) {
-    return {c1.re*c2.re - c1.im*c2.im, c1.re*c2.im + c1.im*c2.re};
+    return {c1.re * c2.re - c1.im * c2.im, c1.re * c2.im + c1.im * c2.re};
   }
 
   float operator()(int m) const { return re * static_cast<float>(m); }
   my_complex operator()(int m1, int m2) const {
-    return {static_cast<float>(m1+m2)*re, static_cast<float>(m1-m2)*im};
+    return {static_cast<float>(m1 + m2) * re, static_cast<float>(m1 - m2) * im};
   }
 };
 
-inline std::ostream & operator<<(std::ostream & os, my_complex const& c) {
-  return os << "{" << (c.re == -0 ? 0 : c.re)
-            << "," << (c.im == -0 ? 0 : c.im)
+inline std::ostream& operator<<(std::ostream& os, my_complex const& c) {
+  return os << "{" << (c.re == -0 ? 0 : c.re) << "," << (c.im == -0 ? 0 : c.im)
             << "}";
 }
 
 namespace libcommute {
 
 // Specialize scalar_traits for my_complex
-template<> struct scalar_traits<my_complex> {
+template <> struct scalar_traits<my_complex> {
   // Zero value test
   static bool is_zero(my_complex const& x) { return x.re == 0 && x.im == 0; }
   // Make a constant from a double value
-  static my_complex make_const(double x) {
-    return {static_cast<float>(x), 0};
-  }
+  static my_complex make_const(double x) { return {static_cast<float>(x), 0}; }
   // Real part of x
   static my_complex real(my_complex const& x) { return {x.re, 0}; }
   // Imaginary part of x

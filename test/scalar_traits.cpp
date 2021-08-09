@@ -73,7 +73,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, 4.0)));
     CHECK(scalar_traits<cmplx>::make_const(0) == cmplx(0));
     CHECK(scalar_traits<cmplx>::make_const(1) == cmplx(1.0));
-    CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0,-2.0));
+    CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0, -2.0));
   }
 
   SECTION("std::complex<double>") {
@@ -86,7 +86,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, 4.0)));
     CHECK(scalar_traits<cmplx>::make_const(0) == cmplx(0));
     CHECK(scalar_traits<cmplx>::make_const(1) == cmplx(1.0));
-    CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0,-2.0));
+    CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0, -2.0));
   }
 
   SECTION("my_complex") {
@@ -148,11 +148,11 @@ TEST_CASE("Result types of arithmetic operations", "[arithmetic_result_type]") {
 
     CHECK(std::is_same<sum_type<my_complex, int>, my_complex>::value);
     CHECK(std::is_same<sum_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<sum_type<my_complex, my_complex>,my_complex>::value);
+    CHECK(std::is_same<sum_type<my_complex, my_complex>, my_complex>::value);
 
     CHECK(std::is_same<diff_type<my_complex, int>, my_complex>::value);
     CHECK(std::is_same<diff_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<diff_type<my_complex, my_complex>,my_complex>::value);
+    CHECK(std::is_same<diff_type<my_complex, my_complex>, my_complex>::value);
 
     CHECK(std::is_same<mul_type<my_complex, int>, my_complex>::value);
     CHECK(std::is_same<mul_type<int, my_complex>, my_complex>::value);
@@ -191,26 +191,39 @@ TEST_CASE("Detect availability of compound assignments",
 // Mock types used to test functions *_assign()
 //
 
-struct ST1 { int a; };
-struct ST2 { int a; };
+struct ST1 {
+  int a;
+};
+struct ST2 {
+  int a;
+};
 
 struct ST3 {
   int a;
 
   ST3(ST3 const&) = default;
-  ST3(ST3 &&) noexcept = default;
-  ST3 & operator=(ST3 const&) = default;
-  ST3 & operator=(ST3 &&) noexcept = default;
+  ST3(ST3&&) noexcept = default;
+  ST3& operator=(ST3 const&) = default;
+  ST3& operator=(ST3&&) noexcept = default;
   ~ST3() = default;
 
-  ST3 & operator+=(ST1 const& x) { a += x.a; return *this; }
-  ST3 operator+(ST2 const& x) { return {a + 2*x.a}; }
+  ST3& operator+=(ST1 const& x) {
+    a += x.a;
+    return *this;
+  }
+  ST3 operator+(ST2 const& x) { return {a + 2 * x.a}; }
 
-  ST3 & operator-=(ST1 const& x) { a -= x.a; return *this; }
-  ST3 operator-(ST2 const& x) { return {a - 2*x.a}; }
+  ST3& operator-=(ST1 const& x) {
+    a -= x.a;
+    return *this;
+  }
+  ST3 operator-(ST2 const& x) { return {a - 2 * x.a}; }
 
-  ST3 & operator*=(ST1 const& x) { a *= x.a; return *this; }
-  ST3 operator*(ST2 const& x) { return {a * 2*x.a}; }
+  ST3& operator*=(ST1 const& x) {
+    a *= x.a;
+    return *this;
+  }
+  ST3 operator*(ST2 const& x) { return {a * 2 * x.a}; }
 };
 
 TEST_CASE("Functions *_assign()", "[op_assign]") {

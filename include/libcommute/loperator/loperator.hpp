@@ -14,14 +14,14 @@
 #define LIBCOMMUTE_LOPERATOR_LOPERATOR_HPP_
 
 #include "../expression/expression.hpp"
+#include "../metafunctions.hpp"
+#include "../scalar_traits.hpp"
+#include "../utility.hpp"
 #include "hilbert_space.hpp"
-#include "monomial_action_fermion.hpp"
 #include "monomial_action_boson.hpp"
+#include "monomial_action_fermion.hpp"
 #include "monomial_action_spin.hpp"
 #include "state_vector.hpp"
-#include "../scalar_traits.hpp"
-#include "../metafunctions.hpp"
-#include "../utility.hpp"
 
 #include <utility>
 #include <vector>
@@ -32,27 +32,25 @@ namespace libcommute {
 // Linear operator acting on a state vector in a Hilbert space
 //
 
-template<typename ScalarType, int... AlgebraIDs>
-class loperator_base {
+template <typename ScalarType, int... AlgebraIDs> class loperator_base {
 
   using monomial_action_t = monomial_action<AlgebraIDs...>;
 
 public:
-
   using scalar_type = ScalarType;
 
   loperator_base() = default;
 
-  template<typename... IndexTypes>
+  template <typename... IndexTypes>
   loperator_base(expression<scalar_type, IndexTypes...> const& expr,
                  hilbert_space<IndexTypes...> const& hs) {
     for(auto const& m : expr) {
       // cppcheck-suppress useStlAlgorithm
       m_actions_.emplace_back(
-        monomial_action_t(std::make_pair(m.monomial.begin(), m.monomial.end()),
-                          hs),
-        m.coeff
-      );
+          monomial_action_t(
+              std::make_pair(m.monomial.begin(), m.monomial.end()),
+              hs),
+          m.coeff);
     }
   }
 
@@ -70,26 +68,25 @@ public:
   ~loperator_base() = default;
 
 private:
-
   std::vector<std::pair<monomial_action_t, scalar_type>> m_actions_;
 
 protected:
-
   inline std::vector<std::pair<monomial_action_t, scalar_type>> const&
-  m_actions() const { return m_actions_; }
+  m_actions() const {
+    return m_actions_;
+  }
 };
 
 //
 // Linear operator with constant monomial coefficients
 //
 
-template<typename ScalarType, int... AlgebraIDs>
+template <typename ScalarType, int... AlgebraIDs>
 class loperator : public loperator_base<ScalarType, AlgebraIDs...> {
 
   using base = loperator_base<ScalarType, AlgebraIDs...>;
 
 public:
-
   loperator() = default;
 
   using base::base;
@@ -102,7 +99,7 @@ public:
   ~loperator() = default;
 
   // Act on state and return the resulting state.
-  template<typename StateVector>
+  template <typename StateVector>
   inline StateVector operator()(StateVector const& sv) const {
     StateVector res = zeros_like(sv);
     act_impl(sv, res);
@@ -110,35 +107,34 @@ public:
   }
 
   // Act on state `src` and return the resulting state via `dst`.
-  template<typename SrcStateVector, typename DstStateVector>
-  inline void operator()(SrcStateVector && src, DstStateVector && dst) const {
+  template <typename SrcStateVector, typename DstStateVector>
+  inline void operator()(SrcStateVector&& src, DstStateVector&& dst) const {
     set_zeros(dst);
     act_impl(std::forward<SrcStateVector>(src),
              std::forward<DstStateVector>(dst));
   }
 
   // Act on state and return the resulting state.
-  template<typename StateVector>
+  template <typename StateVector>
   inline StateVector operator*(StateVector const& sv) const {
     return operator()(sv);
   }
 
 private:
-
   // Implementation details of operator()
-  template<typename SrcStateVector, typename DstStateVector>
-  inline void act_impl(SrcStateVector && src, DstStateVector && dst) const {
+  template <typename SrcStateVector, typename DstStateVector>
+  inline void act_impl(SrcStateVector&& src, DstStateVector&& dst) const {
     foreach(src,
-            [&,this](sv_index_type in_index,
-                     element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
-      for(auto const& ma : base::m_actions()) {
-        sv_index_type index = in_index;
-        auto coeff = scalar_traits<ScalarType>::make_const(1);
-        bool nonzero = ma.first.act(index, coeff);
-        if(nonzero)
-          update_add_element(dst, index, ma.second * coeff * a);
-      }
-    });
+            [&, this](sv_index_type in_index,
+                      element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
+              for(auto const& ma : base::m_actions()) {
+                sv_index_type index = in_index;
+                auto coeff = scalar_traits<ScalarType>::make_const(1);
+                bool nonzero = ma.first.act(index, coeff);
+                if(nonzero)
+                  update_add_element(dst, index, ma.second * coeff * a);
+              }
+            });
   }
 };
 
@@ -146,13 +142,12 @@ private:
 // Linear operator with parameter-dependent (callable) coefficients
 //
 
-template<typename ScalarType, int... AlgebraIDs>
+template <typename ScalarType, int... AlgebraIDs>
 class parametric_loperator : public loperator_base<ScalarType, AlgebraIDs...> {
 
   using base = loperator_base<ScalarType, AlgebraIDs...>;
 
 public:
-
   parametric_loperator() = delete;
 
   using base::base;
@@ -169,9 +164,9 @@ public:
   // Coefficients in front of monomials of the corresponding polynomial
   // expression are invoked with the `args` as arguments to produce
   // the actual coefficient values.
-  template<typename StateVector, typename... CoeffArgs>
-  inline StateVector
-  operator()(StateVector const& sv, CoeffArgs&&... args) const {
+  template <typename StateVector, typename... CoeffArgs>
+  inline StateVector operator()(StateVector const& sv,
+                                CoeffArgs&&... args) const {
     StateVector res = zeros_like(sv);
     std::vector<evaluated_coeff_t<CoeffArgs...>> evaluated_coeffs;
     evaluated_coeffs.reserve(base::m_actions().size());
@@ -179,7 +174,7 @@ public:
     return res;
   }
 
-  template<typename... CoeffArgs>
+  template <typename... CoeffArgs>
   using evaluated_coeff_t = invoke_result_t<ScalarType, CoeffArgs...>;
 
   // Act on state `src` and return the resulting state via `dst`.
@@ -187,9 +182,9 @@ public:
   // Coefficients in front of monomials of the corresponding polynomial
   // expression are invoked with the `coeff_args` as arguments to produce
   // the actual coefficient values.
-  template<typename StateVector, typename... CoeffArgs>
+  template <typename StateVector, typename... CoeffArgs>
   inline void operator()(StateVector const& src,
-                         StateVector & dst,
+                         StateVector& dst,
                          CoeffArgs&&... args) const {
     set_zeros(dst);
     std::vector<evaluated_coeff_t<CoeffArgs...>> evaluated_coeffs;
@@ -203,12 +198,12 @@ public:
   // expression are invoked with the `coeff_args` as arguments to produce
   // the actual coefficient values. This method does not allocate memory
   // to store those values and stores them in `evaluated_coeffs` instead.
-  template<typename StateVector, typename... CoeffArgs>
+  template <typename StateVector, typename... CoeffArgs>
   inline void act_and_store_coeffs(
-    StateVector const& src,
-    StateVector & dst,
-    std::vector<evaluated_coeff_t<CoeffArgs...>> & evaluated_coeffs,
-    CoeffArgs&&... args) const {
+      StateVector const& src,
+      StateVector& dst,
+      std::vector<evaluated_coeff_t<CoeffArgs...>>& evaluated_coeffs,
+      CoeffArgs&&... args) const {
 
     set_zeros(dst);
     evaluated_coeffs.clear();
@@ -220,10 +215,10 @@ public:
   // Coefficients in front of monomials of the corresponding polynomial
   // expression are invoked with the `args` as arguments to produce
   // the output coefficient values.
-  template<typename... CoeffArgs>
+  template <typename... CoeffArgs>
   inline loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...>
   at(CoeffArgs&&... args) const {
-        loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> lop;
+    loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> lop;
     for(auto const& m : base::m_actions()) {
       lop.add_monomial_action(m.first,
                               m.second(std::forward<CoeffArgs>(args)...));
@@ -232,14 +227,13 @@ public:
   }
 
 private:
-
   // Implementation details of operator()
-  template<typename StateVector, typename... CoeffArgs>
-  inline void act_impl(
-    StateVector const& src,
-    StateVector & dst,
-    std::vector<evaluated_coeff_t<CoeffArgs...>> & evaluated_coeffs,
-    CoeffArgs&&... args) const {
+  template <typename StateVector, typename... CoeffArgs>
+  inline void
+  act_impl(StateVector const& src,
+           StateVector& dst,
+           std::vector<evaluated_coeff_t<CoeffArgs...>>& evaluated_coeffs,
+           CoeffArgs&&... args) const {
 
     auto const& m_act = base::m_actions();
 
@@ -250,23 +244,25 @@ private:
       evaluated_coeffs.emplace_back(a.second(std::forward<CoeffArgs>(args)...));
 
     // Apply monomials
-    foreach(src, [&,this](sv_index_type in_index,
-                          element_type_t<StateVector> const& a) {
-      for(std::size_t n = 0; n < m_act.size(); ++n) {
-        sv_index_type index = in_index;
-        auto coeff =
-          scalar_traits<evaluated_coeff_t<CoeffArgs...>>::make_const(1);
-        bool nz = m_act[n].first.act(index, coeff);
-        if(nz) {
-          update_add_element(dst, index, evaluated_coeffs[n] * coeff * a);
-        }
-      }
-    });
+    foreach(
+        src,
+        [&, this](sv_index_type in_index,
+                  element_type_t<StateVector> const& a) {
+          for(std::size_t n = 0; n < m_act.size(); ++n) {
+            sv_index_type index = in_index;
+            auto coeff =
+                scalar_traits<evaluated_coeff_t<CoeffArgs...>>::make_const(1);
+            bool nz = m_act[n].first.act(index, coeff);
+            if(nz) {
+              update_add_element(dst, index, evaluated_coeffs[n] * coeff * a);
+            }
+          }
+        });
   }
 };
 
 // Factory function for loperator
-template<typename ScalarType, typename... IndexTypes>
+template <typename ScalarType, typename... IndexTypes>
 inline loperator<ScalarType, fermion, boson, spin>
 make_loperator(expression<ScalarType, IndexTypes...> const& expr,
                hilbert_space<IndexTypes...> const& hs) {
@@ -274,7 +270,7 @@ make_loperator(expression<ScalarType, IndexTypes...> const& expr,
 }
 
 // Factory function for parametric_loperator
-template<typename ScalarType, typename... IndexTypes>
+template <typename ScalarType, typename... IndexTypes>
 inline parametric_loperator<ScalarType, fermion, boson, spin>
 make_param_loperator(expression<ScalarType, IndexTypes...> const& expr,
                      hilbert_space<IndexTypes...> const& hs) {

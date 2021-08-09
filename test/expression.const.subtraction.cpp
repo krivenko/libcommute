@@ -16,9 +16,9 @@
 #include "my_complex.hpp"
 #include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
 
 #include <string>
 
@@ -108,26 +108,26 @@ TEST_CASE("Subtraction", "[minus]") {
   SECTION("double and complex") {
     auto expr_r = c_dag(1, "up");
     using ref_t = expression<std::complex<double>, int, std::string>;
-    std::complex<double> const Id(1,0);
-    std::complex<double> const I(0,1);
+    std::complex<double> const Id(1, 0);
+    std::complex<double> const I(0, 1);
 
     // Result type
-    CHECK(std::is_same<decltype(expr_r - 2.0*I), ref_t>::value);
-    CHECK(std::is_same<decltype(2.0*I - expr_r), ref_t>::value);
+    CHECK(std::is_same<decltype(expr_r - 2.0 * I), ref_t>::value);
+    CHECK(std::is_same<decltype(2.0 * I - expr_r), ref_t>::value);
 
-    CHECK_THAT((expr_r - 0.0*I), Prints<ref_t>("(1,0)*C+(1,up)"));
-    CHECK_THAT((0.0*I - expr_r), Prints<ref_t>("(-1,0)*C+(1,up)"));
-    CHECK_THAT((expr_r - 2.0*I), Prints<ref_t>("(0,-2) + (1,0)*C+(1,up)"));
-    CHECK_THAT((2.0*I - expr_r), Prints<ref_t>("(0,2) + (-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - 0.0 * I), Prints<ref_t>("(1,0)*C+(1,up)"));
+    CHECK_THAT((0.0 * I - expr_r), Prints<ref_t>("(-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - 2.0 * I), Prints<ref_t>("(0,-2) + (1,0)*C+(1,up)"));
+    CHECK_THAT((2.0 * I - expr_r), Prints<ref_t>("(0,2) + (-1,0)*C+(1,up)"));
 
     expr_r -= 2.0;
 
-    CHECK_THAT((expr_r - 0.0*I), Prints<ref_t>("(-2,0) + (1,0)*C+(1,up)"));
-    CHECK_THAT((0.0*I - expr_r), Prints<ref_t>("(2,0) + (-1,0)*C+(1,up)"));
-    CHECK_THAT((expr_r - 2.0*Id), Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
-    CHECK_THAT((2.0*Id - expr_r), Prints<ref_t>("(4,0) + (-1,0)*C+(1,up)"));
-    CHECK_THAT((expr_r - (-2.0*Id)), Prints<ref_t>("(1,0)*C+(1,up)"));
-    CHECK_THAT(((-2.0*Id) - expr_r), Prints<ref_t>("(-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - 0.0 * I), Prints<ref_t>("(-2,0) + (1,0)*C+(1,up)"));
+    CHECK_THAT((0.0 * I - expr_r), Prints<ref_t>("(2,0) + (-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - 2.0 * Id), Prints<ref_t>("(-4,0) + (1,0)*C+(1,up)"));
+    CHECK_THAT((2.0 * Id - expr_r), Prints<ref_t>("(4,0) + (-1,0)*C+(1,up)"));
+    CHECK_THAT((expr_r - (-2.0 * Id)), Prints<ref_t>("(1,0)*C+(1,up)"));
+    CHECK_THAT(((-2.0 * Id) - expr_r), Prints<ref_t>("(-1,0)*C+(1,up)"));
   }
   SECTION("my_complex") {
     auto expr = c_dag<my_complex>(1, "up");

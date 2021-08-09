@@ -47,8 +47,7 @@ int main() {
   using namespace static_indices;
 
   // The Jaynes-Cummings Hamiltonian
-  auto H = hbar * w_c * a_dag() * a()  +
-           hbar * w_a * S_z() +
+  auto H = hbar * w_c * a_dag() * a() + hbar * w_a * S_z() +
            hbar * 0.5 * Omega * (a() * S_p() + a_dag() * S_m());
 
   // Check that the number operator commutes with the Hamiltonian
@@ -84,7 +83,7 @@ int main() {
                   double E) {
     double d = 0;
     for(unsigned int i = 0; i < hs.dim(); ++i) {
-      d += std::pow(psi[i] - E*phi[i], 2);
+      d += std::pow(psi[i] - E * phi[i], 2);
     }
     return std::sqrt(d);
   };
@@ -107,8 +106,8 @@ int main() {
   psi = Hop(phi);
 
   // Check |\psi> \approx E_{gs} |\phi>
-  std::cout << "|||0,g> - E_g|0,g>||_{L^2} = "
-            << diff(psi, phi, E_gs) << std::endl;
+  std::cout << "|||0,g> - E_g|0,g>||_{L^2} = " << diff(psi, phi, E_gs)
+            << std::endl;
 
   //
   // Now, do a similar check for the Jaynes-Cummings ladder doublets.
@@ -121,8 +120,8 @@ int main() {
     auto n1_e_index = hs.basis_state_index(es_boson, n - 1) + // n - 1
                       hs.basis_state_index(es_spin, 1);       // 1 -> e
     // Index of basis state |n, g>
-    auto n_g_index = hs.basis_state_index(es_boson, n) +      // n
-                     hs.basis_state_index(es_spin, 0);        // 0 -> g
+    auto n_g_index = hs.basis_state_index(es_boson, n) + // n
+                     hs.basis_state_index(es_spin, 0);   // 0 -> g
 
     // Set \phi to be the "+" dressed state
     std::fill(phi.begin(), phi.end(), 0);
@@ -131,8 +130,8 @@ int main() {
 
     psi = Hop(phi);
 
-    std::cout << "|||" << n << ",+> - E_+(" << n << ")|" << n <<",+>||_{L^2} = "
-              << diff(psi, phi, energy(1, n)) << std::endl;
+    std::cout << "|||" << n << ",+> - E_+(" << n << ")|" << n
+              << ",+>||_{L^2} = " << diff(psi, phi, energy(1, n)) << std::endl;
 
     // Set \phi to be the "-" dressed state
     std::fill(phi.begin(), phi.end(), 0);
@@ -141,8 +140,8 @@ int main() {
 
     psi = Hop(phi);
 
-    std::cout << "|||" << n << ",-> - E_-(" << n << ")|" << n <<",->||_{L^2} = "
-              << diff(psi, phi, energy(-1, n)) << std::endl;
+    std::cout << "|||" << n << ",-> - E_-(" << n << ")|" << n
+              << ",->||_{L^2} = " << diff(psi, phi, energy(-1, n)) << std::endl;
   }
 
   return 0;

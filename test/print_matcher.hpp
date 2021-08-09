@@ -23,7 +23,7 @@
 //
 
 // Checks result of calling operator<<() on an object of type `T`
-template<typename T> class PrintMatcher : public Catch::MatcherBase<T> {
+template <typename T> class PrintMatcher : public Catch::MatcherBase<T> {
   std::string const& ref_;
 
 public:
@@ -36,12 +36,9 @@ public:
     return ss.str() == ref_;
   }
 
-  std::string describe() const override {
-    return "prints " + ref_ ;
-  }
+  std::string describe() const override { return "prints " + ref_; }
 };
-template<typename T>
-inline PrintMatcher<T> Prints(std::string const& ref) {
+template <typename T> inline PrintMatcher<T> Prints(std::string const& ref) {
   return PrintMatcher<T>(ref);
 }
 

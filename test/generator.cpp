@@ -13,11 +13,11 @@
 
 #include <catch.hpp>
 
-#include "print_matcher.hpp"
 #include "check_ordering.hpp"
+#include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 
 #include <algorithm>
@@ -50,13 +50,13 @@ void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
     for(std::size_t j = i + 1; j < v.size(); ++j) {
       double c = v[j]->swap_with(*v[i], f);
       if(one_half) {
-        if(j%3 == 1 && i == j - 1) { // S_- S_+ = 1/2 - S_z
+        if(j % 3 == 1 && i == j - 1) { // S_- S_+ = 1/2 - S_z
           CHECK(c == 0);
           CHECK_LINEAR_FUNCTION_1(f, 0.5, -1, *v[i + 2]);
-        } else if(j%3 == 2 && i == j - 2) { // S_z S_+ = 1/2 S_+
+        } else if(j % 3 == 2 && i == j - 2) { // S_z S_+ = 1/2 S_+
           CHECK(c == 0);
           CHECK_LINEAR_FUNCTION_1(f, 0, 0.5, *v[i]);
-        } else if(j%3 == 2 && i == j - 1) { // S_z S_- = -1/2 S_-
+        } else if(j % 3 == 2 && i == j - 1) { // S_z S_- = -1/2 S_-
           CHECK(c == 0);
           CHECK_LINEAR_FUNCTION_1(f, 0, -0.5, *v[i]);
         } else {
@@ -65,11 +65,11 @@ void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
         }
       } else {
         CHECK(c == 1);
-        if(j%3 == 1 && i == j - 1) { // S_- S_+ = S_+ * S_- - 2*S_z
+        if(j % 3 == 1 && i == j - 1) { // S_- S_+ = S_+ * S_- - 2*S_z
           CHECK_LINEAR_FUNCTION_1(f, 0, -2, *v[i + 2]);
-        } else if(j%3 == 2 && i == j - 2) { // S_z S_+ = S_+ * S_z + S_+
+        } else if(j % 3 == 2 && i == j - 2) { // S_z S_+ = S_+ * S_z + S_+
           CHECK_LINEAR_FUNCTION_1(f, 0, 1, *v[i]);
-        } else if(j%3 == 2 && i == j - 1) { // S_z S_- = S_- * S_z - S_-
+        } else if(j % 3 == 2 && i == j - 1) { // S_z S_- = S_- * S_z - S_-
           CHECK_LINEAR_FUNCTION_1(f, 0, -1, *v[i]);
         } else {
           CHECK_LINEAR_FUNCTION_0(f, 0);
@@ -86,22 +86,22 @@ void check_generator_spin_simplify_prod(std::vector<gen_type*> const& v,
     for(std::size_t j = i; j < v.size(); ++j) {
       bool c = v[i]->simplify_prod(*v[j], f);
       if(one_half) {
-        if(i%3 == 0 && j == i) { // S_+ * S_+ = 0
+        if(i % 3 == 0 && j == i) { // S_+ * S_+ = 0
           CHECK(c);
           CHECK_LINEAR_FUNCTION_0(f, 0);
-        } else if(i%3 == 1 && j == i) { // S_- * S_- = 0
+        } else if(i % 3 == 1 && j == i) { // S_- * S_- = 0
           CHECK(c);
           CHECK_LINEAR_FUNCTION_0(f, 0);
-        } else if(i%3 == 2 && j == i) { // S_z * S_z = 1/4
+        } else if(i % 3 == 2 && j == i) { // S_z * S_z = 1/4
           CHECK(c);
           CHECK_LINEAR_FUNCTION_0(f, 0.25);
-        } else if(i%3 == 0 && j == i + 1) { // S_+ * S_- = 1/2 + S_z
+        } else if(i % 3 == 0 && j == i + 1) { // S_+ * S_- = 1/2 + S_z
           CHECK(c);
           CHECK_LINEAR_FUNCTION_1(f, 0.5, 1, *v[i + 2]);
-        } else if(i%3 == 0 && j == i + 2) { // S_+ * S_z = -1/2 S_+
+        } else if(i % 3 == 0 && j == i + 2) { // S_+ * S_z = -1/2 S_+
           CHECK(c);
           CHECK_LINEAR_FUNCTION_1(f, 0, -0.5, *v[i]);
-        } else if(i%3 == 1 && j == i + 1) { // S_- * S_z = 1/2 S_-
+        } else if(i % 3 == 1 && j == i + 1) { // S_- * S_z = 1/2 S_-
           CHECK(c);
           CHECK_LINEAR_FUNCTION_1(f, 0, 0.5, *v[i]);
         } else {
@@ -115,7 +115,7 @@ void check_generator_spin_simplify_prod(std::vector<gen_type*> const& v,
   }
 }
 
-template<typename V>
+template <typename V>
 void check_conj(V const& v, std::initializer_list<int> ref) {
   linear_function_t f;
   int n = 0;
@@ -135,14 +135,14 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto Cdag_up = make_fermion(true, "up", 0);
   auto C_up = make_fermion(false, "up", 0);
   auto C_dn = make_fermion(false, "dn", 0);
-  std::vector<gen_type*> fermion_ops = {&Cdag_dn,&Cdag_up,&C_up,&C_dn};
+  std::vector<gen_type*> fermion_ops = {&Cdag_dn, &Cdag_up, &C_up, &C_dn};
 
   // Bosonic generators
   auto Adag_x = make_boson(true, "x", 0);
   auto Adag_y = make_boson(true, "y", 0);
   auto A_y = make_boson(false, "y", 0);
   auto A_x = make_boson(false, "x", 0);
-  std::vector<gen_type*> boson_ops = {&Adag_x,&Adag_y,&A_y,&A_x};
+  std::vector<gen_type*> boson_ops = {&Adag_x, &Adag_y, &A_y, &A_x};
 
   // Spin-1/2 algebra generators
   auto Sp_i = make_spin(spin_component::plus, "i", 0);
@@ -151,7 +151,7 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto Sp_j = make_spin(spin_component::plus, "j", 0);
   auto Sm_j = make_spin(spin_component::minus, "j", 0);
   auto Sz_j = make_spin(spin_component::z, "j", 0);
-  std::vector<gen_type*> spin_ops = {&Sp_i,&Sm_i,&Sz_i,&Sp_j,&Sm_j,&Sz_j};
+  std::vector<gen_type*> spin_ops = {&Sp_i, &Sm_i, &Sz_i, &Sp_j, &Sm_j, &Sz_j};
 
   // Spin-1 algebra generators
   auto S1p_i = make_spin(1, spin_component::plus, "i", 0);
@@ -160,23 +160,23 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto S1p_j = make_spin(1, spin_component::plus, "j", 0);
   auto S1m_j = make_spin(1, spin_component::minus, "j", 0);
   auto S1z_j = make_spin(1, spin_component::z, "j", 0);
-  std::vector<gen_type*> spin1_ops = {&S1p_i,&S1m_i,&S1z_i,
-                                      &S1p_j,&S1m_j,&S1z_j};
+  std::vector<gen_type*> spin1_ops =
+      {&S1p_i, &S1m_i, &S1z_i, &S1p_j, &S1m_j, &S1z_j};
 
   // Spin-3/2 algebra generators
-  auto S32p_i = make_spin(3.0/2, spin_component::plus, "i", 0);
-  auto S32m_i = make_spin(3.0/2, spin_component::minus, "i", 0);
-  auto S32z_i = make_spin(3.0/2, spin_component::z, "i", 0);
-  auto S32p_j = make_spin(3.0/2, spin_component::plus, "j", 0);
-  auto S32m_j = make_spin(3.0/2, spin_component::minus, "j", 0);
-  auto S32z_j = make_spin(3.0/2, spin_component::z, "j", 0);
-  std::vector<gen_type*> spin32_ops = {&S32p_i,&S32m_i,&S32z_i,
-                                       &S32p_j,&S32m_j,&S32z_j};
+  auto S32p_i = make_spin(3.0 / 2, spin_component::plus, "i", 0);
+  auto S32m_i = make_spin(3.0 / 2, spin_component::minus, "i", 0);
+  auto S32z_i = make_spin(3.0 / 2, spin_component::z, "i", 0);
+  auto S32p_j = make_spin(3.0 / 2, spin_component::plus, "j", 0);
+  auto S32m_j = make_spin(3.0 / 2, spin_component::minus, "j", 0);
+  auto S32z_j = make_spin(3.0 / 2, spin_component::z, "j", 0);
+  std::vector<gen_type*> spin32_ops =
+      {&S32p_i, &S32m_i, &S32z_i, &S32p_j, &S32m_j, &S32z_j};
 
   linear_function_t lin_f;
 
   SECTION("fermion") {
-    for(auto * op : fermion_ops) {
+    for(auto* op : fermion_ops) {
       CHECK(op->algebra_id() == fermion);
       CHECK_FALSE(op->reduce_power(3, lin_f));
       CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -184,7 +184,7 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     for(std::size_t i = 0; i < fermion_ops.size(); ++i) {
       auto fermion_gen_p =
-        dynamic_cast<generator_fermion<std::string, int>*>(fermion_ops[i]);
+          dynamic_cast<generator_fermion<std::string, int>*>(fermion_ops[i]);
       CHECK(fermion_gen_p->dagger() == (i < 2));
     }
 
@@ -215,7 +215,7 @@ TEST_CASE("Algebra generators", "[generator]") {
   }
 
   SECTION("boson") {
-    for(auto * op : boson_ops) {
+    for(auto* op : boson_ops) {
       CHECK(op->algebra_id() == boson);
       CHECK_FALSE(op->reduce_power(3, lin_f));
       CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -223,7 +223,7 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     for(std::size_t i = 0; i < boson_ops.size(); ++i) {
       auto boson_gen_p =
-        dynamic_cast<generator_boson<std::string, int>*>(boson_ops[i]);
+          dynamic_cast<generator_boson<std::string, int>*>(boson_ops[i]);
       CHECK(boson_gen_p->dagger() == (i < 2));
     }
 
@@ -254,7 +254,7 @@ TEST_CASE("Algebra generators", "[generator]") {
   }
 
   SECTION("spin-1/2") {
-    for(auto * op : spin_ops) {
+    for(auto* op : spin_ops) {
       CHECK(op->algebra_id() == spin);
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
@@ -294,7 +294,7 @@ TEST_CASE("Algebra generators", "[generator]") {
   }
 
   SECTION("spin-1") {
-    for(auto * op : spin1_ops) {
+    for(auto* op : spin1_ops) {
       CHECK(op->algebra_id() == spin);
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
@@ -334,7 +334,7 @@ TEST_CASE("Algebra generators", "[generator]") {
   }
 
   SECTION("spin-3/2") {
-    for(auto * op : spin32_ops) {
+    for(auto* op : spin32_ops) {
       CHECK(op->algebra_id() == spin);
 
       auto spin_gen_p = dynamic_cast<generator_spin<std::string, int>*>(op);
@@ -374,11 +374,8 @@ TEST_CASE("Algebra generators", "[generator]") {
 
   SECTION("different_algebras") {
     std::vector<gen_type*> all_ops;
-    for(auto const & op_list : {fermion_ops,
-                                boson_ops,
-                                spin_ops,
-                                spin1_ops,
-                                spin32_ops}) {
+    for(auto const& op_list :
+        {fermion_ops, boson_ops, spin_ops, spin1_ops, spin32_ops}) {
       std::copy(op_list.begin(), op_list.end(), std::back_inserter(all_ops));
     }
 

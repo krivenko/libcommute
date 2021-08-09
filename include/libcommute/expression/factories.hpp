@@ -13,12 +13,12 @@
 #ifndef LIBCOMMUTE_EXPRESSION_FACTORIES_HPP_
 #define LIBCOMMUTE_EXPRESSION_FACTORIES_HPP_
 
-#include "expression.hpp"
-#include "generator_fermion.hpp"
-#include "generator_boson.hpp"
-#include "generator_spin.hpp"
 #include "../scalar_traits.hpp"
 #include "../utility.hpp"
+#include "expression.hpp"
+#include "generator_boson.hpp"
+#include "generator_fermion.hpp"
+#include "generator_spin.hpp"
 
 #include <utility>
 
@@ -30,30 +30,26 @@ namespace libcommute {
 namespace static_indices {
 
 #define INDICES std::forward<IndexTypes>(indices)...
-#define DEFINE_FACTORY(NAME, ...)                                         \
-template<typename ScalarType = double, typename... IndexTypes>            \
-inline                                                                    \
-expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
-NAME(IndexTypes&&... indices) {                                           \
-  using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
-  return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
-               typename ret_t::monomial_t(__VA_ARGS__)                    \
-  );                                                                      \
-}
+#define DEFINE_FACTORY(NAME, ...)                                              \
+  template <typename ScalarType = double, typename... IndexTypes>              \
+  inline expression<ScalarType, c_str_to_string_t<IndexTypes>...> NAME(        \
+      IndexTypes&&... indices) {                                               \
+    using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>;    \
+    return ret_t(scalar_traits<ScalarType>::make_const(1),                     \
+                 typename ret_t::monomial_t(__VA_ARGS__));                     \
+  }
 
-#define DEFINE_FACTORY_SPIN(NAME, ...)                                    \
-template<int Multiplicity,                                                \
-         typename ScalarType = double,                                    \
-         typename... IndexTypes>                                          \
-inline                                                                    \
-expression<ScalarType, c_str_to_string_t<IndexTypes>...>                  \
-NAME(IndexTypes&&... indices) {                                           \
-  static_assert(Multiplicity >= 2, "Invalid multiplicity");               \
-  using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>; \
-  return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
-               typename ret_t::monomial_t(__VA_ARGS__)                    \
-  );                                                                      \
-}
+#define DEFINE_FACTORY_SPIN(NAME, ...)                                         \
+  template <int Multiplicity,                                                  \
+            typename ScalarType = double,                                      \
+            typename... IndexTypes>                                            \
+  inline expression<ScalarType, c_str_to_string_t<IndexTypes>...> NAME(        \
+      IndexTypes&&... indices) {                                               \
+    static_assert(Multiplicity >= 2, "Invalid multiplicity");                  \
+    using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>;    \
+    return ret_t(scalar_traits<ScalarType>::make_const(1),                     \
+                 typename ret_t::monomial_t(__VA_ARGS__));                     \
+  }
 
 //
 // Free functions to make fermionic operators
@@ -64,9 +60,9 @@ DEFINE_FACTORY(c_dag, (static_indices::make_fermion(true, INDICES)))
 // Annihilation operator
 DEFINE_FACTORY(c, (static_indices::make_fermion(false, INDICES)))
 // Number of fermions
-DEFINE_FACTORY(n, (static_indices::make_fermion(true, indices...)),
-                  (static_indices::make_fermion(false, indices...))
-              )
+DEFINE_FACTORY(n,
+               (static_indices::make_fermion(true, indices...)),
+               (static_indices::make_fermion(false, indices...)))
 
 //
 // Free functions to make bosonic operators
@@ -92,68 +88,60 @@ DEFINE_FACTORY(S_z, (static_indices::make_spin(spin_component::z, INDICES)))
 // Free functions to make spin operators (arbitrary spin)
 //
 // Raising operator
-DEFINE_FACTORY_SPIN(S_p, (static_indices::make_spin(
-                                                    (Multiplicity-1)/2.0,
-                                                    spin_component::plus,
-                                                    INDICES
-                                                   )
-                         )
-                   )
+DEFINE_FACTORY_SPIN(S_p,
+                    (static_indices::make_spin((Multiplicity - 1) / 2.0,
+                                               spin_component::plus,
+                                               INDICES)))
 // Lowering operator
-DEFINE_FACTORY_SPIN(S_m, (static_indices::make_spin(
-                                                    (Multiplicity-1)/2.0,
-                                                    spin_component::minus,
-                                                    INDICES
-                                                   )
-                         )
-                   )
+DEFINE_FACTORY_SPIN(S_m,
+                    (static_indices::make_spin((Multiplicity - 1) / 2.0,
+                                               spin_component::minus,
+                                               INDICES)))
 // S_z
-DEFINE_FACTORY_SPIN(S_z, (static_indices::make_spin(
-                                                    (Multiplicity-1)/2.0,
-                                                    spin_component::z,
-                                                    INDICES
-                                                   )
-                         )
-                   )
+DEFINE_FACTORY_SPIN(S_z,
+                    (static_indices::make_spin((Multiplicity - 1) / 2.0,
+                                               spin_component::z,
+                                               INDICES)))
 
 //
 // In the complex case, we can additionally define S_x and S_y
 //
 
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (static_indices::S_p(indices...) +
-                                      static_indices::S_m(indices...));
+  return std::complex<double>(0.5) *
+         (static_indices::S_p(indices...) + static_indices::S_m(indices...));
 }
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (static_indices::S_p(indices...) -
-                                          static_indices::S_m(indices...));
+  return std::complex<double>(0, -0.5) *
+         (static_indices::S_p(indices...) - static_indices::S_m(indices...));
 }
 
-template<int Mult, typename... IndexTypes>
+template <int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_x(IndexTypes&&... indices) {
   return std::complex<double>(0.5) * (static_indices::S_p<Mult>(indices...) +
                                       static_indices::S_m<Mult>(indices...));
 }
-template<int Mult, typename... IndexTypes>
+template <int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0,-0.5) * (static_indices::S_p<Mult>(indices...) -
-                                         static_indices::S_m<Mult>(indices...));
+  return std::complex<double>(0, -0.5) *
+         (static_indices::S_p<Mult>(indices...) -
+          static_indices::S_m<Mult>(indices...));
 }
 
 // Make a complex expression out of a real one
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline expr_complex<IndexTypes...>
 make_complex(expr_real<IndexTypes...> const& expr) {
   return expr_complex<IndexTypes...>(expr);
 }
 
-} // namespace libcommute::static_indices
+} // namespace static_indices
 } // namespace libcommute
 
 #undef DEFINE_FACTORY

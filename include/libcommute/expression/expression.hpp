@@ -13,11 +13,11 @@
 #ifndef LIBCOMMUTE_EXPRESSION_EXPRESSION_HPP_
 #define LIBCOMMUTE_EXPRESSION_EXPRESSION_HPP_
 
-#include "generator.hpp"
-#include "monomial.hpp"
+#include "../metafunctions.hpp"
 #include "../scalar_traits.hpp"
 #include "../utility.hpp"
-#include "../metafunctions.hpp"
+#include "generator.hpp"
+#include "monomial.hpp"
 
 #include <complex>
 #include <iostream>
@@ -42,34 +42,31 @@ namespace libcommute {
 // used instead of +, -, * in arithmetic expressions with ScalarType objects.
 //
 
-template<typename ScalarType, typename... IndexTypes>
-class expression {
+template <typename ScalarType, typename... IndexTypes> class expression {
 public:
-
   using scalar_type = ScalarType;
   using index_types = std::tuple<IndexTypes...>;
   using monomial_t = monomial<IndexTypes...>;
   using monomials_map_t = std::map<monomial_t, ScalarType>;
 
 private:
-
   // List of all monomials in this polynomial expression
   monomials_map_t monomials_;
 
   // Expression with only the IndexTypes fixed
-  template<typename S> using expression_t = expression<S, IndexTypes...>;
+  template <typename S> using expression_t = expression<S, IndexTypes...>;
 
   // Is T an instance of expression_t?
-  template<typename T> struct is_expression : std::false_type {};
-  template<typename S> struct is_expression<expression_t<S>>
-    : std::true_type {};
+  template <typename T> struct is_expression : std::false_type {};
+  template <typename S>
+  struct is_expression<expression_t<S>> : std::true_type {};
 
   // Disable overload for expressions
-  template<typename T> using disable_for_expression =
-    typename std::enable_if<!is_expression<T>::value>::type;
+  template <typename T>
+  using disable_for_expression =
+      typename std::enable_if<!is_expression<T>::value>::type;
 
 public:
-
   // Value semantics
   expression() = default;
   expression(expression const&) = default;
@@ -79,24 +76,23 @@ public:
   ~expression() = default;
 
   // Construct from an expression of a different scalar type
-  template<typename S>
+  template <typename S>
   // cppcheck-suppress noExplicitConstructor
   expression(expression<S, IndexTypes...> const& x) {
-   static_assert(std::is_constructible<scalar_type, S>::value,
-                 "Incompatible scalar type in construction");
-   *this = x;
+    static_assert(std::is_constructible<scalar_type, S>::value,
+                  "Incompatible scalar type in construction");
+    *this = x;
   }
 
   // Construct expression with one constant term
-  template<typename S>
-  explicit expression(S const& x) {
+  template <typename S> explicit expression(S const& x) {
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
     if(!scalar_traits<S>::is_zero(x)) monomials_.emplace(monomial_t{}, x);
   }
 
   // Construct from a monomial
-  template<typename S>
+  template <typename S>
   explicit expression(S const& x, monomial_t const& monomial) {
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
@@ -105,10 +101,9 @@ public:
   }
 
 private:
-
   // Internal: Construct from a linear function of generators
-  explicit
-  expression(typename monomial_t::generator_type::linear_function_t const& f) {
+  explicit expression(
+      typename monomial_t::generator_type::linear_function_t const& f) {
     if(!scalar_traits<ScalarType>::is_zero(f.const_term))
       monomials_.emplace(monomial_t{}, f.const_term);
     for(auto const& g : f.terms) {
@@ -119,15 +114,14 @@ private:
   }
 
 public:
-
-  template<typename S>
+  template <typename S>
   expression& operator=(expression<S, IndexTypes...> const& x) {
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in assignment");
-   monomials_.clear();
-   for (auto const& y : x.get_monomials())
-     monomials_.emplace(monomial_t(y.first), scalar_type(y.second));
-   return *this;
+    monomials_.clear();
+    for(auto const& y : x.get_monomials())
+      monomials_.emplace(monomial_t(y.first), scalar_type(y.second));
+    return *this;
   }
 
   //
@@ -136,7 +130,7 @@ public:
 
   // Monomials container
   inline monomials_map_t const& get_monomials() const { return monomials_; }
-  inline monomials_map_t & get_monomials() { return monomials_; }
+  inline monomials_map_t& get_monomials() { return monomials_; }
 
   // Number of monomials
   inline std::size_t size() const { return monomials_.size(); }
@@ -175,13 +169,14 @@ public:
 
   // Apply functor 'f' to all monomial/coefficient pairs
   // and replace the coefficients with the functor return values.
-  template<typename F,
-           typename NewScalarType = invoke_result_t<F,
-             expression::monomial_t const&,
-             expression::scalar_type const&>>
+  template <
+      typename F,
+      typename NewScalarType = invoke_result_t<F,
+                                               expression::monomial_t const&,
+                                               expression::scalar_type const&>>
   friend expression_t<NewScalarType> transform(expression const& expr, F&& f) {
     expression_t<NewScalarType> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& m : expr.monomials_) {
       auto val = f(m.first, m.second);
       if(!scalar_traits<NewScalarType>::is_zero(val))
@@ -214,21 +209,21 @@ public:
   //
 
   // Addition
-  template<typename S>
+  template <typename S>
   expression_t<sum_type<ScalarType, S>>
   operator+(expression_t<S> const& expr) const {
     return add_impl(expr, std::is_same<sum_type<ScalarType, S>, ScalarType>());
   }
 
   // Subtraction
-  template<typename S>
+  template <typename S>
   expression_t<diff_type<ScalarType, S>>
   operator-(expression_t<S> const& expr) const {
     return sub_impl(expr, std::is_same<diff_type<ScalarType, S>, ScalarType>());
   }
 
   // Multiplication
-  template<typename S>
+  template <typename S>
   expression_t<mul_type<ScalarType, S>>
   operator*(expression_t<S> const& expr) const {
     expression_t<mul_type<ScalarType, S>> res(*this);
@@ -241,24 +236,21 @@ public:
   //
 
   // Compound assignment/addition
-  template<typename S>
-  expression & operator+=(expression_t<S> const& expr) {
+  template <typename S> expression& operator+=(expression_t<S> const& expr) {
     for(auto const& p : expr.get_monomials()) {
       auto it = monomials_.find(p.first);
       if(it == monomials_.end())
         monomials_.emplace(p);
       else {
         add_assign(it->second, p.second);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          monomials_.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) monomials_.erase(it);
       }
     }
     return *this;
   }
 
   // Compound assignment/subtraction
-  template<typename S>
-  expression & operator-=(expression_t<S> const& expr) {
+  template <typename S> expression& operator-=(expression_t<S> const& expr) {
     auto const z = scalar_traits<ScalarType>::make_const(0);
     for(auto const& p : expr.get_monomials()) {
       auto it = monomials_.find(p.first);
@@ -266,16 +258,14 @@ public:
         monomials_.emplace(p.first, z - p.second);
       else {
         sub_assign(it->second, p.second);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          monomials_.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) monomials_.erase(it);
       }
     }
     return *this;
   }
 
   // Compound assignment/multiplication
-  template<typename S>
-  expression & operator*=(expression_t<S> const& expr) {
+  template <typename S> expression& operator*=(expression_t<S> const& expr) {
     monomials_map_t res_map;
     for(auto const& m1 : monomials_) {
       for(auto const& m2 : expr.get_monomials()) {
@@ -289,7 +279,7 @@ public:
   }
 
   // Unary minus
-  template<typename S = ScalarType>
+  template <typename S = ScalarType>
   auto operator-() const -> expression_t<minus_type<S>> {
     return unary_minus_impl<S>(std::is_same<minus_type<S>, ScalarType>());
   }
@@ -299,69 +289,64 @@ public:
   //
 
   // Multiplication by scalar (postfix form)
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   auto operator*(S const& alpha) const
-    -> expression_t<mul_type<ScalarType, S>> {
+      -> expression_t<mul_type<ScalarType, S>> {
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       return {};
     else
       return mul_const_postfix_impl(
-        alpha,
-        std::is_same<mul_type<ScalarType, S>, ScalarType>()
-      );
+          alpha,
+          std::is_same<mul_type<ScalarType, S>, ScalarType>());
   }
 
   // Multiplication by scalar (prefix form)
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   friend auto operator*(S const& alpha, expression const& expr)
-    -> expression_t<mul_type<S, ScalarType>> {
+      -> expression_t<mul_type<S, ScalarType>> {
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       return {};
     else
       return expr.mul_const_prefix_impl(
-        alpha,
-        std::is_same<mul_type<S, ScalarType>, ScalarType>()
-      );
+          alpha,
+          std::is_same<mul_type<S, ScalarType>, ScalarType>());
   }
 
   // Addition of scalar (postfix form)
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  auto operator+(S const& alpha) const ->
-    expression_t<sum_type<ScalarType, S>> {
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  auto operator+(S const& alpha) const
+      -> expression_t<sum_type<ScalarType, S>> {
     return add_const_postfix_impl(
-      alpha,
-      std::is_same<sum_type<ScalarType, S>, ScalarType>()
-    );
+        alpha,
+        std::is_same<sum_type<ScalarType, S>, ScalarType>());
   }
 
   // Addition of scalar (prefix form)
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   friend auto operator+(S const& alpha, expression const& expr)
-    -> expression_t<sum_type<S, ScalarType>> {
+      -> expression_t<sum_type<S, ScalarType>> {
     return expr.add_const_prefix_impl(
-      alpha,
-      std::is_same<sum_type<S, ScalarType>, ScalarType>()
-    );
+        alpha,
+        std::is_same<sum_type<S, ScalarType>, ScalarType>());
   }
 
   // Subtraction of scalar (postfix form)
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  auto operator-(S const& alpha) const ->
-    expression_t<diff_type<ScalarType, S>> {
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  auto operator-(S const& alpha) const
+      -> expression_t<diff_type<ScalarType, S>> {
     return sub_const_postfix_impl(
-      alpha,
-      std::is_same<diff_type<ScalarType, S>, ScalarType>()
-    );
+        alpha,
+        std::is_same<diff_type<ScalarType, S>, ScalarType>());
   }
 
   // Subtraction of scalar (prefix form)
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
   friend auto operator-(S const& alpha, expression const& expr)
-    -> expression_t<diff_type<S, ScalarType>> {
+      -> expression_t<diff_type<S, ScalarType>> {
     using res_s_t = diff_type<S, ScalarType>;
     expression_t<res_s_t> res;
     auto const z = scalar_traits<S>::make_const(0);
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : expr.monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, z - p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -370,8 +355,7 @@ public:
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
         add_assign(it->second, alpha);
-        if(scalar_traits<res_s_t>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<res_s_t>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -382,18 +366,19 @@ public:
   //
 
   // Compound assignment/multiplication by scalar
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  expression & operator*=(S const& alpha) {
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  expression& operator*=(S const& alpha) {
     if(scalar_traits<remove_cvref_t<S>>::is_zero(alpha))
       monomials_.clear();
     else
-      for(auto & p : monomials_) mul_assign(p.second, alpha);
+      for(auto& p : monomials_)
+        mul_assign(p.second, alpha);
     return *this;
   }
 
   // Compound assignments/addition of scalar
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  expression & operator+=(S const& alpha) {
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  expression& operator+=(S const& alpha) {
     using s_t = remove_cvref_t<S>;
     if(!scalar_traits<s_t>::is_zero(alpha)) {
       auto it = monomials_.find(monomial_t{});
@@ -403,16 +388,15 @@ public:
         monomials_.emplace_hint(monomials_.begin(), monomial_t{}, val);
       } else {
         add_assign(it->second, alpha);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          monomials_.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) monomials_.erase(it);
       }
     }
     return *this;
   }
 
   // Compound assignments/subtraction of scalar
-  template<typename S, typename = disable_for_expression<remove_cvref_t<S>>>
-  expression & operator-=(S const& alpha) {
+  template <typename S, typename = disable_for_expression<remove_cvref_t<S>>>
+  expression& operator-=(S const& alpha) {
     using s_t = remove_cvref_t<S>;
     auto const z = scalar_traits<ScalarType>::make_const(0);
     if(!scalar_traits<s_t>::is_zero(alpha)) {
@@ -421,8 +405,7 @@ public:
         monomials_.emplace_hint(monomials_.begin(), monomial_t{}, z - alpha);
       } else {
         sub_assign(it->second, alpha);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          monomials_.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) monomials_.erase(it);
       }
     }
     return *this;
@@ -444,9 +427,8 @@ public:
   }
 
 private:
-
   //
-  // Implementations of arithmetic operations
+  // Implementation of arithmetic operations
   //
 
   //
@@ -455,19 +437,18 @@ private:
 
   // Addition
   // sum_type<ScalarType, S> == ScalarType
-  template<typename S>
+  template <typename S>
   inline expression add_impl(expression_t<S> const& expr,
                              std::true_type) const {
     expression res(*this);
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : expr.get_monomials()) {
       auto it = res_mons.find(p.first);
       if(it == res_mons.end())
         res_mons.emplace(p);
       else {
         add_assign(it->second, p.second);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -475,11 +456,11 @@ private:
 
   // Addition
   // sum_type<ScalarType, S> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<sum_type<ScalarType, S>>
   add_impl(expression_t<S> const& expr, std::false_type) const {
     expression_t<sum_type<ScalarType, S>> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     auto const& m1 = monomials_;
     auto const& m2 = expr.get_monomials();
     auto const z1 = scalar_traits<ScalarType>::make_const(0);
@@ -523,11 +504,11 @@ private:
 
   // Subtraction
   // diff_type<ScalarType, S> == ScalarType
-  template<typename S>
+  template <typename S>
   inline expression sub_impl(expression_t<S> const& expr,
                              std::true_type) const {
     expression res(*this);
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     auto const z = scalar_traits<ScalarType>::make_const(0);
 
     for(auto const& p : expr.get_monomials()) {
@@ -536,8 +517,7 @@ private:
         res_mons.emplace(p.first, z - p.second);
       else {
         sub_assign(it->second, p.second);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -545,11 +525,11 @@ private:
 
   // Subtraction
   // diff_type<ScalarType, S> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<diff_type<ScalarType, S>>
   sub_impl(expression_t<S> const& expr, std::false_type) const {
     expression_t<diff_type<ScalarType, S>> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     auto const& m1 = monomials_;
     auto const& m2 = expr.get_monomials();
     auto const z1 = scalar_traits<ScalarType>::make_const(0);
@@ -592,31 +572,31 @@ private:
   //
 
   // Unary minus: minus_type<ScalarType> == ScalarType
-  template<typename S>
+  template <typename S>
   inline expression unary_minus_impl(std::true_type) const {
     expression res(*this);
-    for(auto & p : res.monomials_) p.second = -p.second;
+    for(auto& p : res.monomials_)
+      p.second = -p.second;
     return res;
   }
 
   // Unary minus: minus_type<ScalarType> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<minus_type<S>> unary_minus_impl(std::false_type) const {
     expression_t<minus_type<S>> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, -p.second);
     return res;
   }
 
-   //
+  //
   // Multiplication
   //
 
   // Store monomial in a map while taking care of possible collisions
-  static void store_monomial(monomial_t&& m,
-                             scalar_type coeff,
-                             monomials_map_t& target) {
+  static void
+  store_monomial(monomial_t&& m, scalar_type coeff, monomials_map_t& target) {
     // C++17 structured bindings would be the real solution here
     // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
     bool is_new_monomial;
@@ -624,8 +604,7 @@ private:
     std::tie(it, is_new_monomial) = target.emplace(m, coeff);
     if(!is_new_monomial) {
       add_assign(it->second, coeff);
-      if(scalar_traits<ScalarType>::is_zero(it->second))
-        target.erase(it);
+      if(scalar_traits<ScalarType>::is_zero(it->second)) target.erase(it);
     }
   }
 
@@ -647,23 +626,21 @@ private:
       auto process_f = [&](int n) {
         // Process monomial generated by the constant term in 'f'
         if(f.const_term != 0) {
-          normalize_and_store(concatenate(
-                                std::make_pair(m.begin(), m.begin()+n-1),
-                                std::make_pair(m.begin()+n+1, m.end())
-                              ),
-                              coeff * f.const_term,
-                              target);
+          normalize_and_store(
+              concatenate(std::make_pair(m.begin(), m.begin() + n - 1),
+                          std::make_pair(m.begin() + n + 1, m.end())),
+              coeff * f.const_term,
+              target);
         }
 
         // Process monomials generated by the rest of the terms in 'f'
         for(auto const& t : f.terms) {
-          normalize_and_store(concatenate(
-                  std::make_pair(m.begin(), m.begin()+n-1),
-                  *t.first,
-                  std::make_pair(m.begin()+n+1, m.end())
-                ),
-                coeff * t.second,
-                target);
+          normalize_and_store(
+              concatenate(std::make_pair(m.begin(), m.begin() + n - 1),
+                          *t.first,
+                          std::make_pair(m.begin() + n + 1, m.end())),
+              coeff * t.second,
+              target);
         }
       };
 
@@ -719,7 +696,7 @@ private:
     auto it = m.begin(), end_it = m.end();
     auto next_it = it + 1;
     int power = 1;
-    for(;it != end_it; ++it, ++next_it) {
+    for(; it != end_it; ++it, ++next_it) {
       if(next_it == end_it) {
         store_monomial(std::move(m), coeff, target);
         return;
@@ -731,22 +708,20 @@ private:
 
             auto v = scalar_traits<ScalarType>::make_const(f.const_term);
             if(!scalar_traits<ScalarType>::is_zero(v))
-              reduce_powers_and_store(concatenate(
-                                      std::make_pair(m.begin(), it-power+2),
-                                      std::make_pair(next_it+1, end_it)
-                                      ),
-                                      coeff * v,
-                                      target);
+              reduce_powers_and_store(
+                  concatenate(std::make_pair(m.begin(), it - power + 2),
+                              std::make_pair(next_it + 1, end_it)),
+                  coeff * v,
+                  target);
             for(auto const& g : f.terms) {
               v = scalar_traits<ScalarType>::make_const(g.second);
               if(!scalar_traits<ScalarType>::is_zero(v))
-                normalize_and_store(concatenate(
-                                      std::make_pair(m.begin(), it-power+2),
-                                      *g.first,
-                                      std::make_pair(next_it+1, end_it)
-                                    ),
-                                    coeff * v,
-                                    target);
+                normalize_and_store(
+                    concatenate(std::make_pair(m.begin(), it - power + 2),
+                                *g.first,
+                                std::make_pair(next_it + 1, end_it)),
+                    coeff * v,
+                    target);
             }
             return;
           }
@@ -763,20 +738,21 @@ private:
 
   // Multiplication by scalar (postfix form)
   // mul_type<ScalarType, S> == ScalarType
-  template<typename S>
+  template <typename S>
   inline expression mul_const_postfix_impl(S&& alpha, std::true_type) const {
     expression res(*this);
-    for(auto & p : res.monomials_) mul_assign(p.second, alpha);
+    for(auto& p : res.monomials_)
+      mul_assign(p.second, alpha);
     return res;
   }
 
   // Multiplication by scalar (postfix form)
   // mul_type<ScalarType, S> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<mul_type<ScalarType, S>>
   mul_const_postfix_impl(S&& alpha, std::false_type) const {
     expression_t<mul_type<ScalarType, S>> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, p.second * alpha);
     return res;
@@ -784,20 +760,21 @@ private:
 
   // Multiplication by scalar (prefix form)
   // mul_type<S, ScalarType> == ScalarType
-  template<typename S>
+  template <typename S>
   inline expression mul_const_prefix_impl(S&& alpha, std::true_type) const {
     expression res(*this);
-    for(auto & p : res.monomials_) p.second = alpha * p.second;
+    for(auto& p : res.monomials_)
+      p.second = alpha * p.second;
     return res;
   }
 
   // Multiplication by scalar (prefix form)
   // mul_type<S, ScalarType> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<mul_type<S, ScalarType>>
   mul_const_prefix_impl(S&& alpha, std::false_type) const {
     expression_t<mul_type<S, ScalarType>> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, alpha * p.second);
     return res;
@@ -809,19 +786,18 @@ private:
 
   // Addition of scalar (postfix form)
   // sum_type<ScalarType, S> == ScalarType
-  template<typename S>
-  inline
-  expression add_const_postfix_impl(S const& alpha, std::true_type) const {
+  template <typename S>
+  inline expression add_const_postfix_impl(S const& alpha,
+                                           std::true_type) const {
     expression res(*this);
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
         add_assign(it->second, alpha);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -829,12 +805,12 @@ private:
 
   // Addition of scalar (postfix form)
   // sum_type<ScalarType, S> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<sum_type<ScalarType, S>>
   add_const_postfix_impl(S const& alpha, std::false_type) const {
     using res_s_t = sum_type<ScalarType, S>;
     expression_t<res_s_t> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -843,8 +819,7 @@ private:
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
         add_assign(it->second, alpha);
-        if(scalar_traits<res_s_t>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<res_s_t>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -852,19 +827,18 @@ private:
 
   // Addition of scalar (prefix form)
   // sum_type<S, ScalarType> == ScalarType
-  template<typename S>
-  inline
-  expression add_const_prefix_impl(S const& alpha, std::true_type) const {
+  template <typename S>
+  inline expression add_const_prefix_impl(S const& alpha,
+                                          std::true_type) const {
     expression res(*this);
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
         add_assign(it->second, alpha);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -872,12 +846,12 @@ private:
 
   // Addition of scalar (prefix form)
   // sum_type<S, ScalarType> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<sum_type<S, ScalarType>>
   add_const_prefix_impl(S const& alpha, std::false_type) const {
     using res_s_t = sum_type<S, ScalarType>;
     expression_t<res_s_t> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -886,8 +860,7 @@ private:
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, alpha);
       } else {
         add_assign(it->second, alpha);
-        if(scalar_traits<res_s_t>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<res_s_t>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -899,20 +872,19 @@ private:
 
   // Subtraction of scalar (postfix form)
   // diff_type<ScalarType, S> == ScalarType
-  template<typename S>
-  inline
-  expression sub_const_postfix_impl(S const& alpha, std::true_type) const {
+  template <typename S>
+  inline expression sub_const_postfix_impl(S const& alpha,
+                                           std::true_type) const {
     expression res(*this);
     auto const z = scalar_traits<ScalarType>::make_const(0);
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     if(!scalar_traits<S>::is_zero(alpha)) {
       auto it = res_mons.find(monomial_t{});
       if(it == res_mons.end()) {
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, z - alpha);
       } else {
         sub_assign(it->second, alpha);
-        if(scalar_traits<ScalarType>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<ScalarType>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -920,12 +892,12 @@ private:
 
   // Subtraction of scalar (postfix form)
   // diff_type<ScalarType, S> != ScalarType
-  template<typename S>
+  template <typename S>
   inline expression_t<diff_type<ScalarType, S>>
   sub_const_postfix_impl(S const& alpha, std::false_type) const {
     using res_s_t = diff_type<ScalarType, S>;
     expression_t<res_s_t> res;
-    auto & res_mons = res.get_monomials();
+    auto& res_mons = res.get_monomials();
     for(auto const& p : monomials_)
       res_mons.emplace_hint(res_mons.end(), p.first, p.second);
     if(!scalar_traits<S>::is_zero(alpha)) {
@@ -935,8 +907,7 @@ private:
         res_mons.emplace_hint(res_mons.begin(), monomial_t{}, z - alpha);
       } else {
         sub_assign(it->second, alpha);
-        if(scalar_traits<res_s_t>::is_zero(it->second))
-          res_mons.erase(it);
+        if(scalar_traits<res_s_t>::is_zero(it->second)) res_mons.erase(it);
       }
     }
     return res;
@@ -944,14 +915,13 @@ private:
 };
 
 // Constant iterator over monomials
-template<typename ScalarType, typename... IndexTypes>
+template <typename ScalarType, typename... IndexTypes>
 class expression<ScalarType, IndexTypes...>::const_iterator {
 
   using map_it = typename monomials_map_t::const_iterator;
   map_it m_it_;
 
 public:
-
   struct value_type {
     monomial_t const& monomial;
     ScalarType const& coeff;
@@ -974,7 +944,10 @@ public:
   ~const_iterator() = default;
 
   // Increments
-  const_iterator& operator++() { ++m_it_; return *this;}
+  const_iterator& operator++() {
+    ++m_it_;
+    return *this;
+  }
   const_iterator operator++(int) {
     const_iterator retval = *this;
     ++(*this);
@@ -982,7 +955,10 @@ public:
   }
 
   // Decrements
-  const_iterator& operator--() { --m_it_; return *this;}
+  const_iterator& operator--() {
+    --m_it_;
+    return *this;
+  }
   const_iterator operator--(int) {
     const_iterator retval = *this;
     --(*this);
@@ -990,8 +966,8 @@ public:
   }
 
   // Equality
-  bool operator==(const_iterator const& it) const {return m_it_ == it.m_it_;}
-  bool operator!=(const_iterator const& it) const {return !(*this == it);}
+  bool operator==(const_iterator const& it) const { return m_it_ == it.m_it_; }
+  bool operator!=(const_iterator const& it) const { return !(*this == it); }
 
   // Dereference
   reference operator*() const { return {m_it_->first, m_it_->second}; }
@@ -1008,12 +984,12 @@ public:
 namespace static_indices {
 
 // Aliases for specific scalar types
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 using expr_real = expression<double, IndexTypes...>;
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 using expr_complex = expression<std::complex<double>, IndexTypes...>;
 
-} // namespace libcommute::static_indices
+} // namespace static_indices
 } // namespace libcommute
 
 #if __cplusplus >= 201703L
@@ -1026,7 +1002,7 @@ namespace dynamic_indices {
 using expr_real = expression<double, dyn_indices>;
 using expr_complex = expression<std::complex<double>, dyn_indices>;
 
-} // namespace libcommute::dynamic_indices
+} // namespace dynamic_indices
 } // namespace libcommute
 
 #endif

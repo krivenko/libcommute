@@ -31,11 +31,11 @@ TEST_CASE("c_str_to_string_t<T> metafunction", "[c_str_to_string_t]") {
   CHECK(std::is_same<c_str_to_string_t<decltype("Hello, world!")>,
                      std::string>::value);
 
-  char const * hw = "Hello, world!";
+  char const* hw = "Hello, world!";
   // cppcheck-suppress constVariable
-  auto & hw_ref = hw;
+  auto& hw_ref = hw;
   auto const& hw_cref = hw;
-  auto && hw_rref = hw;
+  auto&& hw_rref = hw;
   CHECK(std::is_same<c_str_to_string_t<decltype(hw_ref)>, std::string>::value);
   CHECK(std::is_same<c_str_to_string_t<decltype(hw_cref)>, std::string>::value);
   CHECK(std::is_same<c_str_to_string_t<decltype(hw_rref)>, std::string>::value);
@@ -95,8 +95,9 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f1.terms.empty());
   CHECK_FALSE(f1.vanishing());
 
-  std::vector<std::pair<std::string, double>> terms =
-    {std::make_pair("obj1", 2.0), std::make_pair("obj2", 3.0)};
+  std::vector<std::pair<std::string, double>> terms = {
+      std::make_pair("obj1", 2.0),
+      std::make_pair("obj2", 3.0)};
   linear_function<std::string> f2(4.0, terms);
   CHECK(f2.const_term == 4.0);
   CHECK(f2.terms.size() == 2);

@@ -51,7 +51,9 @@ TEST_CASE("remove_cvref<T> metafunction", "[remove_cvref]") {
 }
 
 // Free function
-double f(int x) { return 0; }
+double f(int x) {
+  return 0;
+}
 
 // Lambda-functions
 auto const lambda1 = [](int x) -> double { return 0; };
@@ -73,11 +75,10 @@ public:
 
 // std::function
 auto const std_f1 = std::function<double(int)>(lambda1);
-auto const std_f2 = std::function<std::string(int x, std::string const& s)>(
-  lambda2
-);
+auto const std_f2 =
+    std::function<std::string(int x, std::string const& s)>(lambda2);
 
-template<typename RefT, typename T, typename... Args>
+template <typename RefT, typename T, typename... Args>
 void check_invoke_result() {
   CHECK(std::is_same<typename invoke_result<T, Args...>::type, RefT>::value);
   CHECK(std::is_same<invoke_result_t<T, Args...>, RefT>::value);

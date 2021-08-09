@@ -36,15 +36,14 @@ class elementary_space_gamma : public elementary_space<int> {
   using base = elementary_space<int>;
 
 public:
-
   // Since all 4 gamma matrices act in the same elementary space,
   // we can initialize the base class with any number
   elementary_space_gamma() : base(0) {}
   elementary_space_gamma(elementary_space_gamma const&) = default;
-  elementary_space_gamma(elementary_space_gamma &&) noexcept = default;
+  elementary_space_gamma(elementary_space_gamma&&) noexcept = default;
   elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
-  elementary_space_gamma& operator=(elementary_space_gamma &&) noexcept
-    = default;
+  elementary_space_gamma&
+  operator=(elementary_space_gamma&&) noexcept = default;
   ~elementary_space_gamma() override = default;
 
   // Virtual copy-constructor.
@@ -69,14 +68,13 @@ public:
 
 namespace libcommute {
 
-template<> class monomial_action<libcommute::gamma> {
+template <> class monomial_action<libcommute::gamma> {
 
   // Indices of matrices in the product, right to left.
   // This order is chosen because the matrix on the right acts on a state first
   std::vector<int> index_sequence;
 
 public:
-
   // m_range is a pair of iterators over a list of generator_gamma objects.
   // This range represents the product of gamma matrices we want to act with.
   monomial_action(monomial<int>::range_type const& m_range,
@@ -105,35 +103,34 @@ public:
   // 'coeff' must be multiplied by the overall constant factor acquired as
   // a result of monomial action.
   //
-  template<typename ScalarType>
-  inline bool act(sv_index_type & index,
-                  ScalarType & coeff) const {
+  template <typename ScalarType>
+  inline bool act(sv_index_type& index, ScalarType& coeff) const {
 
-    std::complex<double> const I(0,1);
+    std::complex<double> const I(0, 1);
 
     // Act with all matrices in the product, right to left
     for(int i : index_sequence) {
       switch(i) {
-        case 0:
-          // Action of \gamma^0
-          // It is diagonal => 'index' does not change
-          coeff *= std::array<double, 4>{1,1,-1,-1}[index];
-          break;
-        case 1:
-          // Action of \gamma^1
-          coeff *= std::array<double, 4>{-1,-1,1,1}[index];
-          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
-          break;
-        case 2:
-          // Action of \gamma^2
-          coeff *= std::array<std::complex<double>, 4>{-I,I,I,-I}[index];
-          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
-          break;
-        case 3:
-          // Action of \gamma^3
-          coeff *= std::array<std::complex<double>, 4>{-1,1,1,-1}[index];
-          index = std::array<sv_index_type, 4>{2,3,0,1}[index];
-          break;
+      case 0:
+        // Action of \gamma^0
+        // It is diagonal => 'index' does not change
+        coeff *= std::array<double, 4>{1, 1, -1, -1}[index];
+        break;
+      case 1:
+        // Action of \gamma^1
+        coeff *= std::array<double, 4>{-1, -1, 1, 1}[index];
+        index = std::array<sv_index_type, 4>{3, 2, 1, 0}[index];
+        break;
+      case 2:
+        // Action of \gamma^2
+        coeff *= std::array<std::complex<double>, 4>{-I, I, I, -I}[index];
+        index = std::array<sv_index_type, 4>{3, 2, 1, 0}[index];
+        break;
+      case 3:
+        // Action of \gamma^3
+        coeff *= std::array<std::complex<double>, 4>{-1, 1, 1, -1}[index];
+        index = std::array<sv_index_type, 4>{2, 3, 0, 1}[index];
+        break;
       }
     }
     // This 'true' signals that the action result is not identically zero.
@@ -156,17 +153,15 @@ int main() {
   // Hilbert space made of one elementary space for gamma matrices.
   hilbert_space<int> hs{elementary_space_gamma()};
 
-  std::complex<double> const I(0,1);
+  std::complex<double> const I(0, 1);
 
   // Expression for \gamma^5
-  auto gamma5 = I * make_gamma(0)
-                  * make_gamma(1)
-                  * make_gamma(2)
-                  * make_gamma(3);
+  auto gamma5 =
+      I * make_gamma(0) * make_gamma(1) * make_gamma(2) * make_gamma(3);
 
   // Linear operator representation of \gamma^5
-  auto gamma5op = loperator<std::complex<double>,
-                            libcommute::gamma>(gamma5, hs);
+  auto gamma5op =
+      loperator<std::complex<double>, libcommute::gamma>(gamma5, hs);
 
   //
   // Build the explicit matrix representation of \gamma^5

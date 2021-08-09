@@ -26,7 +26,7 @@
 #include <memory>
 #include <vector>
 
-std::complex<double> const I(0,1);
+std::complex<double> const I(0, 1);
 
 namespace libcommute {
 
@@ -39,14 +39,13 @@ class elementary_space_gamma final : public elementary_space<int> {
   using base = elementary_space<int>;
 
 public:
-
   // Value semantics
   elementary_space_gamma() : base(0) {}
   elementary_space_gamma(elementary_space_gamma const&) = default;
   elementary_space_gamma(elementary_space_gamma&&) noexcept = default;
   elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
-  elementary_space_gamma& operator=(elementary_space_gamma&&) noexcept
-    = default;
+  elementary_space_gamma&
+  operator=(elementary_space_gamma&&) noexcept = default;
   ~elementary_space_gamma() final = default;
 
   std::unique_ptr<base> clone() const final {
@@ -61,12 +60,11 @@ public:
 // Action of a gamma-matrix monomial
 //
 
-template<> class monomial_action<libcommute::gamma> {
+template <> class monomial_action<libcommute::gamma> {
 
   std::vector<int> index_sequence;
 
 public:
-
   monomial_action(detail::monomial_range_t<int> const& m_range,
                   hilbert_space<int> const& hs) {
     for(auto it = m_range.first; it != m_range.second; ++it)
@@ -74,25 +72,22 @@ public:
     std::reverse(index_sequence.begin(), index_sequence.end());
   }
 
-  inline bool act(sv_index_type & index,
-                  std::complex<double> & coeff) const {
+  inline bool act(sv_index_type& index, std::complex<double>& coeff) const {
     for(int i : index_sequence) {
       switch(i) {
-        case 0:
-          coeff *= std::array<double, 4>{1,1,-1,-1}[index];
-          break;
-        case 1:
-          coeff *= std::array<double, 4>{-1,-1,1,1}[index];
-          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
-          break;
-        case 2:
-          coeff *= std::array<std::complex<double>, 4>{-I,I,I,-I}[index];
-          index = std::array<sv_index_type, 4>{3,2,1,0}[index];
-          break;
-        case 3:
-          coeff *= std::array<std::complex<double>, 4>{-1,1,1,-1}[index];
-          index = std::array<sv_index_type, 4>{2,3,0,1}[index];
-          break;
+      case 0: coeff *= std::array<double, 4>{1, 1, -1, -1}[index]; break;
+      case 1:
+        coeff *= std::array<double, 4>{-1, -1, 1, 1}[index];
+        index = std::array<sv_index_type, 4>{3, 2, 1, 0}[index];
+        break;
+      case 2:
+        coeff *= std::array<std::complex<double>, 4>{-I, I, I, -I}[index];
+        index = std::array<sv_index_type, 4>{3, 2, 1, 0}[index];
+        break;
+      case 3:
+        coeff *= std::array<std::complex<double>, 4>{-1, 1, 1, -1}[index];
+        index = std::array<sv_index_type, 4>{2, 3, 0, 1}[index];
+        break;
       }
     }
     return true;
@@ -103,7 +98,7 @@ public:
 
 using namespace libcommute;
 
-template<typename ExprType>
+template <typename ExprType>
 void check_loperator(ExprType const& expr1, ExprType const& expr2) {
   hilbert_space<int> hs{elementary_space_gamma()};
 
@@ -113,7 +108,7 @@ void check_loperator(ExprType const& expr1, ExprType const& expr2) {
 
   std::vector<std::complex<double>> in(4), out1(4), out2(4);
 
-  for(sv_index_type in_index : {0,1,2,3}) {
+  for(sv_index_type in_index : {0, 1, 2, 3}) {
     in[in_index] = 1;
     CHECK(lop1(in) == lop2(in));
     CHECK(lop1 * in == lop2 * in);
@@ -134,12 +129,11 @@ TEST_CASE("loperator for expressions with gamma-matrices",
     return (mu == nu) * (mu == 0 ? 1 : -1);
   };
 
-  std::vector<expr_type> Gamma; // Gamma matrices
+  std::vector<expr_type> Gamma;  // Gamma matrices
   std::vector<expr_type> Gammac; // Covariant Gamma matrices
   for(int mu : {0, 1, 2, 3}) {
     Gamma.emplace_back(expr_type(1.0, mon_type(generator_gamma(mu))));
-    Gammac.emplace_back(expr_type(eta(mu, mu),
-                                  mon_type(generator_gamma(mu))));
+    Gammac.emplace_back(expr_type(eta(mu, mu), mon_type(generator_gamma(mu))));
   }
 
   SECTION("Commutation relations") {
@@ -188,7 +182,7 @@ TEST_CASE("loperator for expressions with gamma-matrices",
       expr_type s;
       for(int mu = 0; mu < 4; ++mu)
         s += Gamma[mu] * Gamma[nu] * Gammac[mu];
-      check_loperator(s, -2.0*Gamma[nu]);
+      check_loperator(s, -2.0 * Gamma[nu]);
     }
   }
 
@@ -198,7 +192,7 @@ TEST_CASE("loperator for expressions with gamma-matrices",
         expr_type s;
         for(int mu = 0; mu < 4; ++mu)
           s += Gamma[mu] * Gamma[nu] * Gamma[rho] * Gammac[mu];
-        check_loperator(s, expr_type(4*eta(nu, rho)));
+        check_loperator(s, expr_type(4 * eta(nu, rho)));
       }
     }
   }
@@ -218,7 +212,8 @@ TEST_CASE("loperator for expressions with gamma-matrices",
 
   // 4D Levi-Civita symbol
   auto eps = [](int i1, int i2, int i3, int i4) -> double {
-    return (i4 - i3)*(i4 - i2)*(i4 - i1)*(i3 - i2)*(i3 - i1)*(i2 - i1)/12;
+    return (i4 - i3) * (i4 - i2) * (i4 - i1) * (i3 - i2) * (i3 - i1) *
+           (i2 - i1) / 12;
   };
 
   SECTION("Identity 5") {
@@ -226,11 +221,10 @@ TEST_CASE("loperator for expressions with gamma-matrices",
       for(int nu = 0; nu < 4; ++nu) {
         for(int rho = 0; rho < 4; ++rho) {
           auto lhs = Gamma[mu] * Gamma[nu] * Gamma[rho];
-          auto rhs = eta(mu, nu) * Gamma[rho] +
-                     eta(nu, rho) * Gamma[mu] -
+          auto rhs = eta(mu, nu) * Gamma[rho] + eta(nu, rho) * Gamma[mu] -
                      eta(mu, rho) * Gamma[nu];
           for(int sigma = 0; sigma < 4; ++sigma) {
-            rhs += -I*eps(sigma, mu, nu, rho) * Gammac[sigma] * Gamma5;
+            rhs += -I * eps(sigma, mu, nu, rho) * Gammac[sigma] * Gamma5;
           }
           check_loperator(lhs, rhs);
         }

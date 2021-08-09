@@ -13,10 +13,10 @@
 #ifndef LIBCOMMUTE_LOPERATOR_SPACE_PARTITION_HPP_
 #define LIBCOMMUTE_LOPERATOR_SPACE_PARTITION_HPP_
 
-#include "disjoint_sets.hpp"
-#include "sparse_state_vector.hpp"
-#include "loperator.hpp"
 #include "../scalar_traits.hpp"
+#include "disjoint_sets.hpp"
+#include "loperator.hpp"
+#include "sparse_state_vector.hpp"
 
 #include <functional>
 #include <map>
@@ -32,9 +32,9 @@
 namespace libcommute {
 
 // Sparse storage for matrix elements of a quantum operator
-template<typename ScalarType>
-using matrix_elements_map = std::map<std::pair<sv_index_type, sv_index_type>,
-                                     ScalarType>;
+template <typename ScalarType>
+using matrix_elements_map =
+    std::map<std::pair<sv_index_type, sv_index_type>, ScalarType>;
 
 // Connections between subspaces
 using connections_map = std::set<std::pair<sv_index_type, sv_index_type>>;
@@ -53,14 +53,11 @@ class space_partition {
   // Map representative basis state to subspace index
   std::map<sv_index_type, sv_index_type> root_to_subspace;
 
-  template<typename LOpScalarType, int... LOpAlgebraIDs>
-  using loperator_melem_t =
-  matrix_elements_map<
-    typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type
-    >;
+  template <typename LOpScalarType, int... LOpAlgebraIDs>
+  using loperator_melem_t = matrix_elements_map<
+      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type>;
 
 public:
-
   space_partition() = delete;
 
   // Partition Hilbert space `hs` using Hermitian operator `h`.
@@ -68,12 +65,12 @@ public:
   // `hs` can be of any type, for which `get_dim(hs)` returns the dimension of
   // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
   // to each basis state index in `hs`.
-  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
                   HSType const& hs)
     : ds(get_dim(hs)) {
     using scalar_type =
-      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
+        typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sv_index_type d = get_dim(hs);
 
     sparse_state_vector<scalar_type> in_state(d);
@@ -97,13 +94,13 @@ public:
   // `hs` can be of any type, for which `get_dim(hs)` returns the dimension of
   // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
   // to each basis state index in `hs`.
-  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
                   HSType const& hs,
-                  loperator_melem_t<LOpScalarType, LOpAlgebraIDs...> & me)
+                  loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>& me)
     : ds(get_dim(hs)) {
     using scalar_type =
-      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
+        typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
     sv_index_type d = get_dim(hs);
 
     sparse_state_vector<scalar_type> in_state(d);
@@ -128,14 +125,13 @@ public:
   // Merge some of the invariant subspaces together, to ensure that a given
   // operator `Cd` and its Hermitian conjugate `C` generate only one-to-one
   // connections between the subspaces.
-  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   auto merge_subspaces(loperator<LOpScalarType, LOpAlgebraIDs...> const& Cd,
                        loperator<LOpScalarType, LOpAlgebraIDs...> const& C,
                        HSType const& hs,
-                       bool store_matrix_elements = true
-                      ) ->
-    std::pair<loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>,
-              loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>>
+                       bool store_matrix_elements = true)
+      -> std::pair<loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>,
+                   loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>>
 
   {
     using loperator_t = loperator<LOpScalarType, LOpAlgebraIDs...>;
@@ -152,10 +148,10 @@ public:
       in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       sv_index_type in_subspace = ds.find_root(in_index);
 
-      auto fill_conn = [&, this](
-        loperator_t const& lop,
-        std::multimap<sv_index_type, sv_index_type> & conn,
-        matrix_elements_map<scalar_type> & elem) {
+      auto fill_conn = [&,
+                        this](loperator_t const& lop,
+                              std::multimap<sv_index_type, sv_index_type>& conn,
+                              matrix_elements_map<scalar_type>& elem) {
         lop(in_state, out_state);
         // Iterate over non-zero final amplitudes
         foreach(out_state, [&](sv_index_type out_index, scalar_type const& a) {
@@ -190,26 +186,33 @@ public:
       // - Merges upper_subspace with all subspaces generated from
       //   upper_subspace by application of (C^+ C)^(2*n).
       std::function<void(sv_index_type, bool)> zigzag_traversal =
-        [this,lower_subspace,upper_subspace,&Cd_conn,&C_conn,&zigzag_traversal]
-        (sv_index_type in_subspace, // find all connections from in_subspace
-         bool upwards // if true, C^+ connection, otherwise C connection
-        )
-        {
-          std::multimap<sv_index_type, sv_index_type>::iterator it;
-          while((it = (upwards ? Cd_conn : C_conn).find(in_subspace)) !=
-                      (upwards ? Cd_conn : C_conn).end()) {
+          [this,
+           lower_subspace,
+           upper_subspace,
+           &Cd_conn,
+           &C_conn,
+           &zigzag_traversal](
+              sv_index_type
+                  in_subspace, // find all connections from in_subspace
+              bool upwards // if true, C^+ connection, otherwise C connection
+          ) {
+            std::multimap<sv_index_type, sv_index_type>::iterator it;
+            while((it = (upwards ? Cd_conn : C_conn).find(in_subspace)) !=
+                  (upwards ? Cd_conn : C_conn).end()) {
 
-          auto out_subspace = it->second;
-          (upwards ? Cd_conn : C_conn).erase(it);
+              auto out_subspace = it->second;
+              (upwards ? Cd_conn : C_conn).erase(it);
 
-          if(upwards) ds.set_union(out_subspace, upper_subspace);
-          else        ds.set_union(out_subspace, lower_subspace);
+              if(upwards)
+                ds.set_union(out_subspace, upper_subspace);
+              else
+                ds.set_union(out_subspace, lower_subspace);
 
-          // Recursively apply to all found out_subspace's with
-          // a 'flipped' direction
-          zigzag_traversal(out_subspace, !upwards);
-        }
-      };
+              // Recursively apply to all found out_subspace's with
+              // a 'flipped' direction
+              zigzag_traversal(out_subspace, !upwards);
+            }
+          };
 
       // Apply to all C^+ connections starting from lower_subspace
       zigzag_traversal(lower_subspace, true);
@@ -237,12 +240,12 @@ public:
   }
 
   // Find all subspace-to-subspace connections generated by a given operator
-  template<typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
-  connections_map find_connections(
-    loperator<LOpScalarType, LOpAlgebraIDs...> const& op,
-    HSType const& hs) const {
+  template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
+  connections_map
+  find_connections(loperator<LOpScalarType, LOpAlgebraIDs...> const& op,
+                   HSType const& hs) const {
     using scalar_type =
-      typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
+        typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
 
     connections_map connections;
 
@@ -252,14 +255,14 @@ public:
     sparse_state_vector<scalar_type> out_state(d);
     foreach(hs, [&](sv_index_type in_index) {
       sv_index_type in_subspace =
-        root_to_subspace.find(ds.find_root(in_index))->second;
+          root_to_subspace.find(ds.find_root(in_index))->second;
 
       in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       op(in_state, out_state);
 
       foreach(out_state, [&](sv_index_type out_index, scalar_type const&) {
         sv_index_type out_subspace =
-          root_to_subspace.find(ds.find_root(out_index))->second;
+            root_to_subspace.find(ds.find_root(out_index))->second;
         connections.emplace(in_subspace, out_subspace);
       });
 
@@ -272,13 +275,13 @@ public:
   // Apply a functor `f` to all basis states in a given space partition.
   // The functor must take two arguments, index of the basis state,
   // and index of the subspace this basis state belongs to.
-  template<typename F>
-    friend void foreach(space_partition const& sp, F&& f) {
-    for(sv_index_type n = 0; n < sp.dim(); ++n) { f(n, sp[n]); }
+  template <typename F> friend void foreach(space_partition const& sp, F&& f) {
+    for(sv_index_type n = 0; n < sp.dim(); ++n) {
+      f(n, sp[n]);
+    }
   }
 
 private:
-
   void update_root_to_subspace() {
     ds.compress_sets();
     ds.normalize_sets();
@@ -288,7 +291,6 @@ private:
       root_to_subspace.emplace(ds.find_root(n), root_to_subspace.size());
     }
   }
-
 };
 
 } // namespace libcommute

@@ -46,24 +46,24 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
     H += U * n("up", o) * n("dn", o);
   }
   // Interorbital interactions, different spins
-  for (int o1 = 0; o1 < n_orbs; ++o1) {
-    for (int o2 = 0; o2 < n_orbs; ++o2) {
-      if (o1 == o2) continue;
+  for(int o1 = 0; o1 < n_orbs; ++o1) {
+    for(int o2 = 0; o2 < n_orbs; ++o2) {
+      if(o1 == o2) continue;
       H += (U - 2 * J) * n("up", o1) * n("dn", o2);
     }
   }
   // Interorbital interactions, equal spins
-  for (int o1 = 0; o1 < n_orbs; ++o1) {
-    for (int o2 = 0; o2 < n_orbs; ++o2) {
-      if (o2 >= o1) continue;
+  for(int o1 = 0; o1 < n_orbs; ++o1) {
+    for(int o2 = 0; o2 < n_orbs; ++o2) {
+      if(o2 >= o1) continue;
       H += (U - 3 * J) * n("up", o1) * n("up", o2);
       H += (U - 3 * J) * n("dn", o1) * n("dn", o2);
     }
   }
   // Spin flips and pair hoppings
-  for (int o1 = 0; o1 < n_orbs; ++o1) {
-    for (int o2 = 0; o2 < n_orbs; ++o2) {
-      if (o1 == o2) continue;
+  for(int o1 = 0; o1 < n_orbs; ++o1) {
+    for(int o2 = 0; o2 < n_orbs; ++o2) {
+      if(o1 == o2) continue;
       H += -J * c_dag("up", o1) * c_dag("dn", o1) * c("up", o2) * c("dn", o2);
       H += -J * c_dag("up", o1) * c_dag("dn", o2) * c("up", o2) * c("dn", o1);
     }
@@ -96,63 +96,62 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
     std::set<std::set<sv_index_type>> cl{v_cl.cbegin(), v_cl.cend()};
 
     // Expected classification of states
-    std::set<std::set<sv_index_type>> ref_cl {
-      // N=0
-      {0},
-      // N=1
-      {d0},
-      {d1},
-      {d2},
-      {u0},
-      {u1},
-      {u2},
-      // N=2, same spin
-      {d0 + d1},
-      {d0 + d2},
-      {d1 + d2},
-      {u0 + u1},
-      {u0 + u2},
-      {u1 + u2},
-      // N=2, pair hopping
-      {d0 + u0, d1 + u1, d2 + u2},
-      // N=2, spin flip
-      {d0 + u1, d1 + u0},
-      {d0 + u2, d2 + u0},
-      {d1 + u2, d2 + u1},
-      // N=3
-      {d0 + d1 + d2},
-      {u0 + u1 + u2},
-      {d0 + d1 + u0, d1 + d2 + u2},
-      {d0 + d2 + u0, d1 + d2 + u1},
-      {d0 + d1 + u1, d0 + d2 + u2},
-      {d0 + u0 + u1, d2 + u1 + u2},
-      {d1 + u0 + u1, d2 + u0 + u2},
-      {d0 + u0 + u2, d1 + u1 + u2},
-      {d1 + d2 + u0, d0 + d2 + u1, d0 + d1 + u2},
-      {d2 + u0 + u1, d0 + u1 + u2, d1 + u0 + u2},
-      // N=4, 2 holes with the same spin
-      {d2 + u0 + u1 + u2},
-      {d1 + u0 + u1 + u2},
-      {d0 + u0 + u1 + u2},
-      {d0 + d1 + d2 + u2},
-      {d0 + d1 + d2 + u1},
-      {d0 + d1 + d2 + u0},
-      // N=4, pair hopping
-      {d1 + d2 + u1 + u2, d0 + d2 + u0 + u2, d0 + d1 + u0 + u1},
-      // N=4, spin flip
-      {d1 + d2 + u0 + u2, d0 + d2 + u1 + u2},
-      {d1 + d2 + u0 + u1, d0 + d1 + u1 + u2},
-      {d0 + d2 + u0 + u1, d0 + d1 + u0 + u2},
-      // N=5
-      {d1 + d2 + u0 + u1 + u2},
-      {d0 + d2 + u0 + u1 + u2},
-      {d0 + d1 + u0 + u1 + u2},
-      {d0 + d1 + d2 + u1 + u2},
-      {d0 + d1 + d2 + u0 + u2},
-      {d0 + d1 + d2 + u0 + u1},
-      // N=6
-      {d0 + d1 + d2 + u0 + u1 + u2}
-    };
+    std::set<std::set<sv_index_type>> ref_cl{
+        // N=0
+        {0},
+        // N=1
+        {d0},
+        {d1},
+        {d2},
+        {u0},
+        {u1},
+        {u2},
+        // N=2, same spin
+        {d0 + d1},
+        {d0 + d2},
+        {d1 + d2},
+        {u0 + u1},
+        {u0 + u2},
+        {u1 + u2},
+        // N=2, pair hopping
+        {d0 + u0, d1 + u1, d2 + u2},
+        // N=2, spin flip
+        {d0 + u1, d1 + u0},
+        {d0 + u2, d2 + u0},
+        {d1 + u2, d2 + u1},
+        // N=3
+        {d0 + d1 + d2},
+        {u0 + u1 + u2},
+        {d0 + d1 + u0, d1 + d2 + u2},
+        {d0 + d2 + u0, d1 + d2 + u1},
+        {d0 + d1 + u1, d0 + d2 + u2},
+        {d0 + u0 + u1, d2 + u1 + u2},
+        {d1 + u0 + u1, d2 + u0 + u2},
+        {d0 + u0 + u2, d1 + u1 + u2},
+        {d1 + d2 + u0, d0 + d2 + u1, d0 + d1 + u2},
+        {d2 + u0 + u1, d0 + u1 + u2, d1 + u0 + u2},
+        // N=4, 2 holes with the same spin
+        {d2 + u0 + u1 + u2},
+        {d1 + u0 + u1 + u2},
+        {d0 + u0 + u1 + u2},
+        {d0 + d1 + d2 + u2},
+        {d0 + d1 + d2 + u1},
+        {d0 + d1 + d2 + u0},
+        // N=4, pair hopping
+        {d1 + d2 + u1 + u2, d0 + d2 + u0 + u2, d0 + d1 + u0 + u1},
+        // N=4, spin flip
+        {d1 + d2 + u0 + u2, d0 + d2 + u1 + u2},
+        {d1 + d2 + u0 + u1, d0 + d1 + u1 + u2},
+        {d0 + d2 + u0 + u1, d0 + d1 + u0 + u2},
+        // N=5
+        {d1 + d2 + u0 + u1 + u2},
+        {d0 + d2 + u0 + u1 + u2},
+        {d0 + d1 + u0 + u1 + u2},
+        {d0 + d1 + d2 + u1 + u2},
+        {d0 + d1 + d2 + u0 + u2},
+        {d0 + d1 + d2 + u0 + u1},
+        // N=6
+        {d0 + d1 + d2 + u0 + u1 + u2}};
 
     CHECK(cl == ref_cl);
   }
@@ -176,132 +175,150 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
     std::vector<std::set<melem_t>> v_melem(sp.n_subspaces());
     for(auto const& x : matrix_elements) {
-      v_melem[sp[x.first.first]].insert(melem_t{x.first.second,
-                                                x.first.first,
-                                                x.second}
-                                       );
+      v_melem[sp[x.first.first]].insert(
+          melem_t{x.first.second, x.first.first, x.second});
     }
     melem_set_t melem(v_melem.cbegin(), v_melem.cend());
 
     // Expected matrix elements
-    melem_set_t ref_melem {
-      // N=0
-      std::set<melem_t>{},
-      // N=1
-      {{d0, d0, -mu}}, {{d1, d1, -mu}}, {{d2, d2, -mu}},
-      {{u0, u0, -mu}}, {{u1, u1, -mu}}, {{u2, u2, -mu}},
-      // N=2, same spin
-      {{d0 + d1, d0 + d1, -2 * mu + U - 3 * J}},
-      {{d0 + d2, d0 + d2, -2 * mu + U - 3 * J}},
-      {{d1 + d2, d1 + d2, -2 * mu + U - 3 * J}},
-      {{u0 + u1, u0 + u1, -2 * mu + U - 3 * J}},
-      {{u0 + u2, u0 + u2, -2 * mu + U - 3 * J}},
-      {{u1 + u2, u1 + u2, -2 * mu + U - 3 * J}},
-      // N=2, pair hopping
-      {{d0 + u0, d0 + u0, -2 * mu + U},
-       {d1 + u1, d1 + u1, -2 * mu + U},
-       {d2 + u2, d2 + u2, -2 * mu + U},
-       {d0 + u0, d1 + u1, J}, {d0 + u0, d2 + u2, J}, {d1 + u1, d2 + u2, J},
-       {d1 + u1, d0 + u0, J}, {d2 + u2, d0 + u0, J}, {d2 + u2, d1 + u1, J}},
-      // N=2, spin flip
-      {{d0 + u1, d0 + u1, -2 * mu + U - 2 * J},
-       {d1 + u0, d1 + u0, -2 * mu + U - 2 * J},
-       {d0 + u1, d1 + u0, J}, {d1 + u0, d0 + u1, J}},
-      {{d0 + u2, d0 + u2, -2 * mu + U - 2 * J},
-       {d2 + u0, d2 + u0, -2 * mu + U - 2 * J},
-       {d0 + u2, d2 + u0, J}, {d2 + u0, d0 + u2, J}},
-      {{d1 + u2, d1 + u2, -2 * mu + U - 2 * J},
-       {d2 + u1, d2 + u1, -2 * mu + U - 2 * J},
-       {d1 + u2, d2 + u1, J}, {d2 + u1, d1 + u2, J}},
-      // N=3
-      {{d0 + d1 + d2, d0 + d1 + d2, -3 * mu + 3 * U - 9 * J}},
-      {{u0 + u1 + u2, u0 + u1 + u2, -3 * mu + 3 * U - 9 * J}},
-      {{d0 + d1 + u0, d0 + d1 + u0, -3 * mu + 3 * U - 5 * J},
-       {d1 + d2 + u2, d1 + d2 + u2, -3 * mu + 3 * U - 5 * J},
-       {d0 + d1 + u0, d1 + d2 + u2, -J}, {d1 + d2 + u2, d0 + d1 + u0, -J}},
-      {{d0 + d2 + u0, d0 + d2 + u0, -3 * mu + 3 * U - 5 * J},
-       {d1 + d2 + u1, d1 + d2 + u1, -3 * mu + 3 * U - 5 * J},
-       {d0 + d2 + u0, d1 + d2 + u1, J}, {d1 + d2 + u1, d0 + d2 + u0, J}},
-      {{d0 + d1 + u1, d0 + d1 + u1, -3 * mu + 3 * U - 5 * J},
-       {d0 + d2 + u2, d0 + d2 + u2, -3 * mu + 3 * U - 5 * J},
-       {d0 + d1 + u1, d0 + d2 + u2, J}, {d0 + d2 + u2, d0 + d1 + u1, J}},
-      {{d0 + u0 + u1, d0 + u0 + u1, -3 * mu + 3 * U - 5 * J},
-       {d2 + u1 + u2, d2 + u1 + u2, -3 * mu + 3 * U - 5 * J},
-       {d0 + u0 + u1, d2 + u1 + u2, -J}, {d2 + u1 + u2, d0 + u0 + u1, -J}},
-      {{d1 + u0 + u1, d1 + u0 + u1, -3 * mu + 3 * U - 5 * J},
-       {d2 + u0 + u2, d2 + u0 + u2, -3 * mu + 3 * U - 5 * J},
-       {d1 + u0 + u1, d2 + u0 + u2, J}, {d2 + u0 + u2, d1 + u0 + u1, J}},
-      {{d0 + u0 + u2, d0 + u0 + u2, -3 * mu + 3 * U - 5 * J},
-       {d1 + u1 + u2, d1 + u1 + u2, -3 * mu + 3 * U - 5 * J},
-       {d0 + u0 + u2, d1 + u1 + u2, J}, {d1 + u1 + u2, d0 + u0 + u2, J}},
-      {{d1 + d2 + u0, d1 + d2 + u0, -3 * mu + 3 * U - 7 * J},
-       {d0 + d2 + u1, d0 + d2 + u1, -3 * mu + 3 * U - 7 * J},
-       {d0 + d1 + u2, d0 + d1 + u2, -3 * mu + 3 * U - 7 * J},
-       {d1 + d2 + u0, d0 + d2 + u1, J},
-       {d0 + d2 + u1, d1 + d2 + u0, J}, {d1 + d2 + u0, d0 + d1 + u2, -J},
-       {d0 + d1 + u2, d1 + d2 + u0, -J}, {d0 + d2 + u1, d0 + d1 + u2, J},
-       {d0 + d1 + u2, d0 + d2 + u1, J}},
-      {{d2 + u0 + u1, d2 + u0 + u1, -3 * mu + 3 * U - 7 * J},
-       {d0 + u1 + u2, d0 + u1 + u2, -3 * mu + 3 * U - 7 * J},
-       {d1 + u0 + u2, d1 + u0 + u2, -3 * mu + 3 * U - 7 * J},
-       {d2 + u0 + u1, d0 + u1 + u2, -J},
-       {d0 + u1 + u2, d2 + u0 + u1, -J}, {d2 + u0 + u1, d1 + u0 + u2, J},
-       {d1 + u0 + u2, d2 + u0 + u1, J}, {d0 + u1 + u2, d1 + u0 + u2, J},
-       {d1 + u0 + u2, d0 + u1 + u2, J}},
-      // N=4, 2 holes with the same spin
-      {{d2 + u0 + u1 + u2, d2 + u0 + u1 + u2, -4 * mu + 6 * U - 13 * J}},
-      {{d1 + u0 + u1 + u2, d1 + u0 + u1 + u2, -4 * mu + 6 * U - 13 * J}},
-      {{d0 + u0 + u1 + u2, d0 + u0 + u1 + u2, -4 * mu + 6 * U - 13 * J}},
-      {{d0 + d1 + d2 + u0, d0 + d1 + d2 + u0, -4 * mu + 6 * U - 13 * J}},
-      {{d0 + d1 + d2 + u1, d0 + d1 + d2 + u1, -4 * mu + 6 * U - 13 * J}},
-      {{d0 + d1 + d2 + u2, d0 + d1 + d2 + u2, -4 * mu + 6 * U - 13 * J}},
-      // N=4, pair hopping
-      {{d1 + d2 + u1 + u2, d1 + d2 + u1 + u2, -4 * mu + 6 * U - 10 * J},
-       {d0 + d2 + u0 + u2, d0 + d2 + u0 + u2, -4 * mu + 6 * U - 10 * J},
-       {d0 + d1 + u0 + u1, d0 + d1 + u0 + u1, -4 * mu + 6 * U - 10 * J},
-       {d1 + d2 + u1 + u2, d0 + d2 + u0 + u2, J},
-       {d0 + d2 + u0 + u2, d1 + d2 + u1 + u2, J},
-       {d1 + d2 + u1 + u2, d0 + d1 + u0 + u1, J},
-       {d0 + d1 + u0 + u1, d1 + d2 + u1 + u2, J},
-       {d0 + d2 + u0 + u2, d0 + d1 + u0 + u1, J},
-       {d0 + d1 + u0 + u1, d0 + d2 + u0 + u2, J}},
-      // N=4, spin flip
-      {{d1 + d2 + u0 + u2, d1 + d2 + u0 + u2, -4 * mu + 6 * U - 12 * J},
-       {d0 + d2 + u1 + u2, d0 + d2 + u1 + u2, -4 * mu + 6 * U - 12 * J},
-       {d1 + d2 + u0 + u2, d0 + d2 + u1 + u2, J},
-       {d0 + d2 + u1 + u2, d1 + d2 + u0 + u2, J}},
-      {{d1 + d2 + u0 + u1, d1 + d2 + u0 + u1, -4 * mu + 6 * U - 12 * J},
-       {d0 + d1 + u1 + u2, d0 + d1 + u1 + u2, -4 * mu + 6 * U - 12 * J},
-       {d1 + d2 + u0 + u1, d0 + d1 + u1 + u2, J},
-       {d0 + d1 + u1 + u2, d1 + d2 + u0 + u1, J}},
-      {{d0 + d2 + u0 + u1, d0 + d2 + u0 + u1, -4 * mu + 6 * U - 12 * J},
-       {d0 + d1 + u0 + u2, d0 + d1 + u0 + u2, -4 * mu + 6 * U - 12 * J},
-       {d0 + d2 + u0 + u1, d0 + d1 + u0 + u2, J},
-       {d0 + d1 + u0 + u2, d0 + d2 + u0 + u1, J}},
-      // N=5
-      {{d1 + d2 + u0 + u1 + u2,
-        d1 + d2 + u0 + u1 + u2,
-        -5 * mu + 10 * U - 20 * J}},
-      {{d0 + d2 + u0 + u1 + u2,
-        d0 + d2 + u0 + u1 + u2,
-        -5 * mu + 10 * U - 20 * J}},
-      {{d0 + d1 + u0 + u1 + u2,
-        d0 + d1 + u0 + u1 + u2,
-        -5 * mu + 10 * U - 20 * J}},
-      {{d0 + d1 + d2 + u1 + u2,
-        d0 + d1 + d2 + u1 + u2,
-        -5 * mu + 10 * U - 20 * J}},
-      {{d0 + d1 + d2 + u0 + u2,
-        d0 + d1 + d2 + u0 + u2,
-        -5 * mu + 10 * U - 20 * J}},
-      {{d0 + d1 + d2 + u0 + u1,
-        d0 + d1 + d2 + u0 + u1,
-        -5 * mu + 10 * U - 20 * J}},
-      // N=6
-      {{d0 + d1 + d2 + u0 + u1 + u2,
-        d0 + d1 + d2 + u0 + u1 + u2,
-        -6 * mu + 15 * U - 30 * J}}
-    };
+    melem_set_t ref_melem{
+        // N=0
+        std::set<melem_t>{},
+        // N=1
+        {{d0, d0, -mu}},
+        {{d1, d1, -mu}},
+        {{d2, d2, -mu}},
+        {{u0, u0, -mu}},
+        {{u1, u1, -mu}},
+        {{u2, u2, -mu}},
+        // N=2, same spin
+        {{d0 + d1, d0 + d1, -2 * mu + U - 3 * J}},
+        {{d0 + d2, d0 + d2, -2 * mu + U - 3 * J}},
+        {{d1 + d2, d1 + d2, -2 * mu + U - 3 * J}},
+        {{u0 + u1, u0 + u1, -2 * mu + U - 3 * J}},
+        {{u0 + u2, u0 + u2, -2 * mu + U - 3 * J}},
+        {{u1 + u2, u1 + u2, -2 * mu + U - 3 * J}},
+        // N=2, pair hopping
+        {{d0 + u0, d0 + u0, -2 * mu + U},
+         {d1 + u1, d1 + u1, -2 * mu + U},
+         {d2 + u2, d2 + u2, -2 * mu + U},
+         {d0 + u0, d1 + u1, J},
+         {d0 + u0, d2 + u2, J},
+         {d1 + u1, d2 + u2, J},
+         {d1 + u1, d0 + u0, J},
+         {d2 + u2, d0 + u0, J},
+         {d2 + u2, d1 + u1, J}},
+        // N=2, spin flip
+        {{d0 + u1, d0 + u1, -2 * mu + U - 2 * J},
+         {d1 + u0, d1 + u0, -2 * mu + U - 2 * J},
+         {d0 + u1, d1 + u0, J},
+         {d1 + u0, d0 + u1, J}},
+        {{d0 + u2, d0 + u2, -2 * mu + U - 2 * J},
+         {d2 + u0, d2 + u0, -2 * mu + U - 2 * J},
+         {d0 + u2, d2 + u0, J},
+         {d2 + u0, d0 + u2, J}},
+        {{d1 + u2, d1 + u2, -2 * mu + U - 2 * J},
+         {d2 + u1, d2 + u1, -2 * mu + U - 2 * J},
+         {d1 + u2, d2 + u1, J},
+         {d2 + u1, d1 + u2, J}},
+        // N=3
+        {{d0 + d1 + d2, d0 + d1 + d2, -3 * mu + 3 * U - 9 * J}},
+        {{u0 + u1 + u2, u0 + u1 + u2, -3 * mu + 3 * U - 9 * J}},
+        {{d0 + d1 + u0, d0 + d1 + u0, -3 * mu + 3 * U - 5 * J},
+         {d1 + d2 + u2, d1 + d2 + u2, -3 * mu + 3 * U - 5 * J},
+         {d0 + d1 + u0, d1 + d2 + u2, -J},
+         {d1 + d2 + u2, d0 + d1 + u0, -J}},
+        {{d0 + d2 + u0, d0 + d2 + u0, -3 * mu + 3 * U - 5 * J},
+         {d1 + d2 + u1, d1 + d2 + u1, -3 * mu + 3 * U - 5 * J},
+         {d0 + d2 + u0, d1 + d2 + u1, J},
+         {d1 + d2 + u1, d0 + d2 + u0, J}},
+        {{d0 + d1 + u1, d0 + d1 + u1, -3 * mu + 3 * U - 5 * J},
+         {d0 + d2 + u2, d0 + d2 + u2, -3 * mu + 3 * U - 5 * J},
+         {d0 + d1 + u1, d0 + d2 + u2, J},
+         {d0 + d2 + u2, d0 + d1 + u1, J}},
+        {{d0 + u0 + u1, d0 + u0 + u1, -3 * mu + 3 * U - 5 * J},
+         {d2 + u1 + u2, d2 + u1 + u2, -3 * mu + 3 * U - 5 * J},
+         {d0 + u0 + u1, d2 + u1 + u2, -J},
+         {d2 + u1 + u2, d0 + u0 + u1, -J}},
+        {{d1 + u0 + u1, d1 + u0 + u1, -3 * mu + 3 * U - 5 * J},
+         {d2 + u0 + u2, d2 + u0 + u2, -3 * mu + 3 * U - 5 * J},
+         {d1 + u0 + u1, d2 + u0 + u2, J},
+         {d2 + u0 + u2, d1 + u0 + u1, J}},
+        {{d0 + u0 + u2, d0 + u0 + u2, -3 * mu + 3 * U - 5 * J},
+         {d1 + u1 + u2, d1 + u1 + u2, -3 * mu + 3 * U - 5 * J},
+         {d0 + u0 + u2, d1 + u1 + u2, J},
+         {d1 + u1 + u2, d0 + u0 + u2, J}},
+        {{d1 + d2 + u0, d1 + d2 + u0, -3 * mu + 3 * U - 7 * J},
+         {d0 + d2 + u1, d0 + d2 + u1, -3 * mu + 3 * U - 7 * J},
+         {d0 + d1 + u2, d0 + d1 + u2, -3 * mu + 3 * U - 7 * J},
+         {d1 + d2 + u0, d0 + d2 + u1, J},
+         {d0 + d2 + u1, d1 + d2 + u0, J},
+         {d1 + d2 + u0, d0 + d1 + u2, -J},
+         {d0 + d1 + u2, d1 + d2 + u0, -J},
+         {d0 + d2 + u1, d0 + d1 + u2, J},
+         {d0 + d1 + u2, d0 + d2 + u1, J}},
+        {{d2 + u0 + u1, d2 + u0 + u1, -3 * mu + 3 * U - 7 * J},
+         {d0 + u1 + u2, d0 + u1 + u2, -3 * mu + 3 * U - 7 * J},
+         {d1 + u0 + u2, d1 + u0 + u2, -3 * mu + 3 * U - 7 * J},
+         {d2 + u0 + u1, d0 + u1 + u2, -J},
+         {d0 + u1 + u2, d2 + u0 + u1, -J},
+         {d2 + u0 + u1, d1 + u0 + u2, J},
+         {d1 + u0 + u2, d2 + u0 + u1, J},
+         {d0 + u1 + u2, d1 + u0 + u2, J},
+         {d1 + u0 + u2, d0 + u1 + u2, J}},
+        // N=4, 2 holes with the same spin
+        {{d2 + u0 + u1 + u2, d2 + u0 + u1 + u2, -4 * mu + 6 * U - 13 * J}},
+        {{d1 + u0 + u1 + u2, d1 + u0 + u1 + u2, -4 * mu + 6 * U - 13 * J}},
+        {{d0 + u0 + u1 + u2, d0 + u0 + u1 + u2, -4 * mu + 6 * U - 13 * J}},
+        {{d0 + d1 + d2 + u0, d0 + d1 + d2 + u0, -4 * mu + 6 * U - 13 * J}},
+        {{d0 + d1 + d2 + u1, d0 + d1 + d2 + u1, -4 * mu + 6 * U - 13 * J}},
+        {{d0 + d1 + d2 + u2, d0 + d1 + d2 + u2, -4 * mu + 6 * U - 13 * J}},
+        // N=4, pair hopping
+        {{d1 + d2 + u1 + u2, d1 + d2 + u1 + u2, -4 * mu + 6 * U - 10 * J},
+         {d0 + d2 + u0 + u2, d0 + d2 + u0 + u2, -4 * mu + 6 * U - 10 * J},
+         {d0 + d1 + u0 + u1, d0 + d1 + u0 + u1, -4 * mu + 6 * U - 10 * J},
+         {d1 + d2 + u1 + u2, d0 + d2 + u0 + u2, J},
+         {d0 + d2 + u0 + u2, d1 + d2 + u1 + u2, J},
+         {d1 + d2 + u1 + u2, d0 + d1 + u0 + u1, J},
+         {d0 + d1 + u0 + u1, d1 + d2 + u1 + u2, J},
+         {d0 + d2 + u0 + u2, d0 + d1 + u0 + u1, J},
+         {d0 + d1 + u0 + u1, d0 + d2 + u0 + u2, J}},
+        // N=4, spin flip
+        {{d1 + d2 + u0 + u2, d1 + d2 + u0 + u2, -4 * mu + 6 * U - 12 * J},
+         {d0 + d2 + u1 + u2, d0 + d2 + u1 + u2, -4 * mu + 6 * U - 12 * J},
+         {d1 + d2 + u0 + u2, d0 + d2 + u1 + u2, J},
+         {d0 + d2 + u1 + u2, d1 + d2 + u0 + u2, J}},
+        {{d1 + d2 + u0 + u1, d1 + d2 + u0 + u1, -4 * mu + 6 * U - 12 * J},
+         {d0 + d1 + u1 + u2, d0 + d1 + u1 + u2, -4 * mu + 6 * U - 12 * J},
+         {d1 + d2 + u0 + u1, d0 + d1 + u1 + u2, J},
+         {d0 + d1 + u1 + u2, d1 + d2 + u0 + u1, J}},
+        {{d0 + d2 + u0 + u1, d0 + d2 + u0 + u1, -4 * mu + 6 * U - 12 * J},
+         {d0 + d1 + u0 + u2, d0 + d1 + u0 + u2, -4 * mu + 6 * U - 12 * J},
+         {d0 + d2 + u0 + u1, d0 + d1 + u0 + u2, J},
+         {d0 + d1 + u0 + u2, d0 + d2 + u0 + u1, J}},
+        // N=5
+        {{d1 + d2 + u0 + u1 + u2,
+          d1 + d2 + u0 + u1 + u2,
+          -5 * mu + 10 * U - 20 * J}},
+        {{d0 + d2 + u0 + u1 + u2,
+          d0 + d2 + u0 + u1 + u2,
+          -5 * mu + 10 * U - 20 * J}},
+        {{d0 + d1 + u0 + u1 + u2,
+          d0 + d1 + u0 + u1 + u2,
+          -5 * mu + 10 * U - 20 * J}},
+        {{d0 + d1 + d2 + u1 + u2,
+          d0 + d1 + d2 + u1 + u2,
+          -5 * mu + 10 * U - 20 * J}},
+        {{d0 + d1 + d2 + u0 + u2,
+          d0 + d1 + d2 + u0 + u2,
+          -5 * mu + 10 * U - 20 * J}},
+        {{d0 + d1 + d2 + u0 + u1,
+          d0 + d1 + d2 + u0 + u1,
+          -5 * mu + 10 * U - 20 * J}},
+        // N=6
+        {{d0 + d1 + d2 + u0 + u1 + u2,
+          d0 + d1 + d2 + u0 + u1 + u2,
+          -6 * mu + 15 * U - 30 * J}}};
 
     CHECK(melem == ref_melem);
   }
@@ -347,16 +364,15 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         if(f_sp.size() == 0) continue;
 
         // Check if op maps i_sp to only one subspace
-        auto n = std::count_if(
-          cl.begin(),
-          cl.end(),
-          [&f_sp](std::set<sv_index_type> const& f_sp_ref) {
-            return std::includes(f_sp_ref.cbegin(),
-                                 f_sp_ref.cend(),
-                                 f_sp.cbegin(),
-                                 f_sp.cend());
-          }
-        );
+        auto n =
+            std::count_if(cl.begin(),
+                          cl.end(),
+                          [&f_sp](std::set<sv_index_type> const& f_sp_ref) {
+                            return std::includes(f_sp_ref.cbegin(),
+                                                 f_sp_ref.cend(),
+                                                 f_sp.cbegin(),
+                                                 f_sp.cend());
+                          });
         CHECK(n == 1);
       }
     }
@@ -365,12 +381,11 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
   SECTION("find_connections") {
 
     std::vector<expression<double, std::string, int>> expr = {
-      {},
-      c_dag("up", 0) * c("dn", 1),
-      c_dag("up", 0) * c("dn", 1) + c_dag("dn", 0) * c("dn", 1),
-      c_dag("dn", 1) * c_dag("up", 1),
-      n("up", 2)
-    };
+        {},
+        c_dag("up", 0) * c("dn", 1),
+        c_dag("up", 0) * c("dn", 1) + c_dag("dn", 0) * c("dn", 1),
+        c_dag("dn", 1) * c_dag("up", 1),
+        n("up", 2)};
 
     auto sp = space_partition(Hop, hs);
     auto op = make_loperator(expr[1] + expr[2] + expr[3] + expr[4], hs);
@@ -394,8 +409,8 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
       for(auto const& expr2 : expr) {
         auto conns1 = sp.find_connections(make_loperator(expr1, hs), hs);
         auto conns2 = sp.find_connections(make_loperator(expr2, hs), hs);
-        auto conns12 = sp.find_connections(make_loperator(expr1 + expr2, hs),
-                                           hs);
+        auto conns12 =
+            sp.find_connections(make_loperator(expr1 + expr2, hs), hs);
 
         connections_map conns12_ref;
         std::set_union(conns1.begin(),

@@ -38,13 +38,12 @@ class polynomial {
   std::vector<double> coefficients;
 
 public:
-
   // Construct zero polynomial of degree n
   explicit polynomial(std::size_t n) : coefficients(n + 1, 0) {}
 
   // Construct from a list of coefficients
-  explicit polynomial(std::initializer_list<double> coeffs) :
-    coefficients(coeffs) {}
+  explicit polynomial(std::initializer_list<double> coeffs)
+    : coefficients(coeffs) {}
 
   // Degree of this polynomial
   std::size_t degree() const { return coefficients.size() - 1; }
@@ -68,9 +67,8 @@ public:
     auto max_degree = std::max(degree(), p.degree());
     polynomial result(max_degree);
     for(std::size_t i = 0; i <= max_degree; ++i) {
-      result.coefficients[i] =
-        (i <= degree() ? coefficients[i] : 0) +
-        (i <= p.degree() ? p.coefficients[i] : 0);
+      result.coefficients[i] = (i <= degree() ? coefficients[i] : 0) +
+                               (i <= p.degree() ? p.coefficients[i] : 0);
     }
     return result;
   }
@@ -80,9 +78,8 @@ public:
     auto max_degree = std::max(degree(), p.degree());
     polynomial result(max_degree);
     for(std::size_t i = 0; i <= max_degree; ++i) {
-      result.coefficients[i] =
-        (i <= degree() ? coefficients[i] : 0) -
-        (i <= p.degree() ? p.coefficients[i] : 0);
+      result.coefficients[i] = (i <= degree() ? coefficients[i] : 0) -
+                               (i <= p.degree() ? p.coefficients[i] : 0);
     }
     return result;
   }
@@ -92,7 +89,7 @@ public:
     polynomial result(degree() + p.degree());
     for(std::size_t i = 0; i <= degree(); ++i) {
       for(std::size_t j = 0; j <= p.degree(); ++j) {
-        result.coefficients[i+j] += coefficients[i] * p.coefficients[j];
+        result.coefficients[i + j] += coefficients[i] * p.coefficients[j];
       }
     }
     return result;
@@ -103,32 +100,30 @@ public:
     polynomial res(*this);
     std::for_each(res.coefficients.begin(),
                   res.coefficients.end(),
-                  [x](double & c) { c *= x; });
+                  [x](double& c) { c *= x; });
     return res;
   }
 
   // Multiplication by a constant pre-factor
-  friend polynomial operator*(double x, polynomial const& p) {
-    return p * x;
-  }
+  friend polynomial operator*(double x, polynomial const& p) { return p * x; }
 };
 
 // Specialize struct scalar_traits to let libcommute know about our polynomial
 // type so that it can be used as a coefficient type of libcommute::expression.
 namespace libcommute {
 
-template<> struct scalar_traits<polynomial> {
+template <> struct scalar_traits<polynomial> {
   // Zero value test
   static bool is_zero(polynomial const& p) {
-    return std::all_of(p.coeffs().begin(),
-                       p.coeffs().end(),
-                       [](double c) { return c == 0; });
+    return std::all_of(p.coeffs().begin(), p.coeffs().end(), [](double c) {
+      return c == 0;
+    });
   }
   // Make a constant polynomial from a double value
   static polynomial make_const(double x) { return polynomial{x}; }
 };
 
-}
+} // namespace libcommute
 
 int main() {
 
@@ -144,7 +139,7 @@ int main() {
 
   // Hamiltonian of the oscillator
   using namespace static_indices; // For a_dag() and a()
-  auto H = 0.5*w0 + w0*(a_dag<polynomial>() - g) * (a<polynomial>() - g);
+  auto H = 0.5 * w0 + w0 * (a_dag<polynomial>() - g) * (a<polynomial>() - g);
 
   // H will act in the Hilbert space 'hs'. Since we are working with a boson,
   // we have to truncate the Hilbert space and allow a finite number of
@@ -171,8 +166,7 @@ int main() {
     // Print all non-zero elements of |ket>
     std::cout << "\\lambda = " << lambda << " :|ket> = ";
     for(unsigned int i = 0; i < ket.size(); ++i) {
-      if(ket[i] != 0)
-        std::cout << " +(" << ket[i] << ")|" << i << ">";
+      if(ket[i] != 0) std::cout << " +(" << ket[i] << ")|" << i << ">";
     }
     std::cout << std::endl;
   }

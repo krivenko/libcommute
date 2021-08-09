@@ -16,8 +16,8 @@
 #include "check_ordering.hpp"
 #include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/monomial.hpp>
 
@@ -126,10 +126,16 @@ TEST_CASE("Monomials", "[monomial]") {
                       m0,
                       m2,
                       Cdag_dn,
-                      std::make_pair(m4.begin() + 1, m4.begin() + 3)
-                     ) ==
-          mon_type(A_y,Sp_i,Cdag_dn,A_y,Sp_i,S1z_j,Cdag_dn,S1z_j,Cdag_dn)
-    );
+                      std::make_pair(m4.begin() + 1, m4.begin() + 3)) ==
+          mon_type(A_y,
+                   Sp_i,
+                   Cdag_dn,
+                   A_y,
+                   Sp_i,
+                   S1z_j,
+                   Cdag_dn,
+                   S1z_j,
+                   Cdag_dn));
   }
 
   SECTION("swap_generators()") {

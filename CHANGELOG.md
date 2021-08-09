@@ -12,7 +12,8 @@ All notable changes to this project will be documented in this file.
 - New CMake option ``STATIC_ANALYSIS``. When enabled, the ``clang-tidy`` and
   ``cppcheck`` static analysis tools will be run on the C++ sources of unit
   tests and examples as part of build process.
-- Minor bugfixes and improvements in coding style.
+- Minor bugfixes in unit tests and improvements in coding style.
+- Reformatted C++ sources using ``clang-format`` and a style based on ``LLVM``.
 
 ## [0.6.1] - 2021-03-30
 

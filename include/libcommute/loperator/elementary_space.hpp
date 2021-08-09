@@ -27,19 +27,17 @@ namespace libcommute {
 // 2-dimensional (|0> and |1>).
 //
 
-template<typename... IndexTypes>
-class elementary_space {
+template <typename... IndexTypes> class elementary_space {
 
 public:
-
   using index_types = std::tuple<IndexTypes...>;
 
   // Value semantics
-  template<typename... Args>
-  elementary_space(Args&&... indices) :
-    indices_(std::forward<Args>(indices)...) {}
+  template <typename... Args>
+  elementary_space(Args&&... indices)
+    : indices_(std::forward<Args>(indices)...) {}
   elementary_space(index_types indices) : indices_(std::move(indices)) {}
-  elementary_space(index_types && indices) : indices_(std::move(indices)) {}
+  elementary_space(index_types&& indices) : indices_(std::move(indices)) {}
   elementary_space(elementary_space const&) = default;
   elementary_space(elementary_space&&) noexcept = default;
   elementary_space& operator=(elementary_space const&) = default;
@@ -84,11 +82,9 @@ public:
   index_types const& indices() const { return indices_; }
 
 private:
-
   index_types indices_;
 
 protected:
-
   // Check two elementary spaces for equality
   virtual bool equal(elementary_space const& es) const {
     return indices_ == es.indices_;
@@ -102,6 +98,6 @@ protected:
   }
 };
 
-}
+} // namespace libcommute
 
 #endif

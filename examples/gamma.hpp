@@ -41,7 +41,6 @@ class generator_gamma : public generator<int> {
   using linear_function_t = typename base::linear_function_t;
 
 public:
-
   // Algebra ID of this generator
   int algebra_id() const override { return libcommute::gamma; }
 
@@ -61,8 +60,7 @@ public:
   // canonical order,
   //
   // g1 * g2 -> -g2 * g1 + 2\eta(g1, g2)
-  double
-  swap_with(base const& g2, linear_function_t & f) const override {
+  double swap_with(base const& g2, linear_function_t& f) const override {
 
     // Do g1 and g2 have the same indices?
     bool diag = base::equal(g2);
@@ -84,8 +82,7 @@ public:
   // It tries to simplify squares of gamma matrices,
   // (\gamma^0)^2 = I_4
   // (\gamma^k)^2 = -I_4 for k = 1,2,3
-  bool
-  simplify_prod(base const& g2, linear_function_t & f) const override {
+  bool simplify_prod(base const& g2, linear_function_t& f) const override {
     if(*this == g2) {
       // Replace the square with a constant
       int index = std::get<0>(base::indices());
@@ -98,7 +95,7 @@ public:
 
   // Hermitian conjugate of this generator as a linear function of generators.
   // \gamma^0 is Hermitian and \gamma^k are anti-Hermitian
-  void conj(linear_function_t & f) const override {
+  void conj(linear_function_t& f) const override {
     int index = std::get<0>(base::indices());
     if(index == 0) {
       // f(g) = 0 + 1*(*this)
@@ -110,7 +107,7 @@ public:
   }
 
   // Stream output function
-  std::ostream & print(std::ostream & os) const override {
+  std::ostream& print(std::ostream& os) const override {
     int index = std::get<0>(base::indices());
     return os << "\\gamma^" << index;
   }

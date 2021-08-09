@@ -13,11 +13,11 @@
 #ifndef LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
 #define LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
 
+#include "../expression/generator_fermion.hpp"
 #include "elementary_space_fermion.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
 #include "state_vector.hpp"
-#include "../expression/generator_fermion.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -29,7 +29,7 @@
 
 namespace libcommute {
 
-template<> class monomial_action<fermion> {
+template <> class monomial_action<fermion> {
 
   // Is this monomial a constant?
   bool is_const = false;
@@ -41,8 +41,7 @@ template<> class monomial_action<fermion> {
   sv_index_type creation_count_mask;
 
 public:
-
-  template<typename... IndexTypes>
+  template <typename... IndexTypes>
   monomial_action(detail::monomial_range_t<IndexTypes...> const& m_range,
                   hilbert_space<IndexTypes...> const& hs) {
 
@@ -55,24 +54,22 @@ public:
     std::vector<int> annihilation_set_bits;
 
     for(auto it = m_range.first; it != m_range.second; ++it) {
-      if(!is_fermion(*it))
-        throw unknown_generator<IndexTypes...>(*it);
+      if(!is_fermion(*it)) throw unknown_generator<IndexTypes...>(*it);
 
       elementary_space_fermion<IndexTypes...> es(it->indices());
-      if(!hs.has(es))
-        throw unknown_generator<IndexTypes...>(*it);
+      if(!hs.has(es)) throw unknown_generator<IndexTypes...>(*it);
 
       auto br = hs.bit_range(es);
       // All fermionic elementary spaces are 2-dimensional
       assert(br.first == br.second);
 
       bool dagger =
-        dynamic_cast<generator_fermion<IndexTypes...> const&>(*it).dagger();
+          dynamic_cast<generator_fermion<IndexTypes...> const&>(*it).dagger();
 
       (dagger ? creation_set_bits : annihilation_set_bits)
-        .emplace_back(br.first);
-      (dagger ? creation_mask : annihilation_mask)
-        |= (sv_index_type(1) << br.first);
+          .emplace_back(br.first);
+      (dagger ? creation_mask : annihilation_mask) |=
+          (sv_index_type(1) << br.first);
     }
 
     auto const& range = hs.algebra_bit_range(fermion);
@@ -81,32 +78,28 @@ public:
     annihilation_count_mask = compute_count_mask(annihilation_set_bits, range);
   }
 
-  template<typename ScalarType>
-  inline bool act(sv_index_type & index,
-                  ScalarType & coeff) const {
+  template <typename ScalarType>
+  inline bool act(sv_index_type& index, ScalarType& coeff) const {
 
     if(is_const) return true;
 
     // Fermions
-    if ((index & annihilation_mask) != annihilation_mask)
+    if((index & annihilation_mask) != annihilation_mask)
       return false; // Zero after acting with the annihilation operators
 
     sv_index_type inter_index = index & ~annihilation_mask;
 
-    if (((inter_index ^ creation_mask) & creation_mask) != creation_mask)
+    if(((inter_index ^ creation_mask) & creation_mask) != creation_mask)
       return false; // Zero after acting with the creation operators
 
     index = ~(~inter_index & ~creation_mask);
     bool minus = parity_number_of_bits((inter_index & annihilation_count_mask) ^
-                                       (index & creation_count_mask)
-                                      );
-    if(minus)
-      mul_assign(coeff, scalar_traits<ScalarType>::make_const(-1));
+                                       (index & creation_count_mask));
+    if(minus) mul_assign(coeff, scalar_traits<ScalarType>::make_const(-1));
     return true;
   }
 
 private:
-
   // Compute parity of the number of set bits in i
   inline static bool parity_number_of_bits(sv_index_type i) {
     i ^= i >> 32;
@@ -119,8 +112,8 @@ private:
   }
 
   //
-  inline static sv_index_type
-  compute_count_mask(std::vector<int> const &d, bit_range_t const& bit_range) {
+  inline static sv_index_type compute_count_mask(std::vector<int> const& d,
+                                                 bit_range_t const& bit_range) {
     sv_index_type mask = 0;
     bool is_on = (d.size() % 2 == 1);
     for(int i = bit_range.first; i <= bit_range.second; ++i) {

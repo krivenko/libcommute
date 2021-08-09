@@ -13,9 +13,9 @@
 #ifndef LIBCOMMUTE_EXPRESSION_MONOMIAL_HPP_
 #define LIBCOMMUTE_EXPRESSION_MONOMIAL_HPP_
 
-#include "generator.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
+#include "generator.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -35,12 +35,11 @@ namespace libcommute {
 // Monomial: a product of algebra generators
 //
 
-template<typename... IndexTypes>
-class monomial {
+template <typename... IndexTypes> class monomial {
 
   // Helper method for one of constructors
-  template<typename GenType1, typename... GenTypesTail>
-  void constructor_impl(GenType1 && generator, GenTypesTail&&... more_gens) {
+  template <typename GenType1, typename... GenTypesTail>
+  void constructor_impl(GenType1&& generator, GenTypesTail&&... more_gens) {
     using gen1_t = typename std::remove_reference<GenType1>::type;
     generators_.emplace_back(make_unique<gen1_t>(generator));
     constructor_impl(std::forward<GenTypesTail>(more_gens)...);
@@ -48,12 +47,11 @@ class monomial {
   void constructor_impl() {}
 
   // Check if all provided types are derived from generator<IndexTypes...>
-  template<typename... Types>
-  using all_are_generators = all_derived_from<generator<IndexTypes...>,
-                                              Types...>;
+  template <typename... Types>
+  using all_are_generators =
+      all_derived_from<generator<IndexTypes...>, Types...>;
 
 public:
-
   using index_types = std::tuple<IndexTypes...>;
   using generator_type = generator<IndexTypes...>;
   using gen_ptr_type = std::unique_ptr<generator_type>;
@@ -62,10 +60,9 @@ public:
   monomial() = default;
 
   // Construct from a list of >=1 generators
-  template<typename... GenTypes,
-           typename = typename std::enable_if<
-              all_are_generators<GenTypes...>::value>::type
-           >
+  template <typename... GenTypes,
+            typename = typename std::enable_if<
+                all_are_generators<GenTypes...>::value>::type>
   explicit monomial(GenTypes&&... generators) {
     constructor_impl(std::forward<GenTypes>(generators)...);
   }
@@ -113,8 +110,7 @@ public:
     std::transform(m.generators_.begin(),
                    m.generators_.end(),
                    std::back_inserter(generators_),
-                   [](gen_ptr_type const& g) { return g->clone(); }
-    );
+                   [](gen_ptr_type const& g) { return g->clone(); });
     return *this;
   }
   monomial& operator=(monomial&&) noexcept = default;
@@ -196,12 +192,12 @@ public:
     if(m1.size() != m2.size())
       return m1.size() > m2.size();
     else {
-      return std::lexicographical_compare(m1.begin(),
-                                          m1.end(),
-                                          m2.begin(),
-                                          m2.end(),
-                                          std::greater<generator_type const&>()
-      );
+      return std::lexicographical_compare(
+          m1.begin(),
+          m1.end(),
+          m2.begin(),
+          m2.end(),
+          std::greater<generator_type const&>());
     }
   }
 
@@ -210,7 +206,7 @@ public:
 
   // Concatenate monomials, generators and ranges specified
   // by a pair of monomial iterators
-  template<typename... PartTypes>
+  template <typename... PartTypes>
   friend monomial concatenate(PartTypes&&... parts) {
     monomial res;
     res.generators_.reserve(concat_parts_total_size(parts...));
@@ -230,7 +226,7 @@ public:
     auto it = m.begin(), end_it = m.end();
     auto next_it = it + 1;
     int power = 1;
-    for(;it != end_it; ++it, ++next_it) {
+    for(; it != end_it; ++it, ++next_it) {
       if(next_it == end_it || *next_it != *it) {
         os << (power > 1 ? "[" : "") << *it
            << (power > 1 ? "]^" + std::to_string(power) : "");
@@ -242,7 +238,6 @@ public:
   }
 
 private:
-
   //
   // Implementation bits of concatenate()
   //
@@ -254,29 +249,24 @@ private:
   // Size of a complete monomial
   static std::size_t monomial_part_size(monomial const& m) { return m.size(); }
   // Size of a range within a monomial
-  static std::size_t
-  monomial_part_size(range_type const& range) {
+  static std::size_t monomial_part_size(range_type const& range) {
     return std::distance(range.first, range.second);
   }
 
   // Total number of generators in a mixed list of generators,
   // monomials and monomial ranges
-  template<typename P1, typename... PTail>
+  template <typename P1, typename... PTail>
   static std::size_t concat_parts_total_size(P1&& p1, PTail&&... p_tail) {
     return monomial_part_size(std::forward<P1>(p1)) +
            concat_parts_total_size(std::forward<PTail>(p_tail)...);
   }
-  template<typename P1>
-  static std::size_t concat_parts_total_size(P1&& p1) {
+  template <typename P1> static std::size_t concat_parts_total_size(P1&& p1) {
     return monomial_part_size(std::forward<P1>(p1));
   }
 
 public:
-
   // Append generator
-  void append(generator_type const& g) {
-    generators_.emplace_back(g.clone());
-  }
+  void append(generator_type const& g) { generators_.emplace_back(g.clone()); }
   // Append generators from a monomial
   void append(monomial const& m) {
     generators_.reserve(generators_.size() + m.size());
@@ -292,28 +282,25 @@ public:
   }
 
 private:
-
   // Append generators from a mixed list of monomials and monomial ranges
-  template<typename P1, typename... PTail>
+  template <typename P1, typename... PTail>
   void concat_impl(P1&& p1, PTail&&... p_tail) {
     append(p1);
     concat_impl(std::forward<PTail>(p_tail)...);
   }
-  template<typename P1>
-  void concat_impl(P1&& p1) { append(p1); }
+  template <typename P1> void concat_impl(P1&& p1) { append(p1); }
 
   std::vector<gen_ptr_type> generators_;
 };
 
 // Constant iterator over generators comprising a monomial
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 class monomial<IndexTypes...>::const_iterator {
 
   using vector_it = typename std::vector<gen_ptr_type>::const_iterator;
   vector_it v_it_;
 
 public:
-
   using iterator_category = std::random_access_iterator_tag;
   using value_type = generator_type const&;
   using difference_type = std::ptrdiff_t;
@@ -330,7 +317,10 @@ public:
   ~const_iterator() = default;
 
   // Increments
-  const_iterator& operator++() { ++v_it_; return *this;}
+  const_iterator& operator++() {
+    ++v_it_;
+    return *this;
+  }
   const_iterator operator++(int) {
     const_iterator retval = *this;
     ++(*this);
@@ -338,7 +328,10 @@ public:
   }
 
   // Decrements
-  const_iterator& operator--() { --v_it_; return *this;}
+  const_iterator& operator--() {
+    --v_it_;
+    return *this;
+  }
   const_iterator operator--(int) {
     const_iterator retval = *this;
     --(*this);
@@ -346,8 +339,14 @@ public:
   }
 
   // Arithmetics
-  const_iterator& operator+=(std::size_t n) { v_it_ += n ; return *this; }
-  const_iterator& operator-=(std::size_t n) { v_it_ -= n ; return *this; }
+  const_iterator& operator+=(std::size_t n) {
+    v_it_ += n;
+    return *this;
+  }
+  const_iterator& operator-=(std::size_t n) {
+    v_it_ -= n;
+    return *this;
+  }
   friend const_iterator operator+(const_iterator const& it, std::size_t n) {
     return const_iterator(it.v_it_ + n);
   }
@@ -358,19 +357,19 @@ public:
     return const_iterator(it.v_it_ - n);
   }
   friend difference_type operator-(const_iterator const& it1,
-                                    const_iterator const& it2) {
+                                   const_iterator const& it2) {
     return it1.v_it_ - it2.v_it_;
   }
 
   // Equality
-  bool operator==(const_iterator const& it) const {return v_it_ == it.v_it_;}
-  bool operator!=(const_iterator const& it) const {return !(*this == it);}
+  bool operator==(const_iterator const& it) const { return v_it_ == it.v_it_; }
+  bool operator!=(const_iterator const& it) const { return !(*this == it); }
 
   // Ordering
-  bool operator<(const_iterator const& it) const {return v_it_ < it.v_it_;}
-  bool operator>(const_iterator const& it) const {return v_it_ > it.v_it_;}
-  bool operator<=(const_iterator const& it) const {return v_it_ <= it.v_it_;}
-  bool operator>=(const_iterator const& it) const {return v_it_ >= it.v_it_;}
+  bool operator<(const_iterator const& it) const { return v_it_ < it.v_it_; }
+  bool operator>(const_iterator const& it) const { return v_it_ > it.v_it_; }
+  bool operator<=(const_iterator const& it) const { return v_it_ <= it.v_it_; }
+  bool operator>=(const_iterator const& it) const { return v_it_ >= it.v_it_; }
 
   // Dereference
   reference operator*() const { return **v_it_; }

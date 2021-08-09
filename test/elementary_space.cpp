@@ -15,8 +15,8 @@
 
 #include "check_ordering.hpp"
 
-#include <libcommute/loperator/elementary_space_fermion.hpp>
 #include <libcommute/loperator/elementary_space_boson.hpp>
+#include <libcommute/loperator/elementary_space_fermion.hpp>
 #include <libcommute/loperator/elementary_space_spin.hpp>
 
 #include <algorithm>
@@ -35,30 +35,30 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
   // Fermionic elementary spaces
   auto es_f_dn = make_space_fermion("dn", 0);
   auto es_f_up = make_space_fermion("up", 0);
-  std::vector<es_type*> fermion_es = {&es_f_dn,&es_f_up};
+  std::vector<es_type*> fermion_es = {&es_f_dn, &es_f_up};
 
   // Bosonic elementary spaces (4 bits)
   auto es_b_x = make_space_boson(4, "x", 0);
   auto es_b_y = make_space_boson(4, "y", 0);
-  std::vector<es_type*> boson_es = {&es_b_x,&es_b_y};
+  std::vector<es_type*> boson_es = {&es_b_x, &es_b_y};
 
   // Spin-1/2 algebra elementary spaces
   auto es_s_i = make_space_spin(0.5, "i", 0);
   auto es_s_j = make_space_spin(0.5, "j", 0);
-  std::vector<es_type*> spin_es = {&es_s_i,&es_s_j};
+  std::vector<es_type*> spin_es = {&es_s_i, &es_s_j};
 
   // Spin-1 algebra elementary spaces
   auto es_s1_i = make_space_spin(1.0, "i", 0);
   auto es_s1_j = make_space_spin(1.0, "j", 0);
-  std::vector<es_type*> spin1_es = {&es_s1_i,&es_s1_j};
+  std::vector<es_type*> spin1_es = {&es_s1_i, &es_s1_j};
 
   // Spin-3/2 algebra elementary spaces
-  auto es_s32_i = make_space_spin(3.0/2, "i", 0);
-  auto es_s32_j = make_space_spin(3.0/2, "j", 0);
-  std::vector<es_type*> spin32_es = {&es_s32_i,&es_s32_j};
+  auto es_s32_i = make_space_spin(3.0 / 2, "i", 0);
+  auto es_s32_j = make_space_spin(3.0 / 2, "j", 0);
+  std::vector<es_type*> spin32_es = {&es_s32_i, &es_s32_j};
 
   SECTION("fermion") {
-    for(auto * es : fermion_es) {
+    for(auto* es : fermion_es) {
       CHECK(es->algebra_id() == fermion);
       CHECK(es->n_bits() == 1);
     }
@@ -67,7 +67,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
   }
 
   SECTION("boson") {
-    for(auto * es : boson_es) {
+    for(auto* es : boson_es) {
       CHECK(es->algebra_id() == boson);
       CHECK(es->n_bits() == 4);
     }
@@ -76,7 +76,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
   }
 
   SECTION("spin-1/2") {
-    for(auto * es : spin_es) {
+    for(auto* es : spin_es) {
       CHECK(es->algebra_id() == spin);
       CHECK(es->n_bits() == 1);
     }
@@ -85,7 +85,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
   }
 
   SECTION("spin-1") {
-    for(auto * es : spin1_es) {
+    for(auto* es : spin1_es) {
       CHECK(es->algebra_id() == spin);
       CHECK(es->n_bits() == 2);
     }
@@ -94,7 +94,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
   }
 
   SECTION("spin-3/2") {
-    for(auto * es : spin32_es) {
+    for(auto* es : spin32_es) {
       CHECK(es->algebra_id() == spin);
       CHECK(es->n_bits() == 2);
     }
@@ -104,11 +104,8 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
 
   SECTION("different base spaces") {
     std::vector<es_type*> all_es;
-    for(auto const & es_list : {fermion_es,
-                                boson_es,
-                                spin_es,
-                                spin1_es,
-                                spin32_es}) {
+    for(auto const& es_list :
+        {fermion_es, boson_es, spin_es, spin1_es, spin32_es}) {
       std::copy(es_list.begin(), es_list.end(), std::back_inserter(all_es));
     }
     check_equality(all_es);

@@ -44,7 +44,6 @@ class generator_virasoro : public generator<int> {
   static constexpr double central_charge = 2.0;
 
 public:
-
   // This function must return a unique algebra ID shared by all generators
   // of a particular algebra.
   int algebra_id() const override {
@@ -74,8 +73,7 @@ public:
   // L_m * L_n -> L_n * L_m + (m-n)*L_{m+n} + c(m^3 - m)\delta(m,-n)
   //
   // L_m will be passed to swap_with() as *this, i.e. L_m.swap_with(L_n, f).
-  double
-  swap_with(base const& L_n, linear_function_t & f) const override {
+  double swap_with(base const& L_n, linear_function_t& f) const override {
     // Ensure that L_m > L_n, or equivalently m > n.
     assert(*this > L_n);
 
@@ -86,9 +84,9 @@ public:
     int n = std::get<0>(L_n_.indices());
 
     // Write linear terms of the transformed expressions into 'f'
-    f.set(m == -n ? (central_charge * (m*m*m - m)) : 0, // Constant term
-      make_unique<generator_virasoro>(m + n), // L_{m+n}
-      m - n                                   // Coefficient in front of L_{m+n}
+    f.set(m == -n ? (central_charge * (m * m * m - m)) : 0, // Constant term
+          make_unique<generator_virasoro>(m + n),           // L_{m+n}
+          m - n // Coefficient in front of L_{m+n}
     );
 
     // Return coefficient in front of L_n * L_m in the transformed expression
@@ -103,8 +101,7 @@ public:
   //
   // L_m will be passed to simplify_prod() as *this,
   // i.e. L_m.simplify_prod(L_n, f).
-  bool
-  simplify_prod(base const& L_n, linear_function_t & f) const override {
+  bool simplify_prod(base const& L_n, linear_function_t& f) const override {
     // Ensure that L_m <= L_n, or equivalently m <= n.
     assert(!(*this > L_n));
 
@@ -117,13 +114,13 @@ public:
   }
 
   // Hermitian conjugate: (L_n)^\dagger = L_{-n}
-  void conj(linear_function_t & f) const override {
-    int conj_n = - std::get<0>(base::indices());
+  void conj(linear_function_t& f) const override {
+    int conj_n = -std::get<0>(base::indices());
     f.set(0, make_unique<generator_virasoro>(conj_n), 1);
   }
 
   // Print L_n to stream
-  std::ostream & print(std::ostream & os) const override {
+  std::ostream& print(std::ostream& os) const override {
     int n = std::get<0>(base::indices());
     return os << "L(" << n << ")";
   }
@@ -152,27 +149,27 @@ int main() {
   std::cout << "L(-1) * L(-1) = " << L(-1) * L(-1) << std::endl;
 
   // Check recurrence relations from Eq. (5)
-  std::cout << "L_1 - (1/5)[L_3, L_{-2}] = " <<
-    (L(1) - (1.0/5) * (L(3) * L(-2) - L(-2) * L(3))) << std::endl;
-  std::cout << "L_{-1} - (1/3)[L_1, L_{-2}] = " <<
-    (L(-1) - (1.0/3) * (L(1) * L(-2) - L(-2) * L(1))) << std::endl;
-  std::cout << "L_2 - (1/4)[L_3, L_{-1}] = " <<
-    (L(2) - (1.0/4) * (L(3) * L(-1) - L(-1) * L(3))) << std::endl;
-  std::cout << "L_0 - (1/2)[L_1, L_{-1}] = " <<
-    (L(0) - (1.0/2) * (L(1) * L(-1) - L(-1) * L(1))) << std::endl;
+  std::cout << "L_1 - (1/5)[L_3, L_{-2}] = "
+            << (L(1) - (1.0 / 5) * (L(3) * L(-2) - L(-2) * L(3))) << std::endl;
+  std::cout << "L_{-1} - (1/3)[L_1, L_{-2}] = "
+            << (L(-1) - (1.0 / 3) * (L(1) * L(-2) - L(-2) * L(1))) << std::endl;
+  std::cout << "L_2 - (1/4)[L_3, L_{-1}] = "
+            << (L(2) - (1.0 / 4) * (L(3) * L(-1) - L(-1) * L(3))) << std::endl;
+  std::cout << "L_0 - (1/2)[L_1, L_{-1}] = "
+            << (L(0) - (1.0 / 2) * (L(1) * L(-1) - L(-1) * L(1))) << std::endl;
 
   // Check recurrence relation Eq. (6) for some higher positive n
   for(int n = 3; n < 10; ++n) {
-    std::cout << "L_" << (n+1) << " - (1/" << (n-1) << ")"
+    std::cout << "L_" << (n + 1) << " - (1/" << (n - 1) << ")"
               << "[L_" << n << ", L_1] = "
-              << (L(n+1) - (1.0/(n-1)) * (L(n) * L(1) - L(1) * L(n)))
+              << (L(n + 1) - (1.0 / (n - 1)) * (L(n) * L(1) - L(1) * L(n)))
               << std::endl;
   }
   // Check recurrence relation Eq. (7) for some higher negative n
   for(int n = 2; n < 10; ++n) {
-    std::cout << "L_" << (-n-1) << " - (1/(" << (1-n) << "))"
+    std::cout << "L_" << (-n - 1) << " - (1/(" << (1 - n) << "))"
               << "[L_" << -n << ", L_{-1}] = "
-              << (L(-n-1) - (1.0/(1-n)) * (L(-n) * L(-1) - L(-1) * L(-n)))
+              << (L(-n - 1) - (1.0 / (1 - n)) * (L(-n) * L(-1) - L(-1) * L(-n)))
               << std::endl;
   }
 

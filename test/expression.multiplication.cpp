@@ -16,11 +16,11 @@
 #include "my_complex.hpp"
 #include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
-#include <libcommute/expression/generator_boson.hpp>
-#include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/generator_spin.hpp>
 
 #include <string>
 
@@ -82,15 +82,11 @@ TEST_CASE("Multiplication", "[mul]") {
     CHECK_THAT((ref_t() * ref_t()), Prints<ref_t>("0"));
     CHECK_THAT((expr_r * ref_t()), Prints<ref_t>("0"));
     CHECK_THAT((ref_t() * expr_r), Prints<ref_t>("0"));
-    CHECK_THAT((expr_r * c(2, "dn")),
-               Prints<ref_t>("1*C+(1,up)C(2,dn)"));
-    CHECK_THAT((c(2, "dn") * expr_r),
-               Prints<ref_t>("-1*C+(1,up)C(2,dn)"));
+    CHECK_THAT((expr_r * c(2, "dn")), Prints<ref_t>("1*C+(1,up)C(2,dn)"));
+    CHECK_THAT((c(2, "dn") * expr_r), Prints<ref_t>("-1*C+(1,up)C(2,dn)"));
     expr_r *= c(2, "dn");
-    CHECK_THAT((expr_r * a(0, "x")),
-               Prints<ref_t>("1*C+(1,up)C(2,dn)A(0,x)"));
-    CHECK_THAT((a(0, "x") * expr_r),
-               Prints<ref_t>("1*C+(1,up)C(2,dn)A(0,x)"));
+    CHECK_THAT((expr_r * a(0, "x")), Prints<ref_t>("1*C+(1,up)C(2,dn)A(0,x)"));
+    CHECK_THAT((a(0, "x") * expr_r), Prints<ref_t>("1*C+(1,up)C(2,dn)A(0,x)"));
     CHECK_THAT((expr_r * c_dag(1, "up")), Prints<ref_t>("0"));
     CHECK_THAT((c_dag(1, "up") * expr_r), Prints<ref_t>("0"));
   }
@@ -108,10 +104,8 @@ TEST_CASE("Multiplication", "[mul]") {
     CHECK_THAT((ref2_t() * expr1), Prints<ref1_t>("(0,0)"));
     CHECK_THAT((expr2 * ref1_t()), Prints<ref1_t>("(0,0)"));
     CHECK_THAT((ref1_t() * expr2), Prints<ref1_t>("(0,0)"));
-    CHECK_THAT((expr1 * expr2),
-               Prints<ref1_t>("(1,0)*C+(1,up)C(2,dn)"));
-    CHECK_THAT((expr2 * expr1),
-               Prints<ref1_t>("(-1,0)*C+(1,up)C(2,dn)"));
+    CHECK_THAT((expr1 * expr2), Prints<ref1_t>("(1,0)*C+(1,up)C(2,dn)"));
+    CHECK_THAT((expr2 * expr1), Prints<ref1_t>("(-1,0)*C+(1,up)C(2,dn)"));
     expr1 *= expr2;
     CHECK_THAT((expr1 * a(0, "x")),
                Prints<ref1_t>("(1,0)*C+(1,up)C(2,dn)A(0,x)"));

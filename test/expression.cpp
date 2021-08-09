@@ -16,10 +16,10 @@
 #include "my_complex.hpp"
 #include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
-#include <libcommute/expression/generator_spin.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
+#include <libcommute/expression/generator_spin.hpp>
 
 #include <array>
 
@@ -58,28 +58,26 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(expr_monomial.size() == 0);
 
     SECTION("S_z products") {
-      monomial<int> mon_sz(
-        make_fermion(true, 1),
-        make_spin(spin_component::z, 1),
-        make_spin(spin_component::z, 1),
-        make_spin(spin_component::z, 1),
-        make_spin(spin_component::z, 1),
-        make_fermion(true, 2),
-        make_spin(spin_component::z, 2),
-        make_spin(spin_component::z, 2),
-        make_spin(spin_component::z, 2),
-        make_spin(spin_component::z, 2),
-        make_spin(spin_component::z, 3),
-        make_spin(spin_component::z, 3),
-        make_spin(spin_component::z, 3),
-        make_fermion(true, 4),
-        make_spin(spin_component::z, 4),
-        make_spin(spin_component::z, 4),
-        make_spin(spin_component::z, 4)
-      );
+      monomial<int> mon_sz(make_fermion(true, 1),
+                           make_spin(spin_component::z, 1),
+                           make_spin(spin_component::z, 1),
+                           make_spin(spin_component::z, 1),
+                           make_spin(spin_component::z, 1),
+                           make_fermion(true, 2),
+                           make_spin(spin_component::z, 2),
+                           make_spin(spin_component::z, 2),
+                           make_spin(spin_component::z, 2),
+                           make_spin(spin_component::z, 2),
+                           make_spin(spin_component::z, 3),
+                           make_spin(spin_component::z, 3),
+                           make_spin(spin_component::z, 3),
+                           make_fermion(true, 4),
+                           make_spin(spin_component::z, 4),
+                           make_spin(spin_component::z, 4),
+                           make_spin(spin_component::z, 4));
       expr_real<int> expr_sz(1.0, mon_sz);
-      CHECK(expr_sz == c_dag(1)*0.25*0.25*c_dag(2)*0.25*0.25*
-                       0.25*S_z(3)*c_dag(4)*0.25*S_z(4));
+      CHECK(expr_sz == c_dag(1) * 0.25 * 0.25 * c_dag(2) * 0.25 * 0.25 * 0.25 *
+                           S_z(3) * c_dag(4) * 0.25 * S_z(4));
     }
   }
 
@@ -109,18 +107,17 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(expr0.begin() == expr0.end());
     CHECK_FALSE(expr0.begin() != expr0.end());
 
-    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
-                3.0*a(0, "x") + 2.0*a_dag(0, "y");
+    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 + 3.0 * a(0, "x") +
+                2.0 * a_dag(0, "y");
 
     CHECK_FALSE(expr.begin() == expr.end());
     CHECK(expr.begin() != expr.end());
 
     std::vector<mon_type> ref_mons = {
-      mon_type(),
-      mon_type(make_boson(true, 0, "y")),
-      mon_type(make_boson(false, 0, "x")),
-      mon_type(make_fermion(true, 1, "up"), make_fermion(false, 2, "dn"))
-    };
+        mon_type(),
+        mon_type(make_boson(true, 0, "y")),
+        mon_type(make_boson(false, 0, "x")),
+        mon_type(make_fermion(true, 1, "up"), make_fermion(false, 2, "dn"))};
     std::vector<double> ref_coeffs = {1.0, 2.0, 3.0, 4.0};
 
     int n = 0;
@@ -175,24 +172,25 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("transform()") {
-    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
-                3.0 * a(0, "x") + 2.0 * a_dag(0, "y");
+    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 + 3.0 * a(0, "x") +
+                2.0 * a_dag(0, "y");
     using mon_type = decltype(expr)::monomial_t;
 
     // Multiply coefficients in front of bosonic operators by 2*I
     auto f = [](mon_type const& m, double c) -> std::complex<double> {
-      return (m.size() > 0 && is_boson(m[0])) ?
-             std::complex<double>(0, 2*c) : .0;
+      return (m.size() > 0 && is_boson(m[0])) ? std::complex<double>(0, 2 * c) :
+                                                .0;
     };
 
     auto new_expr = transform(expr, f);
 
     std::vector<mon_type> ref_mons = {
-      mon_type(make_boson(true, 0, "y")),
-      mon_type(make_boson(false, 0, "x")),
+        mon_type(make_boson(true, 0, "y")),
+        mon_type(make_boson(false, 0, "x")),
     };
-    std::vector<std::complex<double>> ref_coeffs =
-      {std::complex<double>(0, 4.0), std::complex<double>(0, 6.0)};
+    std::vector<std::complex<double>> ref_coeffs = {
+        std::complex<double>(0, 4.0),
+        std::complex<double>(0, 6.0)};
 
     CHECK(new_expr.size() == 2);
 
@@ -205,10 +203,10 @@ TEST_CASE("Expression with static indices", "[expression]") {
   }
 
   SECTION("conj()") {
-    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 +
-                3.0 * a(0, "x") + std::complex<double>(0,2) * a_dag(0, "y");
-    auto ref = 4.0 * c_dag(2, "dn") * c(1, "up") + 1.0 +
-               3.0 * a_dag(0, "x") + std::complex<double>(0,-2) * a(0, "y");
+    auto expr = 4.0 * c_dag(1, "up") * c(2, "dn") + 1.0 + 3.0 * a(0, "x") +
+                std::complex<double>(0, 2) * a_dag(0, "y");
+    auto ref = 4.0 * c_dag(2, "dn") * c(1, "up") + 1.0 + 3.0 * a_dag(0, "x") +
+               std::complex<double>(0, -2) * a(0, "y");
 
     CHECK(conj(expr) == ref);
   }
@@ -218,10 +216,10 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(S_p() * S_p() == expr_real<>(0));
     CHECK(S_m() * S_m() == expr_real<>(0));
 
-    CHECK(S_p() * S_z() == -0.5*S_p());
-    CHECK(S_z() * S_m() == -0.5*S_m());
-    CHECK(S_z() * S_p() == 0.5*S_p());
-    CHECK(S_m() * S_z() == 0.5*S_m());
+    CHECK(S_p() * S_z() == -0.5 * S_p());
+    CHECK(S_z() * S_m() == -0.5 * S_m());
+    CHECK(S_z() * S_p() == 0.5 * S_p());
+    CHECK(S_m() * S_z() == 0.5 * S_m());
     CHECK(S_p() * S_m() == 0.5 + S_z());
     CHECK(S_m() * S_p() == 0.5 - S_z());
   }
@@ -230,11 +228,12 @@ TEST_CASE("Expression with static indices", "[expression]") {
     expr_real<> sum;
     for(int n = 1; n <= 11; ++n) {
       auto p = c_dag();
-      for(int i = 0; i < n; ++i) p *= S_z();
+      for(int i = 0; i < n; ++i)
+        p *= S_z();
       p *= a();
       sum += p;
     }
-    CHECK(sum == (c_dag()*(341.0/1024 + (1365.0/1024)*S_z())*a()));
+    CHECK(sum == (c_dag() * (341.0 / 1024 + (1365.0 / 1024) * S_z()) * a()));
   }
 
   SECTION("Heisenberg chain") {
@@ -264,7 +263,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
 
     expr_t H;
     for(int i = 0; i < N; ++i) {
-      H += dot(S[i], S[(i+1)%N]);
+      H += dot(S[i], S[(i + 1) % N]);
     }
 
     vec_expr_t S_tot;
@@ -278,7 +277,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
 
     expr_t Q3;
     for(int i = 0; i < N; ++i) {
-      Q3 += dot(cross(S[i], S[(i+1)%N]), S[(i+2)%N]);
+      Q3 += dot(cross(S[i], S[(i + 1) % N]), S[(i + 2) % N]);
     }
 
     // Q3 is a higher-order integral of motion

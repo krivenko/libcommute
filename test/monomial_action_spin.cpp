@@ -29,8 +29,7 @@
 
 using namespace libcommute;
 
-TEST_CASE("Action of a spin monomial on an index",
-          "[monomial_action_spin]") {
+TEST_CASE("Action of a spin monomial on an index", "[monomial_action_spin]") {
 
   using namespace static_indices;
 
@@ -41,7 +40,7 @@ TEST_CASE("Action of a spin monomial on an index",
 
   constexpr int n_op_bits = 5;
   constexpr int n_pad_spaces = 2;
-  constexpr int n_pad_bits = 2*n_pad_spaces;
+  constexpr int n_pad_bits = 2 * n_pad_spaces;
   constexpr int total_n_bits = n_op_bits + n_pad_bits;
 
   std::vector<generator_spin<int>> gens;
@@ -56,15 +55,16 @@ TEST_CASE("Action of a spin monomial on an index",
   gens.emplace_back(1.5, spin_component::z, 2);
 
   hs_type hs;
-  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_es_type(i));
+  for(int i = 0; i < n_pad_spaces; ++i)
+    hs.add(pad_es_type(i));
   std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 6}, {7, 8}};
   hs.add(make_space_spin(0.5, 0));
   hs.add(make_space_spin(1.0, 1));
   hs.add(make_space_spin(1.5, 2));
 
   auto ref_spin_action = [&](generator<int> const& g,
-                             sv_index_type & index,
-                             double & coeff) {
+                             sv_index_type& index,
+                             double& coeff) {
     int ind = std::get<0>(g.indices());
     double s = dynamic_cast<generator_spin<int> const&>(g).spin();
     spin_component c = dynamic_cast<generator_spin<int> const&>(g).component();
@@ -80,20 +80,20 @@ TEST_CASE("Action of a spin monomial on an index",
     }
 
     switch(c) {
-      case plus:
-        m += 1;
-        if(m > s) return false;
-        coeff *= std::sqrt(s*(s+1) - (m-1)*m);
-        break;
-      case minus:
-        m -= 1;
-        if(m < -s) return false;
-        coeff *= std::sqrt(s*(s+1) - (m+1)*m);
-        break;
-      case z:
-        if(m == 0) return false;
-        coeff *= m;
-        break;
+    case plus:
+      m += 1;
+      if(m > s) return false;
+      coeff *= std::sqrt(s * (s + 1) - (m - 1) * m);
+      break;
+    case minus:
+      m -= 1;
+      if(m < -s) return false;
+      coeff *= std::sqrt(s * (s + 1) - (m + 1) * m);
+      break;
+    case z:
+      if(m == 0) return false;
+      coeff *= m;
+      break;
     }
 
     std::bitset<total_n_bits> out_bitset(index);
@@ -135,10 +135,7 @@ TEST_CASE("Action of a spin monomial on an index",
     // NOLINTNEXTLINE(modernize-loop-convert)
     for(unsigned int i = 0; i < gens.size(); ++i) {
       mon_type mon(gens[i]);
-      check_monomial_action<ma_type>(mon,
-                                     hs,
-                                     ref_spin_action,
-                                     in_index_list);
+      check_monomial_action<ma_type>(mon, hs, ref_spin_action, in_index_list);
     }
   }
   SECTION("2 operators") {
@@ -146,10 +143,7 @@ TEST_CASE("Action of a spin monomial on an index",
       for(unsigned int j = 0; j < gens.size(); ++j) {
         if(gens[i] > gens[j]) continue;
         mon_type mon(gens[i], gens[j]);
-        check_monomial_action<ma_type>(mon,
-                                       hs,
-                                       ref_spin_action,
-                                       in_index_list);
+        check_monomial_action<ma_type>(mon, hs, ref_spin_action, in_index_list);
       }
     }
   }
@@ -172,9 +166,8 @@ TEST_CASE("Action of a spin monomial on an index",
       for(unsigned int j = 0; j < gens.size(); ++j) {
         for(unsigned int k = 0; k < gens.size(); ++k) {
           for(unsigned int l = 0; l < gens.size(); ++l) {
-            if(gens[i] > gens[j] ||
-               gens[j] > gens[k] ||
-               gens[k] > gens[l]) continue;
+            if(gens[i] > gens[j] || gens[j] > gens[k] || gens[k] > gens[l])
+              continue;
             mon_type mon(gens[i], gens[j], gens[k], gens[l]);
             check_monomial_action<ma_type>(mon,
                                            hs,

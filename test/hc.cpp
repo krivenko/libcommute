@@ -15,8 +15,8 @@
 
 #include "my_complex.hpp"
 
-#include <libcommute/expression/hc.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/hc.hpp>
 
 using namespace libcommute;
 using namespace static_indices;
@@ -34,8 +34,8 @@ TEST_CASE("Hermitian conjugate object (complex)", "[hc_complex]") {
 }
 
 TEST_CASE("Hermitian conjugate object (my_complex)", "[hc_my_complex]") {
-  auto expr = my_complex(2,2) * c_dag<my_complex>("up", 1)
-                              * c<my_complex>("up", 2);
+  auto expr =
+      my_complex(2, 2) * c_dag<my_complex>("up", 1) * c<my_complex>("up", 2);
   CHECK((expr + hc) == (expr + conj(expr)));
   CHECK((expr - hc) == (expr - conj(expr)));
 }

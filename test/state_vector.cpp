@@ -43,10 +43,10 @@ TEST_CASE("Implementation of StateVector interface for std::vector",
   SECTION("complex") {
     std::vector<std::complex<double>> v{1, 2, 3};
 
-    CHECK(std::is_same<element_type_t<decltype(v)>,
-          std::complex<double>>::value);
+    CHECK(
+        std::is_same<element_type_t<decltype(v)>, std::complex<double>>::value);
     CHECK(std::is_same<element_type_t<decltype(v) const>,
-          std::complex<double>>::value);
+                       std::complex<double>>::value);
     CHECK(get_element(v, 1) == 2.0);
     update_add_element(v, 1, 4);
     CHECK(get_element(v, 1) == 6.0);
@@ -56,9 +56,8 @@ TEST_CASE("Implementation of StateVector interface for std::vector",
 
     SECTION("foreach()") {
       std::vector<std::complex<double>> v_fe{1, 2, 0, 4};
-      foreach(v_fe, [](int i, std::complex<double> a) {
-        CHECK(double(i + 1) == a);
-      });
+      foreach(v_fe,
+              [](int i, std::complex<double> a) { CHECK(double(i + 1) == a); });
     }
   }
 }

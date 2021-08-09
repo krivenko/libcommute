@@ -31,9 +31,9 @@ int main() {
 
   // The following 'factory' functions make spin operators with statically typed
   // indices and real coefficients.
-  using static_indices::S_p;  // Spin-1/2 raising operator S_+
-  using static_indices::S_m;  // Spin-1/2 lowering operator S_-
-  using static_indices::S_z;  // Spin-1/2 operator S_z
+  using static_indices::S_p; // Spin-1/2 raising operator S_+
+  using static_indices::S_m; // Spin-1/2 lowering operator S_-
+  using static_indices::S_z; // Spin-1/2 operator S_z
 
   // Expression 'H' will represent the exchange interaction term.
   // Our spin operators will carry one integer index (site 1 or 2).

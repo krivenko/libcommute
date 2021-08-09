@@ -23,19 +23,18 @@ using namespace libcommute;
 TEST_CASE("Gamma matrices", "[gamma]") {
   using mon_type = monomial<int>;
   using expr_type = expression<std::complex<double>, int>;
-  std::complex<double> I(0,1);
+  std::complex<double> I(0, 1);
 
   // Metric
   auto eta = [](int mu, int nu) -> double {
     return (mu == nu) * (mu == 0 ? 1 : -1);
   };
 
-  std::vector<expr_type> Gamma; // Gamma matrices
+  std::vector<expr_type> Gamma;  // Gamma matrices
   std::vector<expr_type> Gammac; // Covariant Gamma matrices
   for(int mu : {0, 1, 2, 3}) {
     Gamma.emplace_back(expr_type(1.0, mon_type(generator_gamma(mu))));
-    Gammac.emplace_back(expr_type(eta(mu, mu),
-                                  mon_type(generator_gamma(mu))));
+    Gammac.emplace_back(expr_type(eta(mu, mu), mon_type(generator_gamma(mu))));
   }
 
   SECTION("Commutation relations") {
@@ -83,7 +82,7 @@ TEST_CASE("Gamma matrices", "[gamma]") {
       expr_type s;
       for(int mu = 0; mu < 4; ++mu)
         s += Gamma[mu] * Gamma[nu] * Gammac[mu];
-      CHECK(s == -2.0*Gamma[nu]);
+      CHECK(s == -2.0 * Gamma[nu]);
     }
   }
 
@@ -93,7 +92,7 @@ TEST_CASE("Gamma matrices", "[gamma]") {
         expr_type s;
         for(int mu = 0; mu < 4; ++mu)
           s += Gamma[mu] * Gamma[nu] * Gamma[rho] * Gammac[mu];
-        CHECK(s == expr_type(4*eta(nu, rho)));
+        CHECK(s == expr_type(4 * eta(nu, rho)));
       }
     }
   }
@@ -113,7 +112,8 @@ TEST_CASE("Gamma matrices", "[gamma]") {
 
   // 4D Levi-Civita symbol
   auto eps = [](int i1, int i2, int i3, int i4) -> double {
-    return (i4 - i3)*(i4 - i2)*(i4 - i1)*(i3 - i2)*(i3 - i1)*(i2 - i1)/12;
+    return (i4 - i3) * (i4 - i2) * (i4 - i1) * (i3 - i2) * (i3 - i1) *
+           (i2 - i1) / 12;
   };
 
   SECTION("Identity 5") {
@@ -121,11 +121,10 @@ TEST_CASE("Gamma matrices", "[gamma]") {
       for(int nu = 0; nu < 4; ++nu) {
         for(int rho = 0; rho < 4; ++rho) {
           auto lhs = Gamma[mu] * Gamma[nu] * Gamma[rho];
-          auto rhs = eta(mu, nu) * Gamma[rho] +
-                     eta(nu, rho) * Gamma[mu] -
+          auto rhs = eta(mu, nu) * Gamma[rho] + eta(nu, rho) * Gamma[mu] -
                      eta(mu, rho) * Gamma[nu];
           for(int sigma = 0; sigma < 4; ++sigma) {
-            rhs += -I*eps(sigma, mu, nu, rho) * Gammac[sigma] * Gamma5;
+            rhs += -I * eps(sigma, mu, nu, rho) * Gammac[sigma] * Gamma5;
           }
           CHECK(lhs == rhs);
         }

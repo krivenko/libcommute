@@ -17,13 +17,13 @@
 #error "This header file requires a C++-17 compliant compiler"
 #endif
 
-#include "dyn_indices.hpp"
-#include "expression.hpp"
-#include "generator_fermion.hpp"
-#include "generator_boson.hpp"
-#include "generator_spin.hpp"
 #include "../scalar_traits.hpp"
 #include "../utility.hpp"
+#include "dyn_indices.hpp"
+#include "expression.hpp"
+#include "generator_boson.hpp"
+#include "generator_fermion.hpp"
+#include "generator_spin.hpp"
 
 #include <utility>
 
@@ -35,30 +35,24 @@ namespace libcommute {
 namespace dynamic_indices {
 
 #define INDICES std::forward<IndexTypes>(indices)...
-#define DEFINE_FACTORY(NAME, ...)                                         \
-template<typename ScalarType = double, typename... IndexTypes>            \
-inline                                                                    \
-expression<ScalarType, dyn_indices>                                       \
-NAME(IndexTypes&&... indices) {                                           \
-  using ret_t = expression<ScalarType, dyn_indices>;                      \
-  return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
-               typename ret_t::monomial_t(__VA_ARGS__)                    \
-  );                                                                      \
-}
+#define DEFINE_FACTORY(NAME, ...)                                              \
+  template <typename ScalarType = double, typename... IndexTypes>              \
+  inline expression<ScalarType, dyn_indices> NAME(IndexTypes&&... indices) {   \
+    using ret_t = expression<ScalarType, dyn_indices>;                         \
+    return ret_t(scalar_traits<ScalarType>::make_const(1),                     \
+                 typename ret_t::monomial_t(__VA_ARGS__));                     \
+  }
 
-#define DEFINE_FACTORY_SPIN(NAME, ...)                                    \
-template<int Multiplicity,                                                \
-         typename ScalarType = double,                                    \
-         typename... IndexTypes>                                          \
-inline                                                                    \
-expression<ScalarType, dyn_indices>                                       \
-NAME(IndexTypes&&... indices) {                                           \
-  static_assert(Multiplicity >= 2, "Invalid multiplicity");               \
-  using ret_t = expression<ScalarType, dyn_indices>;                      \
-  return ret_t(scalar_traits<ScalarType>::make_const(1),                  \
-               typename ret_t::monomial_t(__VA_ARGS__)                    \
-  );                                                                      \
-}
+#define DEFINE_FACTORY_SPIN(NAME, ...)                                         \
+  template <int Multiplicity,                                                  \
+            typename ScalarType = double,                                      \
+            typename... IndexTypes>                                            \
+  inline expression<ScalarType, dyn_indices> NAME(IndexTypes&&... indices) {   \
+    static_assert(Multiplicity >= 2, "Invalid multiplicity");                  \
+    using ret_t = expression<ScalarType, dyn_indices>;                         \
+    return ret_t(scalar_traits<ScalarType>::make_const(1),                     \
+                 typename ret_t::monomial_t(__VA_ARGS__));                     \
+  }
 
 //
 // Free functions to make fermionic operators
@@ -69,8 +63,9 @@ DEFINE_FACTORY(c_dag, (dynamic_indices::make_fermion(true, INDICES)))
 // Annihilation operator
 DEFINE_FACTORY(c, (dynamic_indices::make_fermion(false, INDICES)))
 // Number of fermions
-DEFINE_FACTORY(n, (dynamic_indices::make_fermion(true, indices...)),
-                  (dynamic_indices::make_fermion(false, indices...)))
+DEFINE_FACTORY(n,
+               (dynamic_indices::make_fermion(true, indices...)),
+               (dynamic_indices::make_fermion(false, indices...)))
 
 //
 // Free functions to make bosonic operators
@@ -88,12 +83,8 @@ DEFINE_FACTORY(a, (dynamic_indices::make_boson(false, INDICES)))
 // Raising operator
 DEFINE_FACTORY(S_p, (dynamic_indices::make_spin(spin_component::plus, INDICES)))
 // Lowering operator
-DEFINE_FACTORY(S_m, (dynamic_indices::make_spin(
-                                                spin_component::minus,
-                                                INDICES
-                                               )
-                    )
-              )
+DEFINE_FACTORY(S_m,
+               (dynamic_indices::make_spin(spin_component::minus, INDICES)))
 // S_z
 DEFINE_FACTORY(S_z, (dynamic_indices::make_spin(spin_component::z, INDICES)))
 
@@ -101,58 +92,50 @@ DEFINE_FACTORY(S_z, (dynamic_indices::make_spin(spin_component::z, INDICES)))
 // Free functions to make spin operators (arbitrary spin)
 //
 // Raising operator
-DEFINE_FACTORY_SPIN(S_p, (dynamic_indices::make_spin(
-                                                     (Multiplicity-1)/2.0,
-                                                     spin_component::plus,
-                                                     INDICES
-                                                    )
-                         )
-                   )
+DEFINE_FACTORY_SPIN(S_p,
+                    (dynamic_indices::make_spin((Multiplicity - 1) / 2.0,
+                                                spin_component::plus,
+                                                INDICES)))
 // Lowering operator
-DEFINE_FACTORY_SPIN(S_m, (dynamic_indices::make_spin(
-                                                     (Multiplicity-1)/2.0,
-                                                     spin_component::minus,
-                                                     INDICES
-                                                    )
-                         )
-                   )
+DEFINE_FACTORY_SPIN(S_m,
+                    (dynamic_indices::make_spin((Multiplicity - 1) / 2.0,
+                                                spin_component::minus,
+                                                INDICES)))
 // S_z
-DEFINE_FACTORY_SPIN(S_z, (dynamic_indices::make_spin(
-                                                     (Multiplicity-1)/2.0,
-                                                     spin_component::z,
-                                                     INDICES
-                                                    )
-                         )
-                   )
+DEFINE_FACTORY_SPIN(S_z,
+                    (dynamic_indices::make_spin((Multiplicity - 1) / 2.0,
+                                                spin_component::z,
+                                                INDICES)))
 
 //
 // In the complex case, we can additionally define S_x and S_y
 //
 
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_x(IndexTypes&&... indices) {
-  return std::complex<double>(0.5) * (dynamic_indices::S_p(indices...) +
-                                      dynamic_indices::S_m(indices...));
+  return std::complex<double>(0.5) *
+         (dynamic_indices::S_p(indices...) + dynamic_indices::S_m(indices...));
 }
-template<typename... IndexTypes>
+template <typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0, -0.5) * (dynamic_indices::S_p(indices...) -
-                                          dynamic_indices::S_m(indices...));
+  return std::complex<double>(0, -0.5) *
+         (dynamic_indices::S_p(indices...) - dynamic_indices::S_m(indices...));
 }
 
-template<int Mult, typename... IndexTypes>
+template <int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_x(IndexTypes&&... indices) {
   return std::complex<double>(0.5) * (dynamic_indices::S_p<Mult>(indices...) +
                                       dynamic_indices::S_m<Mult>(indices...));
 }
-template<int Mult, typename... IndexTypes>
+template <int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, dyn_indices>
 S_y(IndexTypes&&... indices) {
-  return std::complex<double>(0,-0.5) *(dynamic_indices::S_p<Mult>(indices...) -
-                                        dynamic_indices::S_m<Mult>(indices...));
+  return std::complex<double>(0, -0.5) *
+         (dynamic_indices::S_p<Mult>(indices...) -
+          dynamic_indices::S_m<Mult>(indices...));
 }
 
 // Make a complex expression out of a real one
@@ -164,7 +147,7 @@ inline expr_complex make_complex(expr_real const& expr) {
 #undef DEFINE_FACTORY_SPIN
 #undef INDICES
 
-} // namespace libcommute::dynamic_indices
+} // namespace dynamic_indices
 } // namespace libcommute
 
 #endif

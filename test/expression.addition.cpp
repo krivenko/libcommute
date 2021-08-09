@@ -16,10 +16,10 @@
 #include "my_complex.hpp"
 #include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
-#include <libcommute/expression/generator_boson.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/generator_boson.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
 
 #include <string>
 
@@ -75,10 +75,8 @@ TEST_CASE("Addition", "[plus]") {
 
     CHECK_THAT((expr_r + ref_t()), Prints<ref_t>("1*C+(1,up)"));
     CHECK_THAT((ref_t() + expr_r), Prints<ref_t>("1*C+(1,up)"));
-    CHECK_THAT((expr_r + c(2, "dn")),
-               Prints<ref_t>("1*C+(1,up) + 1*C(2,dn)"));
-    CHECK_THAT((c(2, "dn") + expr_r),
-               Prints<ref_t>("1*C+(1,up) + 1*C(2,dn)"));
+    CHECK_THAT((expr_r + c(2, "dn")), Prints<ref_t>("1*C+(1,up) + 1*C(2,dn)"));
+    CHECK_THAT((c(2, "dn") + expr_r), Prints<ref_t>("1*C+(1,up) + 1*C(2,dn)"));
 
     expr_r += c(2, "dn");
 
@@ -131,8 +129,7 @@ TEST_CASE("Addition", "[plus]") {
     CHECK_THAT(((-make_complex(c_dag(1, "up"))) + expr1),
                Prints<ref1_t>("(1,0)*C(2,dn)"));
 
-    CHECK_THAT((make_complex(c_dag(1, "up") + c(2, "dn")) +
-               (c(2, "dn") + 2.0)),
+    CHECK_THAT((make_complex(c_dag(1, "up") + c(2, "dn")) + (c(2, "dn") + 2.0)),
                Prints<ref1_t>("(2,0) + (1,0)*C+(1,up) + (2,0)*C(2,dn)"));
   }
   SECTION("my_complex") {
@@ -168,7 +165,7 @@ TEST_CASE("Addition", "[plus]") {
                Prints<ref_t>("{1,0}*C(2,dn)"));
 
     CHECK_THAT(((c_dag<my_complex>(1, "up") + c<my_complex>(2, "dn")) +
-                (c<my_complex>(2, "dn") + my_complex{2,0})),
+                (c<my_complex>(2, "dn") + my_complex{2, 0})),
                Prints<ref_t>("{2,0} + {1,0}*C+(1,up) + {2,0}*C(2,dn)"));
   }
 }

@@ -39,7 +39,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
 
   constexpr int n_ops = 4;
   constexpr int n_pad_spaces = 2;
-  constexpr int n_pad_bits = 2*n_pad_spaces;
+  constexpr int n_pad_bits = 2 * n_pad_spaces;
 
   std::vector<generator_fermion<int>> gens;
   for(int i = 0; i < n_ops; ++i) {
@@ -47,26 +47,28 @@ TEST_CASE("Action of a fermionic monomial on an index",
     gens.emplace_back(false, i);
   }
 
-  auto ref_c_dag_c_action = [](generator<int> const& g,
-                              sv_index_type & index,
-                              double & coeff) {
-    int ind = std::get<0>(g.indices());
-    bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
-    std::bitset<n_ops + n_pad_bits> in_bitset(index);
-    if(dagger && in_bitset.test(ind + n_pad_bits)) return false;
-    if(!dagger && !in_bitset.test(ind + n_pad_bits)) return false;
-    // Count particles
-    int n = 0;
-    for(int i = 0; i < ind; ++i) n += in_bitset[i + n_pad_bits];
-    index = dagger ? in_bitset.set(ind + n_pad_bits).to_ulong() :
-                     in_bitset.reset(ind + n_pad_bits).to_ulong();
-    coeff *= (n%2 == 0 ? 1 : -1);
-    return true;
-  };
+  auto ref_c_dag_c_action =
+      [](generator<int> const& g, sv_index_type& index, double& coeff) {
+        int ind = std::get<0>(g.indices());
+        bool dagger = dynamic_cast<generator_fermion<int> const&>(g).dagger();
+        std::bitset<n_ops + n_pad_bits> in_bitset(index);
+        if(dagger && in_bitset.test(ind + n_pad_bits)) return false;
+        if(!dagger && !in_bitset.test(ind + n_pad_bits)) return false;
+        // Count particles
+        int n = 0;
+        for(int i = 0; i < ind; ++i)
+          n += in_bitset[i + n_pad_bits];
+        index = dagger ? in_bitset.set(ind + n_pad_bits).to_ulong() :
+                         in_bitset.reset(ind + n_pad_bits).to_ulong();
+        coeff *= (n % 2 == 0 ? 1 : -1);
+        return true;
+      };
 
   hs_type hs;
-  for(int i = 0; i < n_pad_spaces; ++i) hs.add(pad_es_type(i));
-  for(int i = 0; i < n_ops; ++i) hs.add(make_space_fermion(i));
+  for(int i = 0; i < n_pad_spaces; ++i)
+    hs.add(pad_es_type(i));
+  for(int i = 0; i < n_ops; ++i)
+    hs.add(make_space_fermion(i));
 
   std::vector<sv_index_type> in_index_list(1 << n_ops);
   for(unsigned int i = 0; i < in_index_list.size(); i++)
@@ -125,9 +127,9 @@ TEST_CASE("Action of a fermionic monomial on an index",
       for(unsigned int j = 0; j < gens.size(); ++j) {
         for(unsigned int k = 0; k < gens.size(); ++k) {
           for(unsigned int l = 0; l < gens.size(); ++l) {
-            if(!(gens[i] < gens[j]) ||
-               !(gens[j] < gens[k]) ||
-               !(gens[k] < gens[l])) continue;
+            if(!(gens[i] < gens[j]) || !(gens[j] < gens[k]) ||
+               !(gens[k] < gens[l]))
+              continue;
             mon_type mon(gens[i], gens[j], gens[k], gens[l]);
             check_monomial_action<ma_type>(mon,
                                            hs,

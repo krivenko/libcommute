@@ -13,8 +13,8 @@
 
 #include <catch.hpp>
 
-#include <libcommute/loperator/loperator.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/loperator/loperator.hpp>
 
 #include "./my_complex.hpp"
 
@@ -24,8 +24,7 @@
 using namespace libcommute;
 using namespace static_indices;
 
-TEST_CASE("Linear operator with constant coefficients",
-          "[loperator]") {
+TEST_CASE("Linear operator with constant coefficients", "[loperator]") {
 
   SECTION("empty") {
     expression<double, int> expr0;
@@ -41,9 +40,9 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("double") {
-    auto expr1 = 3*c_dag("dn");
-    auto expr2 = 3*c("up");
-    auto expr = 2*expr1 - 2*expr2;
+    auto expr1 = 3 * c_dag("dn");
+    auto expr2 = 3 * c("up");
+    auto expr = 2 * expr1 - 2 * expr2;
 
     auto hs = make_hilbert_space(expr);
     auto lop1 = make_loperator(expr1, hs);
@@ -84,11 +83,11 @@ TEST_CASE("Linear operator with constant coefficients",
   }
 
   SECTION("complex") {
-    std::complex<double> const I(0,1);
+    std::complex<double> const I(0, 1);
 
-    auto expr1 = make_complex(3.0*c_dag("dn"));
-    auto expr2 = make_complex(3.0*c("up"));
-    auto expr = 2.0*I*expr1 - 2.0*I*expr2;
+    auto expr1 = make_complex(3.0 * c_dag("dn"));
+    auto expr2 = make_complex(3.0 * c("up"));
+    auto expr = 2.0 * I * expr1 - 2.0 * I * expr2;
 
     auto hs = make_hilbert_space(expr);
     auto lop1 = make_loperator(expr1, hs);
@@ -106,22 +105,22 @@ TEST_CASE("Linear operator with constant coefficients",
     CHECK(out == state_vector{0, 3, 0, 3});
 
     CHECK(lop2(in) == state_vector{3, -3, 0, 0});
-    CHECK(lop2 *in == state_vector{3, -3, 0, 0});
+    CHECK(lop2 * in == state_vector{3, -3, 0, 0});
     lop2(in, out);
     CHECK(out == state_vector{3, -3, 0, 0});
 
-    CHECK(lop(in) == state_vector{-6.0*I, 12.0*I, .0, 6.0*I});
-    CHECK(lop *in == state_vector{-6.0*I, 12.0*I, .0, 6.0*I});
+    CHECK(lop(in) == state_vector{-6.0 * I, 12.0 * I, .0, 6.0 * I});
+    CHECK(lop * in == state_vector{-6.0 * I, 12.0 * I, .0, 6.0 * I});
     lop(in, out);
-    CHECK(out == state_vector{-6.0*I, 12.0*I, .0, 6.0*I});
+    CHECK(out == state_vector{-6.0 * I, 12.0 * I, .0, 6.0 * I});
   }
 
   SECTION("my_complex") {
     my_complex const I(0, 1);
 
-    auto expr1 = 3*c_dag<my_complex>("dn");
-    auto expr2 = 3*c<my_complex>("up");
-    auto expr = 2*I*expr1 - 2*I*expr2;
+    auto expr1 = 3 * c_dag<my_complex>("dn");
+    auto expr2 = 3 * c<my_complex>("up");
+    auto expr = 2 * I * expr1 - 2 * I * expr2;
 
     auto hs = make_hilbert_space(expr);
     auto lop1 = make_loperator(expr1, hs);
@@ -138,16 +137,16 @@ TEST_CASE("Linear operator with constant coefficients",
     lop2(in, out);
     CHECK(out == state_vector{3, -3, 0, 0});
     lop(in, out);
-    CHECK(out == state_vector{-6*I, 12*I, 0, 6*I});
+    CHECK(out == state_vector{-6 * I, 12 * I, 0, 6 * I});
   }
 }
 
 TEST_CASE("Linear operator with parameter-dependent coefficients",
           "[parametric_loperator]") {
 
-  auto expr1 = 3*c_dag<my_complex>("dn");
-  auto expr2 = 3*c<my_complex>("up");
-  auto expr = 2*expr1 - 2*expr2;
+  auto expr1 = 3 * c_dag<my_complex>("dn");
+  auto expr2 = 3 * c<my_complex>("up");
+  auto expr = 2 * expr1 - 2 * expr2;
 
   auto hs = make_hilbert_space(expr);
   auto lop1 = make_param_loperator(expr1, hs);

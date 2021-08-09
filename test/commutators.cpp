@@ -16,13 +16,13 @@
 #include "my_complex.hpp"
 #include "print_matcher.hpp"
 
-#include <libcommute/expression/generator_fermion.hpp>
 #include <libcommute/expression/expression.hpp>
 #include <libcommute/expression/factories.hpp>
+#include <libcommute/expression/generator_fermion.hpp>
 
 using namespace libcommute;
 
-template<typename ScalarType> void make_commutators_test_case() {
+template <typename ScalarType> void make_commutators_test_case() {
 
   using namespace static_indices;
 

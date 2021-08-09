@@ -33,9 +33,9 @@ int main() {
   //
 
   int const n_orbs = 3;
-  double const mu = 0.7;  // Chemical
-  double const U = 3.0;   // Coulomb repulsion
-  double const J = 0.3;   // Hund interaction
+  double const mu = 0.7; // Chemical
+  double const U = 3.0;  // Coulomb repulsion
+  double const J = 0.3;  // Hund interaction
 
   // Hamiltonian
   expression<double, std::string, int> H;
@@ -50,24 +50,24 @@ int main() {
     H += U * n("up", o) * n("dn", o);
   }
   // Interorbital interactions, different spins
-  for (int o1 = 0; o1 < n_orbs; ++o1) {
-    for (int o2 = 0; o2 < n_orbs; ++o2) {
-      if (o1 == o2) continue;
+  for(int o1 = 0; o1 < n_orbs; ++o1) {
+    for(int o2 = 0; o2 < n_orbs; ++o2) {
+      if(o1 == o2) continue;
       H += (U - 2 * J) * n("up", o1) * n("dn", o2);
     }
   }
   // Interorbital interactions, equal spins
-  for (int o1 = 0; o1 < n_orbs; ++o1) {
-    for (int o2 = 0; o2 < n_orbs; ++o2) {
-      if (o2 >= o1) continue;
+  for(int o1 = 0; o1 < n_orbs; ++o1) {
+    for(int o2 = 0; o2 < n_orbs; ++o2) {
+      if(o2 >= o1) continue;
       H += (U - 3 * J) * n("up", o1) * n("up", o2);
       H += (U - 3 * J) * n("dn", o1) * n("dn", o2);
     }
   }
   // Spin flip and pair hopping terms
-  for (int o1 = 0; o1 < n_orbs; ++o1) {
-    for (int o2 = 0; o2 < n_orbs; ++o2) {
-      if (o1 == o2) continue;
+  for(int o1 = 0; o1 < n_orbs; ++o1) {
+    for(int o2 = 0; o2 < n_orbs; ++o2) {
+      if(o1 == o2) continue;
       H += -J * c_dag("up", o1) * c_dag("dn", o1) * c("up", o2) * c("dn", o2);
       H += -J * c_dag("up", o1) * c_dag("dn", o2) * c("up", o2) * c("dn", o1);
     }
@@ -91,11 +91,11 @@ int main() {
 
   auto sp1 = space_partition(Hop, hs);
 
-  std::cout << "Total dimension of the Hilbert space is "
-            << sp1.dim() << std::endl;
+  std::cout << "Total dimension of the Hilbert space is " << sp1.dim()
+            << std::endl;
 
-  std::cout << "H has " << sp1.n_subspaces()
-            << " invariant subspaces" << std::endl;
+  std::cout << "H has " << sp1.n_subspaces() << " invariant subspaces"
+            << std::endl;
 
   //
   // Once again, this time saving the matrix elements of H
@@ -104,8 +104,8 @@ int main() {
   matrix_elements_map<double> H_elements;
   auto sp2 = space_partition(Hop, hs, H_elements);
 
-  std::cout << "H has " << H_elements.size()
-            << " non-vanishing matrix elements" << std::endl;
+  std::cout << "H has " << H_elements.size() << " non-vanishing matrix elements"
+            << std::endl;
 
   //
   // Now merge some invariant subspaces to make sure that all electron
@@ -113,7 +113,7 @@ int main() {
   //
 
   for(std::string spin : {"up", "dn"}) {
-    for (int o = 0; o < n_orbs; ++o) {
+    for(int o = 0; o < n_orbs; ++o) {
       auto Cdagop = make_loperator(c_dag(spin, o), hs);
       auto Cop = make_loperator(c(spin, o), hs);
 
@@ -146,12 +146,11 @@ int main() {
   // Collect all basis state indices from one subspace
   std::vector<sv_index_type> basis_states_in_subspace_24;
   foreach(sp2, [&](sv_index_type index, sv_index_type subspace) {
-    if(subspace == 24)
-      basis_states_in_subspace_24.push_back(index);
+    if(subspace == 24) basis_states_in_subspace_24.push_back(index);
   });
 
   auto sp24_dim = basis_states_in_subspace_24.size();
-  std::cout << "Subspace 24 is " <<  sp24_dim << "-dimensional" << std::endl;
+  std::cout << "Subspace 24 is " << sp24_dim << "-dimensional" << std::endl;
 
   // Make a mapper object
   basis_mapper mapper(basis_states_in_subspace_24);

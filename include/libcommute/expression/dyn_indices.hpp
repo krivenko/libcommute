@@ -34,35 +34,31 @@ namespace dynamic_indices {
 // with the index type restricted to be one of `IndexTypes`.
 //
 
-template<typename... IndexTypes> class dyn_indices_generic {
+template <typename... IndexTypes> class dyn_indices_generic {
 
 public:
-
   using indices_t = std::vector<std::variant<IndexTypes...>>;
 
 private:
-
   indices_t indices_;
 
 public:
-
   // Value semantics
   dyn_indices_generic() = default;
-  explicit dyn_indices_generic(indices_t && indices) :
-    indices_(std::move(indices)) {}
+  explicit dyn_indices_generic(indices_t&& indices)
+    : indices_(std::move(indices)) {}
   explicit dyn_indices_generic(indices_t const& indices) : indices_(indices) {}
 
-  template<typename Arg,
-           typename = std::enable_if_t<
-             (!std::is_same_v<remove_cvref_t<Arg>, indices_t>) &&
-             (!std::is_same_v<remove_cvref_t<Arg>, dyn_indices_generic>)
-             >
-           >
+  template <typename Arg,
+            typename = std::enable_if_t<
+                (!std::is_same_v<remove_cvref_t<Arg>, indices_t>)&&(
+                    !std::is_same_v<remove_cvref_t<Arg>, dyn_indices_generic>)>>
   dyn_indices_generic(Arg&& arg) {
     indices_.emplace_back(std::forward<Arg>(arg));
   }
 
-  template<typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 1)>>
+  template <typename... Args,
+            typename = std::enable_if_t<(sizeof...(Args) > 1)>>
   dyn_indices_generic(Args&&... args) {
     (indices_.emplace_back(std::forward<Args>(args)), ...);
   }
@@ -103,13 +99,11 @@ public:
   }
 
   // Reference to underlying sequence
-  explicit operator indices_t const& () const {
-    return indices_;
-  }
+  explicit operator indices_t const &() const { return indices_; }
 
   // Stream output
-  friend std::ostream & operator<<(std::ostream & os,
-                                   dyn_indices_generic const& ind) {
+  friend std::ostream& operator<<(std::ostream& os,
+                                  dyn_indices_generic const& ind) {
     std::size_t const N = ind.indices_.size();
     for(std::size_t i = 0; i < N; ++i) {
       std::visit([&os](auto const& x) { os << x; }, ind.indices_[i]);
@@ -117,13 +111,12 @@ public:
     }
     return os;
   }
-
 };
 
 // Dynamic sequence of integer/string indices
 using dyn_indices = dyn_indices_generic<int, std::string>;
 
-} // namespace libcommute::dynamic_indices
+} // namespace dynamic_indices
 } // namespace libcommute
 
 #endif

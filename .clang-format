@@ -1,0 +1,20 @@
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: Cpp11
+
+PointerAlignment: Left
+SpaceBeforeParens: Never
+ConstructorInitializerIndentWidth: 2
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortCaseLabelsOnASingleLine: true
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+BinPackParameters: false
+BinPackArguments: false
+SortUsingDeclarations: false
+BreakBeforeTernaryOperators: false
+ForEachMacros: ['FOREACH']
+ReflowComments: false

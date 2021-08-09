@@ -14,8 +14,8 @@
 #include <catch.hpp>
 
 #include <libcommute/expression/factories.hpp>
-#include <libcommute/loperator/elementary_space_fermion.hpp>
 #include <libcommute/loperator/elementary_space_boson.hpp>
+#include <libcommute/loperator/elementary_space_fermion.hpp>
 #include <libcommute/loperator/elementary_space_spin.hpp>
 #include <libcommute/loperator/hilbert_space.hpp>
 
@@ -33,39 +33,43 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   // Fermionic elementary spaces
   auto es_f_dn = make_space_fermion("dn", 0);
   auto es_f_up = make_space_fermion("up", 0);
-  std::vector<es_type*> fermion_es = {&es_f_dn,&es_f_up};
+  std::vector<es_type*> fermion_es = {&es_f_dn, &es_f_up};
 
   // Bosonic elementary spaces
   auto es_b_x = make_space_boson(4, "x", 0);
   auto es_b_y = make_space_boson(4, "y", 0);
-  std::vector<es_type*> boson_es = {&es_b_x,&es_b_y};
+  std::vector<es_type*> boson_es = {&es_b_x, &es_b_y};
 
   // Spin-1/2 elementary spaces
   auto es_s_i = make_space_spin(0.5, "i", 0);
   auto es_s_j = make_space_spin(0.5, "j", 0);
-  std::vector<es_type*> spin_es = {&es_s_i,&es_s_j};
+  std::vector<es_type*> spin_es = {&es_s_i, &es_s_j};
 
   // Spin-1 elementary spaces
   auto es_s1_i = make_space_spin(1.0, "i", 0);
   auto es_s1_j = make_space_spin(1.0, "j", 0);
-  std::vector<es_type*> spin1_es = {&es_s1_i,&es_s1_j};
+  std::vector<es_type*> spin1_es = {&es_s1_i, &es_s1_j};
 
   // Spin-3/2 elementary spaces
-  auto es_s32_i = make_space_spin(3.0/2, "i", 0);
-  auto es_s32_j = make_space_spin(3.0/2, "j", 0);
-  std::vector<es_type*> spin32_es = {&es_s32_i,&es_s32_j};
+  auto es_s32_i = make_space_spin(3.0 / 2, "i", 0);
+  auto es_s32_j = make_space_spin(3.0 / 2, "j", 0);
+  std::vector<es_type*> spin32_es = {&es_s32_i, &es_s32_j};
 
   SECTION("Equality") {
     hs_type hs_empty;
     CHECK(hs_empty == hs_empty);
     CHECK_FALSE(hs_empty != hs_empty);
 
-    hs_type hs(es_s32_i, es_s32_j,
-               es_s1_i, es_s1_j,
-               es_s_i, es_s_j,
-               es_b_x, es_b_y,
-               es_f_dn, es_f_up
-              );
+    hs_type hs(es_s32_i,
+               es_s32_j,
+               es_s1_i,
+               es_s1_j,
+               es_s_i,
+               es_s_j,
+               es_b_x,
+               es_b_y,
+               es_f_dn,
+               es_f_up);
     CHECK(hs == hs);
     CHECK_FALSE(hs != hs);
   }
@@ -76,12 +80,16 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs_empty.total_n_bits() == 0);
     CHECK(hs_empty.dim() == 1);
 
-    hs_type hs1(es_s32_i, es_s32_j,
-                es_s1_i, es_s1_j,
-                es_s_i, es_s_j,
-                es_b_x, es_b_y,
-                es_f_dn, es_f_up
-               );
+    hs_type hs1(es_s32_i,
+                es_s32_j,
+                es_s1_i,
+                es_s1_j,
+                es_s_i,
+                es_s_j,
+                es_b_x,
+                es_b_y,
+                es_f_dn,
+                es_f_up);
     CHECK(hs1.size() == 10);
     CHECK(hs1.total_n_bits() == 20);
     CHECK(hs1.dim() == 1048576);
@@ -126,12 +134,14 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   }
 
   SECTION("has(), index(), bit_range() and basis_state_index()") {
-    hs_type hs(es_s32_i, es_s32_j,
+    hs_type hs(es_s32_i,
+               es_s32_j,
                es_s1_j,
-               es_s_i, es_s_j,
+               es_s_i,
+               es_s_j,
                es_b_x,
-               es_f_dn, es_f_up
-              );
+               es_f_dn,
+               es_f_up);
     CHECK(hs.size() == 8);
     CHECK(hs.total_n_bits() == 14);
     CHECK(hs.dim() == 16384);
@@ -198,11 +208,14 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
                           int index,
                           int size,
                           int total_n_bits,
-                          int b, int e,
-                          int fermion_b, int fermion_e,
-                          int boson_b, int boson_e,
-                          int spin_b, int spin_e
-                         ) {
+                          int b,
+                          int e,
+                          int fermion_b,
+                          int fermion_e,
+                          int boson_b,
+                          int boson_e,
+                          int spin_b,
+                          int spin_e) {
       CHECK(hs.size() == size);
       CHECK(hs.total_n_bits() == total_n_bits);
       CHECK(hs.dim() == 1 << total_n_bits);
@@ -214,22 +227,19 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
         auto ref_range = std::make_pair(fermion_b, fermion_e);
         CHECK(hs.algebra_bit_range(fermion) == ref_range);
       } else {
-        CHECK_THROWS_AS(hs.algebra_bit_range(fermion),
-                        std::runtime_error);
+        CHECK_THROWS_AS(hs.algebra_bit_range(fermion), std::runtime_error);
       }
       if(boson_b != -1) {
         auto ref_range = std::make_pair(boson_b, boson_e);
         CHECK(hs.algebra_bit_range(boson) == ref_range);
       } else {
-        CHECK_THROWS_AS(hs.algebra_bit_range(boson),
-                        std::runtime_error);
+        CHECK_THROWS_AS(hs.algebra_bit_range(boson), std::runtime_error);
       }
       if(spin_b != -1) {
         auto ref_range = std::make_pair(spin_b, spin_e);
         CHECK(hs.algebra_bit_range(spin) == ref_range);
       } else {
-        CHECK_THROWS_AS(hs.algebra_bit_range(spin),
-                        std::runtime_error);
+        CHECK_THROWS_AS(hs.algebra_bit_range(spin), std::runtime_error);
       }
     };
 
@@ -265,8 +275,8 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   }
 
   SECTION("Construction from expression") {
-    auto expr = 2.0 * S_p<4>("i", 0) * S_m<4>("j", 0) +
-                5.0 * n("up", 0) * n("dn", 0);
+    auto expr =
+        2.0 * S_p<4>("i", 0) * S_m<4>("j", 0) + 5.0 * n("up", 0) * n("dn", 0);
 
     hs_type hs1(expr);
     CHECK(hs1.size() == 4);
@@ -325,13 +335,14 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   SECTION("Very big Hilbert space") {
     hs_type hs1;
     for(int i = 0; i < 32; ++i)
-      hs1.add(make_space_spin(3.0/2, "s", i));
+      hs1.add(make_space_spin(3.0 / 2, "s", i));
 
     using ex_type = hs_type::hilbert_space_too_big;
-    CHECK_THROWS_AS(hs1.add(make_space_spin(3.0/2, "s", 32)), ex_type);
+    CHECK_THROWS_AS(hs1.add(make_space_spin(3.0 / 2, "s", 32)), ex_type);
 
     auto expr = expression<double, std::string, int>(1);
-    for(int i = 0; i < 32; ++i) expr *= S_p<4>("s", i);
+    for(int i = 0; i < 32; ++i)
+      expr *= S_p<4>("s", i);
     hs_type hs2(expr);
     CHECK(hs2.total_n_bits() == 64);
 

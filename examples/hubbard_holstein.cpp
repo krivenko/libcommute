@@ -52,9 +52,9 @@ int main() {
   // Every creation and annihilation operator met in the expression must
   // carry two integer (coordinates of a lattice site) and one string
   // index.
-  static_indices::expr_real<
-             int, int, std::string // types of operator indices
-             > H;
+  static_indices::expr_real<int, int, std::string // types of operator indices
+                            >
+      H;
 
   // The following 'factory' functions make quantum operators with
   // statically typed indices and real coefficients.
@@ -73,8 +73,7 @@ int main() {
             // Skip all pairs of lattice sites (ix,iy) and (jx,jy) that are
             // not nearest-neighbors.
             if((std::abs(ix - jx) % Nx == 1 && iy == jy) ||
-               (ix == jx && std::abs(iy - jy) % Ny == 1)
-            ) {
+               (ix == jx && std::abs(iy - jy) % Ny == 1)) {
               // Add a hopping term
               H += -t * c_dag(ix, iy, spin) * c(jx, jy, spin);
             }
@@ -126,7 +125,7 @@ int main() {
   //
   // Monomials of degree 3 come from the electron-phonon coupling and
   // are products of two fermionic and one bosonic operators.
-  for(auto const& term: H) {
+  for(auto const& term : H) {
     if(term.monomial.size() == 3) {
       // term.coeff is coefficient in front of the monomial
       std::cout << term.monomial << " => " << term.coeff << std::endl;
