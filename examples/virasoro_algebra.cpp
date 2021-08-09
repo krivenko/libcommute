@@ -48,7 +48,7 @@ public:
   // of a particular algebra.
   int algebra_id() const override {
     // Use the lowest algebra ID available to user-defined algebras
-    return LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
+    return min_user_defined_algebra_id;
   }
 
   // Construct generator with a given index 'n'

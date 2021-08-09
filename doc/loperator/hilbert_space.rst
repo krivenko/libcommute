@@ -515,7 +515,7 @@ can be achieved in a few steps by means of a special utility class
 
   .. code-block:: cpp
 
-    // A unique integer >=LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID
+    // A unique integer >=min_user_defined_algebra_id
     static constexpr int my_algebra_id = 7;
 
 * Specialize class :class:`libcommute::es_constructor` as follows

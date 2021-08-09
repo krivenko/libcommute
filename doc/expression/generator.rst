@@ -57,10 +57,10 @@ The following table summarizes information about predefined generators.
     - :expr:`libcommute::spin`
   * - User-defined algebra
     - A class derived from :type:`libcommute::generator`
-    - >= :expr:`libcommute::LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID`
+    - >= :expr:`libcommute::min_user_defined_algebra_id`
 
 Integer constants :expr:`fermion`, :expr:`boson`, :expr:`spin` and
-:expr:`LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID`
+:expr:`min_user_defined_algebra_id`
 mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
 .. _algebra_ids:
@@ -68,7 +68,7 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 .. var:: static constexpr int fermion = -3
 .. var:: static constexpr int boson = -2
 .. var:: static constexpr int spin = -1
-.. var:: static constexpr int LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID = 0
+.. var:: static constexpr int min_user_defined_algebra_id = 0
 
 .. _gen_base:
 

@@ -17,7 +17,7 @@
 
 #include <libcommute/expression/generator.hpp>
 
-// For LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID
+// For min_user_defined_algebra_id
 #include <libcommute/algebra_ids.hpp>
 
 #include <complex>
@@ -30,7 +30,7 @@ namespace libcommute {
 //
 
 // Use the lowest algebra ID available to user-defined algebras
-static constexpr int gamma = LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID;
+static constexpr int gamma = min_user_defined_algebra_id;
 
 //
 // Our generator type: a gamma matrix with one integer index

@@ -26,7 +26,7 @@ static constexpr int boson = -2;
 static constexpr int spin = -1;
 
 // The lowest algebra ID available to user-defined algebras
-static constexpr int LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID = 0;
+static constexpr int min_user_defined_algebra_id = 0;
 
 //
 // Check that a list of algebra IDs is ordered
