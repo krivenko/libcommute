@@ -210,6 +210,10 @@ does not matter -- they will be reordered automatically.
     Throws :struct:`elementary_space_not_found` if :expr:`es` is not part of
     the product.
 
+  .. function:: bool has_algebra(int algebra_id) const
+
+    Is an elementary space with a given algebra ID found in this Hilbert space?
+
   .. function:: std::pair<int, int> const& algebra_bit_range(int algebra_id) \
                 const
 

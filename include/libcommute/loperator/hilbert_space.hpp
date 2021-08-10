@@ -201,6 +201,11 @@ public:
       return it->second;
   }
 
+  // Is an elementary space with a given algebra ID found in this Hilbert space?
+  bool has_algebra(int algebra_id) const {
+    return algebra_bit_ranges_.count(algebra_id);
+  }
+
   // Bit range spanned by algebra ID
   bit_range_t const& algebra_bit_range(int algebra_id) const {
     auto it = algebra_bit_ranges_.find(algebra_id);
