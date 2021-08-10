@@ -199,7 +199,7 @@ public:
   basis_mapper(
       std::vector<loperator<LOpScalarType, LOpAlgebraIDs...>> const& O_list,
       HSType const& hs,
-      int N) {
+      unsigned int N) {
     if(N == 0 || O_list.size() == 0) {
       map_.emplace(0, 0);
       return;

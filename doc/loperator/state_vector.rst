@@ -230,7 +230,7 @@ factory class :class:`basis_mapper` and its methods
                 basis_mapper( \
                 std::vector<loperator<LOpScalarType, LOpAlgebraIDs...>> \
                   const& O_list, \
-                HSType const& hs, int N)
+                HSType const& hs, unsigned int N)
 
     Given a list of operators
     :math:`\{\hat O_1, \hat O_2, \hat O_3, \ldots, \hat O_M\}`, build a mapping
