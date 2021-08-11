@@ -29,6 +29,7 @@
 #include "loperator/elementary_space_spin.hpp"
 #include "loperator/loperator.hpp"
 #include "loperator/mapped_basis_view.hpp"
+#include "loperator/n_fermion_sector_view.hpp"
 #include "loperator/space_partition.hpp"
 
 // C++17-only headers

@@ -50,6 +50,7 @@ set(TESTS
   sparse_state_vector
   space_partition
   mapped_basis_view
+  n_fermion_sector_view
 )
 
 # Build C++ unit tests
