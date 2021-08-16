@@ -23,7 +23,6 @@
 
 #include <array>
 
-#include <libcommute/libcommute.hpp>
 using namespace libcommute;
 using namespace static_indices;
 
