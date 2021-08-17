@@ -31,7 +31,8 @@ There are three basis vectors :math:`|m=0\rangle`, :math:`|m=\pm 1\rangle` of
 the irreducible representation, but one has to round the dimension up to the
 nearest power of 2 (:math:`b = 2`). Finally, in the case of a bosonic generator
 one has to truncate the infinite-dimensional state space and manually set
-:math:`b\geq 1`.
+:math:`b\geq 1` (:math:`b = 1` would correspond to a hardcore boson with two
+allowed states :math:`|0\rangle` and :math:`|1\rangle`).
 
 The ordering of the elementary spaces in the product is established by the
 algebra IDs of the generators :math:`g` these spaces are associated with
