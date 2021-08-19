@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
   to ``min_user_defined_algebra_id`` so that it does not appear to be a macro.
 - In the 3-argument constructor of ``basis_mapper``, change the type of the last
   argument ``N`` from ``int`` to ``unsigned int``.
+- Removed methods ``basis_mapper::make_(const_)view_no_ref()``.
+  ``basis_mapper::make_(const_)view()`` will now return a non-reference view
+  when supplied with a non lvalue-reference argument.
 - New CMake option ``STATIC_ANALYSIS``. When enabled, the ``clang-tidy`` and
   ``cppcheck`` static analysis tools will be run on the C++ sources of unit
   tests and examples as part of build process.

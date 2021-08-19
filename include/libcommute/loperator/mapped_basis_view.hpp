@@ -13,6 +13,7 @@
 #ifndef LIBCOMMUTE_LOPERATOR_MAPPED_BASIS_VIEW_HPP_
 #define LIBCOMMUTE_LOPERATOR_MAPPED_BASIS_VIEW_HPP_
 
+#include "../metafunctions.hpp"
 #include "loperator.hpp"
 #include "sparse_state_vector.hpp"
 #include "state_vector.hpp"
@@ -46,11 +47,9 @@ template <typename StateVector, bool Ref = true> struct mapped_basis_view {
   using scalar_type = typename element_type<
       typename std::remove_const<StateVector>::type>::type;
 
-  using constructor_arg_t =
-      typename std::conditional<Ref, StateVector&, StateVector const&>::type;
-
-  mapped_basis_view(constructor_arg_t sv, map_t const& map)
-    : state_vector(sv), map(map) {}
+  template <typename SV>
+  mapped_basis_view(SV&& sv, map_t const& map)
+    : state_vector(std::forward<SV>(sv)), map(map) {}
 };
 
 // Get element type of the StateVector object adapted by a given
@@ -233,30 +232,28 @@ public:
     return inv_map;
   }
 
+  template <typename StateVector>
+  using make_view_ret_t =
+      mapped_basis_view<remove_cvref_t<StateVector>,
+                        std::is_lvalue_reference<StateVector>::value>;
+
   // Make a non-constant basis mapping view
   template <typename StateVector>
-  mapped_basis_view<StateVector> make_view(StateVector& sv) const {
-    return mapped_basis_view<StateVector>(sv, map_);
+  auto make_view(StateVector&& sv) const -> make_view_ret_t<StateVector> {
+    return make_view_ret_t<StateVector>(std::forward<StateVector>(sv), map_);
   }
+
+  template <typename StateVector>
+  using make_const_view_ret_t =
+      mapped_basis_view<remove_cvref_t<StateVector> const,
+                        std::is_lvalue_reference<StateVector>::value>;
 
   // Make a constant basis mapping view
   template <typename StateVector>
-  mapped_basis_view<StateVector const>
-  make_const_view(StateVector const& sv) const {
-    return mapped_basis_view<StateVector const>(sv, map_);
-  }
-
-  // Make a non-constant basis mapping view by copying `sv`
-  template <typename StateVector>
-  mapped_basis_view<StateVector, false> make_view_no_ref(StateVector sv) const {
-    return mapped_basis_view<StateVector, false>(std::move(sv), map_);
-  }
-
-  // Make a constant basis mapping view by copying `sv`
-  template <typename StateVector>
-  mapped_basis_view<StateVector const, false>
-  make_const_view_no_ref(StateVector sv) const {
-    return mapped_basis_view<StateVector const, false>(std::move(sv), map_);
+  auto make_const_view(StateVector&& sv) const
+      -> make_const_view_ret_t<StateVector> {
+    return make_const_view_ret_t<StateVector>(std::forward<StateVector>(sv),
+                                              map_);
   }
 };
 

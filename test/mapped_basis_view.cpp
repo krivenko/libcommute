@@ -19,6 +19,7 @@
 
 #include <map>
 #include <set>
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -214,6 +215,46 @@ TEST_CASE("Basis-mapped view of a state vector", "[mapped_basis_view]") {
         basis_mapper mapper(O_list, hs_b, N);
         CHECK(mapper.size() == map_size_ref[N]);
       }
+    }
+
+    SECTION("make_view() and make_const_view()") {
+      std::vector<sv_index_type> basis_indices{3, 5, 6, 9, 10, 12};
+      basis_mapper mapper(basis_indices);
+
+      state_vector& st_ref = st;
+      state_vector const& st_cref = st;
+      state_vector&& st_rref = state_vector{1, 2, 3, 4, 5, 6};
+
+      auto view_st = mapper.make_view(st);
+      auto view_st_ref = mapper.make_view(st_ref);
+      auto view_tmp = mapper.make_view(state_vector{1, 2, 3, 4, 5, 6});
+      auto view_rref = mapper.make_view(std::move(st_rref));
+
+      CHECK(std::is_same<decltype(view_st),
+                         mapped_basis_view<state_vector, true>>::value);
+      CHECK(std::is_same<decltype(view_st_ref),
+                         mapped_basis_view<state_vector, true>>::value);
+      CHECK(std::is_same<decltype(view_tmp),
+                         mapped_basis_view<state_vector, false>>::value);
+      CHECK(std::is_same<decltype(view_rref),
+                         mapped_basis_view<state_vector, false>>::value);
+
+      auto cview_st = mapper.make_const_view(st);
+      auto cview_st_ref = mapper.make_const_view(st_ref);
+      auto cview_st_cref = mapper.make_const_view(st_cref);
+      auto cview_tmp = mapper.make_const_view(state_vector{1, 2, 3, 4, 5, 6});
+      auto cview_rref = mapper.make_const_view(std::move(st_rref));
+
+      CHECK(std::is_same<decltype(cview_st),
+                         mapped_basis_view<state_vector const, true>>::value);
+      CHECK(std::is_same<decltype(cview_st_ref),
+                         mapped_basis_view<state_vector const, true>>::value);
+      CHECK(std::is_same<decltype(cview_st_cref),
+                         mapped_basis_view<state_vector const, true>>::value);
+      CHECK(std::is_same<decltype(cview_tmp),
+                         mapped_basis_view<state_vector const, false>>::value);
+      CHECK(std::is_same<decltype(cview_rref),
+                         mapped_basis_view<state_vector const, false>>::value);
     }
   }
 }
