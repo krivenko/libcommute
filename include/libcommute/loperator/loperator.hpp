@@ -246,8 +246,7 @@ private:
     // Apply monomials
     foreach(
         src,
-        [&, this](sv_index_type in_index,
-                  element_type_t<StateVector> const& a) {
+        [&](sv_index_type in_index, element_type_t<StateVector> const& a) {
           for(std::size_t n = 0; n < m_act.size(); ++n) {
             sv_index_type index = in_index;
             auto coeff =
