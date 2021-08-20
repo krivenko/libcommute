@@ -24,6 +24,7 @@
 #include <cmath>
 #include <numeric>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 using namespace libcommute;
@@ -552,5 +553,100 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
           N * std::sqrt(2);
       CHECK_THAT(out, Catch::Matchers::Approx(out_ref));
     }
+  }
+}
+
+TEST_CASE("View of a state vector projected on a direct product of "
+          "multiple N-fermion sectors",
+          "[n_fermion_multisector_view]") {
+
+  using namespace static_indices;
+
+  using hs_type = hilbert_space<int>;
+  using sd_type = sector_descriptor<hs_type>;
+
+  // The multisector used in this test case is a product of two M = 4 sectors
+  // within a full fermionic M = 11 range.
+  //
+  // Sector 1: (1,2,6,7)
+  // Sector 2: (3,4,8,9)
+
+  int const M_total = 11;
+
+  auto sd0 = sd_type{{}, 0};
+  auto sd1 = [](unsigned int N) { return sd_type{{{1}, {2}, {6}, {7}}, N}; };
+  auto sd2 = [](unsigned int N) { return sd_type{{{3}, {4}, {8}, {9}}, N}; };
+
+  SECTION("n_fermion_multisector_size") {
+    hs_type hs;
+
+    // Empty Hilbert space
+    CHECK(n_fermion_multisector_size(hs, {}) == 0);
+    CHECK_THROWS_AS(n_fermion_multisector_size(hs, {sd1(1)}),
+                    std::runtime_error);
+
+    // Purely fermionic Hilbert spaces
+    for(int i = 0; i < M_total; ++i)
+      hs.add(make_space_fermion(i));
+
+    CHECK_THROWS_AS(n_fermion_multisector_size(hs, {sd1(2), sd_type{{{6}}, 1}}),
+                    std::runtime_error);
+
+    std::vector<sv_index_type> sector_sizes_ref = {1, 4, 6, 4, 1};
+
+    CHECK(n_fermion_multisector_size(hs, {}) == 2048); // No sectors
+    // One sector
+    for(unsigned int N = 0; N <= 4; ++N) {
+      CHECK(n_fermion_multisector_size(hs, {sd1(N)}) ==
+            sector_sizes_ref[N] * 128);
+      CHECK(n_fermion_multisector_size(hs, {sd2(N)}) ==
+            sector_sizes_ref[N] * 128);
+    }
+    // Two sectors
+    for(unsigned int N1 = 0; N1 <= 4; ++N1) {
+      for(unsigned int N2 = 0; N2 <= 4; ++N2) {
+        CHECK(n_fermion_multisector_size(hs, {sd1(N1), sd2(N2)}) ==
+              sector_sizes_ref[N1] * sector_sizes_ref[N2] * 8);
+      }
+    }
+    // Mixture with the empty sector
+    for(unsigned int N = 0; N <= 4; ++N) {
+      CHECK(n_fermion_multisector_size(hs, {sd1(N), sd0}) ==
+            sector_sizes_ref[N] * 128);
+      CHECK(n_fermion_multisector_size(hs, {sd2(N), sd0}) ==
+            sector_sizes_ref[N] * 128);
+    }
+
+    // Fermions and bosons
+    hs.add(make_space_boson(2, 0));
+
+    CHECK(n_fermion_multisector_size(hs, {}) == 8192); // No sectors
+    // One sector
+    for(unsigned int N = 0; N <= 4; ++N) {
+      CHECK(n_fermion_multisector_size(hs, {sd1(N)}) ==
+            sector_sizes_ref[N] * 512);
+      CHECK(n_fermion_multisector_size(hs, {sd2(N)}) ==
+            sector_sizes_ref[N] * 512);
+    }
+    // Two sectors
+    for(unsigned int N1 = 0; N1 <= 4; ++N1) {
+      for(unsigned int N2 = 0; N2 <= 4; ++N2) {
+        CHECK(n_fermion_multisector_size(hs, {sd1(N1), sd2(N2)}) ==
+              sector_sizes_ref[N1] * sector_sizes_ref[N2] * 32);
+      }
+    }
+    // Mixture with the empty sector
+    for(unsigned int N = 0; N <= 4; ++N) {
+      CHECK(n_fermion_multisector_size(hs, {sd1(N), sd0}) ==
+            sector_sizes_ref[N] * 512);
+      CHECK(n_fermion_multisector_size(hs, {sd2(N), sd0}) ==
+            sector_sizes_ref[N] * 512);
+    }
+
+    // Purely bosonic Hilbert space
+    hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+    CHECK(n_fermion_multisector_size(hs_b, {}) == 32);
+    CHECK_THROWS_AS(n_fermion_multisector_size(hs_b, {sd1(1)}),
+                    std::runtime_error);
   }
 }

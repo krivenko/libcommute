@@ -14,13 +14,20 @@
 #define LIBCOMMUTE_LOPERATOR_N_FERMION_SECTOR_VIEW_HPP_
 
 #include "../algebra_ids.hpp"
+#include "../utility.hpp"
 
+#include "elementary_space_fermion.hpp"
+#include "hilbert_space.hpp"
 #include "state_vector.hpp"
 
 #include <algorithm>
 #include <cassert>
+#include <iterator>
+#include <set>
+#include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -192,6 +199,10 @@ struct n_fermion_sector_basis_generator {
 };
 
 } // namespace detail
+
+//
+// N-fermion sector
+//
 
 // Size of the fermionic sector with N particles
 template <typename HSType>
@@ -386,6 +397,73 @@ auto make_const_nfs_view(StateVector&& sv, HSType const& hs, unsigned int N)
   return make_const_nfs_view_ret_t<StateVector>(std::forward<StateVector>(sv),
                                                 hs,
                                                 N);
+}
+
+//
+// N-fermion multisector
+//
+
+// Description of a N-particle sector defined over a subset of fermionic
+// degrees of freedom
+template <typename HSType> struct sector_descriptor {
+
+  // Indices defining this sector
+  std::set<typename HSType::index_types> indices;
+
+  // Number of particles in the sector
+  unsigned int N;
+};
+
+namespace detail {
+
+template <typename... IndexTypes>
+void validate_sectors(
+    hilbert_space<IndexTypes...> const& hs,
+    std::vector<sector_descriptor<hilbert_space<IndexTypes...>>> const&
+        sectors) {
+
+  unsigned int M_total = 0;
+  std::set<typename hilbert_space<IndexTypes...>::index_types> all_indices;
+  for(auto const& sector : sectors) {
+    for(auto const& ind : sector.indices) {
+      if(!hs.has(elementary_space_fermion<IndexTypes...>(ind))) {
+        std::stringstream ss;
+        print_tuple(ss, ind);
+        throw std::runtime_error("Fermionic elementary space with indices " +
+                                 ss.str() +
+                                 " is not part of this Hilbert space");
+      }
+      all_indices.insert(ind);
+    }
+    M_total += sector.indices.size();
+  }
+  if(all_indices.size() != M_total)
+    throw std::runtime_error("Some of the sectors overlap");
+}
+
+} // namespace detail
+
+// Size of a fermionic multisector
+template <typename HSType>
+inline sv_index_type n_fermion_multisector_size(
+    HSType const& hs,
+    std::vector<sector_descriptor<HSType>> const& sectors) {
+
+  detail::validate_sectors(hs, sectors);
+
+  auto total_n_bits = hs.total_n_bits();
+  if(total_n_bits == 0) return 0;
+
+  unsigned int M_total = 0;
+  sv_index_type multisector_size = 1;
+  for(auto const& sector : sectors) {
+    unsigned int M = sector.indices.size();
+    if(sector.N > M) return 0;
+    multisector_size *= detail::binomial(M, sector.N);
+    M_total += M;
+  }
+
+  return multisector_size * detail::pow2(total_n_bits - M_total);
 }
 
 } // namespace libcommute
