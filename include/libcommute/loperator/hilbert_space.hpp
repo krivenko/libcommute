@@ -69,6 +69,8 @@ template <typename... IndexTypes> class hilbert_space {
       all_derived_from<elementary_space_t, Types...>;
 
 public:
+  using index_types = std::tuple<IndexTypes...>;
+
   //
   // Exception types
   //

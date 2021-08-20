@@ -19,6 +19,8 @@
 #include <libcommute/loperator/elementary_space_spin.hpp>
 #include <libcommute/loperator/hilbert_space.hpp>
 
+#include <tuple>
+#include <type_traits>
 #include <utility>
 
 using namespace libcommute;
@@ -29,6 +31,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   // Setup
   using es_type = elementary_space<std::string, int>;
   using hs_type = hilbert_space<std::string, int>;
+
+  REQUIRE(
+      std::is_same<hs_type::index_types, std::tuple<std::string, int>>::value);
 
   // Fermionic elementary spaces
   auto es_f_dn = make_space_fermion("dn", 0);

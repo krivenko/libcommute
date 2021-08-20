@@ -8,8 +8,9 @@ All notable changes to this project will be documented in this file.
   [Eigen 3](https://eigen.tuxfamily.org/) types (vectors, vector segments,
   column-like matrix blocks and one-dimensional ``Eigen::Map`` views).
   The corresponding header file is ``loperator/state_vector_eigen3.hpp``.
-- New method ``hilbert_space.has_algebra()``.
-- New method ``space_partition.find_connections()``.
+- New member typedef ``hilbert_space::index_types``.
+- New method ``hilbert_space::has_algebra()``.
+- New method ``space_partition::find_connections()``.
 - Renamed the ``constexpr`` integer ``LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID``
   to ``min_user_defined_algebra_id`` so that it does not appear to be a macro.
 - In the 3-argument constructor of ``basis_mapper``, change the type of the last
@@ -25,4 +26,4 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.1] - 2021-03-30
 
-- New method ``hilbert_space.index()``.
+- New method ``hilbert_space::index()``.
