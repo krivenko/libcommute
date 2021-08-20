@@ -22,7 +22,9 @@
 
 #include <algorithm>
 #include <cassert>
+#include <functional>
 #include <iterator>
+#include <numeric>
 #include <set>
 #include <sstream>
 #include <stdexcept>
@@ -33,6 +35,8 @@
 #include <vector>
 
 namespace libcommute {
+
+template <typename HSType> struct sector_descriptor;
 
 namespace detail {
 
@@ -83,6 +87,7 @@ struct binomial_sum_t {
         }
       }
     }
+    coeffs.shrink_to_fit();
   }
 
   inline sv_index_type
@@ -112,17 +117,20 @@ struct n_fermion_sector_params_t {
     : M(init_m(hs)),
       count_occupied(N <= M / 2),
       N_counted(count_occupied ? N : M - N) {
-    if(N > M)
-      throw std::runtime_error("Sector with " + std::to_string(N) +
-                               " fermions does not exist "
-                               "(there are " +
-                               std::to_string(M) +
-                               " fermionic modes in total)");
+    validate_n(N);
+  }
+
+  template <typename HSType>
+  n_fermion_sector_params_t(HSType const& hs,
+                            sector_descriptor<HSType> const& sector)
+    : M(sector.indices.size()),
+      count_occupied(sector.N <= M / 2),
+      N_counted(count_occupied ? sector.N : M - sector.N) {
+    validate_n(sector.N);
   }
 
 private:
   template <typename HSType> static unsigned int init_m(HSType const& hs) {
-    if(hs.total_n_bits() == 0) throw std::runtime_error("Empty Hilbert space");
     if(hs.has_algebra(fermion)) {
       auto fermion_bit_range = hs.algebra_bit_range(fermion);
       // We rely on the following assumption in map_index().
@@ -133,6 +141,14 @@ private:
       return fermion_bit_range.second - fermion_bit_range.first + 1;
     } else
       return 0;
+  }
+
+  void validate_n(unsigned int N) const {
+    if(N > M)
+      throw std::runtime_error("Sector with " + std::to_string(N) +
+                               " fermions does not exist "
+                               "(there are " +
+                               std::to_string(M) + " fermionic modes in it)");
   }
 };
 
@@ -150,12 +166,13 @@ struct for_each_composition {
   // Upper bounds for elements of 'lambdas'
   std::vector<unsigned int> mutable lambdas_max;
 
-  inline explicit for_each_composition(
-      n_fermion_sector_params_t const& params)
+  inline explicit for_each_composition(n_fermion_sector_params_t const& params)
     : params(params),
       lambdas(params.N_counted, 0),
-      lambdas_max(params.N_counted, params.M - (params.N_counted - 1))
-  {}
+      lambdas_max(params.N_counted, params.M - (params.N_counted - 1)) {
+        lambdas.shrink_to_fit();
+        lambdas_max.shrink_to_fit();
+      }
 
   // Apply 'f' to each composition
   template <typename F> void operator()(F&& f) const {
@@ -187,24 +204,23 @@ struct for_each_composition {
 };
 
 // Combine a composition {\lambda_i} and a basis state index from
-// the non-fermionic subspace into the sector basis state index
-struct composition_to_sector_index {
+// the non-fermionic subspace into the index in the full Hilbert space
+struct composition_to_full_hs_index {
 
-  // Parameters of the sector
-  n_fermion_sector_params_t const& params;
+  // Total number of fermionic modes
+  unsigned int M;
 
   // XOR-mask used when counting unoccupied states
   sv_index_type const index_mask;
 
-  explicit composition_to_sector_index(n_fermion_sector_params_t const& params) :
-    params(params),
-    index_mask(params.count_occupied ? sv_index_type(0) : (pow2(params.M) - 1))
-  {}
+  explicit composition_to_full_hs_index(n_fermion_sector_params_t const& params)
+    : M(params.M),
+      index_mask(params.count_occupied ? sv_index_type(0) : (pow2(M) - 1)) {}
 
   inline sv_index_type operator()(std::vector<unsigned int> const& lambdas,
                                   sv_index_type index_nf) const {
     sv_index_type index_f = 0;
-    if(params.N_counted != 0) {
+    if(lambdas.size() != 0) {
       std::for_each(lambdas.rbegin(),
                     lambdas.rend(),
                     [&index_f](unsigned int lambda) {
@@ -212,9 +228,8 @@ struct composition_to_sector_index {
                       index_f += 1;
                       index_f <<= lambda - 1;
                     });
-
     }
-    return (index_f ^ index_mask) + (index_nf << params.M);
+    return (index_f ^ index_mask) + (index_nf << M);
   }
 };
 
@@ -252,7 +267,7 @@ struct n_fermion_sector_view : public detail::n_fermion_sector_params_t {
   // Although the following two objects are not used by this class' methods,
   // storing them here allows to eliminate memory allocations in foreach().
   detail::for_each_composition for_each_comp;
-  detail::composition_to_sector_index comp_to_index;
+  detail::composition_to_full_hs_index comp_to_index;
 
   using scalar_type = typename element_type<
       typename std::remove_const<StateVector>::type>::type;
@@ -353,6 +368,8 @@ inline void set_zeros(n_fermion_sector_view<StateVector const, Ref>&) {
 template <typename StateVector, bool Ref, typename Functor>
 inline void foreach(n_fermion_sector_view<StateVector, Ref> const& view,
                     Functor&& f) {
+  if(view.M == 0 && view.M_nonfermion == 0) return;
+
   auto dim_nonfermion = detail::pow2(view.M_nonfermion);
   sv_index_type sector_index = 0;
   view.for_each_comp([&](std::vector<unsigned int> const& lambdas) {
@@ -379,10 +396,13 @@ template <typename HSType>
 inline std::vector<sv_index_type>
 n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
   detail::n_fermion_sector_params_t params(hs, N);
-  detail::for_each_composition for_each_comp(params);
-  detail::composition_to_sector_index comp_to_index(params);
 
   unsigned int M_nonfermion = hs.total_n_bits() - params.M;
+  if(params.M == 0 && M_nonfermion == 0) return {};
+
+  detail::for_each_composition for_each_comp(params);
+  detail::composition_to_full_hs_index comp_to_index(params);
+
   sv_index_type dim_nonfermion = detail::pow2(M_nonfermion);
 
   std::vector<sv_index_type> basis_states;
@@ -464,6 +484,245 @@ void validate_sectors(
     throw std::runtime_error("Some of the sectors overlap");
 }
 
+using sector_params_vec_t = std::vector<n_fermion_sector_params_t>;
+
+template <typename HSType>
+sector_params_vec_t
+make_sector_params(HSType const& hs,
+                   std::vector<sector_descriptor<HSType>> const& sectors) {
+
+  validate_sectors(hs, sectors);
+
+  sector_params_vec_t params;
+  for(auto const& sector : sectors) {
+    n_fermion_sector_params_t p(hs, sector);
+    // Initialize only non-empty sectors
+    if(p.M != 0) params.emplace_back(p);
+  }
+  params.shrink_to_fit();
+  return params;
+}
+
+template <typename... IndexTypes>
+unsigned int get_fermion_bit(
+    hilbert_space<IndexTypes...> const& hs,
+    typename hilbert_space<IndexTypes...>::index_types const& indices) {
+  return hs.bit_range(elementary_space_fermion<IndexTypes...>(indices)).first;
+}
+
+// This object uses a non-recursive procedure to generate all restricted N-part
+// compositions of multiple integers in parallel.
+// It does heavy lifting for foreach() and n_fermion_multisector_basis_states().
+struct for_each_composition_multi {
+
+  // Parameters of sectors
+  sector_params_vec_t const& sector_params;
+
+  // Index of the first sector with N_computed != 0
+  int s_min = -1;
+
+  // Index of the last sector with N_computed != 0
+  int s_max = -1;
+
+  // Restricted partitions of M_s
+  std::vector<std::vector<unsigned int>> mutable lambdas;
+
+  // Upper bounds for elements of 'lambdas'
+  std::vector<std::vector<unsigned int>> mutable lambdas_max;
+
+  inline explicit for_each_composition_multi(
+      sector_params_vec_t const& sector_params)
+    : sector_params(sector_params) {
+    for(int s = 0; s < static_cast<int>(sector_params.size()); ++s) {
+      auto const& p = sector_params[s];
+      lambdas.emplace_back(p.N_counted, 0);
+      lambdas.back().shrink_to_fit();
+      lambdas_max.emplace_back(p.N_counted, p.M - (p.N_counted - 1));
+      lambdas_max.back().shrink_to_fit();
+      if(p.N_counted != 0) {
+        if(s_min == -1) s_min = s;
+        s_max = s;
+      }
+    }
+    lambdas.shrink_to_fit();
+    lambdas_max.shrink_to_fit();
+  }
+
+  // Apply 'f' to each composition
+  template <typename F> void operator()(F&& f) const {
+    if(s_min == -1) { // All compositions are empty
+      f(lambdas);
+      return;
+    }
+
+    for(std::size_t s = 0; s < lambdas.size(); ++s) {
+      std::fill(lambdas[s].begin(), lambdas[s].end(), 0);
+      std::fill(lambdas_max[s].begin(),
+                lambdas_max[s].end(),
+                sector_params[s].M - (sector_params[s].N_counted - 1));
+    }
+
+    int s = s_min; // Index of current sector
+    int i = 0;     // Index within the current sector
+
+    while(s >= s_min) {
+      ++lambdas[s][i];
+      if(lambdas[s][i] > lambdas_max[s][i]) {
+        --i;
+        if(i < 0) {
+          do {
+            --s;
+          } while(sector_params[s].N_counted == 0);
+          i = static_cast<int>(sector_params[s].N_counted) - 1;
+        }
+        continue;
+      }
+
+      if(s == s_max &&
+         static_cast<unsigned int>(i) + 1 == sector_params[s].N_counted) {
+        f(lambdas);
+      } else {
+        ++i;
+        if(i == static_cast<int>(sector_params[s].N_counted)) {
+          do {
+            ++s;
+          } while(sector_params[s].N_counted == 0);
+          auto const& p = sector_params[s];
+          i = 0;
+          lambdas_max[s][i] = p.M - (p.N_counted - 1);
+        } else {
+          lambdas_max[s][i] = lambdas_max[s][i - 1] + 1 - lambdas[s][i - 1];
+        }
+        lambdas[s][i] = 0;
+      }
+    }
+  }
+};
+
+// 'non_multisector_bit' stands for a bit corresponding to a non-multisector
+// fermionic degree of freedom.
+static constexpr int non_multisector_bit = -1;
+
+// Combine a composition {\lambda_i} and a basis state index from
+// the non-multisector subspace into the index in the full Hilbert space
+struct compositions_to_full_hs_index {
+
+  // Parameters of sectors
+  sector_params_vec_t const& sector_params;
+
+  // Mapping from bit position to sector index
+  std::vector<int> const& bit_to_sector;
+
+  // XOR-mask used to flip bits in all count_occupied == false sectors
+  sv_index_type const index_mask;
+
+  // Index withing each sector
+  std::vector<sv_index_type> mutable sector_indices;
+
+  compositions_to_full_hs_index(sector_params_vec_t const& sector_params,
+                                std::vector<int> const& bit_to_sector)
+    : sector_params(sector_params),
+      bit_to_sector(bit_to_sector),
+      index_mask(init_index_mask(sector_params, bit_to_sector)),
+      sector_indices(sector_params.size()) {
+        sector_indices.shrink_to_fit();
+      }
+
+  inline sv_index_type
+  operator()(std::vector<std::vector<unsigned int>> const& lambdas,
+             sv_index_type index_nf) const {
+
+    for(unsigned int s = 0; s < lambdas.size(); ++s) {
+      if(lambdas[s].size() != 0) {
+        auto& index_f = sector_indices[s];
+        std::for_each(lambdas[s].rbegin(),
+                      lambdas[s].rend(),
+                      [&index_f](unsigned int lambda) {
+                        index_f <<= 1;
+                        index_f += 1;
+                        index_f <<= lambda - 1;
+                      });
+      } else
+        sector_indices[s] = 0;
+    }
+
+    sv_index_type index = 0;
+
+    // Consume bits from sector_indices and index_nf
+    for(unsigned int b = 0; b < bit_to_sector.size(); ++b) {
+      int s = bit_to_sector[b];
+      if(s != non_multisector_bit) {
+        auto& index_f = sector_indices[s];
+        index += (index_f & sv_index_type(1)) << b;
+        index_f >>= 1;
+      } else {
+        index += (index_nf & sv_index_type(1)) << b;
+        index_nf >>= 1;
+      }
+    }
+
+    index += index_nf << bit_to_sector.size();
+
+    return index ^ index_mask;
+  }
+
+private:
+  static sv_index_type init_index_mask(sector_params_vec_t const& sector_params,
+                                       std::vector<int> const& bit_to_sector) {
+    sv_index_type mask = 0;
+    for(unsigned int b = 0; b < bit_to_sector.size(); ++b) {
+      int s = bit_to_sector[b];
+      if(s != non_multisector_bit && (!sector_params[s].count_occupied)) {
+        mask += pow2(b);
+      }
+    }
+    return mask;
+  }
+};
+
+template <typename HSType>
+static std::vector<int>
+make_bit_to_sector(HSType const& hs,
+                   std::vector<sector_descriptor<HSType>> const& sectors) {
+
+  if(!hs.has_algebra(fermion)) return {};
+
+  std::vector<int> result(hs.algebra_bit_range(fermion).second + 1,
+                          non_multisector_bit);
+  unsigned int result_size = 0;
+
+  int sector_i = 0;
+  for(auto const& sector : sectors) {
+    // Process only non-empty sectors
+    if(!sector.indices.empty()) {
+      for(auto const& ind : sector.indices) {
+        unsigned int b = detail::get_fermion_bit(hs, ind);
+        result[b] = sector_i;
+        result_size = std::max(result_size, b + 1);
+      }
+      ++sector_i;
+    }
+  }
+
+  result.resize(result_size);
+  result.shrink_to_fit();
+  return result;
+}
+
+template <typename HSType>
+unsigned int
+compute_m_nonmultisector(HSType const& hs,
+                         sector_params_vec_t const& sector_params) {
+  return hs.total_n_bits() -
+         std::accumulate(
+             sector_params.begin(),
+             sector_params.end(),
+             0,
+             [](unsigned int M, n_fermion_sector_params_t const& data) {
+               return M + data.M;
+             });
+}
+
 } // namespace detail
 
 // Size of a fermionic multisector
@@ -487,6 +746,302 @@ inline sv_index_type n_fermion_multisector_size(
   }
 
   return multisector_size * detail::pow2(total_n_bits - M_total);
+}
+
+template <typename StateVector, bool Ref = true>
+struct n_fermion_multisector_view {
+
+  // The underlying state vector
+  typename std::conditional<Ref, StateVector&, StateVector>::type state_vector;
+
+  // Parameters of sectors
+  detail::sector_params_vec_t sector_params;
+
+  // Various per-sector data used by map_index()
+  struct sector_map_index_data_t {
+
+    // Sum of binomial coefficients
+    detail::binomial_sum_t binomial_sum;
+
+    // Current value of m
+    unsigned int m = 0;
+
+    // Current value of n
+    unsigned int n = 0;
+
+    // Current value of \lambda
+    unsigned int lambda = 1;
+
+    // Current index within this sector
+    sv_index_type index = 0;
+
+    explicit sector_map_index_data_t(
+        detail::n_fermion_sector_params_t const& params)
+      : binomial_sum(params.M, params.N_counted) {}
+
+    // Reset all current values
+    void reset(detail::n_fermion_sector_params_t const& params) {
+      m = params.M;
+      n = params.N_counted;
+      index = 0;
+      lambda = 1;
+    }
+  };
+  std::vector<sector_map_index_data_t> mutable sector_map_index_data;
+
+  // Mapping from bit position to sector index.
+  std::vector<int> bit_to_sector;
+
+  // Strides used to combine sector indices into a multisector index
+  std::vector<sv_index_type> sector_strides;
+
+  // The number of bits not belonging to the multisector
+  unsigned int M_nonmultisector;
+
+  // Although the following two objects are not used by this class' methods,
+  // storing them here allows to eliminate memory allocations in foreach().
+  detail::for_each_composition_multi for_each_comp;
+  detail::compositions_to_full_hs_index comp_to_index;
+
+  using scalar_type = typename element_type<
+      typename std::remove_const<StateVector>::type>::type;
+
+  template <typename SV, typename HSType>
+  n_fermion_multisector_view(
+      SV&& sv,
+      HSType const& hs,
+      std::vector<sector_descriptor<HSType>> const& sectors)
+    : state_vector(std::forward<SV>(sv)),
+      sector_params(detail::make_sector_params(hs, sectors)),
+      bit_to_sector(detail::make_bit_to_sector(hs, sectors)),
+      sector_strides(init_sector_strides(sector_params)),
+      M_nonmultisector(detail::compute_m_nonmultisector(hs, sector_params)),
+      for_each_comp(sector_params),
+      comp_to_index(sector_params, bit_to_sector) {
+    sector_map_index_data.reserve(sector_params.size());
+    for(auto const& p : sector_params) {
+      // cppcheck-suppress useStlAlgorithm
+      sector_map_index_data.emplace_back(p);
+    }
+  }
+
+  sv_index_type map_index(sv_index_type index) const {
+
+    // Translate the fermionic part of 'index' into a list of sector indices
+    for(std::size_t s = 0; s < sector_params.size(); ++s)
+      sector_map_index_data[s].reset(sector_params[s]);
+
+    sv_index_type index_nonmultisector = 0;
+    unsigned int b_nonmultisector = 0;
+
+    for(int s : bit_to_sector) {
+      if(s !=
+         detail::non_multisector_bit) { // This bit belongs to the multisector
+        auto& d = sector_map_index_data[s];
+        if((index & sv_index_type(1)) == sector_params[s].count_occupied) {
+          d.index += d.binomial_sum(d.n, d.m, d.lambda);
+          d.m -= d.lambda;
+          --d.n;
+          d.lambda = 1;
+        } else {
+          ++d.lambda;
+        }
+      } else { // a non-multisector bit
+        index_nonmultisector += (index & sv_index_type(1)) << b_nonmultisector;
+        ++b_nonmultisector;
+      }
+      index >>= 1;
+    }
+
+    index_nonmultisector += index << b_nonmultisector;
+
+    auto index_multisector = std::inner_product(
+        sector_map_index_data.begin(),
+        sector_map_index_data.end(),
+        sector_strides.begin(),
+        0,
+        std::plus<sv_index_type>(),
+        [](sector_map_index_data_t const& data, sv_index_type stride) {
+          return data.index * stride;
+        });
+    return (index_multisector << M_nonmultisector) + index_nonmultisector;
+  }
+
+private:
+  static std::vector<sv_index_type>
+  init_sector_strides(detail::sector_params_vec_t const& sector_params) {
+    std::vector<sv_index_type> strides(sector_params.size());
+    strides.shrink_to_fit();
+    if(strides.empty()) return strides;
+
+    strides[strides.size() - 1] = 1;
+    for(std::size_t i = strides.size() - 1; i-- != 0;)
+      strides[i] =
+          strides[i + 1] * detail::binomial(sector_params[i + 1].M,
+                                            sector_params[i + 1].N_counted);
+
+    return strides;
+  }
+};
+
+// Get element type of the StateVector object adapted by a given
+// n_fermion_multisector_view object.
+template <typename StateVector, bool Ref>
+struct element_type<n_fermion_multisector_view<StateVector, Ref>> {
+  using type = typename n_fermion_multisector_view<StateVector>::scalar_type;
+};
+
+// Get state amplitude of the adapted StateVector object
+// at index view.map_index(n)
+template <typename StateVector, bool Ref>
+inline auto
+get_element(n_fermion_multisector_view<StateVector, Ref> const& view,
+            sv_index_type n) ->
+    typename n_fermion_sector_view<StateVector>::scalar_type {
+  return get_element(view.state_vector, view.map_index(n));
+}
+
+// Add a constant to a state amplitude stored in the adapted StateVector object
+// at index view.map_index(n)
+template <typename StateVector, bool Ref, typename T>
+inline void
+update_add_element(n_fermion_multisector_view<StateVector, Ref>& view,
+                   sv_index_type n,
+                   T&& value) {
+  update_add_element(view.state_vector,
+                     view.map_index(n),
+                     std::forward<T>(value));
+}
+
+// update_add_element() is not defined for constant views
+template <typename StateVector, bool Ref, typename T>
+inline void
+update_add_element(n_fermion_multisector_view<StateVector const, Ref>&,
+                   sv_index_type,
+                   T&&) {
+  static_assert(!std::is_same<StateVector, StateVector>::value,
+                "update_add_element() is not supported for constant views");
+}
+
+// zeros_like() is not defined for views
+template <typename StateVector, bool Ref>
+inline StateVector
+zeros_like(n_fermion_multisector_view<StateVector, Ref> const&) {
+  static_assert(!std::is_same<StateVector, StateVector>::value,
+                "zeros_like() is not supported for views");
+}
+
+// Set all amplitudes stored in the adapted StateVector object to zero
+template <typename StateVector, bool Ref>
+inline void set_zeros(n_fermion_multisector_view<StateVector, Ref>& view) {
+  set_zeros(view.state_vector);
+}
+
+// set_zeros() is not defined for constant views
+template <typename StateVector, bool Ref>
+inline void set_zeros(n_fermion_multisector_view<StateVector const, Ref>&) {
+  static_assert(!std::is_same<StateVector, StateVector>::value,
+                "set_zeros() is not supported for constant views");
+}
+
+// Apply functor `f` to all index/non-zero amplitude pairs
+// in the adapted StateVector object
+template <typename StateVector, bool Ref, typename Functor>
+inline void foreach(n_fermion_multisector_view<StateVector, Ref> const& view,
+                    Functor&& f) {
+  if(view.sector_params.size() == 0 && view.M_nonmultisector == 0) return;
+
+  auto dim_nonmultisector = detail::pow2(view.M_nonmultisector);
+  sv_index_type multisector_index = 0;
+  view.for_each_comp([&](std::vector<std::vector<unsigned int>> const&
+                             lambdas) {
+    for(sv_index_type index_nms = 0; index_nms < dim_nonmultisector;
+        ++index_nms) {
+
+      // Emulate decltype(auto)
+      decltype(get_element(view.state_vector, multisector_index)) a =
+          get_element(view.state_vector, multisector_index);
+
+      ++multisector_index;
+
+      using T =
+          typename n_fermion_multisector_view<StateVector, Ref>::scalar_type;
+      if(scalar_traits<T>::is_zero(a))
+        continue;
+      else
+        f(view.comp_to_index(lambdas, index_nms), a);
+    }
+  });
+}
+
+// Make a list of basis state indices spanning the N-fermion multisector
+// The order of indices is consistent with that used by
+// n_fermion_multisector_view
+template <typename HSType>
+inline std::vector<sv_index_type> n_fermion_multisector_basis_states(
+    HSType const& hs,
+    std::vector<sector_descriptor<HSType>> const& sectors) {
+  auto sector_params = detail::make_sector_params(hs, sectors);
+  if(hs.total_n_bits() == 0 && sector_params.empty()) return {};
+
+  detail::for_each_composition_multi for_each_comp(sector_params);
+  auto bit_to_sector = detail::make_bit_to_sector(hs, sectors);
+  detail::compositions_to_full_hs_index comp_to_index(sector_params,
+                                                      bit_to_sector);
+
+  sv_index_type dim_multisector = std::accumulate(
+      sector_params.begin(),
+      sector_params.end(),
+      1,
+      [](sv_index_type dim, detail::n_fermion_sector_params_t const& p) {
+        return dim * detail::binomial(p.M, p.N_counted);
+      });
+
+  unsigned int M_nonmultisector = compute_m_nonmultisector(hs, sector_params);
+  sv_index_type dim_nonmultisector = detail::pow2(M_nonmultisector);
+
+  std::vector<sv_index_type> basis_states;
+  basis_states.reserve(dim_multisector * dim_nonmultisector);
+  for_each_comp([&](std::vector<std::vector<unsigned int>> const& lambdas) {
+    for(sv_index_type index_nms = 0; index_nms < dim_nonmultisector;
+        ++index_nms) {
+      basis_states.push_back(comp_to_index(lambdas, index_nms));
+    }
+  });
+
+  return basis_states;
+}
+
+template <typename StateVector>
+using make_nfms_view_ret_t =
+    n_fermion_multisector_view<remove_cvref_t<StateVector>,
+                               std::is_lvalue_reference<StateVector>::value>;
+
+// Make a non-constant N-fermion sector view
+template <typename StateVector, typename HSType>
+auto make_nfms_view(StateVector&& sv,
+                    HSType const& hs,
+                    std::vector<sector_descriptor<HSType>> const& sectors)
+    -> make_nfms_view_ret_t<StateVector> {
+  return make_nfms_view_ret_t<StateVector>(std::forward<StateVector>(sv),
+                                           hs,
+                                           sectors);
+}
+
+template <typename StateVector>
+using make_const_nfms_view_ret_t =
+    n_fermion_multisector_view<remove_cvref_t<StateVector> const,
+                               std::is_lvalue_reference<StateVector>::value>;
+
+// Make a constant N-fermion sector view
+template <typename StateVector, typename HSType>
+auto make_const_nfms_view(StateVector&& sv,
+                          HSType const& hs,
+                          std::vector<sector_descriptor<HSType>> const& sectors)
+    -> make_const_nfms_view_ret_t<StateVector> {
+  return make_const_nfms_view_ret_t<StateVector>(std::forward<StateVector>(sv),
+                                                 hs,
+                                                 sectors);
 }
 
 } // namespace libcommute

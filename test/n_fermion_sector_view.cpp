@@ -24,16 +24,17 @@
 #include <cmath>
 #include <numeric>
 #include <stdexcept>
-#include <string>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 using namespace libcommute;
 
-unsigned int count_fermions(sv_index_type n, unsigned int M) {
+// Compute the number of set bits in 'n' among the first 'M' bits
+unsigned int popcount(sv_index_type n, unsigned int M) {
   unsigned int count = 0;
-  while(M > 0) {
+  for(; M > 0; --M) {
     count += n & sv_index_type(1);
-    --M;
     n >>= 1;
   }
   return count;
@@ -65,18 +66,20 @@ TEST_CASE("Implementation details", "[detail]") {
   }
 
   SECTION("n_fermion_sector_params_t") {
+    unsigned int const M = 5;
+
     hs_type hs;
 
-    CHECK_THROWS_AS(n_fermion_sector_params_t(hs, 0), std::runtime_error);
-
     auto check_params = [](n_fermion_sector_params_t const& params,
-                           int M,
+                           unsigned int M,
                            bool count_occupied,
-                           int N_counted) {
+                           unsigned int N_counted) {
       CHECK(params.M == M);
       CHECK(params.count_occupied == count_occupied);
       CHECK(params.N_counted == N_counted);
     };
+
+    check_params(n_fermion_sector_params_t(hs, 0), 0, true, 0);
 
     hs.add(make_space_fermion(0));
 
@@ -85,32 +88,32 @@ TEST_CASE("Implementation details", "[detail]") {
       check_params(n_fermion_sector_params_t(hs, 1), 1, false, 0);
     }
 
-    for(int i : {1, 2, 3, 4})
-      hs.add(make_space_fermion(i));
+    for(unsigned int i = 1; i < M; ++i)
+      hs.add(make_space_fermion(int(i)));
 
     SECTION("Multiple fermions") {
-      check_params(n_fermion_sector_params_t(hs, 0), 5, true, 0);
-      check_params(n_fermion_sector_params_t(hs, 1), 5, true, 1);
-      check_params(n_fermion_sector_params_t(hs, 2), 5, true, 2);
-      check_params(n_fermion_sector_params_t(hs, 3), 5, false, 2);
-      check_params(n_fermion_sector_params_t(hs, 4), 5, false, 1);
-      check_params(n_fermion_sector_params_t(hs, 5), 5, false, 0);
+      check_params(n_fermion_sector_params_t(hs, 0), M, true, 0);
+      check_params(n_fermion_sector_params_t(hs, 1), M, true, 1);
+      check_params(n_fermion_sector_params_t(hs, 2), M, true, 2);
+      check_params(n_fermion_sector_params_t(hs, 3), M, false, 2);
+      check_params(n_fermion_sector_params_t(hs, 4), M, false, 1);
+      check_params(n_fermion_sector_params_t(hs, 5), M, false, 0);
 
-      CHECK_THROWS_AS(n_fermion_sector_params_t(hs, 6), std::runtime_error);
+      CHECK_THROWS_AS(n_fermion_sector_params_t(hs, M + 1), std::runtime_error);
     }
 
     hs.add(make_space_boson(2, 5));
     hs.add(make_space_boson(3, 6));
 
     SECTION("Fermions and bosons") {
-      check_params(n_fermion_sector_params_t(hs, 0), 5, true, 0);
-      check_params(n_fermion_sector_params_t(hs, 1), 5, true, 1);
-      check_params(n_fermion_sector_params_t(hs, 2), 5, true, 2);
-      check_params(n_fermion_sector_params_t(hs, 3), 5, false, 2);
-      check_params(n_fermion_sector_params_t(hs, 4), 5, false, 1);
-      check_params(n_fermion_sector_params_t(hs, 5), 5, false, 0);
+      check_params(n_fermion_sector_params_t(hs, 0), M, true, 0);
+      check_params(n_fermion_sector_params_t(hs, 1), M, true, 1);
+      check_params(n_fermion_sector_params_t(hs, 2), M, true, 2);
+      check_params(n_fermion_sector_params_t(hs, 3), M, false, 2);
+      check_params(n_fermion_sector_params_t(hs, 4), M, false, 1);
+      check_params(n_fermion_sector_params_t(hs, 5), M, false, 0);
 
-      CHECK_THROWS_AS(n_fermion_sector_params_t(hs, 6), std::runtime_error);
+      CHECK_THROWS_AS(n_fermion_sector_params_t(hs, M + 1), std::runtime_error);
     }
 
     SECTION("Purely bosonic Hilbert space") {
@@ -203,22 +206,22 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
   }
 
   SECTION("Construction") {
+    unsigned int const M = 5;
     hs_type hs;
     state_vector st{};
 
-    CHECK_THROWS_AS(n_fermion_sector_view<state_vector>(st, hs, 0),
-                    std::runtime_error);
-
     auto check_view = [](view_type const& view,
-                         int M,
+                         unsigned int M,
                          bool count_occupied,
-                         int N_counted,
-                         int M_nonfermion) {
+                         unsigned int N_counted,
+                         unsigned int M_nonfermion) {
       CHECK(view.M == M);
       CHECK(view.count_occupied == count_occupied);
       CHECK(view.N_counted == N_counted);
       CHECK(view.M_nonfermion == M_nonfermion);
     };
+
+    check_view(view_type(st, hs, 0), 0, true, 0, 0);
 
     hs.add(make_space_fermion(0));
 
@@ -227,16 +230,16 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       check_view(view_type(st, hs, 1), 1, false, 0, 0);
     }
 
-    for(int i : {1, 2, 3, 4})
-      hs.add(make_space_fermion(i));
+    for(unsigned int i = 1; i < M; ++i)
+      hs.add(make_space_fermion(int(i)));
 
     SECTION("Multiple fermions") {
-      check_view(view_type(st, hs, 0), 5, true, 0, 0);
-      check_view(view_type(st, hs, 1), 5, true, 1, 0);
-      check_view(view_type(st, hs, 2), 5, true, 2, 0);
-      check_view(view_type(st, hs, 3), 5, false, 2, 0);
-      check_view(view_type(st, hs, 4), 5, false, 1, 0);
-      check_view(view_type(st, hs, 5), 5, false, 0, 0);
+      check_view(view_type(st, hs, 0), M, true, 0, 0);
+      check_view(view_type(st, hs, 1), M, true, 1, 0);
+      check_view(view_type(st, hs, 2), M, true, 2, 0);
+      check_view(view_type(st, hs, 3), M, false, 2, 0);
+      check_view(view_type(st, hs, 4), M, false, 1, 0);
+      check_view(view_type(st, hs, 5), M, false, 0, 0);
 
       CHECK_THROWS_AS(n_fermion_sector_view<state_vector>(st, hs, 6),
                       std::runtime_error);
@@ -246,54 +249,62 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     hs.add(make_space_boson(3, 6));
 
     SECTION("Fermions and bosons") {
-      check_view(view_type(st, hs, 0), 5, true, 0, 5);
-      check_view(view_type(st, hs, 1), 5, true, 1, 5);
-      check_view(view_type(st, hs, 2), 5, true, 2, 5);
-      check_view(view_type(st, hs, 3), 5, false, 2, 5);
-      check_view(view_type(st, hs, 4), 5, false, 1, 5);
-      check_view(view_type(st, hs, 5), 5, false, 0, 5);
+      unsigned int const M_bosons = hs.algebra_bit_range(boson).second -
+                                    hs.algebra_bit_range(boson).first + 1;
 
-      CHECK_THROWS_AS(n_fermion_sector_view<state_vector>(st, hs, 6),
+      check_view(view_type(st, hs, 0), M, true, 0, M_bosons);
+      check_view(view_type(st, hs, 1), M, true, 1, M_bosons);
+      check_view(view_type(st, hs, 2), M, true, 2, M_bosons);
+      check_view(view_type(st, hs, 3), M, false, 2, M_bosons);
+      check_view(view_type(st, hs, 4), M, false, 1, M_bosons);
+      check_view(view_type(st, hs, 5), M, false, 0, M_bosons);
+
+      CHECK_THROWS_AS(n_fermion_sector_view<state_vector>(st, hs, M + 1),
                       std::runtime_error);
     }
 
     SECTION("Purely bosonic Hilbert space") {
       hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      unsigned int const M_bosons = hs_b.algebra_bit_range(boson).second -
+                                    hs_b.algebra_bit_range(boson).first + 1;
 
-      check_view(view_type(st, hs_b, 0), 0, true, 0, 5);
+      check_view(view_type(st, hs_b, 0), 0, true, 0, M_bosons);
       CHECK_THROWS_AS(view_type(st, hs_b, 1), std::runtime_error);
     }
   }
 
   SECTION("get_element() and update_add_element()") {
-    hs_type hs{make_space_boson(2, 0)};
-    for(int i : {0, 1, 2, 3, 4})
-      hs.add(make_space_fermion(i));
-
+    unsigned int const M = 5;
     unsigned int const N = 2;
+
+    hs_type hs{make_space_boson(2, 0)};
+    for(unsigned int i = 0; i < M; ++i)
+      hs.add(make_space_fermion(int(i)));
 
     state_vector st(n_fermion_sector_size(hs, N));
     std::iota(st.begin(), st.end(), 0);
+
+    // 70 == 10 00110: 2 bosons + fermions in modes 1 and 2 (sector state 4)
+    sv_index_type const index = 70;
+    sv_index_type const sector_index = 2 + (4 << 2);
 
     SECTION("const") {
       auto view = n_fermion_sector_view<state_vector const>(st, hs, N);
 
       CHECK(std::is_same<element_type_t<decltype(view)>, double>::value);
-      // 70 == 10 00110: 2 bosons + fermions in modes 1 and 2 (sector state 4)
-      CHECK(get_element(view, 70) == 2 + (4 << 2));
+      CHECK(get_element(view, index) == sector_index);
     }
 
     SECTION("non-const") {
       auto view = n_fermion_sector_view<state_vector>(st, hs, N);
 
       CHECK(std::is_same<element_type_t<decltype(view)>, double>::value);
-      // 70 == 10 00110: 2 bosons + fermions in modes 1 and 2 (sector state 4)
-      CHECK(get_element(view, 70) == 2 + (4 << 2));
+      CHECK(get_element(view, index) == sector_index);
 
       state_vector st_ref(st.size());
       std::iota(st_ref.begin(), st_ref.end(), 0);
-      st_ref[18] = 15;
-      update_add_element(view, 70, -3);
+      st_ref[sector_index] = sector_index - 3;
+      update_add_element(view, index, -3);
       CHECK(st == st_ref);
 
       set_zeros(view);
@@ -306,24 +317,30 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     state_vector st{};
 
     hs_type hs;
+
+    // Check that values returned by map_index() form a continuous sequence
+    // starting at 0
+    auto check_map_index =
+        [&hs](view_type const& view, unsigned int M, unsigned int N) {
+          std::vector<sv_index_type> mapped_indices;
+          for(sv_index_type index = 0; index < hs.dim(); ++index) {
+            if(popcount(index, M) == N) {
+              mapped_indices.push_back(view.map_index(index));
+            }
+          }
+          std::sort(mapped_indices.begin(), mapped_indices.end());
+          std::vector<sv_index_type> mapped_indices_ref(
+              n_fermion_sector_size(hs, N));
+          std::iota(mapped_indices_ref.begin(), mapped_indices_ref.end(), 0);
+          CHECK(mapped_indices == mapped_indices_ref);
+        };
+
     for(unsigned int i = 0; i < M; ++i)
       hs.add(make_space_fermion(int(i)));
 
     SECTION("Purely fermionic Hilbert spaces") {
       for(unsigned int N = 0; N <= M; ++N) {
-        auto view = view_type(st, hs, N);
-
-        std::vector<sv_index_type> mapped_indices;
-        for(sv_index_type index = 0; index < hs.dim(); ++index) {
-          if(count_fermions(index, M) == N) {
-            mapped_indices.push_back(view.map_index(index));
-          }
-        }
-        std::sort(mapped_indices.begin(), mapped_indices.end());
-        std::vector<sv_index_type> mapped_indices_ref(
-            n_fermion_sector_size(hs, N));
-        std::iota(mapped_indices_ref.begin(), mapped_indices_ref.end(), 0);
-        CHECK(mapped_indices == mapped_indices_ref);
+        check_map_index(view_type(st, hs, N), M, N);
       }
     }
 
@@ -332,19 +349,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= M; ++N) {
-        auto view = view_type(st, hs, N);
-
-        std::vector<sv_index_type> mapped_indices;
-        for(sv_index_type index = 0; index < hs.dim(); ++index) {
-          if(count_fermions(index, M) == N) {
-            mapped_indices.push_back(view.map_index(index));
-          }
-        }
-        std::sort(mapped_indices.begin(), mapped_indices.end());
-        std::vector<sv_index_type> mapped_indices_ref(
-            n_fermion_sector_size(hs, N));
-        std::iota(mapped_indices_ref.begin(), mapped_indices_ref.end(), 0);
-        CHECK(mapped_indices == mapped_indices_ref);
+        check_map_index(view_type(st, hs, N), M, N);
       }
     }
 
@@ -359,13 +364,30 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
   }
 
   SECTION("foreach()") {
-    // foreach() implements a mapping of the sector basis states to the full
-    // Hilbert space basis states. Here we check that the mapping is the inverse
-    // of map_index().
-
     unsigned int const M = 8;
 
     hs_type hs;
+
+    // foreach() implements a mapping of the sector basis states to the full
+    // Hilbert space basis states. Here we check that the mapping is the inverse
+    // of map_index().
+    auto check_foreach = [](view_type const& view, state_vector& st) {
+      // Start from 1 so that none of st's elements is vanishing
+      std::iota(st.begin(), st.end(), 1);
+      sv_index_type count = 0;
+      foreach(view, [&](sv_index_type index, double a) {
+        CHECK(sv_index_type(a) == view.map_index(index) + 1);
+        ++count;
+      });
+      // Check that all elements of 'st' have been processed
+      CHECK(count == st.size());
+    };
+
+    SECTION("Empty Hilbert space") {
+      state_vector st{};
+      foreach(view_type(st, hs, 0),
+              [](sv_index_type, double) { CHECK(false); });
+    }
 
     for(unsigned int i = 0; i < M; ++i)
       hs.add(make_space_fermion(int(i)));
@@ -373,17 +395,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     SECTION("Purely fermionic Hilbert spaces") {
       for(unsigned int N = 0; N <= M; ++N) {
         state_vector st(n_fermion_sector_size(hs, N));
-        auto view = view_type(st, hs, N);
-
-        for(sv_index_type index = 0; index < hs.dim(); ++index) {
-          if(count_fermions(index, M) == N) {
-            // Add 1 here so that none of st's elements is zero
-            st[view.map_index(index)] = static_cast<double>(index) + 1;
-          }
-        }
-        foreach(view, [](sv_index_type index, double a) {
-          CHECK(sv_index_type(a) == index + 1);
-        });
+        check_foreach(view_type(st, hs, N), st);
       }
     }
 
@@ -393,17 +405,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= M; ++N) {
         state_vector st(n_fermion_sector_size(hs, N));
-        auto view = view_type(st, hs, N);
-
-        for(sv_index_type index = 0; index < hs.dim(); ++index) {
-          if(count_fermions(index, M) == N) {
-            // Add 1 here so that none of st's elements is zero
-            st[view.map_index(index)] = static_cast<double>(index) + 1;
-          }
-        }
-        foreach(view, [](sv_index_type index, double a) {
-          CHECK(sv_index_type(a) == index + 1);
-        });
+        check_foreach(view_type(st, hs, N), st);
       }
     }
 
@@ -411,32 +413,24 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
 
       state_vector st(n_fermion_sector_size(hs_b, 0));
-      auto view = view_type(st, hs_b, 0);
-
-      for(sv_index_type index = 0; index < hs_b.dim(); ++index) {
-        // Add 1 here so that none of st's elements is zero
-        st[view.map_index(index)] = static_cast<double>(index) + 1;
-      }
-      foreach(view, [](sv_index_type index, double a) {
-        CHECK(sv_index_type(a) == index + 1);
-      });
+      check_foreach(view_type(st, hs_b, 0), st);
     }
   }
 
   SECTION("n_fermion_sector_basis_states()") {
     unsigned int const M = 8;
-    state_vector st;
+    state_vector st{};
 
     hs_type hs;
 
-    CHECK_THROWS_AS(n_fermion_sector_basis_states(hs, 0), std::runtime_error);
+    CHECK(n_fermion_sector_basis_states(hs, 0) == std::vector<sv_index_type>{});
     CHECK_THROWS_AS(n_fermion_sector_basis_states(hs, 1), std::runtime_error);
 
     auto build_basis_states_ref = [&st](hs_type const& hs, unsigned int N) {
       auto view = view_type(st, hs, N);
       std::vector<sv_index_type> basis_states(n_fermion_sector_size(hs, N));
       for(sv_index_type index = 0; index < hs.dim(); ++index) {
-        if(count_fermions(index, M) == N) {
+        if(popcount(index, M) == N) {
           basis_states[view.map_index(index)] = index;
         }
       }
@@ -448,9 +442,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
 
     SECTION("Purely fermionic Hilbert spaces") {
       for(unsigned int N = 0; N <= M; ++N) {
-        auto basis_states_ref = build_basis_states_ref(hs, N);
-        auto basis_states = n_fermion_sector_basis_states(hs, N);
-        CHECK(basis_states == basis_states_ref);
+        auto ref = build_basis_states_ref(hs, N);
+        CHECK(n_fermion_sector_basis_states(hs, N) == ref);
       }
     }
 
@@ -459,9 +452,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= M; ++N) {
-        auto basis_states_ref = build_basis_states_ref(hs, N);
-        auto basis_states = n_fermion_sector_basis_states(hs, N);
-        CHECK(basis_states == basis_states_ref);
+        auto ref = build_basis_states_ref(hs, N);
+        CHECK(n_fermion_sector_basis_states(hs, N) == ref);
       }
     }
 
@@ -471,19 +463,17 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       CHECK_THROWS_AS(n_fermion_sector_basis_states(hs_b, 1),
                       std::runtime_error);
 
-      std::vector<sv_index_type> basis_states_ref(
-          n_fermion_sector_size(hs_b, 0));
-      std::iota(basis_states_ref.begin(), basis_states_ref.end(), 0);
+      std::vector<sv_index_type> ref(n_fermion_sector_size(hs_b, 0));
+      std::iota(ref.begin(), ref.end(), 0);
 
-      auto basis_states = n_fermion_sector_basis_states(hs_b, 0);
-      CHECK(basis_states == basis_states_ref);
+      CHECK(n_fermion_sector_basis_states(hs_b, 0) == ref);
     }
   }
 
   SECTION("make_nfs_view() and make_const_nfs_view()") {
     hs_type hs{make_space_fermion(0), make_space_fermion(1)};
 
-    state_vector st;
+    state_vector st{};
 
     state_vector& st_ref = st;
     state_vector const& st_cref = st;
@@ -524,9 +514,12 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
   }
 
   SECTION("loperator") {
+    unsigned int const M = 5;
+
     hs_type hs{make_space_boson(2, 0)};
-    for(int i : {0, 1, 2, 3, 4})
-      hs.add(make_space_fermion(i));
+
+    for(unsigned int i = 0; i < M; ++i)
+      hs.add(make_space_fermion(int(i)));
 
     auto H = (n(0) + n(1) + n(2) + n(3) + n(4)) * (a_dag(0) + a(0));
     auto Hop = make_loperator(H, hs);
@@ -553,100 +546,5 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
           N * std::sqrt(2);
       CHECK_THAT(out, Catch::Matchers::Approx(out_ref));
     }
-  }
-}
-
-TEST_CASE("View of a state vector projected on a direct product of "
-          "multiple N-fermion sectors",
-          "[n_fermion_multisector_view]") {
-
-  using namespace static_indices;
-
-  using hs_type = hilbert_space<int>;
-  using sd_type = sector_descriptor<hs_type>;
-
-  // The multisector used in this test case is a product of two M = 4 sectors
-  // within a full fermionic M = 11 range.
-  //
-  // Sector 1: (1,2,6,7)
-  // Sector 2: (3,4,8,9)
-
-  int const M_total = 11;
-
-  auto sd0 = sd_type{{}, 0};
-  auto sd1 = [](unsigned int N) { return sd_type{{{1}, {2}, {6}, {7}}, N}; };
-  auto sd2 = [](unsigned int N) { return sd_type{{{3}, {4}, {8}, {9}}, N}; };
-
-  SECTION("n_fermion_multisector_size") {
-    hs_type hs;
-
-    // Empty Hilbert space
-    CHECK(n_fermion_multisector_size(hs, {}) == 0);
-    CHECK_THROWS_AS(n_fermion_multisector_size(hs, {sd1(1)}),
-                    std::runtime_error);
-
-    // Purely fermionic Hilbert spaces
-    for(int i = 0; i < M_total; ++i)
-      hs.add(make_space_fermion(i));
-
-    CHECK_THROWS_AS(n_fermion_multisector_size(hs, {sd1(2), sd_type{{{6}}, 1}}),
-                    std::runtime_error);
-
-    std::vector<sv_index_type> sector_sizes_ref = {1, 4, 6, 4, 1};
-
-    CHECK(n_fermion_multisector_size(hs, {}) == 2048); // No sectors
-    // One sector
-    for(unsigned int N = 0; N <= 4; ++N) {
-      CHECK(n_fermion_multisector_size(hs, {sd1(N)}) ==
-            sector_sizes_ref[N] * 128);
-      CHECK(n_fermion_multisector_size(hs, {sd2(N)}) ==
-            sector_sizes_ref[N] * 128);
-    }
-    // Two sectors
-    for(unsigned int N1 = 0; N1 <= 4; ++N1) {
-      for(unsigned int N2 = 0; N2 <= 4; ++N2) {
-        CHECK(n_fermion_multisector_size(hs, {sd1(N1), sd2(N2)}) ==
-              sector_sizes_ref[N1] * sector_sizes_ref[N2] * 8);
-      }
-    }
-    // Mixture with the empty sector
-    for(unsigned int N = 0; N <= 4; ++N) {
-      CHECK(n_fermion_multisector_size(hs, {sd1(N), sd0}) ==
-            sector_sizes_ref[N] * 128);
-      CHECK(n_fermion_multisector_size(hs, {sd2(N), sd0}) ==
-            sector_sizes_ref[N] * 128);
-    }
-
-    // Fermions and bosons
-    hs.add(make_space_boson(2, 0));
-
-    CHECK(n_fermion_multisector_size(hs, {}) == 8192); // No sectors
-    // One sector
-    for(unsigned int N = 0; N <= 4; ++N) {
-      CHECK(n_fermion_multisector_size(hs, {sd1(N)}) ==
-            sector_sizes_ref[N] * 512);
-      CHECK(n_fermion_multisector_size(hs, {sd2(N)}) ==
-            sector_sizes_ref[N] * 512);
-    }
-    // Two sectors
-    for(unsigned int N1 = 0; N1 <= 4; ++N1) {
-      for(unsigned int N2 = 0; N2 <= 4; ++N2) {
-        CHECK(n_fermion_multisector_size(hs, {sd1(N1), sd2(N2)}) ==
-              sector_sizes_ref[N1] * sector_sizes_ref[N2] * 32);
-      }
-    }
-    // Mixture with the empty sector
-    for(unsigned int N = 0; N <= 4; ++N) {
-      CHECK(n_fermion_multisector_size(hs, {sd1(N), sd0}) ==
-            sector_sizes_ref[N] * 512);
-      CHECK(n_fermion_multisector_size(hs, {sd2(N), sd0}) ==
-            sector_sizes_ref[N] * 512);
-    }
-
-    // Purely bosonic Hilbert space
-    hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
-    CHECK(n_fermion_multisector_size(hs_b, {}) == 32);
-    CHECK_THROWS_AS(n_fermion_multisector_size(hs_b, {sd1(1)}),
-                    std::runtime_error);
   }
 }
