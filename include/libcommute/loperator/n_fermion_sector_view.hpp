@@ -136,35 +136,31 @@ private:
   }
 };
 
-// This generator object uses a non-recursive procedure to enumerate all basis
-// state indices in a (pure) N-fermion sector. It does heavy lifting for
-// foreach() and n_fermion_sector_basis_states().
-struct n_fermion_sector_basis_generator {
+// This object uses a non-recursive procedure to generate all restricted N-part
+// compositions of an integer.
+// It does heavy lifting for foreach() and n_fermion_sector_basis_states().
+struct for_each_composition {
 
-  // Total number of fermionic modes
+  // Parameters of the sector
   n_fermion_sector_params_t const& params;
 
   // Restricted partition of M
-  std::vector<unsigned int> lambdas;
+  std::vector<unsigned int> mutable lambdas;
 
   // Upper bounds for elements of 'lambdas'
-  std::vector<unsigned int> lambdas_max;
+  std::vector<unsigned int> mutable lambdas_max;
 
-  // XOR-mask used when counting unoccupied states
-  const sv_index_type index_mask;
-
-  inline explicit n_fermion_sector_basis_generator(
+  inline explicit for_each_composition(
       n_fermion_sector_params_t const& params)
     : params(params),
       lambdas(params.N_counted, 0),
-      lambdas_max(params.N_counted, params.M - (params.N_counted - 1)),
-      index_mask(params.count_occupied ? sv_index_type(0) :
-                                         (pow2(params.M) - 1)) {}
+      lambdas_max(params.N_counted, params.M - (params.N_counted - 1))
+  {}
 
-  // Apply 'f' to each sector basis state
-  template <typename F> void operator()(F&& f) {
+  // Apply 'f' to each composition
+  template <typename F> void operator()(F&& f) const {
     if(params.N_counted == 0) {
-      f(sv_index_type(0) ^ index_mask);
+      f(lambdas);
       return;
     }
 
@@ -180,21 +176,45 @@ struct n_fermion_sector_basis_generator {
       }
 
       if(static_cast<unsigned int>(i) + 1 == lambdas.size()) {
-        sv_index_type index = 0;
-        std::for_each(lambdas.rbegin(),
-                      lambdas.rend(),
-                      [&index](unsigned int lambda) {
-                        index <<= 1;
-                        index += 1;
-                        index <<= lambda - 1;
-                      });
-        f(index ^ index_mask);
+        f(lambdas);
       } else {
         ++i;
         lambdas[i] = 0;
         lambdas_max[i] = lambdas_max[i - 1] + 1 - lambdas[i - 1];
       }
     }
+  }
+};
+
+// Combine a composition {\lambda_i} and a basis state index from
+// the non-fermionic subspace into the sector basis state index
+struct composition_to_sector_index {
+
+  // Parameters of the sector
+  n_fermion_sector_params_t const& params;
+
+  // XOR-mask used when counting unoccupied states
+  sv_index_type const index_mask;
+
+  explicit composition_to_sector_index(n_fermion_sector_params_t const& params) :
+    params(params),
+    index_mask(params.count_occupied ? sv_index_type(0) : (pow2(params.M) - 1))
+  {}
+
+  inline sv_index_type operator()(std::vector<unsigned int> const& lambdas,
+                                  sv_index_type index_nf) const {
+    sv_index_type index_f = 0;
+    if(params.N_counted != 0) {
+      std::for_each(lambdas.rbegin(),
+                    lambdas.rend(),
+                    [&index_f](unsigned int lambda) {
+                      index_f <<= 1;
+                      index_f += 1;
+                      index_f <<= lambda - 1;
+                    });
+
+    }
+    return (index_f ^ index_mask) + (index_nf << params.M);
   }
 };
 
@@ -229,9 +249,10 @@ struct n_fermion_sector_view : public detail::n_fermion_sector_params_t {
   // Number of bits corresponding to the non-fermionic modes
   unsigned int M_nonfermion;
 
-  // Although this object is not used by this class' methods, storing it here
-  // allows to eliminate memory allocations in foreach().
-  mutable detail::n_fermion_sector_basis_generator basis_generator;
+  // Although the following two objects are not used by this class' methods,
+  // storing them here allows to eliminate memory allocations in foreach().
+  detail::for_each_composition for_each_comp;
+  detail::composition_to_sector_index comp_to_index;
 
   using scalar_type = typename element_type<
       typename std::remove_const<StateVector>::type>::type;
@@ -242,7 +263,8 @@ struct n_fermion_sector_view : public detail::n_fermion_sector_params_t {
       state_vector(std::forward<SV>(sv)),
       binomial_sum(M, N_counted),
       M_nonfermion(hs.total_n_bits() - M),
-      basis_generator(*this) {}
+      for_each_comp(*this),
+      comp_to_index(*this) {}
 
   sv_index_type map_index(sv_index_type index) const {
     unsigned int m = M;
@@ -333,7 +355,7 @@ inline void foreach(n_fermion_sector_view<StateVector, Ref> const& view,
                     Functor&& f) {
   auto dim_nonfermion = detail::pow2(view.M_nonfermion);
   sv_index_type sector_index = 0;
-  view.basis_generator([&](sv_index_type index_f) {
+  view.for_each_comp([&](std::vector<unsigned int> const& lambdas) {
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
 
       // Emulate decltype(auto)
@@ -346,7 +368,7 @@ inline void foreach(n_fermion_sector_view<StateVector, Ref> const& view,
       if(scalar_traits<T>::is_zero(a))
         continue;
       else
-        f(index_f + (index_nf << view.M), a);
+        f(view.comp_to_index(lambdas, index_nf), a);
     }
   });
 }
@@ -357,16 +379,17 @@ template <typename HSType>
 inline std::vector<sv_index_type>
 n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
   detail::n_fermion_sector_params_t params(hs, N);
-  detail::n_fermion_sector_basis_generator gen(params);
+  detail::for_each_composition for_each_comp(params);
+  detail::composition_to_sector_index comp_to_index(params);
 
   unsigned int M_nonfermion = hs.total_n_bits() - params.M;
   sv_index_type dim_nonfermion = detail::pow2(M_nonfermion);
 
   std::vector<sv_index_type> basis_states;
   basis_states.reserve(detail::binomial(params.M, N) * dim_nonfermion);
-  gen([&](sv_index_type index_f) {
+  for_each_comp([&](std::vector<unsigned int> const& lambdas) {
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
-      basis_states.push_back(index_f + (index_nf << params.M));
+      basis_states.push_back(comp_to_index(lambdas, index_nf));
     }
   });
 
