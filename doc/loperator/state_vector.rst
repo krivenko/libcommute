@@ -42,7 +42,7 @@ metafunction) that needs be implemented for an object :expr:`sv` of type
     - Description
     - Implementation for :expr:`std::vector<T>`
   * - :expr:`element_type<SV>::type`
-    - The type of the elements.
+    - Type of the elements.
     - :expr:`T`
 
   * - :expr:`get_element(sv, n)`
@@ -50,11 +50,11 @@ metafunction) that needs be implemented for an object :expr:`sv` of type
     - :expr:`sv[n]`
 
   * - :expr:`update_add_element(sv, n, value)`
-    - Add a value of some type :type:`T` to the :expr:`n`-th element of
+    - Add a value of some type :type:`U` to the :expr:`n`-th element of
       :expr:`sv`.
     - :expr:`sv[n] += value` or :expr:`sv[n] = sv[n] + value`
 
-      The compound-assignment from type :expr:`T` will be used
+      The compound-assignment from type :type:`U` will be used
       whenever :expr:`sv`'s elements support it. Otherwise, the implementation
       will fall back to the simple addition.
 
@@ -145,9 +145,9 @@ Mapped basis view
 
 :class:`mapped_basis_view` is another utility type modelling the ``StateVector``
 concept. It is a view of a state vector, which translates basis state
-index arguments of :expr:`get_element()` and :expr:`update_add_element()`
-according to a predefined map :expr:`sv_index_type` -> :expr:`sv_index_type`.
-The element access functions throw :expr:`std::out_of_range` if their index
+index arguments of :func:`get_element()` and :func:`update_add_element()`
+according to a predefined map :type:`sv_index_type` -> :type:`sv_index_type`.
+The element access functions throw :type:`std::out_of_range` if their index
 argument is missing from the map.
 
 :class:`mapped_basis_view` can be used in situations
@@ -177,7 +177,7 @@ that subspace. Such a situation naturally emerges when working with
 
 The mapped basis views should always be constructed by means of a special
 factory class :class:`basis_mapper` and its methods
-:func:`make_view()`/:func:`make_const_view()`.
+:func:`basis_mapper:: make_view()`/:func:`basis_mapper::make_const_view()`.
 
 .. class:: basis_mapper
 
@@ -284,3 +284,202 @@ factory class :class:`basis_mapper` and its methods
     Build and return an inverse index map. Depending on map's size, building
     the inverse can be an expensive operation. Calling this method on a
     non-invertible map is undefined behavior.
+
+.. _n_fermion_sector_view:
+
+N-fermion sector views
+----------------------
+
+There are two more specialized flavours of the basis mapping views called
+:math:`N`-fermion sector views and :math:`N`-fermion multisector views. They
+can come in handy when working with particle-number preserving models of
+fermions. If the model is large, then generating and storing a basis state index
+map for :type:`mapped_basis_view` may become too expensive.
+
+.. class:: template<typename StateVector, bool Ref = true> n_fermion_sector_view
+
+  *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
+
+  View of a :type:`StateVector` object that translates basis state indices from
+  a full :ref:`Hilbert space <hilbert_space>` to its subspace (sector) with a
+  fixed total occupation of fermionic degrees of freedom :math:`N`. The full
+  Hilbert space does not have to be purely fermionic.
+
+  :type:`n_fermion_sector_view` is generally less performant than
+  :type:`mapped_basis_view` in terms of the index translation speed. However,
+  its required storage space scales only as :math:`O(M \min(N, M - N))`, where
+  :math:`M` is the total number of the fermionic degrees of freedom. This
+  scaling law is much milder that the exponential growth of the sector size.
+
+  :type:`StateVector` - type of the underlying state vector object. Defining a
+  read-only view (such that prohibits :expr:`update_add_element()` operations)
+  requires using a ``const``-qualified type here. For example, one can use
+  ``StateVector = std::vector<double>`` for a read-write view, and
+  ``StateVector = const std::vector<double>`` for a read-only view.
+
+  .. _n_fermion_sector_view_Ref:
+
+  :type:`Ref` - by default, :type:`n_fermion_sector_view`
+  stores a reference to the underlying state vector. Setting this option to
+  ``false`` will result in a copy being created and stored instead. This feature
+  can be useful when the underlying type is already a view-like object similar
+  to ``Eigen::Map``.
+
+  .. function:: template <typename SV, typename HSType> \
+                         n_fermion_sector_view(SV&& sv, \
+                         HSType const& hs, unsigned int N)
+
+    Construct a view of the state vector :expr:`sv`, defined in the
+    :expr:`N`-fermion sector of the full Hilbert space :expr:`hs`.
+
+  .. function:: sv_index_type map_index(sv_index_type index) const
+
+    Translate a basis state :expr:`index` from the full Hilbert space to the
+    sector.
+
+.. struct:: template <typename HSType> sector_descriptor
+
+  Description of an :math:`N`-fermion sector defined over a subset of fermionic
+  degrees of freedom.
+
+  :type:`HSType` - type of the full Hilbert space this sector belongs to.
+
+  .. member:: std::set<typename HSType::index_types> indices
+
+    Set of indices corresponding to the relevant fermionic degrees of freedom.
+
+  .. member:: unsigned int N
+
+    Total occupation of the sector.
+
+.. class:: template<typename StateVector, bool Ref = true> \
+           n_fermion_multisector_view
+
+  *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
+
+  View of a :type:`StateVector` object that translates basis state indices from
+  a full :ref:`Hilbert space <hilbert_space>` to an :math:`N`-fermion
+  multisector. A multisector is a set of all basis states, which have
+  :math:`N_1` particles within a subset of fermionic modes :math:`\{S_1\}`,
+  :math:`N_2` particles within another subset :math:`\{S_2\}` and so on. There
+  can be any number of individual pairs :math:`(\{S_i\}, N_i)` (sectors
+  contributing to the multisector) as long as all subsets :math:`\{S_i\}` are
+  disjoint. The full Hilbert space does not have to be purely fermionic.
+
+  :type:`n_fermion_multisector_view` is generally less performant than
+  :type:`mapped_basis_view` in terms of the index translation speed. However,
+  its required storage space scales only as
+  :math:`O(\sum_i M_i \min(N_i, M_i - N_i))`, where
+  :math:`M_i = |\{S_i\}|`. This scaling law is much milder that the exponential
+  growth of the multisector size.
+
+  It is advised to use :type:`n_fermion_sector_view` instead, if there is only
+  one contributing sector that also spans all fermionic degrees of freedom.
+
+  :type:`StateVector` - type of the underlying state vector object. Defining a
+  read-only view (such that prohibits :expr:`update_add_element()` operations)
+  requires using a ``const``-qualified type here. For example, one can use
+  ``StateVector = std::vector<double>`` for a read-write view, and
+  ``StateVector = const std::vector<double>`` for a read-only view.
+
+  .. _n_fermion_multisector_view_Ref:
+
+  :type:`Ref` - by default, :type:`n_fermion_multisector_view`
+  stores a reference to the underlying state vector. Setting this option to
+  ``false`` will result in a copy being created and stored instead. This feature
+  can be useful when the underlying type is already a view-like object similar
+  to ``Eigen::Map``.
+
+  .. function:: template <typename SV, typename HSType> \
+                n_fermion_multisector_view(SV&& sv, HSType const& hs, \
+                std::vector<sector_descriptor<HSType>> const& sectors)
+
+    Construct a view of the state vector :expr:`sv`, defined in the
+    :math:`N`-fermion multisector of the full Hilbert space :expr:`hs`.
+    The multisector is defined via a list of contributing :expr:`sectors`
+    (list of :math:`(\{S_i\}, N_i)` pairs).
+
+  .. function:: sv_index_type map_index(sv_index_type index) const
+
+    Translate a basis state :expr:`index` from the full Hilbert space to the
+    multisector.
+
+Besides :class:`n_fermion_sector_view` and :class:`n_fermion_multisector_view`,
+*<libcommute/loperator/n_fermion_sector_view.hpp>* defines a few supplemental
+utility functions that help working with (multi)sectors.
+
+.. function:: template <typename StateVector, typename HSType> \
+              auto make_nfs_view(StateVector&& sv, HSType const& hs, \
+              unsigned int N)
+              template <typename StateVector, typename HSType> \
+              auto make_const_nfs_view(StateVector&& sv, HSType const& hs, \
+              unsigned int N)
+
+  Make and return a read/write or constant :expr:`N`-fermion sector view of
+  :expr:`sv` within the full Hilbert space :expr:`hs`. If :expr:`sv` is not an
+  lvalue reference, the resulting view will
+  :ref:`hold a copy <n_fermion_sector_view_Ref>` of :expr:`sv`.
+
+.. function:: template <typename StateVector, typename HSType> \
+              auto make_nfms_view(StateVector&& sv, HSType const& hs, \
+              std::vector<sector_descriptor<HSType>> const& sectors)
+              template <typename StateVector, typename HSType> \
+              auto make_const_nfms_view(StateVector&& sv, HSType const& hs, \
+              std::vector<sector_descriptor<HSType>> const& sectors)
+
+  Make and return a read/write or constant :math:`N`-fermion multisector view of
+  :expr:`sv` within the full Hilbert space :expr:`hs`. The multisector is
+  defined via a list of contributing :expr:`sectors` (list of
+  :math:`(\{S_i\}, N_i)` pairs). If :expr:`sv` is not an lvalue reference,
+  the resulting view will
+  :ref:`hold a copy <n_fermion_sector_view_Ref>` of :expr:`sv`.
+
+.. function:: template <typename HSType> sv_index_type \
+              n_fermion_sector_size(HSType const& hs, unsigned int N)
+
+  Size of the :expr:`N`-fermion sector within the full Hilbert space :expr:`hs`.
+
+.. function:: template <typename HSType> sv_index_type \
+              n_fermion_multisector_size(HSType const& hs, \
+              std::vector<sector_descriptor<HSType>> const& sectors)
+
+  Size of the :math:`N`-fermion multisector within the full Hilbert space
+  :expr:`hs`. The multisector is defined via a list of contributing
+  :expr:`sectors` (list of :math:`(\{S_i\}, N_i)` pairs).
+
+.. function:: template <typename HSType> std::vector<sv_index_type> \
+              n_fermion_sector_basis_states(HSType const& hs, unsigned int N)
+
+  Build and return a list of basis state indices forming the :expr:`N`-fermion
+  sector within the full Hilbert space :expr:`hs`. The order of the indices in
+  the list is consistent with the results of
+  :func:`n_fermion_sector_view::map_index()`.
+
+  .. code-block:: cpp
+
+    auto basis_states = n_fermion_sector_basis_states(hs, N);
+    auto view = n_fermion_sector_view(st, hs, N);
+
+    for(sv_index_type n = 0; n < basis_states.size(); ++n) {
+      view.map_index(basis_states[n]) == n; // true for all n
+    }
+
+.. function:: template <typename HSType> std::vector<sv_index_type> \
+              n_fermion_multisector_basis_states(HSType const& hs, \
+              std::vector<sector_descriptor<HSType>> const& sectors)
+
+  Build and return a list of basis state indices forming an :math:`N`-fermion
+  multisector within the full Hilbert space :expr:`hs`. The multisector is
+  defined via a list of contributing :expr:`sectors` (list of
+  :math:`(\{S_i\}, N_i)` pairs). The order of the indices in the list is
+  consistent with the results of
+  :func:`n_fermion_multisector_view::map_index()`.
+
+  .. code-block:: cpp
+
+    auto basis_states = n_fermion_multisector_basis_states(hs, sectors);
+    auto view = n_fermion_multisector_view(st, hs, sectors);
+
+    for(sv_index_type n = 0; n < basis_states.size(); ++n) {
+      view.map_index(basis_states[n]) == n; // true for all n
+    }
