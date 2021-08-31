@@ -644,10 +644,11 @@ private:
         }
       };
 
+      std::size_t n_max = m.size() - 1;
       bool is_swapped = false;
       do {
         is_swapped = false;
-        for(std::size_t n = 1; n < m.size(); ++n) {
+        for(std::size_t n = 1; n <= n_max; ++n) {
           // Pick a pair of generators in m, m[n-1] and m[n]
           generator_t const& prev_gen = m[n - 1];
           generator_t const& cur_gen = m[n];
@@ -674,6 +675,7 @@ private:
             }
           }
         }
+        --n_max;
       } while(is_swapped);
 
       // Check that coefficient in front of this monomial is not zero
