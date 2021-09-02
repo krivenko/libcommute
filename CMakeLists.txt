@@ -81,6 +81,20 @@ if(Eigen3_FOUND)
     set(Eigen3_VERSION "${EIGEN3_VERSION_STRING}")
   endif(NOT Eigen3_VERSION)
   message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
+
+  macro(link_to_eigen3 target)
+    if(TARGET Eigen3::Eigen)
+      target_link_libraries(${target} PRIVATE Eigen3::Eigen)
+    else(TARGET Eigen3::Eigen)
+      target_compile_definitions(${target} PRIVATE ${EIGEN3_DEFINITIONS})
+      target_include_directories(${target}
+                                 SYSTEM PRIVATE ${EIGEN3_INCLUDE_DIRS})
+    endif(TARGET Eigen3::Eigen)
+    if(NOT ${Eigen3_VERSION} VERSION_LESS "3.3.0")
+      target_compile_definitions(${target}
+                                 PRIVATE EIGEN_CAN_MIX_REAL_COMPLEX_EXPR)
+    endif(NOT ${Eigen3_VERSION} VERSION_LESS "3.3.0")
+  endmacro(link_to_eigen3)
 endif(Eigen3_FOUND)
 
 # Build documentation

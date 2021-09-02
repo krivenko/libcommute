@@ -71,7 +71,7 @@ int main() {
         for(int jx = 0; jx < Nx; ++jx) {
           for(int jy = 0; jy < Ny; ++jy) {
             // Skip all pairs of lattice sites (ix,iy) and (jx,jy) that are
-            // not nearest-neighbors.
+            // not nearest neighbors.
             if((std::abs(ix - jx) % Nx == 1 && iy == jy) ||
                (ix == jx && std::abs(iy - jy) % Ny == 1)) {
               // Add a hopping term

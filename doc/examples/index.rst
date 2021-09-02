@@ -11,3 +11,4 @@ Advanced examples
     heisenberg_chain
     parametric_loperator
     virasoro_algebra
+    n_fermion_sectors
