@@ -30,7 +30,7 @@ lattice with only nearest-neighbour hopping allowed,
 
 .. literalinclude:: ../../examples/holstein.cpp
   :language: cpp
-  :lines: 18-68
+  :lines: 22-73
 
 Now, let us add a harmonic oscillator at each lattice site (a localized phonon),
 
@@ -40,7 +40,7 @@ Now, let us add a harmonic oscillator at each lattice site (a localized phonon),
 
 .. literalinclude:: ../../examples/holstein.cpp
   :language: cpp
-  :lines: 70-90
+  :lines: 75-95
 
 .. note::
 
@@ -65,7 +65,7 @@ Hamiltonian of the Holstein model :math:`\hat H_H`,
 
 .. literalinclude:: ../../examples/holstein.cpp
   :language: cpp
-  :lines: 92-
+  :lines: 97-
 
 Now that we have the complete Hamiltonian object, we could proceed along one
 of the following routes.

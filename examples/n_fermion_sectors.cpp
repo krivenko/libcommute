@@ -61,6 +61,15 @@ int main() {
   using static_indices::c;     // Destroy an electron
   using static_indices::n;     // Number of electrons
 
+  // Are two sites neighbors along the x-axis with periodicity?
+  auto neighbors_x = [Nx](int ix, int jx) {
+    return std::abs(ix - jx) == 1 || std::abs(ix - jx) == Nx - 1;
+  };
+  // Are two sites neighbors along the y-axis with periodicity?
+  auto neighbors_y = [Ny](int iy, int jy) {
+    return std::abs(iy - jy) == 1 || std::abs(iy - jy) == Ny - 1;
+  };
+
   // Hopping terms of H
   for(auto spin : {"up", "down"}) {
     for(int ix = 0; ix < Nx; ++ix) {
@@ -69,8 +78,8 @@ int main() {
           for(int jy = 0; jy < Ny; ++jy) {
             // Skip all pairs of lattice sites (ix,iy) and (jx,jy)
             // that are not nearest neighbors.
-            if((std::abs(ix - jx) % Nx == 1 && iy == jy) ||
-               (ix == jx && std::abs(iy - jy) % Ny == 1)) {
+            if((neighbors_x(ix, jx) && iy == jy) ||
+               (ix == jx && neighbors_y(iy, jy))) {
               // Add a hopping term
               H += -t * c_dag(ix, iy, spin) * c(jx, jy, spin);
             }

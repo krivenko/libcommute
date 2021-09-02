@@ -29,7 +29,7 @@ int main() {
   //
 
   // Number of lattice sites in each direction
-  // (the total number of sites is N*N)
+  // (the total number of sites is N * N)
   int const N = 10;
 
   // Electron hopping constant - energy parameter of the TB model
@@ -45,6 +45,11 @@ int main() {
   using libcommute::static_indices::c_dag;
   using libcommute::static_indices::c;
 
+  // Are two sites neighbors along an axis with periodicity?
+  auto neighbors = [N](int i, int j) {
+    return std::abs(i - j) == 1 || std::abs(i - j) == N;
+  };
+
   // Iterate over spin projections
   for(auto spin : {"up", "down"}) {
     // Iterate over all lattice sites with coordinates i = (ix, iy)
@@ -56,8 +61,8 @@ int main() {
             // Skip all pairs of lattice sites i and j that are not
             // nearest-neighbors. The modulus operation accounts for
             // periodic boundary conditions on the lattice.
-            if((std::abs(ix - jx) % N == 1 && iy == jy) ||
-               (ix == jx && std::abs(iy - jy) % N == 1)) {
+            if((neighbors(ix, jx) && iy == jy) ||
+               (ix == jx && neighbors(iy, jy))) {
               // Add a hopping term
               H_e += -t * c_dag(ix, iy, spin) * c(jx, jy, spin);
             }
