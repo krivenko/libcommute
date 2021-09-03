@@ -260,6 +260,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
       REQUIRE(N.size() == M.size());
 
       CHECK(view.sector_map_index_data.size() == M.size());
+      // cppcheck-suppress cppcheckError
       for(std::size_t i = 0; i < M.size(); ++i) {
         CHECK(view.sector_params[i].M == M[i]);
         CHECK(view.sector_params[i].count_occupied == (N[i] <= M[i] / 2));
@@ -907,12 +908,13 @@ TEST_CASE("View of a state vector projected on a direct product of "
 
     state_vector& st_ref = st;
     state_vector const& st_cref = st;
-    state_vector&& st_rref = state_vector{1, 2, 3, 4, 5, 6};
+    state_vector&& st_rref1 = state_vector{1, 2, 3, 4, 5, 6};
+    state_vector&& st_rref2 = state_vector{1, 2, 3, 4, 5, 6};
 
     auto view_st = make_nfms_view(st, hs, {sd});
     auto view_st_ref = make_nfms_view(st_ref, hs, {sd});
     auto view_tmp = make_nfms_view(state_vector{1, 2, 3, 4, 5, 6}, hs, {sd});
-    auto view_rref = make_nfms_view(std::move(st_rref), hs, {sd});
+    auto view_rref = make_nfms_view(std::move(st_rref1), hs, {sd});
 
     CHECK(std::is_same<decltype(view_st),
                        n_fermion_multisector_view<state_vector, true>>::value);
@@ -928,7 +930,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
     auto cview_st_cref = make_const_nfms_view(st_cref, hs, {sd});
     auto cview_tmp =
         make_const_nfms_view(state_vector{1, 2, 3, 4, 5, 6}, hs, {sd});
-    auto cview_rref = make_const_nfms_view(std::move(st_rref), hs, {sd});
+    auto cview_rref = make_const_nfms_view(std::move(st_rref2), hs, {sd});
 
     CHECK(std::is_same<
           decltype(cview_st),

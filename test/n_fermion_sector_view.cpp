@@ -477,12 +477,13 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
 
     state_vector& st_ref = st;
     state_vector const& st_cref = st;
-    state_vector&& st_rref = state_vector{1, 2, 3, 4, 5, 6};
+    state_vector&& st_rref1 = state_vector{1, 2, 3, 4, 5, 6};
+    state_vector&& st_rref2 = state_vector{1, 2, 3, 4, 5, 6};
 
     auto view_st = make_nfs_view(st, hs, 1);
     auto view_st_ref = make_nfs_view(st_ref, hs, 1);
     auto view_tmp = make_nfs_view(state_vector{1, 2, 3, 4, 5, 6}, hs, 1);
-    auto view_rref = make_nfs_view(std::move(st_rref), hs, 1);
+    auto view_rref = make_nfs_view(std::move(st_rref1), hs, 1);
 
     CHECK(std::is_same<decltype(view_st),
                        n_fermion_sector_view<state_vector, true>>::value);
@@ -497,7 +498,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     auto cview_st_ref = make_const_nfs_view(st_ref, hs, 1);
     auto cview_st_cref = make_const_nfs_view(st_cref, hs, 1);
     auto cview_tmp = make_const_nfs_view(state_vector{1, 2, 3, 4, 5, 6}, hs, 1);
-    auto cview_rref = make_const_nfs_view(std::move(st_rref), hs, 1);
+    auto cview_rref = make_const_nfs_view(std::move(st_rref2), hs, 1);
 
     CHECK(std::is_same<decltype(cview_st),
                        n_fermion_sector_view<state_vector const, true>>::value);

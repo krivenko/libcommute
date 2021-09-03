@@ -687,7 +687,7 @@ private:
   }
 
   static void reduce_powers_and_store(monomial_t&& m,
-                                      scalar_type coeff,
+                                      scalar_type const& coeff,
                                       monomials_map_t& target) {
     if(m.empty()) {
       store_monomial(std::move(m), coeff, target);

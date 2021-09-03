@@ -223,12 +223,13 @@ TEST_CASE("Basis-mapped view of a state vector", "[mapped_basis_view]") {
 
       state_vector& st_ref = st;
       state_vector const& st_cref = st;
-      state_vector&& st_rref = state_vector{1, 2, 3, 4, 5, 6};
+      state_vector&& st_rref1 = state_vector{1, 2, 3, 4, 5, 6};
+      state_vector&& st_rref2 = state_vector{1, 2, 3, 4, 5, 6};
 
       auto view_st = mapper.make_view(st);
       auto view_st_ref = mapper.make_view(st_ref);
       auto view_tmp = mapper.make_view(state_vector{1, 2, 3, 4, 5, 6});
-      auto view_rref = mapper.make_view(std::move(st_rref));
+      auto view_rref = mapper.make_view(std::move(st_rref1));
 
       CHECK(std::is_same<decltype(view_st),
                          mapped_basis_view<state_vector, true>>::value);
@@ -243,7 +244,7 @@ TEST_CASE("Basis-mapped view of a state vector", "[mapped_basis_view]") {
       auto cview_st_ref = mapper.make_const_view(st_ref);
       auto cview_st_cref = mapper.make_const_view(st_cref);
       auto cview_tmp = mapper.make_const_view(state_vector{1, 2, 3, 4, 5, 6});
-      auto cview_rref = mapper.make_const_view(std::move(st_rref));
+      auto cview_rref = mapper.make_const_view(std::move(st_rref2));
 
       CHECK(std::is_same<decltype(cview_st),
                          mapped_basis_view<state_vector const, true>>::value);
