@@ -203,83 +203,84 @@ lattice with only nearest-neighbour hopping allowed,</p>
 <div class="math notranslate nohighlight">
 \[\hat H_\text{e} = -t \sum_\sigma \sum_{\langle i,j\rangle}
                   c^\dagger_{i,\sigma} c_{j,\sigma}.\]</div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="w">  </span><span class="c1">//</span>
+<span class="w">  </span><span class="c1">// Let us define Hamiltonian of an electronic tight-binding model</span>
+<span class="w">  </span><span class="c1">// on a square lattice.</span>
+<span class="w">  </span><span class="c1">//</span>
 
-  <span class="c1">//</span>
-  <span class="c1">// Let us define Hamiltonian of an electronic tight-binding model</span>
-  <span class="c1">// on a square lattice.</span>
-  <span class="c1">//</span>
+<span class="w">  </span><span class="c1">// Number of lattice sites in each direction</span>
+<span class="w">  </span><span class="c1">// (the total number of sites is N * N)</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Number of lattice sites in each direction</span>
-  <span class="c1">// (the total number of sites is N*N)</span>
-  <span class="kt">int</span> <span class="k">const</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Electron hopping constant - energy parameter of the TB model</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Electron hopping constant - energy parameter of the TB model</span>
-  <span class="kt">double</span> <span class="k">const</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// TB Hamiltonian as an expression with real coefficients and</span>
+<span class="w">  </span><span class="c1">// statically-typed indices. In this case, the indices are a pair of</span>
+<span class="w">  </span><span class="c1">// integers - lattice site coordinates - and a spin label (&quot;up&quot; or &quot;down&quot;).</span>
+<span class="w">  </span><span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">expr_real</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">H_e</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// TB Hamiltonian as an expression with real coefficients and</span>
-  <span class="c1">// statically-typed indices. In this case, the indices are a pair of</span>
-  <span class="c1">// integers - lattice site coordinates - and a spin label (&quot;up&quot; or &quot;down&quot;).</span>
-  <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">expr_real</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">H_e</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Use functions c_dag() and c() that return fermionic creation/annihilation</span>
+<span class="w">  </span><span class="c1">// operators.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">c_dag</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">c</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Use functions c_dag() and c() that return fermionic creation/annihilation</span>
-  <span class="c1">// operators.</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">c_dag</span><span class="p">;</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">c</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Are two sites neighbors along an axis with periodicity?</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">neighbors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">N</span><span class="p">](</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
 
-  <span class="c1">// Iterate over spin projections</span>
-  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
-    <span class="c1">// Iterate over all lattice sites with coordinates i = (ix, iy)</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Iterate over all lattice sites with coordinates j = (jx, jy)</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">jx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jx</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">jx</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">jy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">jy</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// Skip all pairs of lattice sites i and j that are not</span>
-            <span class="c1">// nearest-neighbors. The modulus operation accounts for</span>
-            <span class="c1">// periodic boundary conditions on the lattice.</span>
-            <span class="k">if</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">ix</span> <span class="o">-</span> <span class="n">jx</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">iy</span> <span class="o">==</span> <span class="n">jy</span><span class="p">)</span> <span class="o">||</span>
-               <span class="p">(</span><span class="n">ix</span> <span class="o">==</span> <span class="n">jx</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">iy</span> <span class="o">-</span> <span class="n">jy</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
-              <span class="c1">// Add a hopping term</span>
-              <span class="n">H_e</span> <span class="o">+=</span> <span class="o">-</span><span class="n">t</span> <span class="o">*</span> <span class="n">c_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span><span class="p">(</span><span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">spin</span><span class="p">);</span>
-            <span class="p">}</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="c1">// Iterate over spin projections</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="nl">spin</span> <span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;down&quot;</span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// Iterate over all lattice sites with coordinates i = (ix, iy)</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">ix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// Iterate over all lattice sites with coordinates j = (jx, jy)</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">jx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">jx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">jx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">jy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">jy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">jy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// Skip all pairs of lattice sites i and j that are not</span>
+<span class="w">            </span><span class="c1">// nearest-neighbors. The modulus operation accounts for</span>
+<span class="w">            </span><span class="c1">// periodic boundary conditions on the lattice.</span>
+<span class="w">            </span><span class="k">if</span><span class="p">((</span><span class="n">neighbors</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">jx</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">jy</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"></span>
+<span class="w">               </span><span class="p">(</span><span class="n">ix</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">jx</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">neighbors</span><span class="p">(</span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">jy</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">              </span><span class="c1">// Add a hopping term</span>
+<span class="w">              </span><span class="n">H_e</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="n">t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">spin</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="n">jx</span><span class="p">,</span><span class="w"> </span><span class="n">jy</span><span class="p">,</span><span class="w"> </span><span class="n">spin</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">          </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Now, let us add a harmonic oscillator at each lattice site (a localized phonon),</p>
 <div class="math notranslate nohighlight">
 \[\hat H_\text{ph} = \omega_0 \sum_i a^\dagger_i a_i.\]</div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// Frequency of the localized phonon</span>
-  <span class="kt">double</span> <span class="k">const</span> <span class="n">w0</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Frequency of the localized phonon</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">w0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">//</span>
-  <span class="c1">// Hamiltonian of phonons localized at lattice sites.</span>
-  <span class="c1">// We want this object to have the same type as H_e.</span>
-  <span class="c1">//</span>
-  <span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span> <span class="n">H_ph</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">//</span>
+<span class="w">  </span><span class="c1">// Hamiltonian of phonons localized at lattice sites.</span>
+<span class="w">  </span><span class="c1">// We want this object to have the same type as H_e.</span>
+<span class="w">  </span><span class="c1">//</span>
+<span class="w">  </span><span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span><span class="w"> </span><span class="n">H_ph</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Use functions a_dag() and a() that return bosonic creation/annihilation</span>
-  <span class="c1">// operators.</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">a_dag</span><span class="p">;</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">a</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Use functions a_dag() and a() that return bosonic creation/annihilation</span>
+<span class="w">  </span><span class="c1">// operators.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">a_dag</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">a</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Iterate over all lattice sites</span>
-  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// Energy of the localized phonon at site (ix, iy)</span>
-      <span class="n">H_ph</span> <span class="o">+=</span> <span class="n">w0</span> <span class="o">*</span> <span class="n">a_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="c1">// Iterate over all lattice sites</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">ix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// Energy of the localized phonon at site (ix, iy)</span>
+<span class="w">      </span><span class="n">H_ph</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">w0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -298,51 +299,51 @@ Hamiltonian of the Holstein model <span class="math notranslate nohighlight">\(\
 \[\hat H_\text{e-ph} = g \sum_\sigma \sum_i n_{i,\sigma}(a^\dagger_i + a_i),\]</div>
 <div class="math notranslate nohighlight">
 \[\hat H_H = \hat H_\text{e} + \hat H_\text{ph} + \hat H_\text{e-ph}.\]</div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">// Electron-phonon coupling constant</span>
-  <span class="kt">double</span> <span class="k">const</span> <span class="n">g</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Electron-phonon coupling constant</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">//</span>
-  <span class="c1">// Hamiltonian of electron-phonon coupling.</span>
-  <span class="c1">//</span>
-  <span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span> <span class="n">H_e_ph</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">//</span>
+<span class="w">  </span><span class="c1">// Hamiltonian of electron-phonon coupling.</span>
+<span class="w">  </span><span class="c1">//</span>
+<span class="w">  </span><span class="k">decltype</span><span class="p">(</span><span class="n">H_e</span><span class="p">)</span><span class="w"> </span><span class="n">H_e_ph</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Use function n() that returns the fermionic number operator n = c_dag * c</span>
-  <span class="k">using</span> <span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">n</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Use function n() that returns the fermionic number operator n = c_dag * c</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">static_indices</span><span class="o">::</span><span class="n">n</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Iterate over spin projections</span>
-  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
-    <span class="c1">// Iterate over all lattice sites</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Electron-phonon coupling at site (ix, iy)</span>
-        <span class="n">H_e_ph</span> <span class="o">+=</span> <span class="n">g</span> <span class="o">*</span> <span class="n">n</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">));</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="c1">// Iterate over spin projections</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="nl">spin</span> <span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;down&quot;</span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// Iterate over all lattice sites</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">ix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// Electron-phonon coupling at site (ix, iy)</span>
+<span class="w">        </span><span class="n">H_e_ph</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">spin</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">));</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="c1">// Holstein Hamiltonian.</span>
-  <span class="k">auto</span> <span class="n">H_H</span> <span class="o">=</span> <span class="n">H_e</span> <span class="o">+</span> <span class="n">H_ph</span> <span class="o">+</span> <span class="n">H_e_ph</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Holstein Hamiltonian.</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">H_H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H_e</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">H_ph</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">H_e_ph</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Print H_H. There will be quite a lot of terms for the 100-site lattice!</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;H_H = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">H_H</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Print H_H. There will be quite a lot of terms for the 100-site lattice!</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;H_H = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">H_H</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Check hermiticity of H_H</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;H_H - H_H^</span><span class="se">\\</span><span class="s">dagger = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H_H</span> <span class="o">-</span> <span class="n">conj</span><span class="p">(</span><span class="n">H_H</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Check hermiticity of H_H</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;H_H - H_H^</span><span class="se">\\</span><span class="s">dagger = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">H_H</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">conj</span><span class="p">(</span><span class="n">H_H</span><span class="p">))</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
-  <span class="c1">// Check that H_H commutes with the total number of electrons</span>
-  <span class="k">decltype</span><span class="p">(</span><span class="n">H_H</span><span class="p">)</span> <span class="n">N_e</span><span class="p">;</span>
-  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">spin</span> <span class="p">:</span> <span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span> <span class="s">&quot;down&quot;</span><span class="p">})</span> <span class="p">{</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">ix</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iy</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">iy</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">N_e</span> <span class="o">+=</span> <span class="n">n</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">,</span> <span class="n">spin</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="c1">// Check that H_H commutes with the total number of electrons</span>
+<span class="w">  </span><span class="k">decltype</span><span class="p">(</span><span class="n">H_H</span><span class="p">)</span><span class="w"> </span><span class="n">N_e</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="nl">spin</span> <span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;down&quot;</span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">ix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">N_e</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">spin</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[H_H, N_e] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">H_H</span> <span class="o">*</span> <span class="n">N_e</span> <span class="o">-</span> <span class="n">N_e</span> <span class="o">*</span> <span class="n">H_H</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[H_H, N_e] = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">H_H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">N_e</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">N_e</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">H_H</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Now that we have the complete Hamiltonian object, we could proceed along one

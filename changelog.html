@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Index" href="genindex.html" />
-    <link rel="prev" title="Virasoro algebra" href="examples/virasoro_algebra.html" /> 
+    <link rel="prev" title="N-fermion sector views and exact diagonalization with Eigen 3" href="examples/n_fermion_sectors.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -183,9 +183,21 @@
 <a class="reference external" href="https://eigen.tuxfamily.org/">Eigen 3</a> types (vectors, vector segments,
 column-like matrix blocks and one-dimensional <code class="docutils literal notranslate"><span class="pre">Eigen::Map</span></code> views).
 The corresponding header file is <code class="docutils literal notranslate"><span class="pre">loperator/state_vector_eigen3.hpp</span></code>.</p></li>
-<li><p>New method <code class="docutils literal notranslate"><span class="pre">space_partition.find_connections()</span></code>.</p></li>
-<li><p>Rename the <code class="docutils literal notranslate"><span class="pre">constexpr</span></code> integer <code class="docutils literal notranslate"><span class="pre">LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID</span></code> to
-<code class="docutils literal notranslate"><span class="pre">min_user_defined_algebra_id</span></code> so that it does not appear to be a macro.</p></li>
+<li><p>New classes <code class="docutils literal notranslate"><span class="pre">n_fermion_sector_view</span></code> and <code class="docutils literal notranslate"><span class="pre">n_fermion_multisector_view</span></code> that
+implement N-fermion (multi)sector views of a state vector. The classes are
+supplemented with free utility functions <code class="docutils literal notranslate"><span class="pre">make_nf(m)s_view()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">make_const_nf(m)s_view()</span></code>, <code class="docutils literal notranslate"><span class="pre">n_fermion_(multi)sector_size()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">n_fermion_(multi)sector_basis_states()</span></code>.</p></li>
+<li><p>New member typedef <code class="docutils literal notranslate"><span class="pre">hilbert_space::index_types</span></code>.</p></li>
+<li><p>New method <code class="docutils literal notranslate"><span class="pre">hilbert_space::has_algebra()</span></code>.</p></li>
+<li><p>New method <code class="docutils literal notranslate"><span class="pre">space_partition::find_connections()</span></code>.</p></li>
+<li><p>Renamed the <code class="docutils literal notranslate"><span class="pre">constexpr</span></code> integer <code class="docutils literal notranslate"><span class="pre">LIBCOMMUTE_MIN_USER_DEFINED_ALGEBRA_ID</span></code>
+to <code class="docutils literal notranslate"><span class="pre">min_user_defined_algebra_id</span></code> so that it does not appear to be a macro.</p></li>
+<li><p>In the 3-argument constructor of <code class="docutils literal notranslate"><span class="pre">basis_mapper</span></code>, change the type of the last
+argument <code class="docutils literal notranslate"><span class="pre">N</span></code> from <code class="docutils literal notranslate"><span class="pre">int</span></code> to <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code>.</p></li>
+<li><p>Removed methods <code class="docutils literal notranslate"><span class="pre">basis_mapper::make_(const_)view_no_ref()</span></code>.
+<code class="docutils literal notranslate"><span class="pre">basis_mapper::make_(const_)view()</span></code> will now return a non-reference view
+when supplied with a non lvalue-reference argument.</p></li>
 <li><p>New CMake option <code class="docutils literal notranslate"><span class="pre">STATIC_ANALYSIS</span></code>. When enabled, the <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> and
 <code class="docutils literal notranslate"><span class="pre">cppcheck</span></code> static analysis tools will be run on the C++ sources of unit
 tests and examples as part of build process.</p></li>
@@ -196,7 +208,7 @@ tests and examples as part of build process.</p></li>
 <div class="section" id="id1">
 <h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>New method <code class="docutils literal notranslate"><span class="pre">hilbert_space.index()</span></code>.</p></li>
+<li><p>New method <code class="docutils literal notranslate"><span class="pre">hilbert_space::index()</span></code>.</p></li>
 </ul>
 </div>
 </div>
@@ -208,7 +220,7 @@ tests and examples as part of build process.</p></li>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="genindex.html" class="btn btn-neutral float-right" title="Index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="examples/virasoro_algebra.html" class="btn btn-neutral float-left" title="Virasoro algebra" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples/n_fermion_sectors.html" class="btn btn-neutral float-left" title="N-fermion sector views and exact diagonalization with Eigen 3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
