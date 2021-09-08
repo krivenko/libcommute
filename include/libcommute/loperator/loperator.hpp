@@ -124,10 +124,15 @@ private:
   // Implementation details of operator()
   template <typename SrcStateVector, typename DstStateVector>
   inline void act_impl(SrcStateVector&& src, DstStateVector&& dst) const {
+
+    // A workaround for GCC Bug 58972
+    // (base::m_actions() would be inaccessible from within the lambda below)
+    auto const& m_act = base::m_actions();
+
     foreach(src,
             [&, this](sv_index_type in_index,
                       element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
-              for(auto const& ma : base::m_actions()) {
+              for(auto const& ma : m_act) {
                 sv_index_type index = in_index;
                 auto coeff = scalar_traits<ScalarType>::make_const(1);
                 bool nonzero = ma.first.act(index, coeff);
