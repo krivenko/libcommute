@@ -24,6 +24,7 @@
 #include "expression/generator_boson.hpp"
 #include "expression/generator_fermion.hpp"
 #include "expression/generator_spin.hpp"
+#include "expression/hc.hpp"
 #include "loperator/elementary_space_boson.hpp"
 #include "loperator/elementary_space_fermion.hpp"
 #include "loperator/elementary_space_spin.hpp"
