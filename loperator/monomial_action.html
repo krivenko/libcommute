@@ -1,81 +1,39 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Advanced: Linear operator representation of a user-defined algebra &mdash; libcommute 0.7.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="State vectors" href="state_vector.html" />
     <link rel="prev" title="Linear operators" href="loperator.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> libcommute
-          
-
-          
-            
             <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.7.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -83,18 +41,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
@@ -114,75 +61,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">libcommute</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Tools for exact diagonalization</a> &raquo;</li>
-        
       <li>Advanced: Linear operator representation of a user-defined algebra</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/loperator/monomial_action.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="advanced-linear-operator-representation-of-a-user-defined-algebra">
-<span id="monomial-action"></span><h1>Advanced: Linear operator representation of a user-defined algebra<a class="headerlink" href="#advanced-linear-operator-representation-of-a-user-defined-algebra" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="advanced-linear-operator-representation-of-a-user-defined-algebra">
+<span id="monomial-action"></span><h1>Advanced: Linear operator representation of a user-defined algebra<a class="headerlink" href="#advanced-linear-operator-representation-of-a-user-defined-algebra" title="Permalink to this headline"></a></h1>
 <p>Having <a class="reference internal" href="../expression/gamma.html#generator-gamma"><span class="std std-ref">defined a new algebra</span></a> one can take a step
 further and implement the <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator representation</span></a>
 of it. Let us build on the <a class="reference internal" href="../expression/gamma.html#generator-gamma"><span class="std std-ref">example</span></a> where we introduced
@@ -331,13 +236,13 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <p>In general, <a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial_action</span></code></a> is defined as follows.</p>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4I_iEN10libcommute15monomial_actionE">
-<span id="_CPPv3I_iEN10libcommute15monomial_actionE"></span><span id="_CPPv2I_iEN10libcommute15monomial_actionE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlgebraID</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial_action</span></span></span><a class="headerlink" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I_iEN10libcommute15monomial_actionE"></span><span id="_CPPv2I_iEN10libcommute15monomial_actionE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlgebraID</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial_action</span></span></span><a class="headerlink" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="Permalink to this definition"></a><br /></dt>
 <dd><p><em>Defined in &lt;libcommute/loperator/monomial_action.hpp&gt;</em></p>
 <p>Action of a product of generators belonging to the same algebra
 <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action::AlgebraID"><span class="n">AlgebraID</span></a></span> on a basis vector.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE">
-<span id="_CPPv3IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">IndexTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="sig-name descname"><span class="n"><span class="pre">monomial_action</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="../expression/monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range_type</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m_range</span></span>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><span class="n"><span class="pre">hilbert_space</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">IndexTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="sig-name descname"><span class="n"><span class="pre">monomial_action</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="../expression/monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range_type</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m_range</span></span>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><span class="n"><span class="pre">hilbert_space</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="Permalink to this definition"></a><br /></dt>
 <dd><p><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::m_range"><span class="n">m_range</span></a></span> is a pair of <a class="reference internal" href="../expression/monomial.html#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial::const_iterator</span></code></a>’s.
 This range represents the product of generators one wants to act with.
 <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::hs"><span class="n">hs</span></a></span> is the Hilbert space to act in.</p>
@@ -345,7 +250,7 @@ This range represents the product of generators one wants to act with.
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType">
-<span id="_CPPv3I0ENK10libcommute15monomial_action3actER13sv_index_typeR10ScalarType"></span><span id="_CPPv2I0ENK10libcommute15monomial_action3actER13sv_index_typeR10ScalarType"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">act</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="n"><span class="pre">sv_index_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">index</span></span>, <a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::ScalarType"><span class="n"><span class="pre">ScalarType</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">coeff</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK10libcommute15monomial_action3actER13sv_index_typeR10ScalarType"></span><span id="_CPPv2I0ENK10libcommute15monomial_action3actER13sv_index_typeR10ScalarType"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">act</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="n"><span class="pre">sv_index_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">index</span></span>, <a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::ScalarType"><span class="n"><span class="pre">ScalarType</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">coeff</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Act on a basis state. It is assumed the action of a generator (and,
 therefore, of a monomial) maps a single basis state to a single basis
 state multiplied by a constant.</p>
@@ -409,54 +314,37 @@ apply it to 4-dimensional state vectors as usual.</p>
 </div>
 </li>
 </ul>
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="state_vector.html" class="btn btn-neutral float-right" title="State vectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="loperator.html" class="btn btn-neutral float-left" title="Linear operators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="state_vector.html" class="btn btn-neutral float-right" title="State vectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2016-2021, Igor Krivenko.
-
-    </p>
+    <p>&#169; Copyright 2016-2021, Igor Krivenko.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

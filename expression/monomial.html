@@ -1,81 +1,39 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Monomial &mdash; libcommute 0.7.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Algebra generators" href="generator.html" />
     <link rel="prev" title="Polynomial expressions" href="expression.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> libcommute
-          
-
-          
-            
             <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.7.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -83,18 +41,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
@@ -114,81 +61,39 @@
 <li class="toctree-l1"><a class="reference internal" href="../search.html">Search</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">libcommute</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Domain-Specific Language for polynomial expressions</a> &raquo;</li>
-        
       <li>Monomial</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/expression/monomial.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="monomial">
-<span id="id1"></span><h1>Monomial<a class="headerlink" href="#monomial" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="monomial">
+<span id="id1"></span><h1>Monomial<a class="headerlink" href="#monomial" title="Permalink to this headline"></a></h1>
 <p>Monomials are ordered products of <a class="reference internal" href="generator.html#generator"><span class="std std-ref">algebra generators</span></a>. Even
 though monomials stored as parts of a <a class="reference internal" href="expression.html#expression"><span class="std std-ref">polynomial expression</span></a>
 are always canonically ordered, that need not be true in general.</p>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4IDpEN10libcommute8monomialE">
-<span id="_CPPv3IDpEN10libcommute8monomialE"></span><span id="_CPPv2IDpEN10libcommute8monomialE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">IndexTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><a class="headerlink" href="#_CPPv4IDpEN10libcommute8monomialE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3IDpEN10libcommute8monomialE"></span><span id="_CPPv2IDpEN10libcommute8monomialE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">IndexTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><a class="headerlink" href="#_CPPv4IDpEN10libcommute8monomialE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Monomial, an ordered product of zero or more algebra generators
 <span class="math notranslate nohighlight">\(g_{i_1}, g_{i_2}, \ldots, g_{i_n}\)</span>,</p>
 <div class="math notranslate nohighlight">
@@ -197,35 +102,35 @@ are always canonically ordered, that need not be true in general.</p>
 <p class="rubric">Member type aliases</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial11index_typesE">
-<span id="_CPPv3N10libcommute8monomial11index_typesE"></span><span id="_CPPv2N10libcommute8monomial11index_typesE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index_types</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial11index_typesE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial11index_typesE"></span><span id="_CPPv2N10libcommute8monomial11index_typesE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index_types</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial11index_typesE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial14generator_typeE">
-<span id="_CPPv3N10libcommute8monomial14generator_typeE"></span><span id="_CPPv2N10libcommute8monomial14generator_typeE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generator_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="generator.html#_CPPv4IDpEN10libcommute9generatorE" title="libcommute::generator"><span class="n"><span class="pre">generator</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial14generator_typeE"></span><span id="_CPPv2N10libcommute8monomial14generator_typeE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generator_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="generator.html#_CPPv4IDpEN10libcommute9generatorE" title="libcommute::generator"><span class="n"><span class="pre">generator</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial12gen_ptr_typeE">
-<span id="_CPPv3N10libcommute8monomial12gen_ptr_typeE"></span><span id="_CPPv2N10libcommute8monomial12gen_ptr_typeE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gen_ptr_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unique_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial12gen_ptr_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial12gen_ptr_typeE"></span><span id="_CPPv2N10libcommute8monomial12gen_ptr_typeE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gen_ptr_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unique_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial12gen_ptr_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <p class="rubric">Constructors</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial8monomialEv">
-<span id="_CPPv3N10libcommute8monomial8monomialEv"></span><span id="_CPPv2N10libcommute8monomial8monomialEv"></span><span id="libcommute::monomial::monomial"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial8monomialEv"></span><span id="_CPPv2N10libcommute8monomial8monomialEv"></span><span id="libcommute::monomial::monomial"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Construct an empty (zero-length) monomial <span class="math notranslate nohighlight">\(M^{(0)} = 1\)</span>.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes">
-<span id="_CPPv3IDpEN10libcommute8monomial8monomialEDpRR8GenTypes"></span><span id="_CPPv2IDpEN10libcommute8monomial8monomialEDpRR8GenTypes"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">GenTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes" title="libcommute::monomial::monomial::GenTypes"><span class="n"><span class="pre">GenTypes</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3IDpEN10libcommute8monomial8monomialEDpRR8GenTypes"></span><span id="_CPPv2IDpEN10libcommute8monomial8monomialEDpRR8GenTypes"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">GenTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes" title="libcommute::monomial::monomial::GenTypes"><span class="n"><span class="pre">GenTypes</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Construct a non-empty monomial from a list of generators.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE">
-<span id="_CPPv3N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE"></span><span id="_CPPv2N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE"></span><span id="libcommute::monomial::monomial__std::initializer_list:generator_typeP:"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">initializer_list</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE"></span><span id="_CPPv2N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE"></span><span id="libcommute::monomial::monomial__std::initializer_list:generator_typeP:"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">initializer_list</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Construct a monomial from a list of pointers to generators using the
 list initialization syntax. This constructor creates copies of the
 generators by calling <a class="reference internal" href="generator.html#_CPPv4NK10libcommute9generator5cloneEv" title="libcommute::generator::clone"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">generator::clone()</span></code></a>.</p>
@@ -233,7 +138,7 @@ generators by calling <a class="reference internal" href="generator.html#_CPPv4N
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE">
-<span id="_CPPv3N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE"></span><span id="_CPPv2N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE"></span><span id="libcommute::monomial::monomial__std::vector:generator_typeP:"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE"></span><span id="_CPPv2N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE"></span><span id="libcommute::monomial::monomial__std::vector:generator_typeP:"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Construct a monomial from a vector of pointers to generators. This
 constructor creates copies of the generators by calling
 <a class="reference internal" href="generator.html#_CPPv4NK10libcommute9generator5cloneEv" title="libcommute::generator::clone"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">generator::clone()</span></code></a>.</p>
@@ -241,7 +146,7 @@ constructor creates copies of the generators by calling
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE">
-<span id="_CPPv3N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE"></span><span id="_CPPv2N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE"></span><span id="libcommute::monomial::monomial__std::initializer_list:gen_ptr_type:"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">initializer_list</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial12gen_ptr_typeE" title="libcommute::monomial::gen_ptr_type"><span class="n"><span class="pre">gen_ptr_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE"></span><span id="_CPPv2N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE"></span><span id="libcommute::monomial::monomial__std::initializer_list:gen_ptr_type:"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">initializer_list</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial12gen_ptr_typeE" title="libcommute::monomial::gen_ptr_type"><span class="n"><span class="pre">gen_ptr_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">generators</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Construct a monomial from a list of smart pointers to generators using the
 list initialization syntax. This constructor creates copies of the
 generators by calling <a class="reference internal" href="generator.html#_CPPv4NK10libcommute9generator5cloneEv" title="libcommute::generator::clone"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">generator::clone()</span></code></a>.</p>
@@ -250,98 +155,98 @@ generators by calling <a class="reference internal" href="generator.html#_CPPv4N
 <p class="rubric">Copy/move-constructors and assignments</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial8monomialERK8monomial">
-<span id="_CPPv3N10libcommute8monomial8monomialERK8monomial"></span><span id="_CPPv2N10libcommute8monomial8monomialERK8monomial"></span><span id="libcommute::monomial::monomial__monomialCR"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial8monomialERK8monomial" title="libcommute::monomial::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialERK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial8monomialERK8monomial"></span><span id="_CPPv2N10libcommute8monomial8monomialERK8monomial"></span><span id="libcommute::monomial::monomial__monomialCR"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial8monomialERK8monomial" title="libcommute::monomial::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialERK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial8monomialERR8monomial">
-<span id="_CPPv3N10libcommute8monomial8monomialERR8monomial"></span><span id="_CPPv2N10libcommute8monomial8monomialERR8monomial"></span><span id="libcommute::monomial::monomial__monomialRR"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial8monomialERR8monomial" title="libcommute::monomial::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialERR8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial8monomialERR8monomial"></span><span id="_CPPv2N10libcommute8monomial8monomialERR8monomial"></span><span id="libcommute::monomial::monomial__monomialRR"></span><span class="sig-name descname"><span class="n"><span class="pre">monomial</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial8monomialERR8monomial" title="libcommute::monomial::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial8monomialERR8monomial" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomialaSERK8monomial">
-<span id="_CPPv3N10libcommute8monomialaSERK8monomial"></span><span id="_CPPv2N10libcommute8monomialaSERK8monomial"></span><span id="libcommute::monomial::assign-operator__monomialCR"></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialaSERK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomialaSERK8monomial"></span><span id="_CPPv2N10libcommute8monomialaSERK8monomial"></span><span id="libcommute::monomial::assign-operator__monomialCR"></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialaSERK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomialaSERR8monomial">
-<span id="_CPPv3N10libcommute8monomialaSERR8monomial"></span><span id="_CPPv2N10libcommute8monomialaSERR8monomial"></span><span id="libcommute::monomial::assign-operator__monomialRR"></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomialaSERR8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomialaSERR8monomial"></span><span id="_CPPv2N10libcommute8monomialaSERR8monomial"></span><span id="libcommute::monomial::assign-operator__monomialRR"></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomialaSERR8monomial" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <p class="rubric"><a class="reference internal" href="expression.html#expr-iteration"><span class="std std-ref">Iteration interface</span></a></p>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial14const_iteratorE">
-<span id="_CPPv3N10libcommute8monomial14const_iteratorE"></span><span id="_CPPv2N10libcommute8monomial14const_iteratorE"></span><span id="libcommute::monomial::const_iterator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_iterator</span></span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial14const_iteratorE"></span><span id="_CPPv2N10libcommute8monomial14const_iteratorE"></span><span id="libcommute::monomial::const_iterator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_iterator</span></span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Random access constant iterator to the list of algebra generators.
 The dereference type is <a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">generator_type</span></code></a>.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial5beginEv">
-<span id="_CPPv3NK10libcommute8monomial5beginEv"></span><span id="_CPPv2NK10libcommute8monomial5beginEv"></span><span id="libcommute::monomial::beginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">begin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial5beginEv"></span><span id="_CPPv2NK10libcommute8monomial5beginEv"></span><span id="libcommute::monomial::beginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">begin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial5beginEv" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial6cbeginEv">
-<span id="_CPPv3NK10libcommute8monomial6cbeginEv"></span><span id="_CPPv2NK10libcommute8monomial6cbeginEv"></span><span id="libcommute::monomial::cbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cbegin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial6cbeginEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial6cbeginEv"></span><span id="_CPPv2NK10libcommute8monomial6cbeginEv"></span><span id="libcommute::monomial::cbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cbegin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial6cbeginEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Constant iterator to the first algebra generator.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial3endEv">
-<span id="_CPPv3NK10libcommute8monomial3endEv"></span><span id="_CPPv2NK10libcommute8monomial3endEv"></span><span id="libcommute::monomial::endC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">end</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial3endEv"></span><span id="_CPPv2NK10libcommute8monomial3endEv"></span><span id="libcommute::monomial::endC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">end</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial3endEv" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial4cendEv">
-<span id="_CPPv3NK10libcommute8monomial4cendEv"></span><span id="_CPPv2NK10libcommute8monomial4cendEv"></span><span id="libcommute::monomial::cendC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cend</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial4cendEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial4cendEv"></span><span id="_CPPv2NK10libcommute8monomial4cendEv"></span><span id="libcommute::monomial::cendC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cend</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial4cendEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Constant past-the-end iterator.</p>
 </dd></dl>
 
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial22const_reverse_iteratorE">
-<span id="_CPPv3N10libcommute8monomial22const_reverse_iteratorE"></span><span id="_CPPv2N10libcommute8monomial22const_reverse_iteratorE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_reverse_iterator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reverse_iterator</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial22const_reverse_iteratorE"></span><span id="_CPPv2N10libcommute8monomial22const_reverse_iteratorE"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_reverse_iterator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reverse_iterator</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Reverse iteration version of <a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">const_iterator</span></code></a>.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial6rbeginEv">
-<span id="_CPPv3NK10libcommute8monomial6rbeginEv"></span><span id="_CPPv2NK10libcommute8monomial6rbeginEv"></span><span id="libcommute::monomial::rbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rbegin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial6rbeginEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial6rbeginEv"></span><span id="_CPPv2NK10libcommute8monomial6rbeginEv"></span><span id="libcommute::monomial::rbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rbegin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial6rbeginEv" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial7crbeginEv">
-<span id="_CPPv3NK10libcommute8monomial7crbeginEv"></span><span id="_CPPv2NK10libcommute8monomial7crbeginEv"></span><span id="libcommute::monomial::crbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">crbegin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial7crbeginEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial7crbeginEv"></span><span id="_CPPv2NK10libcommute8monomial7crbeginEv"></span><span id="libcommute::monomial::crbeginC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">crbegin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial7crbeginEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Reverse constant iterator to last algebra generator.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial4rendEv">
-<span id="_CPPv3NK10libcommute8monomial4rendEv"></span><span id="_CPPv2NK10libcommute8monomial4rendEv"></span><span id="libcommute::monomial::rendC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rend</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial4rendEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial4rendEv"></span><span id="_CPPv2NK10libcommute8monomial4rendEv"></span><span id="libcommute::monomial::rendC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rend</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial4rendEv" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial5crendEv">
-<span id="_CPPv3NK10libcommute8monomial5crendEv"></span><span id="_CPPv2NK10libcommute8monomial5crendEv"></span><span id="libcommute::monomial::crendC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">crend</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial5crendEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial5crendEv"></span><span id="_CPPv2NK10libcommute8monomial5crendEv"></span><span id="libcommute::monomial::crendC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial22const_reverse_iteratorE" title="libcommute::monomial::const_reverse_iterator"><span class="n"><span class="pre">const_reverse_iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">crend</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial5crendEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Reverse constant past-the-end iterator.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomialixENSt6size_tE">
-<span id="_CPPv3NK10libcommute8monomialixENSt6size_tE"></span><span id="_CPPv2NK10libcommute8monomialixENSt6size_tE"></span><span id="libcommute::monomial::subscript-operator__std::sC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">[]</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomialixENSt6size_tE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomialixENSt6size_tE"></span><span id="_CPPv2NK10libcommute8monomialixENSt6size_tE"></span><span id="libcommute::monomial::subscript-operator__std::sC"></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">[]</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomialixENSt6size_tE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Access an algebra generator by its position <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4NK10libcommute8monomialixENSt6size_tE" title="libcommute::monomial::operator[]::n"><span class="n">n</span></a></span> in the monomial.</p>
 </dd></dl>
 
 <p class="rubric">Other methods and friend functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial4sizeEv">
-<span id="_CPPv3NK10libcommute8monomial4sizeEv"></span><span id="_CPPv2NK10libcommute8monomial4sizeEv"></span><span id="libcommute::monomial::sizeC"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial4sizeEv"></span><span id="_CPPv2NK10libcommute8monomial4sizeEv"></span><span id="libcommute::monomial::sizeC"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial4sizeEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Number of algebra generators in the monomial.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial5emptyEv">
-<span id="_CPPv3NK10libcommute8monomial5emptyEv"></span><span id="_CPPv2NK10libcommute8monomial5emptyEv"></span><span id="libcommute::monomial::emptyC"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">empty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial5emptyEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial5emptyEv"></span><span id="_CPPv2NK10libcommute8monomial5emptyEv"></span><span id="libcommute::monomial::emptyC"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">empty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial5emptyEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Is this a zero-length monomial?</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomialeqERK8monomialRK8monomial">
-<span id="_CPPv3N10libcommute8monomialeqERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialeqERK8monomialRK8monomial"></span><span id="libcommute::monomial::eq-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialeqERK8monomialRK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomialeqERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialeqERK8monomialRK8monomial"></span><span id="libcommute::monomial::eq-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialeqERK8monomialRK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomialneERK8monomialRK8monomial">
-<span id="_CPPv3N10libcommute8monomialneERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialneERK8monomialRK8monomial"></span><span id="libcommute::monomial::neq-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">!=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialneERK8monomialRK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomialneERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialneERK8monomialRK8monomial"></span><span id="libcommute::monomial::neq-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">!=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialneERK8monomialRK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomialltERK8monomialRK8monomial">
-<span id="_CPPv3N10libcommute8monomialltERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialltERK8monomialRK8monomial"></span><span id="libcommute::monomial::lt-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialltERK8monomialRK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomialltERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialltERK8monomialRK8monomial"></span><span id="libcommute::monomial::lt-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialltERK8monomialRK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomialgtERK8monomialRK8monomial">
-<span id="_CPPv3N10libcommute8monomialgtERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialgtERK8monomialRK8monomial"></span><span id="libcommute::monomial::gt-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&gt;</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialgtERK8monomialRK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomialgtERK8monomialRK8monomial"></span><span id="_CPPv2N10libcommute8monomialgtERK8monomialRK8monomial"></span><span id="libcommute::monomial::gt-operator__monomialCR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&gt;</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m1</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomialgtERK8monomialRK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Compare two monomials. The lesser and greater comparisons check monomials’
 lengths first, and in the case of equal lengths perform the
 <a class="reference external" href="https://en.cppreference.com/w/cpp/algorithm/lexicographical_compare">lexicographical comparison</a> of
@@ -350,25 +255,25 @@ the <a class="reference internal" href="generator.html#_CPPv4N10libcommute9gener
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute8monomial10is_orderedEv">
-<span id="_CPPv3NK10libcommute8monomial10is_orderedEv"></span><span id="_CPPv2NK10libcommute8monomial10is_orderedEv"></span><span id="libcommute::monomial::is_orderedC"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_ordered</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial10is_orderedEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK10libcommute8monomial10is_orderedEv"></span><span id="_CPPv2NK10libcommute8monomial10is_orderedEv"></span><span id="libcommute::monomial::is_orderedC"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_ordered</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute8monomial10is_orderedEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Is this monomial canonically ordered? In other words, does its algebra
 generator list satisfy <span class="math notranslate nohighlight">\(g_{i_1} &lt; g_{i_2} &lt; \ldots &lt; g_{i_n}\)</span>?</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE">
-<span id="_CPPv3N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE"></span><span id="_CPPv2N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE"></span><span id="libcommute::monomial::swap_generators__std::s.std::s"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">swap_generators</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n1</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE"></span><span id="_CPPv2N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE"></span><span id="libcommute::monomial::swap_generators__std::s.std::s"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">swap_generators</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n1</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Swap algebra generators at positions <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE" title="libcommute::monomial::swap_generators::n1"><span class="n">n1</span></a></span> and <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4N10libcommute8monomial15swap_generatorsENSt6size_tENSt6size_tE" title="libcommute::monomial::swap_generators::n2"><span class="n">n2</span></a></span> within the
 list.</p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial6appendERK14generator_type">
-<span id="_CPPv3N10libcommute8monomial6appendERK14generator_type"></span><span id="_CPPv2N10libcommute8monomial6appendERK14generator_type"></span><span id="libcommute::monomial::append__generator_typeCR"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">g</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial6appendERK14generator_type" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial6appendERK14generator_type"></span><span id="_CPPv2N10libcommute8monomial6appendERK14generator_type"></span><span id="libcommute::monomial::append__generator_typeCR"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14generator_typeE" title="libcommute::monomial::generator_type"><span class="n"><span class="pre">generator_type</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">g</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial6appendERK14generator_type" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial6appendERK8monomial">
-<span id="_CPPv3N10libcommute8monomial6appendERK8monomial"></span><span id="_CPPv2N10libcommute8monomial6appendERK8monomial"></span><span id="libcommute::monomial::append__monomialCR"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial6appendERK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial6appendERK8monomial"></span><span id="_CPPv2N10libcommute8monomial6appendERK8monomial"></span><span id="libcommute::monomial::append__monomialCR"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial6appendERK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE">
-<span id="_CPPv3N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE"></span><span id="_CPPv2N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE"></span><span id="libcommute::monomial::append__std::pair:const_iterator.const_iterator:CR"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">r</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE"></span><span id="_CPPv2N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE"></span><span id="libcommute::monomial::append__std::pair:const_iterator.const_iterator:CR"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n"><span class="pre">const_iterator</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">r</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomial6appendERKNSt4pairI14const_iterator14const_iteratorEE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Append a generator, a monomial or a range of generators specified by a
 begin-end iterator pair <span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">pair</span><span class="p">&lt;</span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n">const_iterator</span></a><span class="p">,</span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><span class="n">const_iterator</span></a><span class="p">&gt;</span></span>
 to this monomial.</p>
@@ -376,7 +281,7 @@ to this monomial.</p>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4IDpEN10libcommute8monomial11concatenateE8monomialDpRR9PartTypes">
-<span id="_CPPv3IDpEN10libcommute8monomial11concatenateEDpRR9PartTypes"></span><span id="_CPPv2IDpEN10libcommute8monomial11concatenateEDpRR9PartTypes"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">PartTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">friend</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">concatenate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomial11concatenateE8monomialDpRR9PartTypes" title="libcommute::monomial::concatenate::PartTypes"><span class="n"><span class="pre">PartTypes</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute8monomial11concatenateE8monomialDpRR9PartTypes" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3IDpEN10libcommute8monomial11concatenateEDpRR9PartTypes"></span><span id="_CPPv2IDpEN10libcommute8monomial11concatenateEDpRR9PartTypes"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">PartTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">friend</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">concatenate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomial11concatenateE8monomialDpRR9PartTypes" title="libcommute::monomial::concatenate::PartTypes"><span class="n"><span class="pre">PartTypes</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute8monomial11concatenateE8monomialDpRR9PartTypes" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Concatenate a number of parts to build a new monomial. The parts can be
 monomials, algebra generators and ranges within monomials. The ranges
 should be passed as begin-end iterator pairs
@@ -385,60 +290,43 @@ should be passed as begin-end iterator pairs
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute8monomiallsERNSt7ostreamERK8monomial">
-<span id="_CPPv3N10libcommute8monomiallsERNSt7ostreamERK8monomial"></span><span id="_CPPv2N10libcommute8monomiallsERNSt7ostreamERK8monomial"></span><span id="libcommute::monomial::lshift-operator__osR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomiallsERNSt7ostreamERK8monomial" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N10libcommute8monomiallsERNSt7ostreamERK8monomial"></span><span id="_CPPv2N10libcommute8monomiallsERNSt7ostreamERK8monomial"></span><span id="libcommute::monomial::lshift-operator__osR.monomialCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <a class="reference internal" href="#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute8monomiallsERNSt7ostreamERK8monomial" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Output stream insertion operator.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="generator.html" class="btn btn-neutral float-right" title="Algebra generators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="expression.html" class="btn btn-neutral float-left" title="Polynomial expressions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generator.html" class="btn btn-neutral float-right" title="Algebra generators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2016-2021, Igor Krivenko.
-
-    </p>
+    <p>&#169; Copyright 2016-2021, Igor Krivenko.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
