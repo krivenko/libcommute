@@ -130,8 +130,8 @@ private:
     auto const& m_act = base::m_actions();
 
     foreach(src,
-            [&, this](sv_index_type in_index,
-                      element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
+            [&](sv_index_type in_index,
+                element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
               for(auto const& ma : m_act) {
                 sv_index_type index = in_index;
                 auto coeff = scalar_traits<ScalarType>::make_const(1);

@@ -46,7 +46,7 @@ int main() {
   using libcommute::static_indices::c;
 
   // Are two sites neighbors along an axis with periodicity?
-  auto neighbors = [N](int i, int j) {
+  auto neighbors = [](int i, int j) {
     return std::abs(i - j) == 1 || std::abs(i - j) == N;
   };
 

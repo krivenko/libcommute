@@ -62,11 +62,11 @@ int main() {
   using static_indices::n;     // Number of electrons
 
   // Are two sites neighbors along the x-axis with periodicity?
-  auto neighbors_x = [Nx](int ix, int jx) {
+  auto neighbors_x = [](int ix, int jx) {
     return std::abs(ix - jx) == 1 || std::abs(ix - jx) == Nx - 1;
   };
   // Are two sites neighbors along the y-axis with periodicity?
-  auto neighbors_y = [Ny](int iy, int jy) {
+  auto neighbors_y = [](int iy, int jy) {
     return std::abs(iy - jy) == 1 || std::abs(iy - jy) == Ny - 1;
   };
 
