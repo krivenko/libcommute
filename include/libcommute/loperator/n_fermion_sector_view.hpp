@@ -170,9 +170,9 @@ struct for_each_composition {
     : params(params),
       lambdas(params.N_counted, 0),
       lambdas_max(params.N_counted, params.M - (params.N_counted - 1)) {
-        lambdas.shrink_to_fit();
-        lambdas_max.shrink_to_fit();
-      }
+    lambdas.shrink_to_fit();
+    lambdas_max.shrink_to_fit();
+  }
 
   // Apply 'f' to each composition
   template <typename F> void operator()(F&& f) const {
@@ -625,8 +625,8 @@ struct compositions_to_full_hs_index {
       bit_to_sector(bit_to_sector),
       index_mask(init_index_mask(sector_params, bit_to_sector)),
       sector_indices(sector_params.size()) {
-        sector_indices.shrink_to_fit();
-      }
+    sector_indices.shrink_to_fit();
+  }
 
   inline sv_index_type
   operator()(std::vector<std::vector<unsigned int>> const& lambdas,
