@@ -308,17 +308,17 @@ If you find this library useful for your research, you can help me by citing it
 using the following BibTeX entry.
 
 ```
-@software{libcommute_v0_5,
+@software{libcommute_v0_7,
   author       = {Igor Krivenko},
   title        = {{libcommute - A quantum operator algebra DSL and
                    exact diagonalization toolkit for C++11/14/17:
-                   Release v0.5}},
+                   Release v0.7.0}},
   month        = oct,
-  year         = 2020,
+  year         = 2021,
   publisher    = {Zenodo},
-  version      = {v0.5},
-  doi          = {10.5281/zenodo.4066422},
-  url          = {https://doi.org/10.5281/zenodo.4066422}
+  version      = {v0.7.0},
+  doi          = {10.5281/zenodo.5558678},
+  url          = {https://doi.org/10.5281/zenodo.5558678}
 }
 ```
 
