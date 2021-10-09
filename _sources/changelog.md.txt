@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.7.0] - 21-10-09
 
 - Added an implementation of the ``StateVector`` concept for some
   [Eigen 3](https://eigen.tuxfamily.org/) types (vectors, vector segments,
