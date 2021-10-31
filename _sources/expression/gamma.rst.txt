@@ -6,8 +6,19 @@ Advanced: A user-defined algebra
 .. default-domain:: cpp
 
 Introducing a new :ref:`algebra <generator>` is as easy as deriving a class from
-the abstract base :class:`libcommute::generator`. In this example we will define
-the algebra of Dirac gamma matrices
+the abstract base :class:`libcommute::generator`. *libcommute*'s DSL can work
+with algebras, whose generators :math:`g_\alpha` obey commutation relations
+
+.. math::
+
+    g_\alpha g_\beta - c g_\beta g_\alpha = F_{\alpha\beta} +
+        \sum_\gamma f_{\alpha\beta}^\gamma g_\gamma
+
+with real constants :math:`c`, :math:`F_{\alpha\beta}` and
+:math:`f_{\alpha\beta}^\gamma`. Such algebraic structures include the Lie and
+Clifford algebras.
+
+In the following example we will define the algebra of Dirac gamma matrices
 :math:`{\gamma^0,\gamma^1,\gamma^2,\gamma^3}`.
 The generators will carry one integer index (0, 1, 2 or 3), which will also fix
 their canonical ordering. The identities we will be using in the code below are

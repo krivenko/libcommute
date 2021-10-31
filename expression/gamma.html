@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced: A user-defined algebra &mdash; libcommute 0.7.0 documentation</title>
+  <title>Advanced: A user-defined algebra &mdash; libcommute 0.7.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/_static/theme_overrides.css" type="text/css" />
@@ -34,7 +34,7 @@
             <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.0
+                0.7.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -91,8 +91,15 @@
   <section id="advanced-a-user-defined-algebra">
 <span id="generator-gamma"></span><h1>Advanced: A user-defined algebra<a class="headerlink" href="#advanced-a-user-defined-algebra" title="Permalink to this headline"></a></h1>
 <p>Introducing a new <a class="reference internal" href="generator.html#generator"><span class="std std-ref">algebra</span></a> is as easy as deriving a class from
-the abstract base <a class="reference internal" href="generator.html#_CPPv4IDpEN10libcommute9generatorE" title="libcommute::generator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::generator</span></code></a>. In this example we will define
-the algebra of Dirac gamma matrices
+the abstract base <a class="reference internal" href="generator.html#_CPPv4IDpEN10libcommute9generatorE" title="libcommute::generator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::generator</span></code></a>. <em>libcommute</em>’s DSL can work
+with algebras, whose generators <span class="math notranslate nohighlight">\(g_\alpha\)</span> obey commutation relations</p>
+<div class="math notranslate nohighlight">
+\[g_\alpha g_\beta - c g_\beta g_\alpha = F_{\alpha\beta} +
+    \sum_\gamma f_{\alpha\beta}^\gamma g_\gamma\]</div>
+<p>with real constants <span class="math notranslate nohighlight">\(c\)</span>, <span class="math notranslate nohighlight">\(F_{\alpha\beta}\)</span> and
+<span class="math notranslate nohighlight">\(f_{\alpha\beta}^\gamma\)</span>. Such algebraic structures include the Lie and
+Clifford algebras.</p>
+<p>In the following example we will define the algebra of Dirac gamma matrices
 <span class="math notranslate nohighlight">\({\gamma^0,\gamma^1,\gamma^2,\gamma^3}\)</span>.
 The generators will carry one integer index (0, 1, 2 or 3), which will also fix
 their canonical ordering. The identities we will be using in the code below are</p>
