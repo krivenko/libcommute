@@ -17,6 +17,6 @@
 // libcommute version information
 //
 
-#define LIBCOMMUTE_VERSION "0.7.0"
+#define LIBCOMMUTE_VERSION "0.7.1"
 
 #endif
