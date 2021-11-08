@@ -114,6 +114,19 @@ For a detailed description of the algorithm see [SKFP16]_.
     The connections are returned as a set of pairs of subspace serial numbers,
     (source subspace, destination subspace).
 
+  .. function:: std::vector<sv_index_type> \
+                subspace_basis(sv_index_type index) const
+
+    Build and return a list of indices of all basis states spanning a given
+    subspace :expr:`index`.
+
+  .. function:: std::vector<std::vector<sv_index_type>> \
+                subspace_bases() const
+
+    Build and return lists of indices of all basis states spanning all subspaces
+    in the partition. The returned lists are disjoint and their union spans the
+    entire Hilbert space.
+
   .. function:: template<typename F> \
                 friend void foreach(space_partition const& sp, F&& f)
 

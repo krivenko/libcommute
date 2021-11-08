@@ -154,6 +154,24 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         {d0 + d1 + d2 + u0 + u1 + u2}};
 
     CHECK(cl == ref_cl);
+
+    SECTION("subspace_bases()") {
+      auto bases = sp.subspace_bases();
+      CHECK(bases.size() == sp.n_subspaces());
+      for(auto const& basis : bases) {
+        std::set<sv_index_type> basis_set{basis.cbegin(), basis.cend()};
+        CHECK(ref_cl.count(basis_set) == 1);
+      }
+    }
+
+    SECTION("subspace_basis()") {
+      for(int subspace = 0; subspace < sp.n_subspaces(); ++subspace) {
+        auto basis = sp.subspace_basis(subspace);
+        std::set<sv_index_type> basis_set{basis.cbegin(), basis.cend()};
+        CHECK(ref_cl.count(basis_set) == 1);
+      }
+      CHECK_THROWS_AS(sp.subspace_basis(sp.n_subspaces()), std::runtime_error);
+    }
   }
 
   SECTION("Matrix elements") {

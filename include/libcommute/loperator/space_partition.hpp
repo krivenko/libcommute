@@ -22,8 +22,10 @@
 #include <map>
 #include <set>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <utility>
+#include <vector>
 
 //
 // Implementation of the automatic partitioning algorithm
@@ -270,6 +272,27 @@ public:
     });
 
     return connections;
+  }
+
+  // Build a list of all basis states spanning a given subspace 'index'.
+  std::vector<sv_index_type> subspace_basis(sv_index_type index) const {
+    if(index >= n_subspaces())
+      throw std::runtime_error("Wrong subspace index " + std::to_string(index));
+    std::vector<sv_index_type> basis;
+    foreach(*this, [&](sv_index_type i, sv_index_type subspace) {
+      if(subspace == index) basis.emplace_back(i);
+    });
+    return basis;
+  }
+
+  // Build lists of basis states spanning subspaces in this partition.
+  std::vector<std::vector<sv_index_type>> subspace_bases() const {
+    std::vector<std::vector<sv_index_type>> bases(n_subspaces(),
+                                                  std::vector<sv_index_type>{});
+    foreach(*this, [&](sv_index_type i, sv_index_type subspace) {
+      bases[subspace].emplace_back(i);
+    });
+    return bases;
   }
 
   // Apply a functor `f` to all basis states in a given space partition.

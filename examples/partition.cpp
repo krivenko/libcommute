@@ -144,10 +144,8 @@ int main() {
   //
 
   // Collect all basis state indices from one subspace
-  std::vector<sv_index_type> basis_states_in_subspace_24;
-  foreach(sp2, [&](sv_index_type index, sv_index_type subspace) {
-    if(subspace == 24) basis_states_in_subspace_24.push_back(index);
-  });
+  std::vector<sv_index_type> basis_states_in_subspace_24 =
+      sp2.subspace_basis(24);
 
   auto sp24_dim = basis_states_in_subspace_24.size();
   std::cout << "Subspace 24 is " << sp24_dim << "-dimensional" << std::endl;

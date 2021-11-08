@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - Unreleased
+
+- New methods ``space_partition::subspace_basis()`` and
+  ``space_partition::subspace_bases()``.
+
 ## [0.7.0] - 21-10-09
 
 - Added an implementation of the ``StateVector`` concept for some
