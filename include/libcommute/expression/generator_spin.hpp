@@ -261,8 +261,7 @@ make_spin(double spin, spin_component c, IndexTypes&&... indices) {
 #if __cplusplus >= 201703L
 #include "dyn_indices.hpp"
 
-namespace libcommute {
-namespace dynamic_indices {
+namespace libcommute::dynamic_indices {
 
 // Convenience factory functions for dynamic indices
 template <typename... IndexTypes>
@@ -277,8 +276,7 @@ make_spin(double spin, spin_component c, IndexTypes&&... indices) {
   return {spin, c, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 
-} // namespace dynamic_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices
 #endif
 
 #endif

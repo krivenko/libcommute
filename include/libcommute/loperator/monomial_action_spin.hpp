@@ -88,22 +88,21 @@ public:
 
       if(next_it == end_it || *next_it != *it) {
         auto const& g = dynamic_cast<generator_spin<IndexTypes...> const&>(*it);
-        double spin = g.spin();
+        double s = g.spin();
 
-        elementary_space_spin<IndexTypes...> es(spin, g.indices());
+        elementary_space_spin<IndexTypes...> es(s, g.indices());
         if(!hs.has(es)) throw unknown_generator<IndexTypes...>(g);
 
         bit_range_t const& bit_range = hs.bit_range(es);
         int shift = bit_range.first;
         int n_bits = bit_range.second - bit_range.first + 1;
 
-        sv_index_type ss = g.multiplicity() % 2 == 0 ?
-                               (spin + 0.5) * (spin + 0.5) :
-                               spin * (spin + 1);
+        sv_index_type ss =
+            g.multiplicity() % 2 == 0 ? (s + 0.5) * (s + 0.5) : s * (s + 1);
         sqr_roots_size = std::max(sqr_roots_size, ss + 1);
 
         updates_.emplace_back(
-            single_spin_update_t{sv_index_type(2 * spin),
+            single_spin_update_t{sv_index_type(2 * s),
                                  shift,
                                  (sv_index_type(1) << n_bits) - 1,
                                  g.component(),

@@ -31,8 +31,7 @@
 // Factory functions for `expression<ScalarType, dyn_indices>`
 //
 
-namespace libcommute {
-namespace dynamic_indices {
+namespace libcommute::dynamic_indices {
 
 #define INDICES std::forward<IndexTypes>(indices)...
 #define DEFINE_FACTORY(NAME, ...)                                              \
@@ -140,14 +139,13 @@ S_y(IndexTypes&&... indices) {
 
 // Make a complex expression out of a real one
 inline expr_complex make_complex(expr_real const& expr) {
-  return expr_complex(expr);
+  return {expr};
 }
 
 #undef DEFINE_FACTORY
 #undef DEFINE_FACTORY_SPIN
 #undef INDICES
 
-} // namespace dynamic_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices
 
 #endif

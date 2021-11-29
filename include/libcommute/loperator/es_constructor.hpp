@@ -171,8 +171,8 @@ public:
   template <typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-    double spin = dynamic_cast<generator_spin<IndexTypes...> const&>(g).spin();
-    return make_unique<elementary_space_spin<IndexTypes...>>(spin, g.indices());
+    double s = dynamic_cast<generator_spin<IndexTypes...> const&>(g).spin();
+    return make_unique<elementary_space_spin<IndexTypes...>>(s, g.indices());
   }
 };
 

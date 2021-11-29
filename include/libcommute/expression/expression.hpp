@@ -997,15 +997,13 @@ using expr_complex = expression<std::complex<double>, IndexTypes...>;
 #if __cplusplus >= 201703L
 #include "dyn_indices.hpp"
 
-namespace libcommute {
-namespace dynamic_indices {
+namespace libcommute::dynamic_indices {
 
 // Aliases for specific scalar types
 using expr_real = expression<double, dyn_indices>;
 using expr_complex = expression<std::complex<double>, dyn_indices>;
 
-} // namespace dynamic_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices
 
 #endif
 

@@ -77,8 +77,7 @@ make_space_boson(int n_bits, IndexTypes&&... indices) {
 #if __cplusplus >= 201703L
 #include "../expression/dyn_indices.hpp"
 
-namespace libcommute {
-namespace dynamic_indices {
+namespace libcommute::dynamic_indices {
 
 // Convenience factory function for dynamic indices
 template <typename... IndexTypes>
@@ -88,8 +87,7 @@ make_space_boson(int n_bits, IndexTypes&&... indices) {
   return {n_bits, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 
-} // namespace dynamic_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices
 #endif
 
 #endif

@@ -139,8 +139,7 @@ make_fermion(bool dagger, IndexTypes&&... indices) {
 #if __cplusplus >= 201703L
 #include "dyn_indices.hpp"
 
-namespace libcommute {
-namespace dynamic_indices {
+namespace libcommute::dynamic_indices {
 
 // Convenience factory functions for dynamic indices
 template <typename... IndexTypes>
@@ -149,8 +148,7 @@ inline generator_fermion<dyn_indices> make_fermion(bool dagger,
   return {dagger, dyn_indices(std::forward<IndexTypes>(indices)...)};
 }
 
-} // namespace dynamic_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices
 #endif
 
 #endif

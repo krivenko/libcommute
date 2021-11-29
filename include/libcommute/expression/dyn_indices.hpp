@@ -25,8 +25,7 @@
 #error "This header file requires a C++-17 compliant compiler"
 #endif
 
-namespace libcommute {
-namespace dynamic_indices {
+namespace libcommute::dynamic_indices {
 
 //
 // Dynamic sequence of indices
@@ -53,13 +52,13 @@ public:
             typename = std::enable_if_t<
                 (!std::is_same_v<remove_cvref_t<Arg>, indices_t>)&&(
                     !std::is_same_v<remove_cvref_t<Arg>, dyn_indices_generic>)>>
-  dyn_indices_generic(Arg&& arg) {
+  explicit dyn_indices_generic(Arg&& arg) {
     indices_.emplace_back(std::forward<Arg>(arg));
   }
 
   template <typename... Args,
             typename = std::enable_if_t<(sizeof...(Args) > 1)>>
-  dyn_indices_generic(Args&&... args) {
+  explicit dyn_indices_generic(Args&&... args) {
     (indices_.emplace_back(std::forward<Args>(args)), ...);
   }
 
@@ -99,7 +98,7 @@ public:
   }
 
   // Reference to underlying sequence
-  explicit operator indices_t const &() const { return indices_; }
+  explicit operator indices_t const&() const { return indices_; }
 
   // Stream output
   friend std::ostream& operator<<(std::ostream& os,
@@ -116,7 +115,6 @@ public:
 // Dynamic sequence of integer/string indices
 using dyn_indices = dyn_indices_generic<int, std::string>;
 
-} // namespace dynamic_indices
-} // namespace libcommute
+} // namespace libcommute::dynamic_indices
 
 #endif
