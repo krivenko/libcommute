@@ -12,3 +12,4 @@ Advanced examples
     parametric_loperator
     virasoro_algebra
     n_fermion_sectors
+    hubbard_holstein_1d

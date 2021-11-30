@@ -32,7 +32,7 @@ endforeach()
 # Examples using Eigen 3
 if(Eigen3_FOUND)
   message(STATUS "Enabling Eigen 3 examples")
-  set(EIGEN3_EXAMPLES n_fermion_sectors)
+  set(EIGEN3_EXAMPLES n_fermion_sectors hubbard_holstein_1d)
   foreach(e ${EIGEN3_EXAMPLES})
     set(s ${CMAKE_CURRENT_SOURCE_DIR}/${e}.cpp)
     add_executable(${e} ${s})
