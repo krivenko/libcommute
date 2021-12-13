@@ -221,6 +221,21 @@ references returned by it.</p>
 <dd><p>Get the number of non-zero (stored) elements.</p>
 </dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10libcommute19sparse_state_vector5pruneEv">
+<span id="_CPPv3N10libcommute19sparse_state_vector5pruneEv"></span><span id="_CPPv2N10libcommute19sparse_state_vector5pruneEv"></span><span id="libcommute::sparse_state_vector::prune"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prune</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute19sparse_state_vector5pruneEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Remove all zero elements (as defined by
+<a class="reference internal" href="../expression/expression.html#custom-scalar-type"><span class="std std-ref">scalar_traits&lt;ScalarType&gt;::is_zero()</span></a>)
+from the unordered map.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN10libcommute19sparse_state_vector5pruneEvRR14UnaryPredicate">
+<span id="_CPPv3I0EN10libcommute19sparse_state_vector5pruneERR14UnaryPredicate"></span><span id="_CPPv2I0EN10libcommute19sparse_state_vector5pruneERR14UnaryPredicate"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UnaryPredicate</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prune</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN10libcommute19sparse_state_vector5pruneEvRR14UnaryPredicate" title="libcommute::sparse_state_vector::prune::UnaryPredicate"><span class="n"><span class="pre">UnaryPredicate</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN10libcommute19sparse_state_vector5pruneEvRR14UnaryPredicate" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Remove unordered map elements (amplitudes) for which predicate <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4I0EN10libcommute19sparse_state_vector5pruneEvRR14UnaryPredicate" title="libcommute::sparse_state_vector::prune::p"><span class="n">p</span></a></span>
+returns <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>

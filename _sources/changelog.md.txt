@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - New methods ``space_partition::subspace_basis()`` and
   ``space_partition::subspace_bases()``.
+- New methods ``sparse_state_vector::prune()`` (two overloads).
 
 ## [0.7.0] - 21-10-09
 
