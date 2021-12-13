@@ -47,4 +47,18 @@ TEST_CASE("Implementation of the StateVector concept based on a sparse storage",
   CHECK(v2.n_nonzeros() == 0);
   set_zeros(v);
   CHECK(v.n_nonzeros() == 0);
+
+  sparse_state_vector<double> v3(100);
+  v3[0] = 4;
+  v3[1] = 5;
+  v3[2] = 6;
+  v3[10] = 0;
+  v3[11] = 7;
+  REQUIRE(v3.n_nonzeros() == 5);
+  v3.prune();
+  CHECK(v3.n_nonzeros() == 4);
+  v3.prune([](double a) { return int(a) % 2 == 0; });
+  CHECK(v3.n_nonzeros() == 2);
+  CHECK(get_element(v3, 1) == 5);
+  CHECK(get_element(v3, 11) == 7);
 }

@@ -80,6 +80,26 @@ public:
     for(auto const& p : sv.data_)
       f(p.first, p.second);
   }
+
+  // Force removal of all zero amplitudes from the storage
+  inline void prune() {
+    for(auto it = data_.begin(); it != data_.end();) {
+      if(scalar_traits<ScalarType>::is_zero(it->second))
+        it = data_.erase(it);
+      else
+        ++it;
+    }
+  }
+
+  // Force removal of all amplitudes meeting a specified criterion
+  template <typename UnaryPredicate> inline void prune(UnaryPredicate&& p) {
+    for(auto it = data_.begin(); it != data_.end();) {
+      if(p(it->second))
+        it = data_.erase(it);
+      else
+        ++it;
+    }
+  }
 };
 
 // Get element type of a sparse_state_vector<ScalarType> object

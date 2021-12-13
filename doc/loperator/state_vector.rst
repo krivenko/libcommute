@@ -138,6 +138,17 @@ only the part of its interface not covered by ``StateVector``.
 
     Get the number of non-zero (stored) elements.
 
+  .. function:: void prune()
+
+    Remove all zero elements (as defined by
+    :ref:`scalar_traits\<ScalarType\>::is_zero() <custom_scalar_type>`)
+    from the unordered map.
+
+  .. function:: template<typename UnaryPredicate> void prune(UnaryPredicate&& p)
+
+    Remove unordered map elements (amplitudes) for which predicate :expr:`p`
+    returns ``true``.
+
 .. _mapped_basis_view:
 
 Mapped basis view
