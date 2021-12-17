@@ -2,13 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.7.1] - Unreleased
+## [0.7.1] - 2021-12-17
 
 - New methods ``space_partition::subspace_basis()`` and
   ``space_partition::subspace_bases()``.
 - New methods ``sparse_state_vector::prune()`` (two overloads).
+- New example ``hubbard_holstein_1d`` and minor updates to the documentation.
 
-## [0.7.0] - 21-10-09
+## [0.7.0] - 2021-10-09
 
 - Added an implementation of the ``StateVector`` concept for some
   [Eigen 3](https://eigen.tuxfamily.org/) types (vectors, vector segments,
