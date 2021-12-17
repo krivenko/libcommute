@@ -26,7 +26,10 @@
 // 'SelfAdjointEigenSolver' and the 'n_fermion_sector_view' objects.
 //
 
+// 'state_vector_eigen3.hpp' must be included before 'libcommute.hpp'.
+// This way libcommute will know how to deal with Eigen's vector types.
 #include <libcommute/loperator/state_vector_eigen3.hpp>
+
 #include <libcommute/libcommute.hpp>
 
 #include <Eigen/Eigenvalues>
