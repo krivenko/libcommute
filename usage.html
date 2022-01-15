@@ -117,23 +117,23 @@ make <em>libcommute</em>’s header files visible to your code.</p>
 <h2>CMake<a class="headerlink" href="#cmake" title="Permalink to this headline"></a></h2>
 <p>Here is a minimal example of a root <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> script for your
 project.</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.8.0</span> <span class="s">FATAL_ERROR</span><span class="p">)</span>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.8.0</span><span class="w"> </span><span class="s">FATAL_ERROR</span><span class="p">)</span>
 
-<span class="nb">project</span><span class="p">(</span><span class="s">myproject</span> <span class="s">LANGUAGES</span> <span class="s">CXX</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">myproject</span><span class="w"> </span><span class="s">LANGUAGES</span><span class="w"> </span><span class="s">CXX</span><span class="p">)</span>
 
 <span class="c"># Change the C++ standard to &#39;17&#39; if you plan to use</span>
 <span class="c"># the dynamic index sequence feature</span>
-<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">11</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">11</span><span class="p">)</span>
 
 <span class="c"># LIBCOMMUTE_ROOT is the installation prefix of libcommute</span>
-<span class="nb">set</span><span class="p">(</span><span class="s">LIBCOMMUTE_DIR</span> <span class="o">${</span><span class="nv">LIBCOMMUTE_ROOT</span><span class="o">}</span><span class="s">/lib/cmake</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">LIBCOMMUTE_DIR</span><span class="w"> </span><span class="o">${</span><span class="nv">LIBCOMMUTE_ROOT</span><span class="o">}</span><span class="s">/lib/cmake</span><span class="p">)</span>
 
 <span class="c"># Import libcommute target</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">libcommute</span> <span class="s">0.4</span> <span class="s">CONFIG</span> <span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">libcommute</span><span class="w"> </span><span class="s">0.4</span><span class="w"> </span><span class="s">CONFIG</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 
 <span class="c"># Build an executable called &#39;myprog&#39;</span>
-<span class="nb">add_executable</span><span class="p">(</span><span class="s">myprog</span> <span class="s">myprog.cpp</span><span class="p">)</span>
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">myprog</span> <span class="s">PRIVATE</span> <span class="s">libcommute</span><span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">myprog.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">libcommute</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

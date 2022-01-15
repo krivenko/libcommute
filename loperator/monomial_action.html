@@ -117,7 +117,7 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
 <span class="c1">// 4-dimensional elementary space gamma matrices act in</span>
 <span class="c1">//</span>
 
-<span class="k">class</span> <span class="nc">elementary_space_gamma</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">elementary_space_gamma</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
 
@@ -160,7 +160,7 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">class</span> <span class="nc">monomial_action</span><span class="o">&lt;</span><span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">monomial_action</span><span class="o">&lt;</span><span class="n">libcommute</span><span class="o">::</span><span class="n">gamma</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="w">  </span><span class="c1">// Indices of matrices in the product, right to left.</span>
 <span class="w">  </span><span class="c1">// This order is chosen because the matrix on the right acts on a state first</span>
@@ -195,13 +195,13 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <span class="w">  </span><span class="c1">// &#39;coeff&#39; must be multiplied by the overall constant factor acquired as</span>
 <span class="w">  </span><span class="c1">// a result of monomial action.</span>
 <span class="w">  </span><span class="c1">//</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">ScalarType</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ScalarType</span><span class="o">&gt;</span><span class="w"></span>
 <span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">act</span><span class="p">(</span><span class="n">sv_index_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">ScalarType</span><span class="o">&amp;</span><span class="w"> </span><span class="n">coeff</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Act with all matrices in the product, right to left</span>
-<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="nl">i</span> <span class="p">:</span><span class="w"> </span><span class="n">index_sequence</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">index_sequence</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="k">switch</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1">// Action of \gamma^0</span>

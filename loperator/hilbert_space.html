@@ -595,7 +595,7 @@ generators into elementary spaces to the functor passed as its second (optional)
 argument. It is possible to customize the translation process by giving
 <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> a callable object similar to the following one</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// A custom elementary space constructor object</span>
-<span class="k">struct</span> <span class="nc">my_es_constructor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_es_constructor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">IndexTypes</span><span class="o">&gt;</span><span class="w"></span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="w"></span>
@@ -635,7 +635,7 @@ can be achieved in a few steps by means of a special utility class
 </div>
 </li>
 <li><p>Specialize class <a class="reference internal" href="#_CPPv4I_DpiEN10libcommute14es_constructorE" title="libcommute::es_constructor"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::es_constructor</span></code></a> as follows</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">class</span> <span class="nc">es_constructor</span><span class="o">&lt;</span><span class="n">my_algebra_id</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">es_constructor</span><span class="o">&lt;</span><span class="n">my_algebra_id</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="k">public</span><span class="o">:</span><span class="w"></span>
 
 <span class="w">  </span><span class="n">es_constructor</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span><span class="w"></span>
