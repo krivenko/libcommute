@@ -71,9 +71,6 @@ jobs:
       run: |
            cd ${GITHUB_WORKSPACE}/build
            make install
-           if [[ "${{ matrix.cxx_compiler.name }}" == "clang" ]]; then
-             touch ${GITHUB_WORKSPACE}/installed/share/doc/libcommute/.nojekyll
-           fi
 
     - name: Deploy documentation
       if: |
