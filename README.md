@@ -39,14 +39,14 @@ Installation
 You will need CMake version 3.8.0 or newer [1] to build examples/unit tests and
 to install *libcommute* so that it can be used from other CMake projects.
 
-Assuming that *libcommute* is to be installed in `<LIBCOMMUTE_PREFIX>`,
+Assuming that *libcommute* is to be installed in `<libcommute_prefix>`,
 the installation normally proceeds in a few simple steps.
 
 ```
 $ git clone https://github.com/krivenko/libcommute.git libcommute.src
 $ mkdir libcommute.build && cd libcommute.build
 $ cmake ../libcommute.src                    \
-  -DCMAKE_INSTALL_PREFIX=<LIBCOMMUTE_PREFIX> \
+  -DCMAKE_INSTALL_PREFIX=<libcommute_prefix> \
   -DEXAMPLES=ON                              \
   -DTESTS=ON
 $ make
@@ -73,8 +73,8 @@ a minimal example of an application `CMakeLists.txt` file.
   # the dynamic index sequence feature
   set(CMAKE_CXX_STANDARD 11)
 
-  # LIBCOMMUTE_ROOT is the installation prefix of libcommute
-  set(LIBCOMMUTE_DIR ${LIBCOMMUTE_ROOT}/lib/cmake)
+  # libcommute_ROOT is the installation prefix of libcommute
+  set(libcommute_DIR ${libcommute_ROOT}/lib/cmake)
 
   # Import libcommute target
   find_package(libcommute 0.4 CONFIG REQUIRED)
