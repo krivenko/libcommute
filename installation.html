@@ -98,7 +98,7 @@ The minimum required version of CMake is <strong>3.8.0</strong>.</p>
 <p>The following sequence of shell commands will build unit tests and examples.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkdir libcommute.build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> libcommute.build
 $ cmake ../libcommute.src                       <span class="se">\</span>
-  -DCMAKE_INSTALL_PREFIX<span class="o">=</span>&lt;LIBCOMMUTE_PREFIX&gt;    <span class="se">\</span>
+  -DCMAKE_INSTALL_PREFIX<span class="o">=</span>&lt;libcommute_prefix&gt;    <span class="se">\</span>
   -DEXAMPLES<span class="o">=</span>ON                                 <span class="se">\</span>
   -DTESTS<span class="o">=</span>ON
 $ make
@@ -115,7 +115,7 @@ to detect potential problems early on.</p>
 <p>Failed tests (having anything different from <code class="docutils literal notranslate"><span class="pre">Passed</span></code> in the test result
 column) signal host-specific compilation/linking problems or bugs in the library
 itself. The following command completes installation of library’s files into
-<code class="docutils literal notranslate"><span class="pre">&lt;LIBCOMMUTE_PREFIX&gt;</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">&lt;libcommute_prefix&gt;</span></code>.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make install
 </pre></div>
 </div>

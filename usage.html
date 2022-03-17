@@ -93,11 +93,11 @@ all <em>libcommute</em>’s headers. The entire library is under 5000 lines of c
 compilation times should normally not be a concern.</p>
 <section id="makefiles-no-build-system">
 <h2>Makefiles/no build system<a class="headerlink" href="#makefiles-no-build-system" title="Permalink to this headline"></a></h2>
-<p>Assume that <code class="docutils literal notranslate"><span class="pre">&lt;LIBCOMMUTE&gt;</span></code> is either a directory with unpacked
+<p>Assume that <code class="docutils literal notranslate"><span class="pre">&lt;libcommute&gt;</span></code> is either a directory with unpacked
 <em>libcommute</em> sources or the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">installation</span></a>
 directory. Just one <code class="docutils literal notranslate"><span class="pre">-I</span></code> flag on compiler’s command line is sufficient to
 make <em>libcommute</em>’s header files visible to your code.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>g++ -O3 -I&lt;LIBCOMMUTE&gt;/include -o myprog myprog.cpp
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>g++ -O3 -I&lt;libcommute&gt;/include -o myprog myprog.cpp
 </pre></div>
 </div>
 <p>(similar for <code class="docutils literal notranslate"><span class="pre">clang++</span></code> and other compilers).</p>
@@ -105,12 +105,12 @@ make <em>libcommute</em>’s header files visible to your code.</p>
 <section id="pkg-config">
 <h2>pkg-config<a class="headerlink" href="#pkg-config" title="Permalink to this headline"></a></h2>
 <p><em>libcommute</em> installs a pkg-config configuration file <code class="docutils literal notranslate"><span class="pre">libcommute.pc</span></code> under
-<code class="docutils literal notranslate"><span class="pre">&lt;LIBCOMMUTE_PREFIX&gt;/share/pkgconfig</span></code>. One can run</p>
+<code class="docutils literal notranslate"><span class="pre">&lt;libcommute_prefix&gt;/share/pkgconfig</span></code>. One can run</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pkg-config --cflags libcommute
 </pre></div>
 </div>
 <p>get the correct <code class="docutils literal notranslate"><span class="pre">-I</span></code> flag needed for compilation. This method requires
-<code class="docutils literal notranslate"><span class="pre">&lt;LIBCOMMUTE_PREFIX&gt;/share/pkgconfig</span></code> being part of pkg-config’s lookup path
+<code class="docutils literal notranslate"><span class="pre">&lt;libcommute_prefix&gt;/share/pkgconfig</span></code> being part of pkg-config’s lookup path
 (modification of the <code class="docutils literal notranslate"><span class="pre">PKG_CONFIG_PATH</span></code> environment variable may be needed).</p>
 </section>
 <section id="cmake">
@@ -125,8 +125,8 @@ project.</p>
 <span class="c"># the dynamic index sequence feature</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">11</span><span class="p">)</span>
 
-<span class="c"># LIBCOMMUTE_ROOT is the installation prefix of libcommute</span>
-<span class="nb">set</span><span class="p">(</span><span class="s">LIBCOMMUTE_DIR</span><span class="w"> </span><span class="o">${</span><span class="nv">LIBCOMMUTE_ROOT</span><span class="o">}</span><span class="s">/lib/cmake</span><span class="p">)</span>
+<span class="c"># libcommute_ROOT is the installation prefix of libcommute</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">libcommute_DIR</span><span class="w"> </span><span class="o">${</span><span class="nv">libcommute_ROOT</span><span class="o">}</span><span class="s">/lib/cmake</span><span class="p">)</span>
 
 <span class="c"># Import libcommute target</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">libcommute</span><span class="w"> </span><span class="s">0.4</span><span class="w"> </span><span class="s">CONFIG</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>

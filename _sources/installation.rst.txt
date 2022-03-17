@@ -29,7 +29,7 @@ The following sequence of shell commands will build unit tests and examples.
 
     $ mkdir libcommute.build && cd libcommute.build
     $ cmake ../libcommute.src                       \
-      -DCMAKE_INSTALL_PREFIX=<LIBCOMMUTE_PREFIX>    \
+      -DCMAKE_INSTALL_PREFIX=<libcommute_prefix>    \
       -DEXAMPLES=ON                                 \
       -DTESTS=ON
     $ make
@@ -48,7 +48,7 @@ to detect potential problems early on.
 Failed tests (having anything different from ``Passed`` in the test result
 column) signal host-specific compilation/linking problems or bugs in the library
 itself. The following command completes installation of library's files into
-``<LIBCOMMUTE_PREFIX>``.
+``<libcommute_prefix>``.
 
 .. code-block:: shell
 
