@@ -47,7 +47,7 @@ public:
   // Value semantics
   template <typename... Args>
   generator_spin(spin_component c, Args&&... indices)
-    : base(std::forward<Args>(indices)...), multiplicity_(2), c_(c) {}
+    : base(std::forward<Args>(indices)...), c_(c) {}
   template <typename... Args>
   generator_spin(double spin, spin_component c, Args&&... indices)
     : base(std::forward<Args>(indices)...),
@@ -138,7 +138,7 @@ public:
 
 private:
   // Multiplicity, 2S+1
-  int multiplicity_;
+  int multiplicity_ = 2;
 
   // Creation or annihilation operator?
   spin_component c_;
