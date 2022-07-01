@@ -15,6 +15,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -92,7 +93,7 @@
            <div itemprop="articleBody">
              
   <section id="finite-dimensional-hilbert-spaces">
-<span id="hilbert-space"></span><h1>Finite-dimensional Hilbert spaces<a class="headerlink" href="#finite-dimensional-hilbert-spaces" title="Permalink to this headline"></a></h1>
+<span id="hilbert-space"></span><h1>Finite-dimensional Hilbert spaces<a class="headerlink" href="#finite-dimensional-hilbert-spaces" title="Permalink to this heading"></a></h1>
 <p>Class <a class="reference internal" href="#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">hilbert_space</span></code></a> is an abstraction of a finite-dimensional state
 space of a quantum system. It contains information needed to construct a
 <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator object</span></a> out of a
@@ -382,7 +383,7 @@ more convenient equivalent of one of <a class="reference internal" href="#_CPPv4
 </dd></dl>
 
 <section id="elementary-spaces">
-<span id="id1"></span><h2>Elementary spaces<a class="headerlink" href="#elementary-spaces" title="Permalink to this headline"></a></h2>
+<span id="id1"></span><h2>Elementary spaces<a class="headerlink" href="#elementary-spaces" title="Permalink to this heading"></a></h2>
 <p>An elementary space has an <a class="reference internal" href="../expression/generator.html#generator"><span class="std std-ref">algebra ID</span></a> assigned to it and
 carries a tuple of indices. Together, these two pieces of information link
 the elementary space to algebra generators acting in it.</p>
@@ -588,7 +589,7 @@ dynamic index sequence.</p>
 
 </section>
 <section id="advanced-customization-of-automatic-hilbert-space-construction">
-<span id="es-constructor"></span><h2>Advanced: Customization of automatic Hilbert space construction<a class="headerlink" href="#advanced-customization-of-automatic-hilbert-space-construction" title="Permalink to this headline"></a></h2>
+<span id="es-constructor"></span><h2>Advanced: Customization of automatic Hilbert space construction<a class="headerlink" href="#advanced-customization-of-automatic-hilbert-space-construction" title="Permalink to this heading"></a></h2>
 <p><a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> delegates the task of translating algebra
 generators into elementary spaces to the functor passed as its second (optional)
 argument. It is possible to customize the translation process by giving

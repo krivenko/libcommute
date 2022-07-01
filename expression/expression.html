@@ -15,6 +15,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -95,12 +96,12 @@
            <div itemprop="articleBody">
              
   <section id="polynomial-expressions">
-<span id="expression"></span><h1>Polynomial expressions<a class="headerlink" href="#polynomial-expressions" title="Permalink to this headline"></a></h1>
+<span id="expression"></span><h1>Polynomial expressions<a class="headerlink" href="#polynomial-expressions" title="Permalink to this heading"></a></h1>
 <p>This page describes how <em>libcommute</em> represent polynomial expressions built
 out of non-commuting quantum-mechanical operators and what features such
 expressions support.</p>
 <section id="class-definitions">
-<span id="expr-classes"></span><h2>Class definitions<a class="headerlink" href="#class-definitions" title="Permalink to this headline"></a></h2>
+<span id="expr-classes"></span><h2>Class definitions<a class="headerlink" href="#class-definitions" title="Permalink to this heading"></a></h2>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4I0DpEN10libcommute10expressionE">
 <span id="_CPPv3I0DpEN10libcommute10expressionE"></span><span id="_CPPv2I0DpEN10libcommute10expressionE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ScalarType</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">IndexTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expression</span></span></span><a class="headerlink" href="#_CPPv4I0DpEN10libcommute10expressionE" title="Permalink to this definition"></a><br /></dt>
@@ -387,7 +388,7 @@ indices.</p>
 
 </section>
 <section id="custom-scalar-types">
-<span id="custom-scalar-type"></span><h2>Custom scalar types<a class="headerlink" href="#custom-scalar-types" title="Permalink to this headline"></a></h2>
+<span id="custom-scalar-type"></span><h2>Custom scalar types<a class="headerlink" href="#custom-scalar-types" title="Permalink to this heading"></a></h2>
 <p>Choosing <span class="cpp-expr sig sig-inline cpp"><span class="kt">double</span></span> or <span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">complex</span><span class="p">&lt;</span><span class="kt">double</span><span class="p">&gt;</span></span> as the scalar type of
 expressions covers the vast majority of practically important cases.
 Nonetheless, sometimes it may be desirable to go beyond and pass a
@@ -449,7 +450,7 @@ defining a special macro <span class="cpp-expr sig sig-inline cpp"><span class="
 </div>
 </section>
 <section id="c-17-dynamically-typed-index-sequences">
-<span id="dyn-indices"></span><h2>[C++17] Dynamically typed index sequences<a class="headerlink" href="#c-17-dynamically-typed-index-sequences" title="Permalink to this headline"></a></h2>
+<span id="dyn-indices"></span><h2>[C++17] Dynamically typed index sequences<a class="headerlink" href="#c-17-dynamically-typed-index-sequences" title="Permalink to this heading"></a></h2>
 <p>On the most basic level, index sequences of all generators found in a single
 expression must agree in types with the <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::IndexTypes"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">IndexTypes</span></code></a> template parameter pack. In many
 situations, however, it is more natural to have generators with different
@@ -576,7 +577,7 @@ convenience.</p>
 
 </section>
 <section id="iteration-interface-and-transformations">
-<span id="expr-iteration"></span><h2>Iteration interface and transformations<a class="headerlink" href="#iteration-interface-and-transformations" title="Permalink to this headline"></a></h2>
+<span id="expr-iteration"></span><h2>Iteration interface and transformations<a class="headerlink" href="#iteration-interface-and-transformations" title="Permalink to this heading"></a></h2>
 <p>Both expressions and their constituent monomials can be easily iterated over
 using STL-compatible <a class="reference internal" href="#_CPPv4N10libcommute10expression14const_iteratorE" title="libcommute::expression::const_iterator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">iterators</span></code></a> or
 range-based <code class="docutils literal notranslate"><span class="pre">for</span></code>-loops.
@@ -617,11 +618,11 @@ This allows for writing complex expression analysis algorithms.</p>
 <span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">is_spin</span><span class="p">(</span><span class="n">g</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Print information about spin operators</span>
 <span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">generator_spin</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">);</span><span class="w"></span>
 <span class="w">        </span><span class="k">switch</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">component</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="nl">plus</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="no">plus</span><span class="p">:</span><span class="w"></span>
 <span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;S_+(&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
-<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="nl">minus</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="no">minus</span><span class="p">:</span><span class="w"></span>
 <span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;S_-(&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
-<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="nl">z</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="no">z</span><span class="p">:</span><span class="w"></span>
 <span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;S_z(&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">indices</span><span class="p">());</span><span class="w"></span>
@@ -702,7 +703,7 @@ taken to be different on odd and even chain links.</p>
 </div>
 </section>
 <section id="pm-h-c-notation">
-<span id="hc"></span><h2><span class="math notranslate nohighlight">\(\pm H.c.\)</span> notation<a class="headerlink" href="#pm-h-c-notation" title="Permalink to this headline"></a></h2>
+<span id="hc"></span><h2><span class="math notranslate nohighlight">\(\pm H.c.\)</span> notation<a class="headerlink" href="#pm-h-c-notation" title="Permalink to this heading"></a></h2>
 <p>It is common to use the <span class="math notranslate nohighlight">\(\pm H.c.\)</span> (“plus/minus Hermitian conjugate”)
 notation to abbreviate analytical expressions when writing down Hamiltonians
 and other Hermitian operators. The same trick works with <em>libcommute</em>’s

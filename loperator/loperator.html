@@ -15,6 +15,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -92,7 +93,7 @@
            <div itemprop="articleBody">
              
   <section id="linear-operators">
-<span id="loperator"></span><h1>Linear operators<a class="headerlink" href="#linear-operators" title="Permalink to this headline"></a></h1>
+<span id="loperator"></span><h1>Linear operators<a class="headerlink" href="#linear-operators" title="Permalink to this heading"></a></h1>
 <p><em>libcommute</em>’s linear operators implement action of
 <a class="reference internal" href="../expression/expression.html#expression"><span class="std std-ref">polynomial expressions</span></a> on
 <a class="reference internal" href="state_vector.html#state-vector"><span class="std std-ref">state vectors</span></a> in
@@ -102,7 +103,7 @@ classes are core devices used to build exact diagonalization routines based on
 <p>The linear operators come in two flavors, simple (<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a>)
 and parametric (<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a>).</p>
 <section id="simple-linear-operator">
-<span id="simple-loperator"></span><h2>Simple linear operator<a class="headerlink" href="#simple-linear-operator" title="Permalink to this headline"></a></h2>
+<span id="simple-loperator"></span><h2>Simple linear operator<a class="headerlink" href="#simple-linear-operator" title="Permalink to this heading"></a></h2>
 <p>Simple linear operators are instances of class template <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute9loperatorE" title="libcommute::loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">loperator</span></code></a>.</p>
 <p>Let us assume that <span class="cpp-expr sig sig-inline cpp"><span class="n">expr</span></span> is a real expression involving only the
 predefined algebras (fermions, bosons and spins), and <span class="cpp-expr sig sig-inline cpp"><span class="n">hs</span></span> is a Hilbert
@@ -218,7 +219,7 @@ constructor.</p>
 
 </section>
 <section id="parametric-linear-operator">
-<span id="param-loperator"></span><h2>Parametric linear operator<a class="headerlink" href="#parametric-linear-operator" title="Permalink to this headline"></a></h2>
+<span id="param-loperator"></span><h2>Parametric linear operator<a class="headerlink" href="#parametric-linear-operator" title="Permalink to this heading"></a></h2>
 <p>Parametric linear operators are similar to
 the <a class="reference internal" href="#simple-loperator"><span class="std std-ref">simple ones</span></a> with one important distinction. They
 represent polynomial expressions with coefficients that support function-like
