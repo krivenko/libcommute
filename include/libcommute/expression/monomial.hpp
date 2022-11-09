@@ -307,7 +307,8 @@ public:
   using pointer = std::unique_ptr<generator_type> const&;
   using reference = generator_type const&;
 
-  explicit const_iterator(vector_it const& v_it) : v_it_(v_it) {}
+  // cppcheck-suppress noExplicitConstructor
+  const_iterator(vector_it const& v_it) : v_it_(v_it) {}
 
   const_iterator() = default;
   const_iterator(const_iterator const&) = default;
