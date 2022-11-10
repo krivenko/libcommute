@@ -3,7 +3,7 @@
  * This file is part of libcommute, a quantum operator algebra DSL and
  * exact diagonalization toolkit for C++11/14/17.
  *
- * Copyright (C) 2016-2021 Igor Krivenko <igor.s.krivenko@gmail.com>
+ * Copyright (C) 2016-2022 Igor Krivenko <igor.s.krivenko@gmail.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
