@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; libcommute 0.7.1 documentation</title>
+  <title>Changelog &mdash; libcommute 0.7.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/_static/theme_overrides.css" type="text/css" />
@@ -34,7 +34,7 @@
             <img src="_static/logo_small.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -51,9 +51,10 @@
 <li class="toctree-l1"><a class="reference internal" href="loperator/index.html">Tools for exact diagonalization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Advanced examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">[0.7.1] - 2021-12-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.0] - 2021-10-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">[0.6.1] - 2021-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">[0.7.2] - 2022-11-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.1] - 2021-12-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">[0.7.0] - 2021-10-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">[0.6.1] - 2021-03-30</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
@@ -88,7 +89,19 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
 <section id="id1">
-<h2>[0.7.1] - 2021-12-17<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<h2>[0.7.2] - 2022-11-10<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Install CMake configuration files into
+<code class="docutils literal notranslate"><span class="pre">${CMAKE_INSTALL_PREFIX}/lib/cmake/libcommute</span></code>, which is the recommended
+location.</p></li>
+<li><p>Upgraded bundled Catch2 to version 2.13.9 (this fixes issue #2 a.k.a.
+catchorg/Catch2#2178).</p></li>
+<li><p>Fixed compilation with clang/libc++ 15 (issue #5).</p></li>
+<li><p>Added project citation information.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>[0.7.1] - 2021-12-17<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>New methods <code class="docutils literal notranslate"><span class="pre">space_partition::subspace_basis()</span></code> and
 <code class="docutils literal notranslate"><span class="pre">space_partition::subspace_bases()</span></code>.</p></li>
@@ -96,8 +109,8 @@
 <li><p>New example <code class="docutils literal notranslate"><span class="pre">hubbard_holstein_1d</span></code> and minor updates to the documentation.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>[0.7.0] - 2021-10-09<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<section id="id3">
+<h2>[0.7.0] - 2021-10-09<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Added an implementation of the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept for some
 <a class="reference external" href="https://eigen.tuxfamily.org/">Eigen 3</a> types (vectors, vector segments,
@@ -125,8 +138,8 @@ tests and examples as part of build process.</p></li>
 <li><p>Reformatted C++ sources using <code class="docutils literal notranslate"><span class="pre">clang-format</span></code> and a style based on <code class="docutils literal notranslate"><span class="pre">LLVM</span></code>.</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<section id="id4">
+<h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>New method <code class="docutils literal notranslate"><span class="pre">hilbert_space::index()</span></code>.</p></li>
 </ul>
@@ -144,7 +157,7 @@ tests and examples as part of build process.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016-2021, Igor Krivenko.</p>
+    <p>&#169; Copyright 2016-2022, Igor Krivenko.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

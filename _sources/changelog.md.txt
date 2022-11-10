@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2022-11-10
+
+- Install CMake configuration files into
+  ``${CMAKE_INSTALL_PREFIX}/lib/cmake/libcommute``, which is the recommended
+  location.
+- Upgraded bundled Catch2 to version 2.13.9 (this fixes issue #2 a.k.a.
+  catchorg/Catch2#2178).
+- Fixed compilation with clang/libc++ 15 (issue #5).
+- Added project citation information.
+
 ## [0.7.1] - 2021-12-17
 
 - New methods ``space_partition::subspace_basis()`` and
