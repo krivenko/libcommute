@@ -60,8 +60,13 @@ project.
   set(libcommute_DIR ${libcommute_ROOT}/lib/cmake)
 
   # Import libcommute target
-  find_package(libcommute 0.4 CONFIG REQUIRED)
+  find_package(libcommute 0.7.2 CONFIG REQUIRED)
 
   # Build an executable called 'myprog'
   add_executable(myprog myprog.cpp)
-  target_link_libraries(myprog PRIVATE libcommute)
+  target_link_libraries(myprog PRIVATE libcommute::libcommute)
+
+.. note::
+
+  Starting from version 0.7.2, *libcommute* exports the namespaced CMake target
+  ``libcommute::libcommute`` instead of just ``libcommute``.

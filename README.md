@@ -77,11 +77,11 @@ a minimal example of an application `CMakeLists.txt` file.
   set(libcommute_DIR ${libcommute_ROOT}/lib/cmake)
 
   # Import libcommute target
-  find_package(libcommute 0.4 CONFIG REQUIRED)
+  find_package(libcommute 0.7.2 CONFIG REQUIRED)
 
   # Build an executable called 'myprog'
   add_executable(myprog myprog.cpp)
-  target_link_libraries(myprog PRIVATE libcommute)
+  target_link_libraries(myprog PRIVATE libcommute::libcommute)
 ```
 
 DSL for quantum-mechanical operators

@@ -60,7 +60,9 @@ configure_package_config_file(
   "${PROJECT_BINARY_DIR}/libcommuteConfig.cmake"
   INSTALL_DESTINATION lib/cmake
 )
-install(EXPORT libcommuteTargets DESTINATION lib/cmake/libcommute)
+install(EXPORT libcommuteTargets
+        NAMESPACE libcommute::
+        DESTINATION lib/cmake/libcommute)
 install(FILES "${PROJECT_BINARY_DIR}/libcommuteConfigVersion.cmake"
               "${PROJECT_BINARY_DIR}/libcommuteConfig.cmake"
         DESTINATION lib/cmake/libcommute)
