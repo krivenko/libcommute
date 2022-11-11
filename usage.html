@@ -131,12 +131,17 @@ project.</p>
 <span class="nb">set</span><span class="p">(</span><span class="s">libcommute_DIR</span><span class="w"> </span><span class="o">${</span><span class="nv">libcommute_ROOT</span><span class="o">}</span><span class="s">/lib/cmake</span><span class="p">)</span>
 
 <span class="c"># Import libcommute target</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">libcommute</span><span class="w"> </span><span class="s">0.4</span><span class="w"> </span><span class="s">CONFIG</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">libcommute</span><span class="w"> </span><span class="s">0.7.2</span><span class="w"> </span><span class="s">CONFIG</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 
 <span class="c"># Build an executable called &#39;myprog&#39;</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">myprog.cpp</span><span class="p">)</span>
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">libcommute</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">libcommute::libcommute</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Starting from version 0.7.2, <em>libcommute</em> exports the namespaced CMake target
+<code class="docutils literal notranslate"><span class="pre">libcommute::libcommute</span></code> instead of just <code class="docutils literal notranslate"><span class="pre">libcommute</span></code>.</p>
 </div>
 </section>
 </section>
