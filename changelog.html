@@ -51,10 +51,10 @@
 <li class="toctree-l1"><a class="reference internal" href="loperator/index.html">Tools for exact diagonalization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Advanced examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#unreleased">[0.7.2] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">[0.7.1] - 2021-12-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.0] - 2021-10-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">[0.6.1] - 2021-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">[0.7.2] - 2022-11-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.1] - 2021-12-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">[0.7.0] - 2021-10-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">[0.6.1] - 2021-03-30</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
@@ -88,10 +88,11 @@
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
-<section id="unreleased">
-<h2>[0.7.2] - Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this heading"></a></h2>
+<section id="id1">
+<h2>[0.7.2] - 2022-11-12<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Export CMake targets in the <code class="docutils literal notranslate"><span class="pre">libcommute::</span></code> namespace.</p></li>
+<li><p>Export namespaced CMake target <code class="docutils literal notranslate"><span class="pre">libcommute::libcommute</span></code> instead of
+plain <code class="docutils literal notranslate"><span class="pre">libcommute</span></code>.</p></li>
 <li><p>Install CMake configuration files into
 <code class="docutils literal notranslate"><span class="pre">${CMAKE_INSTALL_PREFIX}/lib/cmake/libcommute</span></code>, which is the recommended
 location.</p></li>
@@ -101,8 +102,8 @@ catchorg/Catch2#2178).</p></li>
 <li><p>Added project citation information.</p></li>
 </ul>
 </section>
-<section id="id1">
-<h2>[0.7.1] - 2021-12-17<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<section id="id2">
+<h2>[0.7.1] - 2021-12-17<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>New methods <code class="docutils literal notranslate"><span class="pre">space_partition::subspace_basis()</span></code> and
 <code class="docutils literal notranslate"><span class="pre">space_partition::subspace_bases()</span></code>.</p></li>
@@ -110,8 +111,8 @@ catchorg/Catch2#2178).</p></li>
 <li><p>New example <code class="docutils literal notranslate"><span class="pre">hubbard_holstein_1d</span></code> and minor updates to the documentation.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>[0.7.0] - 2021-10-09<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<section id="id3">
+<h2>[0.7.0] - 2021-10-09<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Added an implementation of the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept for some
 <a class="reference external" href="https://eigen.tuxfamily.org/">Eigen 3</a> types (vectors, vector segments,
@@ -139,8 +140,8 @@ tests and examples as part of build process.</p></li>
 <li><p>Reformatted C++ sources using <code class="docutils literal notranslate"><span class="pre">clang-format</span></code> and a style based on <code class="docutils literal notranslate"><span class="pre">LLVM</span></code>.</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<section id="id4">
+<h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>New method <code class="docutils literal notranslate"><span class="pre">hilbert_space::index()</span></code>.</p></li>
 </ul>
