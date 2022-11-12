@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.7.2] - Unreleased
+## [0.7.2] - 2022-11-12
 
-- Export CMake targets in the ``libcommute::`` namespace.
+- Export namespaced CMake target ``libcommute::libcommute`` instead of
+  plain ``libcommute``.
 - Install CMake configuration files into
   ``${CMAKE_INSTALL_PREFIX}/lib/cmake/libcommute``, which is the recommended
   location.
