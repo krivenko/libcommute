@@ -19,7 +19,7 @@ jobs:
         - { name: "clang", cxx: "clang++-10" }
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install Eigen 3
       run: |
@@ -32,7 +32,7 @@ jobs:
 
     - name: Set up Python 3.8
       if: matrix.cxx_compiler.name == 'clang'
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: 3.8
 
@@ -76,7 +76,7 @@ jobs:
       if: |
           github.ref == 'refs/heads/master' &&
           matrix.cxx_compiler.name == 'clang'
-      uses: JamesIves/github-pages-deploy-action@4.1.0
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
         token: ${{ secrets.GITHUB_TOKEN }}
