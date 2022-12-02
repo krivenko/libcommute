@@ -107,6 +107,7 @@ void check_loperator(ExprType const& expr1, ExprType const& expr2) {
   auto lop2 = loperator<std::complex<double>, gamma>(expr2, hs);
 
   std::vector<std::complex<double>> in(4), out1(4), out2(4);
+  std::fill(in.begin(), in.end(), .0);
 
   for(sv_index_type in_index : {0, 1, 2, 3}) {
     in[in_index] = 1;
@@ -115,7 +116,7 @@ void check_loperator(ExprType const& expr1, ExprType const& expr2) {
     lop1(in, out1);
     lop2(in, out2);
     CHECK(out1 == out2);
-    in[in_index] = 0;
+    in[in_index] = 0; // cppcheck-suppress unreadVariable
   }
 }
 
@@ -132,8 +133,8 @@ TEST_CASE("loperator for expressions with gamma-matrices",
   std::vector<expr_type> Gamma;  // Gamma matrices
   std::vector<expr_type> Gammac; // Covariant Gamma matrices
   for(int mu : {0, 1, 2, 3}) {
-    Gamma.emplace_back(expr_type(1.0, mon_type(generator_gamma(mu))));
-    Gammac.emplace_back(expr_type(eta(mu, mu), mon_type(generator_gamma(mu))));
+    Gamma.emplace_back(1.0, mon_type(generator_gamma(mu)));
+    Gammac.emplace_back(eta(mu, mu), mon_type(generator_gamma(mu)));
   }
 
   SECTION("Commutation relations") {

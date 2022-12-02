@@ -33,8 +33,8 @@ TEST_CASE("Gamma matrices", "[gamma]") {
   std::vector<expr_type> Gamma;  // Gamma matrices
   std::vector<expr_type> Gammac; // Covariant Gamma matrices
   for(int mu : {0, 1, 2, 3}) {
-    Gamma.emplace_back(expr_type(1.0, mon_type(generator_gamma(mu))));
-    Gammac.emplace_back(expr_type(eta(mu, mu), mon_type(generator_gamma(mu))));
+    Gamma.emplace_back(1.0, mon_type(generator_gamma(mu)));
+    Gammac.emplace_back(eta(mu, mu), mon_type(generator_gamma(mu)));
   }
 
   SECTION("Commutation relations") {
