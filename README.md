@@ -1,7 +1,7 @@
 ![libcommute logo](doc/images/logo.svg)
 
-[![Build and test](https://github.com/krivenko/libcommute/actions/workflows/build-and-test.yml/badge.svg)](
-https://github.com/krivenko/libcommute/actions/workflows/build-and-test.yml)
+[![CI](https://github.com/krivenko/libcommute/actions/workflows/build-test-deploy.yml/badge.svg)](
+https://github.com/krivenko/libcommute/actions/workflows/build-test-deploy.yml)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-red)](
 https://krivenko.github.io/libcommute)
 [![DOI](https://zenodo.org/badge/186312779.svg)](
