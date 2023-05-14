@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macos-11]
         cxx_compiler:
-        - { name: "gcc", cxx: "g++" }
+        - { name: "gcc", cxx: "g++-10" }
         - { name: "clang", cxx: "clang++" }
     runs-on: ${{ matrix.os }}
 
@@ -33,7 +33,7 @@ jobs:
            fi
 
     - name: Set up Python 3.8
-      if: startsWith(matrix.cxx, 'clang')
+      if: startsWith(matrix.cxx_compiler.name, 'clang')
       uses: actions/setup-python@v4
       with:
         python-version: 3.8
@@ -43,7 +43,7 @@ jobs:
       run: sudo apt-get install cppcheck
 
     - name: Install Sphinx and Read the Docs Sphinx Theme
-      if: startsWith(matrix.cxx, 'clang')
+      if: startsWith(matrix.cxx_compiler.name, 'clang')
       run: |
            python -m pip install --upgrade pip
            pip install sphinx sphinx-rtd-theme myst-parser
@@ -58,12 +58,12 @@ jobs:
              STATIC_ANALYSIS=OFF
            fi
 
-           if [[ "${{ matrix.cxx }}" == clang* ]]; then
+           if [[ "${{ matrix.cxx_compiler.name }}" == clang* ]]; then
              DOCS=ON
            else
              DOCS=OFF
            fi
-           CXX="${{ matrix.cxx }}" cmake ..                                    \
+           CXX="${{ matrix.cxx_compiler.cxx }}" cmake ..                       \
              -DCMAKE_BUILD_TYPE=Debug                                          \
              -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE}/installed              \
              -DSTATIC_ANALYSIS=${STATIC_ANALYSIS}                              \
@@ -85,7 +85,7 @@ jobs:
       if: |
           github.ref == 'refs/heads/master' &&
           startsWith(matrix.os, 'ubuntu') &&
-          startsWith(matrix.cxx, 'clang')
+          startsWith(matrix.cxx_compiler.name, 'clang')
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
