@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Finite-dimensional Hilbert spaces &mdash; libcommute 0.7.2 documentation</title>
@@ -12,10 +12,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -31,15 +30,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> libcommute
-            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            libcommute
+              <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Tools for exact diagonalization</a></li>
       <li class="breadcrumb-item active">Finite-dimensional Hilbert spaces</li>
       <li class="wy-breadcrumbs-aside">
@@ -143,14 +146,14 @@ elementary space and the higher blank cells 7-63 are unused – set to zero.</p>
 <a class="reference internal image-reference" href="../_images/basis_state.svg"><img alt="../_images/basis_state.svg" src="../_images/basis_state.svg" width="800" /></a>
 <p>The simplest way to construct a <a class="reference internal" href="#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">hilbert_space</span></code></a> object is by calling
 <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> on an expression.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">static_indices</span><span class="p">;</span><span class="w"> </span><span class="c1">// For n()</span>
 
-<span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="s">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="s">&quot;dn&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="s">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="s">&quot;dn&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
 <span class="c1">// Construct a 4-dimensional Hilbert space, which is a product of two</span>
 <span class="c1">// fermionic elementary spaces (for {&quot;up&quot;, 0} and {&quot;dn&quot;, 0}).</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">);</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">);</span>
 </pre></div>
 </div>
 <p><a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> is a convenience function that forwards its
@@ -164,14 +167,14 @@ whose truncated dimension must be set by the user. It is possible to
 by passing an extra argument to <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a>. The following
 code snippet shows how to set the truncated space dimension for all bosonic
 generators at once.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">static_indices</span><span class="p">;</span><span class="w"> </span><span class="c1">// For a_dag() and a()</span>
 
-<span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">3.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.5</span><span class="p">);</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">3.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.5</span><span class="p">);</span>
 
 <span class="c1">// hs is a direct product of two bosonic elementary spaces, each with</span>
 <span class="c1">// dimension 2^4 = 16.</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">boson_es_constructor</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">boson_es_constructor</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
 </pre></div>
 </div>
 <p>Other, more refined ways to create a Hilbert space are (a) to explicitly provide
@@ -179,19 +182,19 @@ a list of elementary spaces or (b) to start from an empty product and add
 elementary spaces one by one. One might have to resort to these approaches when
 some elementary spaces must be added into the product, but their corresponding
 generators are not necessarily found in <code class="docutils literal notranslate"><span class="pre">H</span></code>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span>
 <span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">static_indices</span><span class="p">;</span><span class="w"> </span><span class="c1">// For make_space_*()</span>
 
 <span class="c1">// A product of three elementary spaces</span>
 <span class="c1">// std::string and int are index types of generators</span>
-<span class="n">hilbert_space</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hs1</span><span class="p">(</span><span class="w"></span>
+<span class="n">hilbert_space</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hs1</span><span class="p">(</span>
 <span class="w">  </span><span class="n">make_space_fermion</span><span class="p">(</span><span class="s">&quot;dn&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w">   </span><span class="c1">// Fermion</span>
 <span class="w">  </span><span class="n">make_space_boson</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w">   </span><span class="c1">// Boson truncated to dim = 2^4</span>
 <span class="w">  </span><span class="n">make_space_spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;i&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">   </span><span class="c1">// Spin-1/2</span>
-<span class="p">);</span><span class="w"></span>
+<span class="p">);</span>
 
 <span class="c1">// Empty space, to be filled later</span>
-<span class="n">hilbert_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hs2</span><span class="p">;</span><span class="w"></span>
+<span class="n">hilbert_space</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hs2</span><span class="p">;</span>
 <span class="c1">// Fill the space</span>
 <span class="n">hs2</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">make_space_fermion</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="w">  </span><span class="c1">// Add a fermion</span>
 <span class="n">hs2</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">make_space_boson</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span><span class="w"> </span><span class="c1">// Add a boson</span>
@@ -596,19 +599,19 @@ generators into elementary spaces to the functor passed as its second (optional)
 argument. It is possible to customize the translation process by giving
 <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> a callable object similar to the following one</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// A custom elementary space constructor object</span>
-<span class="k">struct</span><span class="w"> </span><span class="nc">my_es_constructor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_es_constructor</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">IndexTypes</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="k">operator</span><span class="p">()(</span><span class="n">generator</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">IndexTypes</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;&gt;</span>
+<span class="w">  </span><span class="k">operator</span><span class="p">()(</span><span class="n">generator</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">//</span>
 <span class="w">    </span><span class="c1">// Create an elementary space associated with &#39;g&#39; and return it</span>
 <span class="w">    </span><span class="c1">// wrapped in a unique pointer.</span>
 <span class="w">    </span><span class="c1">//</span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="c1">// Other members if needed ...</span>
-<span class="p">};</span><span class="w"></span>
+<span class="p">};</span>
 </pre></div>
 </div>
 <p>This approach gives total control over elementary space creation. It works best
@@ -631,27 +634,27 @@ can be achieved in a few steps by means of a special utility class
 <ul>
 <li><p>Define a new algebra ID, e.g. <span class="cpp-expr sig sig-inline cpp"><span class="n">my_algebra_id</span></span>.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// A unique integer &gt;=min_user_defined_algebra_id</span>
-<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">my_algebra_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span><span class="w"></span>
+<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">my_algebra_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
 </pre></div>
 </div>
 </li>
 <li><p>Specialize class <a class="reference internal" href="#_CPPv4I_DpiEN10libcommute14es_constructorE" title="libcommute::es_constructor"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::es_constructor</span></code></a> as follows</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">es_constructor</span><span class="o">&lt;</span><span class="n">my_algebra_id</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">es_constructor</span><span class="o">&lt;</span><span class="n">my_algebra_id</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
 
-<span class="w">  </span><span class="n">es_constructor</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">es_constructor</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
 
-<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">IndexTypes</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="k">operator</span><span class="p">()(</span><span class="n">generator</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">IndexTypes</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">elementary_space</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;&gt;</span>
+<span class="w">  </span><span class="k">operator</span><span class="p">()(</span><span class="n">generator</span><span class="o">&lt;</span><span class="n">IndexTypes</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">//</span>
 <span class="w">    </span><span class="c1">// Create an elementary space associated with &#39;g&#39; and return it</span>
 <span class="w">    </span><span class="c1">// wrapped in a unique pointer. This method will be called only for</span>
 <span class="w">    </span><span class="c1">// the generators of the new algebra, i.e. only when</span>
 <span class="w">    </span><span class="c1">// g.algebra_id() == my_algebra_id</span>
 <span class="w">    </span><span class="c1">//</span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 </pre></div>
 </div>
 <p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">es_constructor</span></code> is obviously a valid elementary space
@@ -659,7 +662,7 @@ constructor for <code class="docutils literal notranslate"><span class="pre">my_
 </li>
 <li><p>Instantiate <a class="reference internal" href="#_CPPv4I_DpiEN10libcommute14es_constructorE" title="libcommute::es_constructor"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">es_constructor</span></code></a> with multiple template parameters
 (algebra IDs).</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">es_constr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">es_constructor</span><span class="o">&lt;</span><span class="n">fermion</span><span class="p">,</span><span class="w"> </span><span class="n">spin</span><span class="p">,</span><span class="w"> </span><span class="n">my_algebra_id</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">es_constr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">es_constructor</span><span class="o">&lt;</span><span class="n">fermion</span><span class="p">,</span><span class="w"> </span><span class="n">spin</span><span class="p">,</span><span class="w"> </span><span class="n">my_algebra_id</span><span class="o">&gt;</span><span class="p">();</span>
 </pre></div>
 </div>
 <p>Now, <span class="cpp-expr sig sig-inline cpp"><span class="n">es_constr</span></span> knows how to process
@@ -672,7 +675,7 @@ template parameters of <a class="reference internal" href="#_CPPv4I_DpiEN10libco
 </div>
 </li>
 <li><p>Finally, call <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> with two arguments.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="w"> </span><span class="n">es_constr</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="w"> </span><span class="n">es_constr</span><span class="p">);</span>
 </pre></div>
 </div>
 </li>

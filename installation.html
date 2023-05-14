@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installation instructions &mdash; libcommute 0.7.2 documentation</title>
@@ -12,10 +12,9 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> libcommute
-            <img src="_static/logo_small.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            libcommute
+              <img src="_static/logo_small.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -68,7 +71,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Installation instructions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
@@ -87,7 +90,7 @@ clone of its <a class="reference external" href="https://github.com/krivenko/lib
 Assuming that <a class="reference external" href="https://git-scm.com/">git</a> package is installed and visible via
 the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable, the following shell command will create a
 directory <code class="docutils literal notranslate"><span class="pre">libcommute.src</span></code> containing the latest <em>libcommute</em> source files.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/krivenko/libcommute.git libcommute.src
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/krivenko/libcommute.git<span class="w"> </span>libcommute.src
 </pre></div>
 </div>
 <p>You can then use <em>libcommute</em> in your own code by passing
@@ -98,12 +101,12 @@ configuration scripts. This will allow you to import <em>libcommute</em> targets
 as well as to run unit tests and build example programs.
 The minimum required version of CMake is <strong>3.8.0</strong>.</p>
 <p>The following sequence of shell commands will build unit tests and examples.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkdir libcommute.build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> libcommute.build
-$ cmake ../libcommute.src                       <span class="se">\</span>
-  -DCMAKE_INSTALL_PREFIX<span class="o">=</span>&lt;libcommute_prefix&gt;    <span class="se">\</span>
-  -DEXAMPLES<span class="o">=</span>ON                                 <span class="se">\</span>
-  -DTESTS<span class="o">=</span>ON
-$ make
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>libcommute.build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>libcommute.build
+$<span class="w"> </span>cmake<span class="w"> </span>../libcommute.src<span class="w">                       </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>&lt;libcommute_prefix&gt;<span class="w">    </span><span class="se">\</span>
+<span class="w">  </span>-DEXAMPLES<span class="o">=</span>ON<span class="w">                                 </span><span class="se">\</span>
+<span class="w">  </span>-DTESTS<span class="o">=</span>ON
+$<span class="w"> </span>make
 </pre></div>
 </div>
 <p>Compilation of the tests can be disabled with CMake flag <code class="docutils literal notranslate"><span class="pre">-DTESTS=OFF</span></code>
@@ -111,14 +114,14 @@ $ make
 with <code class="docutils literal notranslate"><span class="pre">-DEXAMPLES=OFF</span></code>.</p>
 <p>It is generally recommended to run the unit tests before installing the library
 to detect potential problems early on.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make <span class="nb">test</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nb">test</span>
 </pre></div>
 </div>
 <p>Failed tests (having anything different from <code class="docutils literal notranslate"><span class="pre">Passed</span></code> in the test result
 column) signal host-specific compilation/linking problems or bugs in the library
 itself. The following command completes installation of library’s files into
 <code class="docutils literal notranslate"><span class="pre">&lt;libcommute_prefix&gt;</span></code>.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make install
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>install
 </pre></div>
 </div>
 <p>Documentation of <em>libcommute</em> can optionally be built and installed using the
@@ -130,10 +133,6 @@ itself. The following command completes installation of library’s files into
 <p>The table below gives a complete lists of supported CMake options with their
 meaning.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 39%" />
-<col style="width: 61%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Option name</p></th>
 <th class="head"><p>Description</p></th>

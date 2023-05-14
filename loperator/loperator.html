@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Linear operators &mdash; libcommute 0.7.2 documentation</title>
@@ -12,10 +12,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -31,15 +30,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> libcommute
-            <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            libcommute
+              <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Tools for exact diagonalization</a></li>
       <li class="breadcrumb-item active">Linear operators</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,26 +113,26 @@ and parametric (<a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute2
 predefined algebras (fermions, bosons and spins), and <span class="cpp-expr sig sig-inline cpp"><span class="n">hs</span></span> is a Hilbert
 space object compatible with <span class="cpp-expr sig sig-inline cpp"><span class="n">expr</span></span>. Then creating a simple linear
 operator is as easy as</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">make_loperator</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">make_loperator</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Futhermore, let us declare a couple of objects that model the
 <a class="reference internal" href="state_vector.html#state-vector"><span class="std std-ref">state vectors</span></a> concept (in this particular case, they are
 standard vectors)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
 </pre></div>
 </div>
 <p>The following code fragment shows three (nearly) equivalent ways to act with our
 operator on a state, <span class="math notranslate nohighlight">\(|\phi\rangle = \hat L |\psi\rangle\)</span>.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Function call syntax</span>
-<span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">(</span><span class="n">psi</span><span class="p">);</span><span class="w"></span>
+<span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">(</span><span class="n">psi</span><span class="p">);</span>
 
 <span class="c1">// Multiplication syntax</span>
-<span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">psi</span><span class="p">;</span><span class="w"></span>
+<span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">psi</span><span class="p">;</span>
 
 <span class="c1">// &#39;In-place&#39; action syntax</span>
-<span class="n">L</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">);</span><span class="w"></span>
+<span class="n">L</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Although all three forms are semantically equivalent, the last one is faster as
@@ -238,21 +241,21 @@ output state vector. In other words, the extra arguments are effectively
 <span class="c1">// and returning a &#39;double&#39;.</span>
 
 <span class="c1">// Create a parametric linear operator</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">PL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">make_param_loperator</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">PL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">libcommute</span><span class="o">::</span><span class="n">make_param_loperator</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span>
 
 <span class="c1">// Input and output state vectors</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">psi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">phi</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">());</span>
 
 <span class="c1">//</span>
 <span class="c1">// Substitute 2.0 into the expression and act on &#39;psi&#39;</span>
 <span class="c1">//</span>
 
 <span class="c1">// Function call syntax</span>
-<span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PL</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span><span class="w"></span>
+<span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PL</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span>
 
 <span class="c1">// &#39;In-place&#39; action syntax</span>
-<span class="n">PL</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span><span class="w"></span>
+<span class="n">PL</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -262,19 +265,19 @@ called without arguments.</p>
 </div>
 <p>There is also an option to optimize the substitution process by preallocating
 storage for the coefficient return values.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">;</span>
 
 <span class="c1">// Only the first call will cause memory allocation</span>
-<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">.0</span><span class="p">);</span><span class="w"></span>
-<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span><span class="w"></span>
-<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span><span class="w"></span>
-<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">);</span><span class="w"></span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">.0</span><span class="p">);</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span>
+<span class="n">PL</span><span class="p">.</span><span class="n">act_and_store_coeffs</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">evaluated_coeffs</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Finally, one can permanently transform a parametric operator into the
 non-parametric form.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Substitute 4.0 into PL and save the result as a simple linear operator</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PL</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mf">4.0</span><span class="p">);</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PL</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mf">4.0</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>For an extensive example of <a class="reference internal" href="#_CPPv4I0_DpiEN10libcommute20parametric_loperatorE" title="libcommute::parametric_loperator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a>’s use have a look at

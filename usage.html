@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to use libcommute in your project &mdash; libcommute 0.7.2 documentation</title>
@@ -12,10 +12,9 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> libcommute
-            <img src="_static/logo_small.svg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            libcommute
+              <img src="_static/logo_small.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,7 +76,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">How to use <em>libcommute</em> in your project</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
@@ -99,7 +102,7 @@ compilation times should normally not be a concern.</p>
 <em>libcommute</em> sources or the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">installation</span></a>
 directory. Just one <code class="docutils literal notranslate"><span class="pre">-I</span></code> flag on compiler’s command line is sufficient to
 make <em>libcommute</em>’s header files visible to your code.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>g++ -O3 -I&lt;libcommute&gt;/include -o myprog myprog.cpp
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>g++<span class="w"> </span>-O3<span class="w"> </span>-I&lt;libcommute&gt;/include<span class="w"> </span>-o<span class="w"> </span>myprog<span class="w"> </span>myprog.cpp
 </pre></div>
 </div>
 <p>(similar for <code class="docutils literal notranslate"><span class="pre">clang++</span></code> and other compilers).</p>
@@ -108,7 +111,7 @@ make <em>libcommute</em>’s header files visible to your code.</p>
 <h2>pkg-config<a class="headerlink" href="#pkg-config" title="Permalink to this heading"></a></h2>
 <p><em>libcommute</em> installs a pkg-config configuration file <code class="docutils literal notranslate"><span class="pre">libcommute.pc</span></code> under
 <code class="docutils literal notranslate"><span class="pre">&lt;libcommute_prefix&gt;/share/pkgconfig</span></code>. One can run</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pkg-config --cflags libcommute
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pkg-config<span class="w"> </span>--cflags<span class="w"> </span>libcommute
 </pre></div>
 </div>
 <p>get the correct <code class="docutils literal notranslate"><span class="pre">-I</span></code> flag needed for compilation. This method requires
