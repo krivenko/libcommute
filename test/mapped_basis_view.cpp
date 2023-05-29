@@ -210,7 +210,8 @@ TEST_CASE("Basis-mapped view of a state vector", "[mapped_basis_view]") {
                       make_loperator(a_dag(3), hs_b),
                       make_loperator(a_dag(4), hs_b)};
 
-      std::vector<int> map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
+      std::vector<sv_index_type>
+          map_size_ref{1, 4, 10, 20, 35, 56, 84, 120, 165, 220};
       for(int N = 0; N < 10; ++N) {
         basis_mapper mapper(O_list, hs_b, N);
         CHECK(mapper.size() == map_size_ref[N]);

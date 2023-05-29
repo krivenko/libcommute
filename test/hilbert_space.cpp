@@ -224,9 +224,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
                           int boson_e,
                           int spin_b,
                           int spin_e) {
-      CHECK(hs.size() == size);
+      CHECK(hs.size() == std::size_t(size));
       CHECK(hs.total_n_bits() == total_n_bits);
-      CHECK(hs.dim() == 1 << total_n_bits);
+      CHECK(hs.dim() == 1ul << total_n_bits);
       CHECK(hs.has(es));
       CHECK(hs.index(es) == index);
       CHECK(hs.bit_range(es) == std::make_pair(b, e));

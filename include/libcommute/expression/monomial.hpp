@@ -97,6 +97,7 @@ public:
   // Value semantics
   monomial(monomial const& m) {
     generators_.reserve(m.generators_.size());
+    // cppcheck-suppress missingReturn
     std::transform(m.generators_.begin(),
                    m.generators_.end(),
                    std::back_inserter(generators_),

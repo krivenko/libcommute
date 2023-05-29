@@ -105,7 +105,7 @@ int main() {
   auto psi_view = make_const_nfs_view(psi, hs, N_el);
 
   // Fill 'Hmat'.
-  for(int k = 0; k < sec_size; ++k) {
+  for(int k = 0; k < (int)sec_size; ++k) {
     // Reset vector |\psi> to zero.
     psi = Eigen::VectorXd::Zero((int)sec_size);
     psi[k] = 1; // 'psi' is the k-th basis vector now.

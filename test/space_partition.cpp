@@ -165,7 +165,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
     }
 
     SECTION("subspace_basis()") {
-      for(int subspace = 0; subspace < sp.n_subspaces(); ++subspace) {
+      for(int subspace = 0; subspace < (int)sp.n_subspaces(); ++subspace) {
         auto basis = sp.subspace_basis(subspace);
         std::set<sv_index_type> basis_set{basis.cbegin(), basis.cend()};
         CHECK(ref_cl.count(basis_set) == 1);
