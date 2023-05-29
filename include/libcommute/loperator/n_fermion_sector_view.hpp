@@ -169,7 +169,7 @@ struct for_each_composition {
   inline explicit for_each_composition(n_fermion_sector_params_t const& params)
     : params(params),
       lambdas(params.N_counted, 0),
-      lambdas_max(params.N_counted, params.M - (params.N_counted - 1)) {
+      lambdas_max(params.N_counted, params.M - params.N_counted + 1) {
     lambdas.shrink_to_fit();
     lambdas_max.shrink_to_fit();
   }
@@ -184,7 +184,7 @@ struct for_each_composition {
     std::fill(lambdas.begin(), lambdas.end(), 0);
     std::fill(lambdas_max.begin(),
               lambdas_max.end(),
-              params.M - (params.N_counted - 1));
+              params.M - params.N_counted + 1);
     for(int i = 0; i >= 0;) {
       ++lambdas[i];
       if(lambdas[i] > lambdas_max[i]) {
@@ -192,7 +192,7 @@ struct for_each_composition {
         continue;
       }
 
-      if(static_cast<unsigned int>(i) + 1 == lambdas.size()) {
+      if(static_cast<unsigned int>(i + 1) == lambdas.size()) {
         f(lambdas);
       } else {
         ++i;
@@ -559,7 +559,7 @@ struct for_each_composition_multi {
       std::fill(lambdas[s].begin(), lambdas[s].end(), 0);
       std::fill(lambdas_max[s].begin(),
                 lambdas_max[s].end(),
-                sector_params[s].M - (sector_params[s].N_counted - 1));
+                sector_params[s].M - sector_params[s].N_counted + 1);
     }
 
     int s = s_min; // Index of current sector
@@ -572,14 +572,15 @@ struct for_each_composition_multi {
         if(i < 0) {
           do {
             --s;
-          } while(sector_params[s].N_counted == 0);
-          i = static_cast<int>(sector_params[s].N_counted) - 1;
+          } while(s >= s_min && sector_params[s].N_counted == 0);
+          if(s >= s_min)
+            i = static_cast<int>(sector_params[s].N_counted) - 1;
         }
         continue;
       }
 
       if(s == s_max &&
-         static_cast<unsigned int>(i) + 1 == sector_params[s].N_counted) {
+         static_cast<unsigned int>(i + 1) == sector_params[s].N_counted) {
         f(lambdas);
       } else {
         ++i;
@@ -589,7 +590,7 @@ struct for_each_composition_multi {
           } while(sector_params[s].N_counted == 0);
           auto const& p = sector_params[s];
           i = 0;
-          lambdas_max[s][i] = p.M - (p.N_counted - 1);
+          lambdas_max[s][i] = p.M - p.N_counted + 1;
         } else {
           lambdas_max[s][i] = lambdas_max[s][i - 1] + 1 - lambdas[s][i - 1];
         }
