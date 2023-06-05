@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - Unreleased
+
+- Fixed a negative index bug in ``n_fermion_sector_view``.
+  Credits to Dr. Cezary Śliwa for providing the patch.
+
 ## [0.7.2] - 2022-11-12
 
 - Export namespaced CMake target ``libcommute::libcommute`` instead of
