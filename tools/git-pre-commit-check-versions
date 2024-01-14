@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# pre-commit git hook:
+# Check consistency of version strings set in the root `CMakeLists.txt` and
+# in `include/libcommute/version.hpp`.
+
+CMAKE_PROJECT_VERSION=$(                                        \
+    sed -n "s/^set(LIBCOMMUTE_VERSION \([0-9.]*\))/\1/p"        \
+    CMakeLists.txt                                              \
+)
+INCLUDE_VERSION=$(                                              \
+    sed -n "s/^#define LIBCOMMUTE_VERSION \"\([0-9.]*\)\"/\1/p" \
+        include/libcommute/version.hpp                          \
+)
+
+echo "CMAKE_PROJECT_VERSION=${CMAKE_PROJECT_VERSION}"
+echo "INCLUDE_VERSION=${INCLUDE_VERSION}"
+
+if [ "$CMAKE_PROJECT_VERSION" != "$INCLUDE_VERSION" ]; then
+    echo "Versions don't match"
+    exit 1
+fi
