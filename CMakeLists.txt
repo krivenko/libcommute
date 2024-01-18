@@ -103,6 +103,10 @@ endif(Eigen3_FOUND)
 if(DOCUMENTATION)
   message(STATUS "Building documentation")
 
+  # FindPythonInterp has been deprecated since 3.12,
+  # but we still require only 3.8.
+  cmake_policy(SET CMP0148 OLD)
+
   # Detect Sphinx, sphinx_rtd_theme and myst-parser
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
   find_package(PythonInterp 3 REQUIRED)
