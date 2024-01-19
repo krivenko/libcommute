@@ -573,8 +573,7 @@ struct for_each_composition_multi {
           do {
             --s;
           } while(s >= s_min && sector_params[s].N_counted == 0);
-          if(s >= s_min)
-            i = static_cast<int>(sector_params[s].N_counted) - 1;
+          if(s >= s_min) i = static_cast<int>(sector_params[s].N_counted) - 1;
         }
         continue;
       }

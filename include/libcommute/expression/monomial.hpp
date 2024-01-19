@@ -73,7 +73,7 @@ public:
     std::transform(generators.begin(),
                    generators.end(),
                    std::back_inserter(generators_),
-                   [](generator_type* p) { return p->clone(); });
+                   [](generator_type const* p) { return p->clone(); });
   }
 
   // Construct from a list of smart pointers to generators
@@ -91,7 +91,7 @@ public:
     std::transform(generators.begin(),
                    generators.end(),
                    std::back_inserter(generators_),
-                   [](generator_type* p) { return p->clone(); });
+                   [](generator_type const* p) { return p->clone(); });
   }
 
   // Value semantics

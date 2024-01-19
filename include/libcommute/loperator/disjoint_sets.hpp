@@ -67,7 +67,9 @@ public:
   std::size_t find_root(std::size_t x) const {
     assert(x < size());
     std::size_t p = parents_[x];
-    if(parents_[p] != p) { parents_[x] = p = find_root(p); }
+    if(parents_[p] != p) {
+      parents_[x] = p = find_root(p);
+    }
     return p;
   }
 

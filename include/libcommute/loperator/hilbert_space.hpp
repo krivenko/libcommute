@@ -114,7 +114,7 @@ public:
   // Construct from a vector of pointers to elementary spaces
   explicit hilbert_space(
       std::vector<elementary_space_t*> const& elementary_spaces) {
-    for(auto p : elementary_spaces)
+    for(auto const* p : elementary_spaces)
       add(*p);
   }
 
