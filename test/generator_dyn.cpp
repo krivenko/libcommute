@@ -184,7 +184,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     }
 
     for(std::size_t i = 0; i < fermion_ops.size(); ++i) {
-      auto fermion_gen_p =
+      auto const* fermion_gen_p =
           dynamic_cast<generator_fermion<dyn_indices>*>(fermion_ops[i]);
       CHECK(fermion_gen_p->dagger() == (i < 2));
     }
@@ -223,7 +223,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     }
 
     for(std::size_t i = 0; i < boson_ops.size(); ++i) {
-      auto boson_gen_p =
+      auto const* boson_gen_p =
           dynamic_cast<generator_boson<dyn_indices>*>(boson_ops[i]);
       CHECK(boson_gen_p->dagger() == (i < 2));
     }
@@ -258,7 +258,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     for(auto* op : spin_ops) {
       CHECK(op->algebra_id() == spin);
 
-      auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
+      auto const* spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
         CHECK_FALSE(op->reduce_power(3, lin_f));
         CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -298,7 +298,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     for(auto* op : spin1_ops) {
       CHECK(op->algebra_id() == spin);
 
-      auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
+      auto const* spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
         CHECK_FALSE(op->reduce_power(3, lin_f));
         CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -338,7 +338,7 @@ TEST_CASE("Algebra generators (dyn_indices)", "[generator]") {
     for(auto* op : spin32_ops) {
       CHECK(op->algebra_id() == spin);
 
-      auto spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
+      auto const* spin_gen_p = dynamic_cast<generator_spin<dyn_indices>*>(op);
       if(spin_gen_p->component() == spin_component::z) {
         CHECK_FALSE(op->reduce_power(3, lin_f));
         CHECK_FALSE(op->reduce_power(4, lin_f));

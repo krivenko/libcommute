@@ -153,7 +153,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         // N=6
         {d0 + d1 + d2 + u0 + u1 + u2}};
 
-    CHECK(cl == ref_cl);
+    CHECK(cl == ref_cl); // cppcheck-suppress knownConditionTrueFalse
 
     SECTION("subspace_bases()") {
       auto bases = sp.subspace_bases();

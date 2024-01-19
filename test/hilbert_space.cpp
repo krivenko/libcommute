@@ -124,9 +124,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK_FALSE(hs1 == hs2);
     SECTION("Copy") {
       hs_empty = hs2;
-      CHECK(hs_empty == hs2);
+      CHECK(hs_empty == hs2); // cppcheck-suppress knownConditionTrueFalse
       hs1 = hs2;
-      CHECK(hs1 == hs2);
+      CHECK(hs1 == hs2); // cppcheck-suppress knownConditionTrueFalse
     }
     SECTION("Move") {
       auto hs_ref = hs2;
