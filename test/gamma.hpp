@@ -45,6 +45,7 @@ public:
   ~generator_gamma() final = default;
 
   // Make a smart pointer that manages a copy of this generator
+  // cppcheck-suppress duplInheritedMember
   std::unique_ptr<base> clone() const final {
     return make_unique<generator_gamma>(*this);
   }

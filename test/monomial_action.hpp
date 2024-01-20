@@ -36,6 +36,7 @@ public:
   explicit elementary_space_padding(Args&&... indices)
     : elementary_space<IndexTypes...>(std::forward<Args>(indices)...) {}
 
+  // cppcheck-suppress duplInheritedMember
   std::unique_ptr<elementary_space<IndexTypes...>> clone() const final {
     return make_unique<elementary_space_padding>(*this);
   }

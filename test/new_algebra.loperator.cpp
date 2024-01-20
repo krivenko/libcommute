@@ -48,6 +48,7 @@ public:
   operator=(elementary_space_gamma&&) noexcept = default;
   ~elementary_space_gamma() final = default;
 
+  // cppcheck-suppress duplInheritedMember
   std::unique_ptr<base> clone() const final {
     return make_unique<elementary_space_gamma>(*this);
   }

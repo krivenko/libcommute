@@ -92,6 +92,7 @@ public:
       base_tail(m_range, hs) {}
 
   template <typename ScalarType>
+  // cppcheck-suppress duplInheritedMember
   inline bool act(sv_index_type& index, ScalarType& coeff) const {
     return base_head::act(index, coeff) && base_tail::act(index, coeff);
   }
@@ -110,6 +111,7 @@ public:
     : base(m_range, hs) {}
 
   template <typename ScalarType>
+  // cppcheck-suppress duplInheritedMember
   inline bool act(sv_index_type& index, ScalarType& coeff) const {
     return base::act(index, coeff);
   }
@@ -145,6 +147,7 @@ public:
   }
 
   template <typename ScalarType>
+  // cppcheck-suppress duplInheritedMember
   inline bool act(sv_index_type& index, ScalarType& coeff) const {
     return true;
   }
