@@ -300,7 +300,7 @@ public:
   // and index of the subspace this basis state belongs to.
   template <typename F> friend void foreach(space_partition const& sp, F&& f) {
     for(sv_index_type n = 0; n < sp.dim(); ++n) {
-      f(n, sp[n]);
+      std::forward<F>(f)(n, sp[n]);
     }
   }
 

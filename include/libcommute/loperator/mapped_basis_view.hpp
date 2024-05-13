@@ -78,9 +78,10 @@ inline void update_add_element(mapped_basis_view<StateVector, Ref>& view,
 
 // update_add_element() is not defined for constant views
 template <typename StateVector, bool Ref, typename T>
-inline void update_add_element(mapped_basis_view<StateVector const, Ref>&,
-                               sv_index_type,
-                               T&&) {
+inline void
+update_add_element(mapped_basis_view<StateVector const, Ref>&,
+                   sv_index_type,
+                   T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "update_add_element() is not supported for constant views");
 }
@@ -119,7 +120,7 @@ inline void foreach(mapped_basis_view<StateVector, Ref> const& view,
     if(scalar_traits<T>::is_zero(a))
       continue;
     else
-      f(p.first, a);
+      std::forward<Functor>(f)(p.first, a);
   }
 }
 

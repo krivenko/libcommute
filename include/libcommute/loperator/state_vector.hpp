@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 namespace libcommute {
@@ -74,7 +75,7 @@ inline void foreach(std::vector<T> const& sv, Functor&& f) {
     if(scalar_traits<T>::is_zero(a))
       continue;
     else
-      f(n, a);
+      std::forward<Functor>(f)(n, a);
   }
 }
 

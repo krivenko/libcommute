@@ -177,7 +177,7 @@ struct for_each_composition {
   // Apply 'f' to each composition
   template <typename F> void operator()(F&& f) const {
     if(params.N_counted == 0) {
-      f(lambdas);
+      std::forward<F>(f)(lambdas);
       return;
     }
 
@@ -336,9 +336,10 @@ inline void update_add_element(n_fermion_sector_view<StateVector, Ref>& view,
 
 // update_add_element() is not defined for constant views
 template <typename StateVector, bool Ref, typename T>
-inline void update_add_element(n_fermion_sector_view<StateVector const, Ref>&,
-                               sv_index_type,
-                               T&&) {
+inline void
+update_add_element(n_fermion_sector_view<StateVector const, Ref>&,
+                   sv_index_type,
+                   T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "update_add_element() is not supported for constant views");
 }
@@ -366,8 +367,9 @@ inline void set_zeros(n_fermion_sector_view<StateVector const, Ref>&) {
 // Apply functor `f` to all index/non-zero amplitude pairs
 // in the adapted StateVector object
 template <typename StateVector, bool Ref, typename Functor>
-inline void foreach(n_fermion_sector_view<StateVector, Ref> const& view,
-                    Functor&& f) {
+inline void
+foreach(n_fermion_sector_view<StateVector, Ref> const& view,
+        Functor&& f) { // NOLINT(cppcoreguidelines-missing-std-forward)
   if(view.M == 0 && view.M_nonfermion == 0) return;
 
   auto dim_nonfermion = detail::pow2(view.M_nonfermion);
@@ -385,7 +387,7 @@ inline void foreach(n_fermion_sector_view<StateVector, Ref> const& view,
       if(scalar_traits<T>::is_zero(a))
         continue;
       else
-        f(view.comp_to_index(lambdas, index_nf), a);
+        std::forward<Functor>(f)(view.comp_to_index(lambdas, index_nf), a);
     }
   });
 }
@@ -551,7 +553,7 @@ struct for_each_composition_multi {
   // Apply 'f' to each composition
   template <typename F> void operator()(F&& f) const {
     if(s_min == -1) { // All compositions are empty
-      f(lambdas);
+      std::forward<F>(f)(lambdas);
       return;
     }
 
@@ -580,7 +582,7 @@ struct for_each_composition_multi {
 
       if(s == s_max &&
          static_cast<unsigned int>(i + 1) == sector_params[s].N_counted) {
-        f(lambdas);
+        std::forward<F>(f)(lambdas);
       } else {
         ++i;
         if(i == static_cast<int>(sector_params[s].N_counted)) {
@@ -918,7 +920,7 @@ template <typename StateVector, bool Ref, typename T>
 inline void
 update_add_element(n_fermion_multisector_view<StateVector const, Ref>&,
                    sv_index_type,
-                   T&&) {
+                   T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
   static_assert(!std::is_same<StateVector, StateVector>::value,
                 "update_add_element() is not supported for constant views");
 }
@@ -947,8 +949,9 @@ inline void set_zeros(n_fermion_multisector_view<StateVector const, Ref>&) {
 // Apply functor `f` to all index/non-zero amplitude pairs
 // in the adapted StateVector object
 template <typename StateVector, bool Ref, typename Functor>
-inline void foreach(n_fermion_multisector_view<StateVector, Ref> const& view,
-                    Functor&& f) {
+inline void
+foreach(n_fermion_multisector_view<StateVector, Ref> const& view,
+        Functor&& f) { // NOLINT(cppcoreguidelines-missing-std-forward)
   if(view.sector_params.size() == 0 && view.M_nonmultisector == 0) return;
 
   auto dim_nonmultisector = detail::pow2(view.M_nonmultisector);
@@ -969,7 +972,7 @@ inline void foreach(n_fermion_multisector_view<StateVector, Ref> const& view,
       if(scalar_traits<T>::is_zero(a))
         continue;
       else
-        f(view.comp_to_index(lambdas, index_nms), a);
+        std::forward<Functor>(f)(view.comp_to_index(lambdas, index_nms), a);
     }
   });
 }

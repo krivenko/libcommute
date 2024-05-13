@@ -123,13 +123,14 @@ public:
 private:
   // Implementation details of operator()
   template <typename SrcStateVector, typename DstStateVector>
+  // NOLINTNEXTLINE(cppcoreguidelines-missing-std-forward)
   inline void act_impl(SrcStateVector&& src, DstStateVector&& dst) const {
 
     // A workaround for GCC Bug 58972
     // (base::m_actions() would be inaccessible from within the lambda below)
     auto const& m_act = base::m_actions();
 
-    foreach(src,
+    foreach(std::forward<SrcStateVector>(src),
             [&](sv_index_type in_index,
                 element_type_t<remove_cvref_t<SrcStateVector>> const& a) {
               for(auto const& ma : m_act) {

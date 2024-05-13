@@ -25,6 +25,7 @@
 #include <memory>
 #include <tuple>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace libcommute {
@@ -178,7 +179,7 @@ public:
     expression_t<NewScalarType> res;
     auto& res_mons = res.get_monomials();
     for(auto const& m : expr.monomials_) {
-      auto val = f(m.first, m.second);
+      auto val = std::forward<F>(f)(m.first, m.second);
       if(!scalar_traits<NewScalarType>::is_zero(val))
         res_mons.emplace_hint(res_mons.end(), m.first, val);
     }
@@ -741,6 +742,7 @@ private:
   // Multiplication by scalar (postfix form)
   // mul_type<ScalarType, S> == ScalarType
   template <typename S>
+  // NOLINTNEXTLINE(cppcoreguidelines-missing-std-forward)
   inline expression mul_const_postfix_impl(S&& alpha, std::true_type) const {
     expression res(*this);
     for(auto& p : res.monomials_)
@@ -752,6 +754,7 @@ private:
   // mul_type<ScalarType, S> != ScalarType
   template <typename S>
   inline expression_t<mul_type<ScalarType, S>>
+  // NOLINTNEXTLINE(cppcoreguidelines-missing-std-forward)
   mul_const_postfix_impl(S&& alpha, std::false_type) const {
     expression_t<mul_type<ScalarType, S>> res;
     auto& res_mons = res.get_monomials();
@@ -763,6 +766,7 @@ private:
   // Multiplication by scalar (prefix form)
   // mul_type<S, ScalarType> == ScalarType
   template <typename S>
+  // NOLINTNEXTLINE(cppcoreguidelines-missing-std-forward)
   inline expression mul_const_prefix_impl(S&& alpha, std::true_type) const {
     expression res(*this);
     for(auto& p : res.monomials_)
@@ -774,6 +778,7 @@ private:
   // mul_type<S, ScalarType> != ScalarType
   template <typename S>
   inline expression_t<mul_type<S, ScalarType>>
+  // NOLINTNEXTLINE(cppcoreguidelines-missing-std-forward)
   mul_const_prefix_impl(S&& alpha, std::false_type) const {
     expression_t<mul_type<S, ScalarType>> res;
     auto& res_mons = res.get_monomials();

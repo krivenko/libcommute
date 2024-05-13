@@ -60,7 +60,7 @@ DEFINE_FACTORY(c_dag, (static_indices::make_fermion(true, INDICES)))
 // Annihilation operator
 DEFINE_FACTORY(c, (static_indices::make_fermion(false, INDICES)))
 // Number of fermions
-DEFINE_FACTORY(n,
+DEFINE_FACTORY(n, // NOLINT(cppcoreguidelines-missing-std-forward)
                (static_indices::make_fermion(true, indices...)),
                (static_indices::make_fermion(false, indices...)))
 
@@ -109,26 +109,26 @@ DEFINE_FACTORY_SPIN(S_z,
 
 template <typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
-S_x(IndexTypes&&... indices) {
+S_x(IndexTypes&&... indices) { // NOLINT(cppcoreguidelines-missing-std-forward)
   return std::complex<double>(0.5) *
          (static_indices::S_p(indices...) + static_indices::S_m(indices...));
 }
 template <typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
-S_y(IndexTypes&&... indices) {
+S_y(IndexTypes&&... indices) { // NOLINT(cppcoreguidelines-missing-std-forward)
   return std::complex<double>(0, -0.5) *
          (static_indices::S_p(indices...) - static_indices::S_m(indices...));
 }
 
 template <int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
-S_x(IndexTypes&&... indices) {
+S_x(IndexTypes&&... indices) { // NOLINT(cppcoreguidelines-missing-std-forward)
   return std::complex<double>(0.5) * (static_indices::S_p<Mult>(indices...) +
                                       static_indices::S_m<Mult>(indices...));
 }
 template <int Mult, typename... IndexTypes>
 inline expression<std::complex<double>, c_str_to_string_t<IndexTypes>...>
-S_y(IndexTypes&&... indices) {
+S_y(IndexTypes&&... indices) { // NOLINT(cppcoreguidelines-missing-std-forward)
   return std::complex<double>(0, -0.5) *
          (static_indices::S_p<Mult>(indices...) -
           static_indices::S_m<Mult>(indices...));

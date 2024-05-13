@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <type_traits>
+#include <utility>
 
 namespace libcommute {
 
@@ -133,7 +134,7 @@ inline void foreach(Eigen::DenseBase<Derived> const& sv, Functor&& f) {
     if(scalar_traits<ScalarType>::is_zero(a))
       continue;
     else
-      f(n, a);
+      std::forward<Functor>(f)(n, a);
   }
 }
 
@@ -171,7 +172,7 @@ foreach(Eigen::Block<XprType, BlockRows, Eigen::Dynamic, InnerPanel> const& sv,
     if(scalar_traits<ScalarType>::is_zero(a))
       continue;
     else
-      f(n, a);
+      std::forward<Functor>(f)(n, a);
   }
 }
 

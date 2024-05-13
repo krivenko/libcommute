@@ -41,7 +41,8 @@ template <typename... IndexTypes> class monomial {
   template <typename GenType1, typename... GenTypesTail>
   void constructor_impl(GenType1&& generator, GenTypesTail&&... more_gens) {
     using gen1_t = typename std::remove_reference<GenType1>::type;
-    generators_.emplace_back(make_unique<gen1_t>(generator));
+    generators_.emplace_back(
+        make_unique<gen1_t>(std::forward<GenType1>(generator)));
     constructor_impl(std::forward<GenTypesTail>(more_gens)...);
   }
   void constructor_impl() {}
@@ -211,7 +212,7 @@ public:
   friend monomial concatenate(PartTypes&&... parts) {
     monomial res;
     res.generators_.reserve(concat_parts_total_size(parts...));
-    res.concat_impl(parts...);
+    res.concat_impl(std::forward<PartTypes>(parts)...);
     return res;
   }
 
@@ -286,10 +287,12 @@ private:
   // Append generators from a mixed list of monomials and monomial ranges
   template <typename P1, typename... PTail>
   void concat_impl(P1&& p1, PTail&&... p_tail) {
-    append(p1);
+    append(std::forward<P1>(p1));
     concat_impl(std::forward<PTail>(p_tail)...);
   }
-  template <typename P1> void concat_impl(P1&& p1) { append(p1); }
+  template <typename P1> void concat_impl(P1&& p1) {
+    append(std::forward<P1>(p1));
+  }
 
   std::vector<gen_ptr_type> generators_;
 };

@@ -127,7 +127,8 @@ public:
                          ESConstructor&& es_constr = {}) {
     for(auto const& m : expr) {
       for(auto const& g : m.monomial) {
-        elementary_spaces_.emplace(es_constr(g), bit_range_t(0, 0));
+        elementary_spaces_.emplace(std::forward<ESConstructor>(es_constr)(g),
+                                   bit_range_t(0, 0));
       }
     }
     recompute_bit_ranges();
@@ -234,7 +235,7 @@ public:
   inline friend void foreach(hilbert_space const& hs, Functor&& f) {
     sv_index_type d = hs.dim();
     for(sv_index_type i = 0; i < d; ++i) {
-      f(i);
+      std::forward<Functor>(f)(i);
     }
   }
 

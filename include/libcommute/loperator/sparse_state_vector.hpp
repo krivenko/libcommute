@@ -18,6 +18,7 @@
 
 #include <cassert>
 #include <unordered_map>
+#include <utility>
 
 namespace libcommute {
 
@@ -59,9 +60,10 @@ public:
   update_add_element(sparse_state_vector& sv, sv_index_type n, T&& value) {
     auto it = sv.data_.find(n);
     if(it == sv.data_.end()) {
-      if(!scalar_traits<ScalarType>::is_zero(value)) sv.data_[n] = value;
+      if(!scalar_traits<ScalarType>::is_zero(value))
+        sv.data_[n] = std::forward<T>(value);
     } else {
-      it->second += value;
+      it->second += std::forward<T>(value);
       if(scalar_traits<ScalarType>::is_zero(it->second)) sv.data_.erase(it);
     }
   }
@@ -78,7 +80,7 @@ public:
   template <typename Functor>
   inline friend void foreach(sparse_state_vector const& sv, Functor&& f) {
     for(auto const& p : sv.data_)
-      f(p.first, p.second);
+      std::forward<Functor>(f)(p.first, p.second);
   }
 
   // Force removal of all zero amplitudes from the storage
@@ -94,7 +96,7 @@ public:
   // Force removal of all amplitudes meeting a specified criterion
   template <typename UnaryPredicate> inline void prune(UnaryPredicate&& p) {
     for(auto it = data_.begin(); it != data_.end();) {
-      if(p(it->second))
+      if(std::forward<UnaryPredicate>(p)(it->second))
         it = data_.erase(it);
       else
         ++it;

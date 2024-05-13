@@ -56,7 +56,7 @@ void check_map_index(view_type const& view,
                      sv_index_type expected_multisector_size) {
   std::vector<sv_index_type> mapped_indices;
   for(sv_index_type index = 0; index < hs.dim(); ++index) {
-    if(selector(index)) {
+    if(std::forward<StateSelector>(selector)(index)) {
       mapped_indices.push_back(view.map_index(index));
     }
   }
@@ -78,7 +78,7 @@ build_basis_states_ref(hs_type const& hs,
   std::vector<sv_index_type> basis_states(
       n_fermion_multisector_size(hs, sectors));
   for(sv_index_type index = 0; index < hs.dim(); ++index) {
-    if(selector(index)) {
+    if(std::forward<StateSelector>(selector)(index)) {
       basis_states[view.map_index(index)] = index;
     }
   }
