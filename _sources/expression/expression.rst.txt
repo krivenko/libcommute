@@ -489,7 +489,7 @@ This allows for writing complex expression analysis algorithms.
         }
 
       }
-      std::cout << std::endl;
+      std::cout << '\n';
     }
 
 .. note:: Only the constant iterators are implemented by :type:`expression` and
@@ -531,7 +531,7 @@ taken to be different on odd and even chain links.
       H += v * (c_dag(a) * c(a + 1) + c_dag(a + 1) * c(a));
     }
 
-    std::cout << "H = " << H << std::endl;
+    std::cout << "H = " << H << '\n';
 
     // Construct the Su-Schrieffer-Heeger (SSH) model by changing hopping
     // constants on all even links of the chain.
@@ -557,7 +557,7 @@ taken to be different on odd and even chain links.
 
     auto H_SSH = transform(H, update_hopping_element);
 
-    std::cout << "H_SSH = " << H_SSH << std::endl;
+    std::cout << "H_SSH = " << H_SSH << '\n';
 
 .. _hc:
 
