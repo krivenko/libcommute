@@ -382,7 +382,7 @@ public:
   reference operator[](std::size_t n) const { return *v_it_[n]; }
 
   // swap()
-  friend void swap(const_iterator& lhs, const_iterator& rhs) {
+  friend void swap(const_iterator& lhs, const_iterator& rhs) noexcept {
     std::swap(lhs.v_it_, rhs.v_it_);
   }
 };

@@ -983,7 +983,7 @@ public:
   }
 
   // swap()
-  friend void swap(const_iterator& lhs, const_iterator& rhs) {
+  friend void swap(const_iterator& lhs, const_iterator& rhs) noexcept {
     std::swap(lhs.m_it_, rhs.m_it_);
   }
 };
