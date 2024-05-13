@@ -185,7 +185,7 @@ int main() {
     for(int j = 0; j < 4; ++j) {
       std::cout << "+" << phi[j] << "|" << j << ">";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
   }
 
   return 0;

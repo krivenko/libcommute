@@ -115,9 +115,9 @@ int main() {
   }
 
   // Total number of terms (monomials) in 'H'.
-  std::cout << "Total number of terms in H: " << H.size() << std::endl;
+  std::cout << "Total number of terms in H: " << H.size() << '\n';
   // Is H Hermitian?
-  std::cout << "H^\\dagger - H = " << (conj(H) - H) << std::endl;
+  std::cout << "H^\\dagger - H = " << (conj(H) - H) << '\n';
 
   // Does H commute with N and S_z?
   decltype(H) N, S_z;
@@ -127,8 +127,8 @@ int main() {
       S_z += 0.5 * (n(ix, iy, "up") - n(ix, iy, "down"));
     }
   }
-  std::cout << "[H, N] = " << (H * N - N * H) << std::endl;
-  std::cout << "[H, S_z] = " << (H * S_z - S_z * H) << std::endl;
+  std::cout << "[H, N] = " << (H * N - N * H) << '\n';
+  std::cout << "[H, S_z] = " << (H * S_z - S_z * H) << '\n';
 
   // Iterate over all terms in 'H' and print those of degree 3.
   //
@@ -137,7 +137,7 @@ int main() {
   for(auto const& term : H) {
     if(term.monomial.size() == 3) {
       // term.coeff is coefficient in front of the monomial
-      std::cout << term.monomial << " => " << term.coeff << std::endl;
+      std::cout << term.monomial << " => " << term.coeff << '\n';
     }
   }
 

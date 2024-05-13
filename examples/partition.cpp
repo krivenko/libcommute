@@ -91,11 +91,9 @@ int main() {
 
   auto sp1 = space_partition(Hop, hs);
 
-  std::cout << "Total dimension of the Hilbert space is " << sp1.dim()
-            << std::endl;
+  std::cout << "Total dimension of the Hilbert space is " << sp1.dim() << '\n';
 
-  std::cout << "H has " << sp1.n_subspaces() << " invariant subspaces"
-            << std::endl;
+  std::cout << "H has " << sp1.n_subspaces() << " invariant subspaces\n";
 
   //
   // Once again, this time saving the matrix elements of H
@@ -105,7 +103,7 @@ int main() {
   auto sp2 = space_partition(Hop, hs, H_elements);
 
   std::cout << "H has " << H_elements.size() << " non-vanishing matrix elements"
-            << std::endl;
+            << '\n';
 
   //
   // Now merge some invariant subspaces to make sure that all electron
@@ -120,22 +118,22 @@ int main() {
       auto matrix_elements = sp2.merge_subspaces(Cdagop, Cop, hs);
 
       std::cout << c_dag(spin, o) << " has " << matrix_elements.first.size()
-                << " non-vanishing matrix elements" << std::endl;
+                << " non-vanishing matrix elements\n";
       std::cout << c(spin, o) << " has " << matrix_elements.first.size()
-                << " non-vanishing matrix elements" << std::endl;
+                << " non-vanishing matrix elements\n";
     }
   }
 
   std::cout << "Number of disjoint subspaces after merging is "
-            << sp2.n_subspaces() << std::endl;
+            << sp2.n_subspaces() << '\n';
 
   //
   // foreach()
   //
 
-  std::cout << "Distribution of basis states over the subspaces:" << std::endl;
+  std::cout << "Distribution of basis states over the subspaces:\n";
   foreach(sp2, [](sv_index_type index, sv_index_type subspace) {
-    std::cout << index << " => " << subspace << std::endl;
+    std::cout << index << " => " << subspace << '\n';
   });
 
   //
@@ -148,7 +146,7 @@ int main() {
       sp2.subspace_basis(24);
 
   auto sp24_dim = basis_states_in_subspace_24.size();
-  std::cout << "Subspace 24 is " << sp24_dim << "-dimensional" << std::endl;
+  std::cout << "Subspace 24 is " << sp24_dim << "-dimensional\n";
 
   // Make a mapper object
   basis_mapper mapper(basis_states_in_subspace_24);

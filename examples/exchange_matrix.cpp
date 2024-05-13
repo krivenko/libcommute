@@ -40,12 +40,12 @@ int main() {
   auto H = 0.5 * (S_p(1) * S_m(2) + S_m(1) * S_p(2)) + S_z(1) * S_z(2);
 
   // Print 'H'
-  std::cout << "H = " << H << std::endl;
+  std::cout << "H = " << H << '\n';
 
   // Automatically analyze structure of 'H' and construct a 4-dimensional
   // Hilbert space (direct product of two spin-1/2 spaces).
   auto hs = make_hilbert_space(H);
-  std::cout << "dim(hs) = " << hs.dim() << std::endl;
+  std::cout << "dim(hs) = " << hs.dim() << '\n';
 
   // Construct a 'loperator' object that represents action of expression 'H' on
   // state vectors in the Hilbert space 'hs'.
@@ -75,7 +75,7 @@ int main() {
     for(int j = 0; j < 4; ++j) {
       std::cout << "+(" << phi[j] << ")|" << j << ">";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
   }
 
   return 0;

@@ -86,7 +86,7 @@ int main() {
   }
 
   // Print the Hamiltonian
-  std::cout << "H_K = " << H_K << std::endl;
+  std::cout << "H_K = " << H_K << '\n';
 
   //
   // Integrals of motion N, S^2 and L^2 (Eq. (4)).
@@ -142,7 +142,7 @@ int main() {
                (5.0 / 2) * J * N;
 
   // Must be zero
-  std::cout << "H_K - H_t2g = " << (H_K - H_t2g) << std::endl;
+  std::cout << "H_K - H_t2g = " << (H_K - H_t2g) << '\n';
 
   return 0;
 }

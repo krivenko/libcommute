@@ -168,7 +168,7 @@ int main() {
     for(unsigned int i = 0; i < ket.size(); ++i) {
       if(ket[i] != 0) std::cout << " +(" << ket[i] << ")|" << i << ">";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
   }
 
   return 0;

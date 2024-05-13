@@ -140,37 +140,37 @@ using namespace libcommute;
 int main() {
 
   // Check that L(0) is Hermitian and (L_n)^\dagger = L_{-n}
-  std::cout << "conj(L(0)) = " << conj(L(0)) << std::endl;
-  std::cout << "conj(L(1)) = " << conj(L(1)) << std::endl;
+  std::cout << "conj(L(0)) = " << conj(L(0)) << '\n';
+  std::cout << "conj(L(1)) = " << conj(L(1)) << '\n';
 
   // Check that L(n)^2 = 0 for a few n
-  std::cout << "L(0) * L(0) = " << L(0) * L(0) << std::endl;
-  std::cout << "L(1) * L(1) = " << L(1) * L(1) << std::endl;
-  std::cout << "L(-1) * L(-1) = " << L(-1) * L(-1) << std::endl;
+  std::cout << "L(0) * L(0) = " << L(0) * L(0) << '\n';
+  std::cout << "L(1) * L(1) = " << L(1) * L(1) << '\n';
+  std::cout << "L(-1) * L(-1) = " << L(-1) * L(-1) << '\n';
 
   // Check recurrence relations from Eq. (5)
   std::cout << "L_1 - (1/5)[L_3, L_{-2}] = "
-            << (L(1) - (1.0 / 5) * (L(3) * L(-2) - L(-2) * L(3))) << std::endl;
+            << (L(1) - (1.0 / 5) * (L(3) * L(-2) - L(-2) * L(3))) << '\n';
   std::cout << "L_{-1} - (1/3)[L_1, L_{-2}] = "
-            << (L(-1) - (1.0 / 3) * (L(1) * L(-2) - L(-2) * L(1))) << std::endl;
+            << (L(-1) - (1.0 / 3) * (L(1) * L(-2) - L(-2) * L(1))) << '\n';
   std::cout << "L_2 - (1/4)[L_3, L_{-1}] = "
-            << (L(2) - (1.0 / 4) * (L(3) * L(-1) - L(-1) * L(3))) << std::endl;
+            << (L(2) - (1.0 / 4) * (L(3) * L(-1) - L(-1) * L(3))) << '\n';
   std::cout << "L_0 - (1/2)[L_1, L_{-1}] = "
-            << (L(0) - (1.0 / 2) * (L(1) * L(-1) - L(-1) * L(1))) << std::endl;
+            << (L(0) - (1.0 / 2) * (L(1) * L(-1) - L(-1) * L(1))) << '\n';
 
   // Check recurrence relation Eq. (6) for some higher positive n
   for(int n = 3; n < 10; ++n) {
     std::cout << "L_" << (n + 1) << " - (1/" << (n - 1) << ")"
               << "[L_" << n << ", L_1] = "
               << (L(n + 1) - (1.0 / (n - 1)) * (L(n) * L(1) - L(1) * L(n)))
-              << std::endl;
+              << '\n';
   }
   // Check recurrence relation Eq. (7) for some higher negative n
   for(int n = 2; n < 10; ++n) {
     std::cout << "L_" << (-n - 1) << " - (1/(" << (1 - n) << "))"
               << "[L_" << -n << ", L_{-1}] = "
               << (L(-n - 1) - (1.0 / (1 - n)) * (L(-n) * L(-1) - L(-1) * L(-n)))
-              << std::endl;
+              << '\n';
   }
 
   return 0;

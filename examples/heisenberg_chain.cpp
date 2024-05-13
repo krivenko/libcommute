@@ -85,16 +85,16 @@ int main() {
     S_tot = S_tot + S[i];
 
   // All three components of S commute with the Hamiltonian.
-  std::cout << "[H, S_x] = " << (H * S_tot[0] - S_tot[0] * H) << std::endl;
-  std::cout << "[H, S_y] = " << (H * S_tot[1] - S_tot[1] * H) << std::endl;
-  std::cout << "[H, S_z] = " << (H * S_tot[2] - S_tot[2] * H) << std::endl;
+  std::cout << "[H, S_x] = " << (H * S_tot[0] - S_tot[0] * H) << '\n';
+  std::cout << "[H, S_y] = " << (H * S_tot[1] - S_tot[1] * H) << '\n';
+  std::cout << "[H, S_z] = " << (H * S_tot[2] - S_tot[2] * H) << '\n';
 
   // Higher charge Q_3 (1st line of Eq. (10)).
   expr_t Q3;
   for(int i = 0; i < N; ++i) {
     Q3 += dot(cross(S[i], S[(i + 1) % N]), S[(i + 2) % N]);
   }
-  std::cout << "[H, Q3] = " << (H * Q3 - Q3 * H) << std::endl;
+  std::cout << "[H, Q3] = " << (H * Q3 - Q3 * H) << '\n';
 
   // Higher charge Q_4 (2nd line of Eq. (10)).
   expr_t Q4;
@@ -103,7 +103,7 @@ int main() {
                     S[(i + 3) % N]);
     Q4 += dot(S[i], S[(i + 2) % N]);
   }
-  std::cout << "[H, Q4] = " << (H * Q4 - Q4 * H) << std::endl;
+  std::cout << "[H, Q4] = " << (H * Q4 - Q4 * H) << '\n';
 
   // Higher charge Q_5 (3rd line of Eq. (10)).
   expr_t Q5;
@@ -114,12 +114,12 @@ int main() {
     Q5 += dot(cross(S[i], S[(i + 2) % N]), S[(i + 3) % N]);
     Q5 += dot(cross(S[i], S[(i + 1) % N]), S[(i + 3) % N]);
   }
-  std::cout << "[H, Q5] = " << (H * Q5 - Q5 * H) << std::endl;
+  std::cout << "[H, Q5] = " << (H * Q5 - Q5 * H) << '\n';
 
   // Check that the higher charges pairwise commute.
-  std::cout << "[Q3, Q4] = " << (Q3 * Q4 - Q4 * Q3) << std::endl;
-  std::cout << "[Q3, Q5] = " << (Q3 * Q5 - Q5 * Q3) << std::endl;
-  std::cout << "[Q4, Q5] = " << (Q4 * Q5 - Q5 * Q4) << std::endl;
+  std::cout << "[Q3, Q4] = " << (Q3 * Q4 - Q4 * Q3) << '\n';
+  std::cout << "[Q3, Q5] = " << (Q3 * Q5 - Q5 * Q3) << '\n';
+  std::cout << "[Q4, Q5] = " << (Q4 * Q5 - Q5 * Q4) << '\n';
 
   return 0;
 }

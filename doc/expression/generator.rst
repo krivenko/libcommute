@@ -332,7 +332,7 @@ In other words,
   // or annihilation operator.
   if(is_fermion(g)) {
     auto const& f = dynamic_cast<generator_fermion<int, std::string> const&>(g);
-    std::cout << (f.dagger() ? "creation" : "annihilation") << std::endl;
+    std::cout << (f.dagger() ? "creation" : "annihilation") << '\n';
   }
 
 .. _generator_boson:
@@ -416,7 +416,7 @@ In other words,
   // annihilation operator.
   if(is_boson(g)) {
     auto const& b = dynamic_cast<generator_boson<int> const&>(g);
-    std::cout << (b.dagger() ? "creation" : "annihilation") << std::endl;
+    std::cout << (b.dagger() ? "creation" : "annihilation") << '\n';
   }
 
 .. _generator_spin:
@@ -573,17 +573,17 @@ In other words,
   if(is_spin(g)) {
     auto const& s = dynamic_cast<generator_spin<int> const&>(g);
 
-    std::cout << "J = " << s.spin() << std::endl;
-    std::cout << "2J+1 = " << s.multiplicity() << std::endl;
+    std::cout << "J = " << s.spin() << '\n';
+    std::cout << "2J+1 = " << s.multiplicity() << '\n';
     switch(s.component()) {
       case libcommute::plus:
-        std::cout << "+" << std::endl;
+        std::cout << "+\n";
         break;
       case libcommute::minus:
-        std::cout << "-" << std::endl;
+        std::cout << "-\n";
         break;
       case libcommute::z:
-        std::cout << "z" << std::endl;
+        std::cout << "z\n";
         break;
     }
   }

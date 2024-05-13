@@ -52,7 +52,7 @@ int main() {
 
   // Check that the number operator commutes with the Hamiltonian
   auto N = a_dag() * a() + S_z();
-  std::cout << "[H, N] = " << (H * N - N * H) << std::endl;
+  std::cout << "[H, N] = " << (H * N - N * H) << '\n';
 
   // Complete Hilbert space of the system is a product of the isospin-1/2 space
   // and the bosonic space truncated to 2^10 - 1 excitations.
@@ -106,8 +106,7 @@ int main() {
   psi = Hop(phi);
 
   // Check |\psi> \approx E_{gs} |\phi>
-  std::cout << "|||0,g> - E_g|0,g>||_{L^2} = " << diff(psi, phi, E_gs)
-            << std::endl;
+  std::cout << "|||0,g> - E_g|0,g>||_{L^2} = " << diff(psi, phi, E_gs) << '\n';
 
   //
   // Now, do a similar check for the Jaynes-Cummings ladder doublets.
@@ -131,7 +130,7 @@ int main() {
     psi = Hop(phi);
 
     std::cout << "|||" << n << ",+> - E_+(" << n << ")|" << n
-              << ",+>||_{L^2} = " << diff(psi, phi, energy(1, n)) << std::endl;
+              << ",+>||_{L^2} = " << diff(psi, phi, energy(1, n)) << '\n';
 
     // Set \phi to be the "-" dressed state
     std::fill(phi.begin(), phi.end(), 0);
@@ -141,7 +140,7 @@ int main() {
     psi = Hop(phi);
 
     std::cout << "|||" << n << ",-> - E_-(" << n << ")|" << n
-              << ",->||_{L^2} = " << diff(psi, phi, energy(-1, n)) << std::endl;
+              << ",->||_{L^2} = " << diff(psi, phi, energy(-1, n)) << '\n';
   }
 
   return 0;

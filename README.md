@@ -194,9 +194,9 @@ int main() {
   }
 
   // Total number of terms (monomials) in 'H'.
-  std::cout << "Total number of terms in H: " << H.size() << std::endl;
+  std::cout << "Total number of terms in H: " << H.size() << '\n';
   // Is H Hermitian?
-  std::cout << "H^\\dagger - H = " << (conj(H) - H) << std::endl;
+  std::cout << "H^\\dagger - H = " << (conj(H) - H) << '\n';
 
   // Does H commute with N and S_z?
   decltype(H) N, S_z;
@@ -206,8 +206,8 @@ int main() {
       S_z += 0.5 * (n(ix, iy, "up") - n(ix, iy, "down"));
     }
   }
-  std::cout << "[H, N] = " << (H * N - N * H) << std::endl;
-  std::cout << "[H, S_z] = " << (H * S_z - S_z * H) << std::endl;
+  std::cout << "[H, N] = " << (H * N - N * H) << '\n';
+  std::cout << "[H, S_z] = " << (H * S_z - S_z * H) << '\n';
 
   // Iterate over all terms in 'H' and print those of degree 3.
   //
@@ -216,7 +216,7 @@ int main() {
   for(auto const& term: H) {
     if(term.monomial.size() == 3) {
       // term.coeff is coefficient in front of the monomial
-      std::cout << term.monomial << " => " << term.coeff << std::endl;
+      std::cout << term.monomial << " => " << term.coeff << '\n';
     }
   }
 
@@ -258,12 +258,12 @@ int main() {
   auto H = 0.5 * (S_p(1) * S_m(2) + S_m(1) * S_p(2)) + S_z(1) * S_z(2);
 
   // Print 'H'
-  std::cout << "H = " << H << std::endl;
+  std::cout << "H = " << H << '\n';
 
   // Automatically analyze structure of 'H' and construct a 4-dimensional
   // Hilbert space (direct product of two spin-1/2 spaces).
   auto hs = make_hilbert_space(H);
-  std::cout << "dim(hs) = " << hs.dim() << std::endl;
+  std::cout << "dim(hs) = " << hs.dim() << '\n';
 
   // Construct a 'loperator' object that represents action of expression 'H' on
   // state vectors in the Hilbert space 'hs'.
@@ -291,7 +291,7 @@ int main() {
     for(int j = 0; j < 4; ++j) {
       std::cout << "+(" << phi[j] << ")|" << j << ">";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
   }
 
   return 0;

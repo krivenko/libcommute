@@ -120,10 +120,10 @@ int main() {
   auto H_H = H_e + H_ph + H_e_ph;
 
   // Print H_H. There will be quite a lot of terms for the 100-site lattice!
-  std::cout << "H_H = " << H_H << std::endl;
+  std::cout << "H_H = " << H_H << '\n';
 
   // Check hermiticity of H_H
-  std::cout << "H_H - H_H^\\dagger = " << (H_H - conj(H_H)) << std::endl;
+  std::cout << "H_H - H_H^\\dagger = " << (H_H - conj(H_H)) << '\n';
 
   // Check that H_H commutes with the total number of electrons
   decltype(H_H) N_e;
@@ -135,7 +135,7 @@ int main() {
     }
   }
 
-  std::cout << "[H_H, N_e] = " << (H_H * N_e - N_e * H_H) << std::endl;
+  std::cout << "[H_H, N_e] = " << (H_H * N_e - N_e * H_H) << '\n';
 
   return 0;
 }

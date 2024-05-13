@@ -103,7 +103,7 @@ int main() {
 
   // Automatically analyze structure of 'H' and construct a Hilbert space
   auto hs = make_hilbert_space(H);
-  std::cout << "Full Hilbert space dimension: " << hs.dim() << std::endl;
+  std::cout << "Full Hilbert space dimension: " << hs.dim() << '\n';
 
   // Construct a 'loperator' object that represents action of expression 'H' on
   // state vectors in the Hilbert space 'hs'.
@@ -117,7 +117,7 @@ int main() {
     int const N = 2;
 
     auto const sector_size = n_fermion_sector_size(hs, N);
-    std::cout << "Size of the N = 2 sector: " << sector_size << std::endl;
+    std::cout << "Size of the N = 2 sector: " << sector_size << '\n';
 
     // Preallocate a Hamiltonian matrix to be filled and diagonalized.
     // Note that we have to store matrix elements only within the small sector.
@@ -148,7 +148,7 @@ int main() {
                                                         Eigen::EigenvaluesOnly);
 
     std::cout << "10 lowest eigenvalues of the N = 2 sector: "
-              << diag.eigenvalues().head(10).transpose() << std::endl;
+              << diag.eigenvalues().head(10).transpose() << '\n';
   }
 
   //
@@ -175,7 +175,7 @@ int main() {
 
     auto const multisector_size = n_fermion_multisector_size(hs, sectors);
     std::cout << "Size of the N_up = 1, N_down = 1 multisector: "
-              << multisector_size << std::endl;
+              << multisector_size << '\n';
 
     // Preallocate a Hamiltonian matrix to be filled and diagonalized.
     // Note that we have to store matrix elements only within the multisector.
@@ -206,7 +206,7 @@ int main() {
                                                         Eigen::EigenvaluesOnly);
 
     std::cout << "10 lowest eigenvalues of the multisector: "
-              << diag.eigenvalues().head(10).transpose() << std::endl;
+              << diag.eigenvalues().head(10).transpose() << '\n';
   }
 
   return 0;
