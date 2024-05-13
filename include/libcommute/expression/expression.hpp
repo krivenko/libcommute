@@ -602,7 +602,7 @@ private:
     // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
     bool is_new_monomial;
     typename monomials_map_t::iterator it;
-    std::tie(it, is_new_monomial) = target.emplace(m, coeff);
+    std::tie(it, is_new_monomial) = target.emplace(std::move(m), coeff);
     if(!is_new_monomial) {
       add_assign(it->second, coeff);
       if(scalar_traits<ScalarType>::is_zero(it->second)) target.erase(it);
