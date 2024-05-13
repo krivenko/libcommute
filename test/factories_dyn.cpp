@@ -41,6 +41,7 @@ TEST_CASE("Factory functions", "[factories]") {
 
   SECTION("make_complex()") {
     auto expr = make_complex(4.0 * c_dag(1, "up") * c(2, "dn") + 1.0);
+    // NOLINTNEXTLINE(modernize-type-traits)
     CHECK(std::is_same<decltype(expr),
                        expression<std::complex<double>, dyn_indices>>::value);
     CHECK(expr == std::complex<double>(4, 0) * c_dag(1, "up") * c(2, "dn") +

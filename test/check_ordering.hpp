@@ -47,6 +47,7 @@ void check_equality_impl(std::vector<T> const& v, std::false_type) {
 template <typename T> void check_equality(std::vector<T> const& v) {
   check_equality_impl(
       v,
+      // NOLINTNEXTLINE(modernize-type-traits)
       std::integral_constant<bool, std::is_pointer<T>::value>());
 }
 
@@ -77,6 +78,7 @@ void check_less_greater_impl(std::vector<T> const& v, std::false_type) {
 template <typename T> void check_less_greater(std::vector<T> const& v) {
   check_less_greater_impl(
       v,
+      // NOLINTNEXTLINE(modernize-type-traits)
       std::integral_constant<bool, std::is_pointer<T>::value>());
 }
 

@@ -65,6 +65,7 @@ private:
   // Disable overload for expressions
   template <typename T>
   using disable_for_expression =
+      // NOLINTNEXTLINE(modernize-type-traits)
       typename std::enable_if<!is_expression<T>::value>::type;
 
 public:

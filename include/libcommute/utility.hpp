@@ -64,12 +64,16 @@ namespace detail {
 
 template <typename Base, typename T, typename... Tail>
 struct all_derived_from_impl {
+  // NOLINTNEXTLINE(modernize-type-traits)
   using T_ = typename std::remove_reference<T>::type;
+  // NOLINTNEXTLINE(modernize-type-traits)
   static constexpr bool value = std::is_base_of<Base, T_>::value &&
                                 all_derived_from_impl<Base, Tail...>::value;
 };
 template <typename Base, typename T> struct all_derived_from_impl<Base, T> {
+  // NOLINTNEXTLINE(modernize-type-traits)
   using T_ = typename std::remove_reference<T>::type;
+  // NOLINTNEXTLINE(modernize-type-traits)
   static constexpr bool value = std::is_base_of<Base, T_>::value;
 };
 
@@ -88,11 +92,13 @@ namespace detail {
 template <typename T, typename TypeListHead, typename... TypeListTail>
 struct not_in_type_list_impl {
   static constexpr bool value =
+      // NOLINTNEXTLINE(modernize-type-traits)
       (!std::is_same<T, TypeListHead>::value) &&
       not_in_type_list_impl<T, TypeListTail...>::value;
 };
 template <typename T, typename TypeListHead>
 struct not_in_type_list_impl<T, TypeListHead> {
+  // NOLINTNEXTLINE(modernize-type-traits)
   static constexpr bool value = !std::is_same<T, TypeListHead>::value;
 };
 
@@ -149,6 +155,7 @@ struct noncopyable {
 //
 
 template <typename T>
+// NOLINTNEXTLINE(modernize-type-traits)
 struct linear_function : std::conditional<std::is_copy_constructible<T>::value,
                                           copyable,
                                           noncopyable>::type {

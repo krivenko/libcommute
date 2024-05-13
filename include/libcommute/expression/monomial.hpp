@@ -40,6 +40,7 @@ template <typename... IndexTypes> class monomial {
   // Helper method for one of constructors
   template <typename GenType1, typename... GenTypesTail>
   void constructor_impl(GenType1&& generator, GenTypesTail&&... more_gens) {
+    // NOLINTNEXTLINE(modernize-type-traits)
     using gen1_t = typename std::remove_reference<GenType1>::type;
     generators_.emplace_back(
         make_unique<gen1_t>(std::forward<GenType1>(generator)));
@@ -62,7 +63,7 @@ public:
 
   // Construct from a list of >=1 generators
   template <typename... GenTypes,
-            typename = typename std::enable_if<
+            typename = typename std::enable_if< // NOLINT(modernize-type-traits)
                 all_are_generators<GenTypes...>::value>::type>
   explicit monomial(GenTypes&&... generators) {
     constructor_impl(std::forward<GenTypes>(generators)...);

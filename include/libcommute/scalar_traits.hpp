@@ -36,6 +36,7 @@ template <typename T> struct is_complex<std::complex<T>> : std::true_type {};
 
 // Enable template instantiation if Trait<T>::value is true
 template <template <typename> class Trait, typename T>
+// NOLINTNEXTLINE(modernize-type-traits)
 using with_trait = typename std::enable_if<Trait<T>::value>::type;
 
 // Traits of types that can be used as the ScalarType parameter of `expression`.
