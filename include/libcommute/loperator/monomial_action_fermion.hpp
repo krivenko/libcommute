@@ -93,15 +93,18 @@ public:
       return false; // Zero after acting with the creation operators
 
     index = ~(~inter_index & ~creation_mask);
-    bool minus = parity_number_of_bits((inter_index & annihilation_count_mask) ^
-                                       (index & creation_count_mask));
+    bool minus = parity_popcount((inter_index & annihilation_count_mask) ^
+                                 (index & creation_count_mask));
     if(minus) mul_assign(coeff, scalar_traits<ScalarType>::make_const(-1));
     return true;
   }
 
 private:
   // Compute parity of the number of set bits in i
-  inline static bool parity_number_of_bits(sv_index_type i) {
+  inline static bool parity_popcount(sv_index_type i) {
+#if defined(__GNUC__) || defined(__clang__)
+    return __builtin_popcountll(i) & 0x01;
+#else
     i ^= i >> 32;
     i ^= i >> 16;
     i ^= i >> 8;
@@ -109,6 +112,7 @@ private:
     i ^= i >> 2;
     i ^= i >> 1;
     return i & 0x01;
+#endif
   }
 
   //
