@@ -66,6 +66,7 @@ jobs:
            CXX="${{ matrix.cxx_compiler.cxx }}" cmake ..                       \
              -DCMAKE_BUILD_TYPE=Debug                                          \
              -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE}/installed              \
+             -DCMAKE_CXX_FLAGS="-march=native"                                 \
              -DSTATIC_ANALYSIS=${STATIC_ANALYSIS}                              \
              -DTESTS=ON                                                        \
              -DEXAMPLES=ON                                                     \
