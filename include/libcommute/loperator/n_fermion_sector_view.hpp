@@ -113,6 +113,7 @@ struct binomial_sum_t {
 
 // Parameters of an N-fermion sector
 struct n_fermion_sector_params_t {
+
   // Total number of fermionic modes
   unsigned int M;
 
@@ -126,21 +127,17 @@ struct n_fermion_sector_params_t {
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs, unsigned int N)
     : M(init_m(hs)),
-      N(N),
+      N(validated_n(N)),
       count_occupied(N <= M / 2),
-      N_counted(count_occupied ? N : M - N) {
-    validate_n(N);
-  }
+      N_counted(count_occupied ? N : M - N) {}
 
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs,
                             sector_descriptor<HSType> const& sector)
     : M(sector.indices.size()),
-      N(sector.N),
+      N(validated_n(sector.N)),
       count_occupied(N <= M / 2),
-      N_counted(count_occupied ? N : M - N) {
-    validate_n(sector.N);
-  }
+      N_counted(count_occupied ? N : M - N) {}
 
 private:
   template <typename HSType> static unsigned int init_m(HSType const& hs) {
@@ -156,20 +153,22 @@ private:
       return 0;
   }
 
-  void validate_n(unsigned int N) const {
+  inline unsigned int validated_n(unsigned int N) const {
     if(N > M)
       throw std::runtime_error("Sector with " + std::to_string(N) +
                                " fermions does not exist "
                                "(there are " +
                                std::to_string(M) + " fermionic modes in it)");
+    return N;
   }
 };
 
 //
-// Combination ranking algorithm
+// Ranking and unranking algorithms
 //
 
-struct combination_ranking {
+// Combination ranking algorithm
+class combination_ranking {
 
   // Parameters of the sector
   n_fermion_sector_params_t const& params;
@@ -183,30 +182,15 @@ struct combination_ranking {
   // Sum of binomial coefficients
   detail::binomial_sum_t binomial_sum;
 
-  // Restricted partition of M used in unranking
-  std::vector<unsigned int> mutable lambdas;
-
-  // Upper bounds for elements of 'lambdas'
-  std::vector<unsigned int> mutable lambdas_max;
-
-  // XOR-mask used in unranking when counting unoccupied states
-  sv_index_type const unoccupied_unranking_mask;
-
+public:
   explicit combination_ranking(n_fermion_sector_params_t const& params)
     : params(params),
       count_occupied(params.N <= params.M / 2),
       N_counted(count_occupied ? params.N : params.M - params.N),
-      binomial_sum(params.M, N_counted),
-      lambdas(N_counted, 0),
-      lambdas_max(N_counted, params.M - N_counted + 1),
-      unoccupied_unranking_mask(count_occupied ? sv_index_type(0) :
-                                                 (detail::pow2(params.M) - 1)) {
-    lambdas.shrink_to_fit();
-    lambdas_max.shrink_to_fit();
-  }
+      binomial_sum(params.M, N_counted) {}
 
   // Rank a fermionic many-body state
-  sv_index_type rank(sv_index_type index) const {
+  sv_index_type operator()(sv_index_type index) const {
     unsigned int m = params.M;
     unsigned int n = N_counted;
     sv_index_type r = 0;
@@ -224,39 +208,88 @@ struct combination_ranking {
     }
     return r;
   }
+};
 
-  // Apply 'f' to each unranked state of the sector
-  template <typename F> void foreach_unranked(F&& f) const {
-    if(N_counted == 0) {
-      std::forward<F>(f)(unoccupied_unranking_mask);
-      return;
-    }
+// Generator of unranked basis states
+class unranking_generator {
 
+  // Parameters of the sector
+  n_fermion_sector_params_t const& params;
+
+  // Number of counted modes (either occupied or unoccupied)
+  unsigned int N_counted;
+
+  // Restricted partition of params.M
+  std::vector<unsigned int> mutable lambdas;
+
+  // Upper bounds for elements of 'lambdas'
+  std::vector<unsigned int> mutable lambdas_max;
+
+  // Index of the element of 'lambdas' to be updated to generate
+  // the next state
+  int mutable i = 0;
+
+  // XOR-mask used when counting unoccupied states
+  sv_index_type const unoccupied_mask;
+
+public:
+  explicit unranking_generator(n_fermion_sector_params_t const& params)
+    : params(params),
+      N_counted(params.N <= params.M / 2 ? params.N : params.M - params.N),
+      lambdas(N_counted, 0),
+      lambdas_max(N_counted, params.M - N_counted + 1),
+      unoccupied_mask(params.N <= params.M / 2 ? sv_index_type(0) :
+                                                 (detail::pow2(params.M) - 1)) {
+    lambdas.shrink_to_fit();
+    lambdas_max.shrink_to_fit();
+  }
+
+  // Initialize iteration
+  inline void init() const {
     std::fill(lambdas.begin(), lambdas.end(), 0);
     std::fill(lambdas_max.begin(), lambdas_max.end(), params.M - N_counted + 1);
-    for(int i = 0; i >= 0;) {
+    i = 0;
+  }
+
+  // Return the next state
+  inline sv_index_type next() const {
+    if(N_counted == 0) {
+      --i;
+      return unoccupied_mask;
+    }
+
+    while(i >= 0) {
       ++lambdas[i];
       if(lambdas[i] > lambdas_max[i]) {
         --i;
         continue;
       }
 
-      if(static_cast<unsigned int>(i + 1) == lambdas.size()) {
-        sv_index_type index = 0;
-        std::for_each(lambdas.rbegin(),
-                      lambdas.rend(),
-                      [&index](unsigned int lambda) {
-                        index <<= 1;
-                        index += 1;
-                        index <<= lambda - 1;
-                      });
-        f(index ^ unoccupied_unranking_mask);
-      } else {
-        ++i;
-        lambdas[i] = 0;
-        lambdas_max[i] = lambdas_max[i - 1] + 1 - lambdas[i - 1];
-      }
+      if(static_cast<unsigned int>(i + 1) == lambdas.size()) break;
+
+      ++i;
+      lambdas[i] = 0;
+      lambdas_max[i] = lambdas_max[i - 1] + 1 - lambdas[i - 1];
     }
+
+    sv_index_type index = 0;
+    std::for_each(lambdas.rbegin(),
+                  lambdas.rend(),
+                  [&index](unsigned int lambda) {
+                    index <<= 1;
+                    index += 1;
+                    index <<= lambda - 1;
+                  });
+
+    return index ^ unoccupied_mask;
+  }
+
+  // Are there still states to be returned by next()?
+  inline bool done() const {
+    if(N_counted == 0)
+      return i != 0;
+    else
+      return lambdas[0] >= lambdas_max[0];
   }
 };
 
@@ -280,13 +313,19 @@ inline sv_index_type n_fermion_sector_size(HSType const& hs, unsigned int N) {
 template <typename StateVector,
           bool Ref = true,
           typename RankingAlgorithm = combination_ranking>
-struct n_fermion_sector_view : public n_fermion_sector_params_t {
+struct n_fermion_sector_view {
 
   // The underlying state vector
   typename std::conditional<Ref, StateVector&, StateVector>::type state_vector;
 
-  // State ranking/unranking algorithm
-  RankingAlgorithm algorithm;
+  // Parameters of the sector
+  n_fermion_sector_params_t params;
+
+  // State ranking algorithm
+  RankingAlgorithm rank;
+
+  // Generator of unranked states
+  unranking_generator unrank;
 
   // Number of bits corresponding to the non-fermionic modes
   unsigned int M_nonfermion;
@@ -296,16 +335,17 @@ struct n_fermion_sector_view : public n_fermion_sector_params_t {
 
   template <typename SV, typename HSType>
   n_fermion_sector_view(SV&& sv, HSType const& hs, unsigned int N)
-    : n_fermion_sector_params_t(hs, N),
-      state_vector(std::forward<SV>(sv)),
-      algorithm(*this),
-      M_nonfermion(hs.total_n_bits() - M) {}
+    : state_vector(std::forward<SV>(sv)),
+      params(hs, N),
+      rank(params),
+      unrank(params),
+      M_nonfermion(hs.total_n_bits() - params.M) {}
 
   sv_index_type map_index(sv_index_type index) const {
-    sv_index_type index_f = algorithm.rank(index);
+    sv_index_type ranked = rank(index);
     // Place the non-fermionic bits of 'index' to the least significant
     // positions and put the computed rank of the fermionic part after them.
-    return (index_f << M_nonfermion) + (index >> M);
+    return (ranked << M_nonfermion) + (index >> params.M);
   }
 };
 
@@ -383,11 +423,14 @@ template <typename StateVector,
 inline void
 foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
         Functor&& f) { // NOLINT(cppcoreguidelines-missing-std-forward)
-  if(view.M == 0 && view.M_nonfermion == 0) return;
+  if(view.params.M == 0 && view.M_nonfermion == 0) return;
 
   auto dim_nonfermion = detail::pow2(view.M_nonfermion);
   sv_index_type sector_index = 0;
-  view.algorithm.foreach_unranked([&](sv_index_type index_f) {
+
+  view.unrank.init();
+  while(!view.unrank.done()) {
+    sv_index_type unranked = view.unrank.next();
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
 
       // Emulate decltype(auto)
@@ -402,14 +445,13 @@ foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
       if(scalar_traits<T>::is_zero(a))
         continue;
       else
-        std::forward<Functor>(f)(index_f + (index_nf << view.M), a);
+        std::forward<Functor>(f)(unranked + (index_nf << view.params.M), a);
     }
-  });
+  }
 }
 
 // Make a list of basis state indices spanning the N-fermion sector
-// The order of indices is consistent with that used by n_fermion_sector_view
-// provided the same ranking algorithm is used.
+// The order of indices is consistent with that used by n_fermion_sector_view.
 template <typename HSType, typename RankingAlgorithm = combination_ranking>
 inline std::vector<sv_index_type>
 n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
@@ -418,17 +460,20 @@ n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
   unsigned int M_nonfermion = hs.total_n_bits() - params.M;
   if(params.M == 0 && M_nonfermion == 0) return {};
 
-  RankingAlgorithm algorithm(params);
+  unranking_generator unrank(params);
 
   sv_index_type dim_nonfermion = detail::pow2(M_nonfermion);
 
   std::vector<sv_index_type> basis_states;
   basis_states.reserve(detail::binomial(params.M, N) * dim_nonfermion);
-  algorithm.foreach_unranked([&](sv_index_type index_f) {
+
+  unrank.init();
+  while(!unrank.done()) {
+    sv_index_type unranked = unrank.next();
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
-      basis_states.push_back(index_f + (index_nf << params.M));
+      basis_states.push_back(unranked + (index_nf << params.M));
     }
-  });
+  }
 
   return basis_states;
 }
