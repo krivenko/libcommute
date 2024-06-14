@@ -44,6 +44,8 @@ TEST_CASE("Implementation details", "[detail]") {
   using namespace static_indices;
   using namespace detail;
 
+  using hs_type = hilbert_space<int>;
+
   SECTION("2^n") {
     CHECK(pow2(0) == 1);
     CHECK(pow2(1) == 2);
@@ -99,13 +101,6 @@ TEST_CASE("Implementation details", "[detail]") {
                 {1, 1, 1, 1, 1, 2, 3, 4, 1, 3, 6, 10},
                 4);
   }
-}
-
-TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
-
-  using namespace static_indices;
-
-  using hs_type = hilbert_space<int>;
 
   SECTION("n_fermion_sector_params_t") {
 
@@ -113,18 +108,20 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
 
     auto check_params = [](n_fermion_sector_params_t const& params,
                            unsigned int M,
+                           sv_index_type mask,
                            unsigned int N) {
       CHECK(params.M == M);
+      CHECK(params.mask == mask);
       CHECK(params.N == N);
     };
 
-    check_params(n_fermion_sector_params_t(hs, 0), 0, 0);
+    check_params(n_fermion_sector_params_t(hs, 0), 0, 0x0, 0);
 
     hs.add(make_space_fermion(0));
 
     SECTION("One fermion") {
       for(unsigned int N = 0; N < 1; ++N)
-        check_params(n_fermion_sector_params_t(hs, N), 1, N);
+        check_params(n_fermion_sector_params_t(hs, N), 1, 0x1, N);
     }
 
     for(unsigned int i = 1; i < 5; ++i)
@@ -132,7 +129,7 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
 
     SECTION("Multiple fermions") {
       for(unsigned int N = 0; N < 6; ++N)
-        check_params(n_fermion_sector_params_t(hs, N), 5, N);
+        check_params(n_fermion_sector_params_t(hs, N), 5, 0x1F, N);
 
       CHECK_THROWS_AS(n_fermion_sector_params_t(hs, 5 + 1), std::runtime_error);
     }
@@ -142,7 +139,7 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N < 6; ++N)
-        check_params(n_fermion_sector_params_t(hs, N), 5, N);
+        check_params(n_fermion_sector_params_t(hs, N), 5, 0x1F, N);
 
       CHECK_THROWS_AS(n_fermion_sector_params_t(hs, 5 + 1), std::runtime_error);
     }
@@ -150,10 +147,18 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
     SECTION("Purely bosonic Hilbert space") {
       hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
 
-      check_params(n_fermion_sector_params_t(hs_b, 0), 0, 0);
+      check_params(n_fermion_sector_params_t(hs_b, 0), 0, 0x0, 0);
       CHECK_THROWS_AS(n_fermion_sector_params_t(hs_b, 1), std::runtime_error);
     }
   }
+}
+
+TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
+
+  using namespace static_indices;
+  using detail::n_fermion_sector_params_t;
+
+  using hs_type = hilbert_space<int>;
 
   SECTION("combination_ranking") {
 
@@ -164,9 +169,11 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
     hs.add(make_space_fermion(0));
 
     SECTION("One fermion") {
-      combination_ranking rank0(n_fermion_sector_params_t(hs, 0));
+      auto params0 = n_fermion_sector_params_t(hs, 0);
+      combination_ranking rank0(params0);
       CHECK(rank0(0x0) == 0);
-      combination_ranking rank1(n_fermion_sector_params_t(hs, 1));
+      auto params1 = n_fermion_sector_params_t(hs, 1);
+      combination_ranking rank1(params1);
       CHECK(rank1(0x0) == 0);
     }
 
@@ -176,20 +183,26 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
     SECTION("Multiple fermions") {
       sv_index_type full = (1 << 5) - 1;
 
-      combination_ranking rank0(n_fermion_sector_params_t(hs, 0));
-      combination_ranking rank5(n_fermion_sector_params_t(hs, 5));
+      auto params0 = n_fermion_sector_params_t(hs, 0);
+      auto rank0 = combination_ranking(params0);
+      auto params5 = n_fermion_sector_params_t(hs, 5);
+      auto rank5 = combination_ranking(params5);
       CHECK(rank0(0x0) == 0);
       CHECK(rank5(full) == 0);
 
-      combination_ranking rank1(n_fermion_sector_params_t(hs, 1));
-      combination_ranking rank4(n_fermion_sector_params_t(hs, 4));
+      auto params1 = n_fermion_sector_params_t(hs, 1);
+      auto rank1 = combination_ranking(params1);
+      auto params4 = n_fermion_sector_params_t(hs, 4);
+      auto rank4 = combination_ranking(params4);
       for(unsigned int i = 0; i < 5; ++i) {
         CHECK(rank1(1 << i) == i);
         CHECK(rank4(full ^ (1 << i)) == i);
       }
 
-      combination_ranking rank2(n_fermion_sector_params_t(hs, 2));
-      combination_ranking rank3(n_fermion_sector_params_t(hs, 3));
+      auto params2 = n_fermion_sector_params_t(hs, 2);
+      auto rank2 = combination_ranking(params2);
+      auto params3 = n_fermion_sector_params_t(hs, 3);
+      auto rank3 = combination_ranking(params3);
       unsigned int i = 0;
       for(unsigned int i1 = 0; i1 < 5 - 1; ++i1) {
         for(unsigned int i2 = i1 + 1; i2 < 5; ++i2) {
@@ -206,6 +219,7 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
                            std::vector<sv_index_type> const& unranked_ref) {
       for(int i = 0; i < 2; ++i) {
         std::vector<sv_index_type> unranked;
+        CHECK(g.size() == unranked_ref.size());
         g.init();
         while(!g.done()) {
           unranked.emplace_back(g.next());
@@ -311,8 +325,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
                          unsigned int M,
                          unsigned int N,
                          unsigned int M_nonfermion) {
-      CHECK(view.params.M == M);
-      CHECK(view.params.N == N);
+      CHECK(view.sector_params.M == M);
+      CHECK(view.sector_params.N == N);
       CHECK(view.M_nonfermion == M_nonfermion);
     };
 

@@ -34,6 +34,10 @@
 #include <utility>
 #include <vector>
 
+#if defined(__GNUC__) || defined(__clang__)
+#include <immintrin.h>
+#endif
+
 /* Ranking / unranking algorithms implemented here are described in
  *
  * `"Trie-based ranking of quantum many-body states",
@@ -61,6 +65,36 @@ inline sv_index_type binomial(unsigned int n, unsigned int k) {
   for(unsigned int i = 0; i < k; ++i)
     C = (C * (n - i)) / (i + 1);
   return C;
+}
+
+// Parallel bits deposit
+inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
+#if defined(__GNUC__) || defined(__clang__)
+  return _pdep_u64(src, mask);
+#else
+  // https://www.chessprogramming.org/BMI2#Serial_Implementation
+  sv_index_type res = 0;
+  for(sv_index_type bb = 1; mask; bb += bb) {
+    if(src & bb) res |= mask & -mask;
+    mask &= mask - 1;
+  }
+  return res;
+#endif
+}
+
+// Parallel bits extract
+inline sv_index_type extract_bits(sv_index_type val, sv_index_type mask) {
+#if defined(__GNUC__) || defined(__clang__)
+  return _pext_u64(val, mask);
+#else
+  // From https://www.chessprogramming.org/BMI2#Serial_Implementation_2
+  sv_index_type res = 0;
+  for(sv_index_type bb = 1; mask; bb += bb) {
+    if(val & mask & -mask) res |= bb;
+    mask &= mask - 1;
+  }
+  return res;
+#endif
 }
 
 // Evaluator for sums of the following form,
@@ -109,35 +143,28 @@ struct binomial_sum_t {
   }
 };
 
-} // namespace detail
-
 // Parameters of an N-fermion sector
 struct n_fermion_sector_params_t {
 
-  // Total number of fermionic modes
+  // Number of fermionic modes in the sector
   unsigned int M;
+
+  // Bit mask indicating positions of the modes
+  sv_index_type mask;
 
   // Number of occupied modes
   unsigned int N;
 
-  // TODO: These are specific to ranking algorithm, to be removed
-  bool count_occupied;
-  unsigned int N_counted;
-
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs, unsigned int N)
-    : M(init_m(hs)),
-      N(validated_n(N)),
-      count_occupied(N <= M / 2),
-      N_counted(count_occupied ? N : M - N) {}
+    : M(init_m(hs)), mask((sv_index_type(1) << M) - 1), N(validated_n(N)) {}
 
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs,
                             sector_descriptor<HSType> const& sector)
     : M(sector.indices.size()),
-      N(validated_n(sector.N)),
-      count_occupied(N <= M / 2),
-      N_counted(count_occupied ? N : M - N) {}
+      mask(init_mask(hs, sector)),
+      N(validated_n(sector.N)) {}
 
 private:
   template <typename HSType> static unsigned int init_m(HSType const& hs) {
@@ -153,6 +180,19 @@ private:
       return 0;
   }
 
+  template <typename... IndexTypes>
+  static unsigned int
+  init_mask(hilbert_space<IndexTypes...> const& hs,
+            sector_descriptor<hilbert_space<IndexTypes...>> const& sector) {
+    sv_index_type mask = 0;
+    for(auto const& i : sector.indices) {
+      unsigned int b =
+          hs.bit_range(elementary_space_fermion<IndexTypes...>(i)).first;
+      mask += sv_index_type(1) << b;
+    }
+    return mask;
+  }
+
   inline unsigned int validated_n(unsigned int N) const {
     if(N > M)
       throw std::runtime_error("Sector with " + std::to_string(N) +
@@ -163,6 +203,8 @@ private:
   }
 };
 
+} // namespace detail
+
 //
 // Ranking and unranking algorithms
 //
@@ -171,7 +213,7 @@ private:
 class combination_ranking {
 
   // Parameters of the sector
-  n_fermion_sector_params_t const& params;
+  detail::n_fermion_sector_params_t const& sector_params;
 
   // Count occupied or unoccupied fermionic modes
   bool count_occupied;
@@ -183,15 +225,15 @@ class combination_ranking {
   detail::binomial_sum_t binomial_sum;
 
 public:
-  explicit combination_ranking(n_fermion_sector_params_t const& params)
-    : params(params),
+  explicit combination_ranking(detail::n_fermion_sector_params_t const& params)
+    : sector_params(params),
       count_occupied(params.N <= params.M / 2),
       N_counted(count_occupied ? params.N : params.M - params.N),
       binomial_sum(params.M, N_counted) {}
 
   // Rank a fermionic many-body state
   sv_index_type operator()(sv_index_type index) const {
-    unsigned int m = params.M;
+    unsigned int m = sector_params.M;
     unsigned int n = N_counted;
     sv_index_type r = 0;
     unsigned int lambda = 1;
@@ -214,7 +256,7 @@ public:
 class unranking_generator {
 
   // Parameters of the sector
-  n_fermion_sector_params_t const& params;
+  detail::n_fermion_sector_params_t const& sector_params;
 
   // Number of counted modes (either occupied or unoccupied)
   unsigned int N_counted;
@@ -233,8 +275,8 @@ class unranking_generator {
   sv_index_type const unoccupied_mask;
 
 public:
-  explicit unranking_generator(n_fermion_sector_params_t const& params)
-    : params(params),
+  explicit unranking_generator(detail::n_fermion_sector_params_t const& params)
+    : sector_params(params),
       N_counted(params.N <= params.M / 2 ? params.N : params.M - params.N),
       lambdas(N_counted, 0),
       lambdas_max(N_counted, params.M - N_counted + 1),
@@ -247,7 +289,9 @@ public:
   // Initialize iteration
   inline void init() const {
     std::fill(lambdas.begin(), lambdas.end(), 0);
-    std::fill(lambdas_max.begin(), lambdas_max.end(), params.M - N_counted + 1);
+    std::fill(lambdas_max.begin(),
+              lambdas_max.end(),
+              sector_params.M - N_counted + 1);
     i = 0;
   }
 
@@ -291,6 +335,11 @@ public:
     else
       return lambdas[0] >= lambdas_max[0];
   }
+
+  // Total number of generated unranked states
+  inline sv_index_type size() const {
+    return detail::binomial(sector_params.M, sector_params.N);
+  }
 };
 
 //
@@ -319,13 +368,13 @@ struct n_fermion_sector_view {
   typename std::conditional<Ref, StateVector&, StateVector>::type state_vector;
 
   // Parameters of the sector
-  n_fermion_sector_params_t params;
+  detail::n_fermion_sector_params_t sector_params;
 
   // State ranking algorithm
-  RankingAlgorithm rank;
+  RankingAlgorithm ranking;
 
   // Generator of unranked states
-  unranking_generator unrank;
+  unranking_generator unranking;
 
   // Number of bits corresponding to the non-fermionic modes
   unsigned int M_nonfermion;
@@ -336,16 +385,16 @@ struct n_fermion_sector_view {
   template <typename SV, typename HSType>
   n_fermion_sector_view(SV&& sv, HSType const& hs, unsigned int N)
     : state_vector(std::forward<SV>(sv)),
-      params(hs, N),
-      rank(params),
-      unrank(params),
-      M_nonfermion(hs.total_n_bits() - params.M) {}
+      sector_params(hs, N),
+      ranking(sector_params),
+      unranking(sector_params),
+      M_nonfermion(hs.total_n_bits() - sector_params.M) {}
 
   sv_index_type map_index(sv_index_type index) const {
-    sv_index_type ranked = rank(index);
+    sv_index_type ranked = ranking(index);
     // Place the non-fermionic bits of 'index' to the least significant
     // positions and put the computed rank of the fermionic part after them.
-    return (ranked << M_nonfermion) + (index >> params.M);
+    return (ranked << M_nonfermion) + (index >> sector_params.M);
   }
 };
 
@@ -387,7 +436,7 @@ inline void update_add_element(
     n_fermion_sector_view<StateVector const, Ref, RankingAlgorithm>&,
     sv_index_type,
     T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
-  static_assert(!std::is_same<StateVector, StateVector>::value,
+  static_assert(false,
                 "update_add_element() is not supported for constant views");
 }
 
@@ -395,8 +444,7 @@ inline void update_add_element(
 template <typename StateVector, bool Ref, typename RankingAlgorithm>
 inline StateVector
 zeros_like(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const&) {
-  static_assert(!std::is_same<StateVector, StateVector>::value,
-                "zeros_like() is not supported for views");
+  static_assert(false, "zeros_like() is not supported for views");
 }
 
 // Set all amplitudes stored in the adapted StateVector object to zero
@@ -410,8 +458,7 @@ set_zeros(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm>& view) {
 template <typename StateVector, bool Ref, typename RankingAlgorithm>
 inline void
 set_zeros(n_fermion_sector_view<StateVector const, Ref, RankingAlgorithm>&) {
-  static_assert(!std::is_same<StateVector, StateVector>::value,
-                "set_zeros() is not supported for constant views");
+  static_assert(false, "set_zeros() is not supported for constant views");
 }
 
 // Apply functor `f` to all index/non-zero amplitude pairs
@@ -423,14 +470,14 @@ template <typename StateVector,
 inline void
 foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
         Functor&& f) { // NOLINT(cppcoreguidelines-missing-std-forward)
-  if(view.params.M == 0 && view.M_nonfermion == 0) return;
+  if(view.sector_params.M == 0 && view.M_nonfermion == 0) return;
 
   auto dim_nonfermion = detail::pow2(view.M_nonfermion);
   sv_index_type sector_index = 0;
 
-  view.unrank.init();
-  while(!view.unrank.done()) {
-    sv_index_type unranked = view.unrank.next();
+  view.unranking.init();
+  while(!view.unranking.done()) {
+    sv_index_type unranked = view.unranking.next();
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
 
       // Emulate decltype(auto)
@@ -445,7 +492,8 @@ foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
       if(scalar_traits<T>::is_zero(a))
         continue;
       else
-        std::forward<Functor>(f)(unranked + (index_nf << view.params.M), a);
+        std::forward<Functor>(f)(unranked + (index_nf << view.sector_params.M),
+                                 a);
     }
   }
 }
@@ -455,23 +503,23 @@ foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
 template <typename HSType, typename RankingAlgorithm = combination_ranking>
 inline std::vector<sv_index_type>
 n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
-  n_fermion_sector_params_t params(hs, N);
+  detail::n_fermion_sector_params_t sector_params(hs, N);
 
-  unsigned int M_nonfermion = hs.total_n_bits() - params.M;
-  if(params.M == 0 && M_nonfermion == 0) return {};
+  unsigned int M_nonfermion = hs.total_n_bits() - sector_params.M;
+  if(sector_params.M == 0 && M_nonfermion == 0) return {};
 
-  unranking_generator unrank(params);
+  unranking_generator unranking(sector_params);
 
   sv_index_type dim_nonfermion = detail::pow2(M_nonfermion);
 
   std::vector<sv_index_type> basis_states;
-  basis_states.reserve(detail::binomial(params.M, N) * dim_nonfermion);
+  basis_states.reserve(detail::binomial(sector_params.M, N) * dim_nonfermion);
 
-  unrank.init();
-  while(!unrank.done()) {
-    sv_index_type unranked = unrank.next();
+  unranking.init();
+  while(!unranking.done()) {
+    sv_index_type unranked = unranking.next();
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
-      basis_states.push_back(unranked + (index_nf << params.M));
+      basis_states.push_back(unranked + (index_nf << sector_params.M));
     }
   }
 
@@ -562,7 +610,6 @@ template <typename HSType>
 sector_params_vec_t
 make_sector_params(HSType const& hs,
                    std::vector<sector_descriptor<HSType>> const& sectors) {
-
   validate_sectors(hs, sectors);
 
   sector_params_vec_t params;
@@ -575,225 +622,96 @@ make_sector_params(HSType const& hs,
   return params;
 }
 
-template <typename... IndexTypes>
-unsigned int get_fermion_bit(
-    hilbert_space<IndexTypes...> const& hs,
-    typename hilbert_space<IndexTypes...>::index_types const& indices) {
-  return hs.bit_range(elementary_space_fermion<IndexTypes...>(indices)).first;
+template <typename HSType>
+unsigned int make_nonmultisector_mask(HSType const& hs,
+                                      sector_params_vec_t const& sector_params,
+                                      sv_index_type& mask) {
+  unsigned int M = hs.total_n_bits();
+  mask = (sv_index_type(1) << hs.total_n_bits()) - 1;
+  for(auto const& p : sector_params) {
+    mask -= p.mask;
+    M -= p.M;
+  }
+  return M;
 }
 
-// This object uses a non-recursive procedure to generate all restricted N-part
-// compositions of multiple integers in parallel.
-// It does heavy lifting for foreach() and n_fermion_multisector_basis_states().
-struct for_each_composition_multi {
+// Generator of multi-sector unranked basis states
+class multisector_unranking_generator {
 
   // Parameters of sectors
-  sector_params_vec_t const& sector_params;
+  detail::sector_params_vec_t const& sector_params;
 
-  // Index of the first sector with N_computed != 0
-  int s_min = -1;
+  // State unranking generators for each sector
+  std::vector<unranking_generator> sector_gens;
 
-  // Index of the last sector with N_computed != 0
-  int s_max = -1;
+  // Total number of generated unranked states
+  sv_index_type total;
 
-  // Restricted partitions of M_s
-  std::vector<std::vector<unsigned int>> mutable lambdas;
+  // Index of current unranked state
+  sv_index_type mutable i = 0;
 
-  // Upper bounds for elements of 'lambdas'
-  std::vector<std::vector<unsigned int>> mutable lambdas_max;
+  // Index of the sector currently being updated
+  int mutable s = 0;
 
-  inline explicit for_each_composition_multi(
-      sector_params_vec_t const& sector_params)
-    : sector_params(sector_params) {
-    for(int s = 0; s < static_cast<int>(sector_params.size()); ++s) {
-      auto const& p = sector_params[s];
-      lambdas.emplace_back(p.N_counted, 0);
-      lambdas.back().shrink_to_fit();
-      lambdas_max.emplace_back(p.N_counted, p.M - (p.N_counted - 1));
-      lambdas_max.back().shrink_to_fit();
-      if(p.N_counted != 0) {
-        if(s_min == -1) s_min = s;
-        s_max = s;
-      }
-    }
-    lambdas.shrink_to_fit();
-    lambdas_max.shrink_to_fit();
+  // s-th element corresponds to the unranked state with bits from the first s
+  // sectors having been deposited to it
+  std::vector<sv_index_type> mutable partial_unranked;
+
+public:
+  explicit multisector_unranking_generator(
+      detail::sector_params_vec_t const& params)
+    : sector_params(params),
+      sector_gens(params.begin(), params.end()),
+      total(std::accumulate(sector_gens.begin(),
+                            sector_gens.end(),
+                            1,
+                            [](sv_index_type n, unranking_generator const& g) {
+                              return n * g.size();
+                            })),
+      partial_unranked(sector_gens.size(), 0) {}
+
+  inline void init() const {
+    for(auto const& g : sector_gens)
+      g.init();
+    i = 0;
+    s = 0;
   }
 
-  // Apply 'f' to each composition
-  template <typename F> void operator()(F&& f) const {
-    if(s_min == -1) { // All compositions are empty
-      std::forward<F>(f)(lambdas);
-      return;
+  inline sv_index_type next() const {
+    if(sector_gens.size() == 0) {
+      s = -1;
+      ++i;
+      return 0;
     }
 
-    for(std::size_t s = 0; s < lambdas.size(); ++s) {
-      std::fill(lambdas[s].begin(), lambdas[s].end(), 0);
-      std::fill(lambdas_max[s].begin(),
-                lambdas_max[s].end(),
-                sector_params[s].M - sector_params[s].N_counted + 1);
-    }
-
-    int s = s_min; // Index of current sector
-    int i = 0;     // Index within the current sector
-
-    while(s >= s_min) {
-      ++lambdas[s][i];
-      if(lambdas[s][i] > lambdas_max[s][i]) {
-        --i;
-        if(i < 0) {
-          do {
-            --s;
-          } while(s >= s_min && sector_params[s].N_counted == 0);
-          if(s >= s_min) i = static_cast<int>(sector_params[s].N_counted) - 1;
-        }
+    while(s >= 0) {
+      if(sector_gens[s].done()) {
+        sector_gens[s].init();
+        s -= 1;
         continue;
       }
 
-      if(s == s_max &&
-         static_cast<unsigned int>(i + 1) == sector_params[s].N_counted) {
-        std::forward<F>(f)(lambdas);
-      } else {
-        ++i;
-        if(i == static_cast<int>(sector_params[s].N_counted)) {
-          do {
-            ++s;
-          } while(sector_params[s].N_counted == 0);
-          auto const& p = sector_params[s];
-          i = 0;
-          lambdas_max[s][i] = p.M - p.N_counted + 1;
-        } else {
-          lambdas_max[s][i] = lambdas_max[s][i - 1] + 1 - lambdas[s][i - 1];
-        }
-        lambdas[s][i] = 0;
-      }
+      sv_index_type val =
+          detail::deposit_bits(sector_gens[s].next(), sector_params[s].mask);
+
+      if(s == 0)
+        partial_unranked[s] = val;
+      else
+        partial_unranked[s] = partial_unranked[s - 1] + val;
+
+      if(s < sector_gens.size() - 1)
+        s += 1;
+      else
+        break;
     }
+    ++i;
+    return partial_unranked.back();
   }
+
+  inline bool done() const { return i == total; }
+
+  inline sv_index_type size() const { return total; }
 };
-
-// 'non_multisector_bit' stands for a bit corresponding to a non-multisector
-// fermionic degree of freedom.
-static constexpr int non_multisector_bit = -1;
-
-// Combine a composition {\lambda_i} and a basis state index from
-// the non-multisector subspace into the index in the full Hilbert space
-struct compositions_to_full_hs_index {
-
-  // Parameters of sectors
-  sector_params_vec_t const& sector_params;
-
-  // Mapping from bit position to sector index
-  std::vector<int> const& bit_to_sector;
-
-  // XOR-mask used to flip bits in all count_occupied == false sectors
-  sv_index_type const index_mask;
-
-  // Index withing each sector
-  std::vector<sv_index_type> mutable sector_indices;
-
-  compositions_to_full_hs_index(sector_params_vec_t const& sector_params,
-                                std::vector<int> const& bit_to_sector)
-    : sector_params(sector_params),
-      bit_to_sector(bit_to_sector),
-      index_mask(init_index_mask(sector_params, bit_to_sector)),
-      sector_indices(sector_params.size()) {
-    sector_indices.shrink_to_fit();
-  }
-
-  inline sv_index_type
-  operator()(std::vector<std::vector<unsigned int>> const& lambdas,
-             sv_index_type index_nf) const {
-
-    for(unsigned int s = 0; s < lambdas.size(); ++s) {
-      if(lambdas[s].size() != 0) {
-        auto& index_f = sector_indices[s];
-        std::for_each(lambdas[s].rbegin(),
-                      lambdas[s].rend(),
-                      [&index_f](unsigned int lambda) {
-                        index_f <<= 1;
-                        index_f += 1;
-                        index_f <<= lambda - 1;
-                      });
-      } else
-        sector_indices[s] = 0;
-    }
-
-    sv_index_type index = 0;
-
-    // Consume bits from sector_indices and index_nf
-    for(unsigned int b = 0; b < bit_to_sector.size(); ++b) {
-      int s = bit_to_sector[b];
-      if(s != non_multisector_bit) {
-        auto& index_f = sector_indices[s];
-        index += (index_f & sv_index_type(1)) << b;
-        index_f >>= 1;
-      } else {
-        index += (index_nf & sv_index_type(1)) << b;
-        index_nf >>= 1;
-      }
-    }
-
-    index += index_nf << bit_to_sector.size();
-
-    return index ^ index_mask;
-  }
-
-private:
-  static sv_index_type init_index_mask(sector_params_vec_t const& sector_params,
-                                       std::vector<int> const& bit_to_sector) {
-    sv_index_type mask = 0;
-    for(unsigned int b = 0; b < bit_to_sector.size(); ++b) {
-      int s = bit_to_sector[b];
-      if(s != non_multisector_bit && (!sector_params[s].count_occupied)) {
-        mask += pow2(b);
-      }
-    }
-    return mask;
-  }
-};
-
-template <typename HSType>
-static std::vector<int>
-make_bit_to_sector(HSType const& hs,
-                   std::vector<sector_descriptor<HSType>> const& sectors) {
-
-  if(!hs.has_algebra(fermion)) return {};
-
-  std::vector<int> result(hs.algebra_bit_range(fermion).second + 1,
-                          non_multisector_bit);
-  unsigned int result_size = 0;
-
-  int sector_i = 0;
-  for(auto const& sector : sectors) {
-    // Process only non-empty sectors
-    if(!sector.indices.empty()) {
-      for(auto const& ind : sector.indices) {
-        unsigned int b = detail::get_fermion_bit(hs, ind);
-        result[b] = sector_i;
-        result_size = std::max(result_size, b + 1);
-      }
-      ++sector_i;
-    }
-  }
-
-  result.resize(result_size);
-  result.shrink_to_fit();
-  return result;
-}
-
-template <typename HSType>
-unsigned int
-compute_m_nonmultisector(HSType const& hs,
-                         sector_params_vec_t const& sector_params) {
-  return hs.total_n_bits() -
-         std::accumulate(
-             sector_params.begin(),
-             sector_params.end(),
-             0,
-             [](unsigned int M, n_fermion_sector_params_t const& data) {
-               return M + data.M;
-             });
-}
 
 } // namespace detail
 
@@ -820,7 +738,9 @@ inline sv_index_type n_fermion_multisector_size(
   return multisector_size * detail::pow2(total_n_bits - M_total);
 }
 
-template <typename StateVector, bool Ref = true>
+template <typename StateVector,
+          bool Ref = true,
+          typename RankingAlgorithm = combination_ranking>
 struct n_fermion_multisector_view {
 
   // The underlying state vector
@@ -829,50 +749,20 @@ struct n_fermion_multisector_view {
   // Parameters of sectors
   detail::sector_params_vec_t sector_params;
 
-  // Various per-sector data used by map_index()
-  struct sector_map_index_data_t {
-
-    // Sum of binomial coefficients
-    detail::binomial_sum_t binomial_sum;
-
-    // Current value of m
-    unsigned int m = 0;
-
-    // Current value of n
-    unsigned int n = 0;
-
-    // Current value of \lambda
-    unsigned int lambda = 1;
-
-    // Current index within this sector
-    sv_index_type index = 0;
-
-    explicit sector_map_index_data_t(n_fermion_sector_params_t const& params)
-      : binomial_sum(params.M, params.N_counted) {}
-
-    // Reset all current values
-    void reset(n_fermion_sector_params_t const& params) {
-      m = params.M;
-      n = params.N_counted;
-      index = 0;
-      lambda = 1;
-    }
-  };
-  std::vector<sector_map_index_data_t> mutable sector_map_index_data;
-
-  // Mapping from bit position to sector index.
-  std::vector<int> bit_to_sector;
+  // State ranking algorithm for each sector
+  std::vector<RankingAlgorithm> ranking;
 
   // Strides used to combine sector indices into a multisector index
   std::vector<sv_index_type> sector_strides;
 
+  // Generator of unranked states
+  detail::multisector_unranking_generator unranking;
+
   // The number of bits not belonging to the multisector
   unsigned int M_nonmultisector;
 
-  // Although the following two objects are not used by this class' methods,
-  // storing them here allows to eliminate memory allocations in foreach().
-  detail::for_each_composition_multi for_each_comp;
-  detail::compositions_to_full_hs_index comp_to_index;
+  // Mask used to select non-multisector bits
+  sv_index_type nonmultisector_bits_mask = 0;
 
   using scalar_type = typename element_type<
       typename std::remove_const<StateVector>::type>::type;
@@ -884,57 +774,23 @@ struct n_fermion_multisector_view {
       std::vector<sector_descriptor<HSType>> const& sectors)
     : state_vector(std::forward<SV>(sv)),
       sector_params(detail::make_sector_params(hs, sectors)),
-      bit_to_sector(detail::make_bit_to_sector(hs, sectors)),
+      ranking(sector_params.begin(), sector_params.end()),
       sector_strides(init_sector_strides(sector_params)),
-      M_nonmultisector(detail::compute_m_nonmultisector(hs, sector_params)),
-      for_each_comp(sector_params),
-      comp_to_index(sector_params, bit_to_sector) {
-    sector_map_index_data.reserve(sector_params.size());
-    for(auto const& p : sector_params) {
-      // cppcheck-suppress useStlAlgorithm
-      sector_map_index_data.emplace_back(p);
-    }
+      unranking(sector_params) {
+    M_nonmultisector =
+        make_nonmultisector_mask(hs, sector_params, nonmultisector_bits_mask);
   }
 
   sv_index_type map_index(sv_index_type index) const {
-
-    // Translate the fermionic part of 'index' into a list of sector indices
-    for(std::size_t s = 0; s < sector_params.size(); ++s)
-      sector_map_index_data[s].reset(sector_params[s]);
-
-    sv_index_type index_nonmultisector = 0;
-    unsigned int b_nonmultisector = 0;
-
-    for(int s : bit_to_sector) {
-      if(s !=
-         detail::non_multisector_bit) { // This bit belongs to the multisector
-        auto& d = sector_map_index_data[s];
-        if((index & sv_index_type(1)) == sector_params[s].count_occupied) {
-          d.index += d.binomial_sum(d.n, d.m, d.lambda);
-          d.m -= d.lambda;
-          --d.n;
-          d.lambda = 1;
-        } else {
-          ++d.lambda;
-        }
-      } else { // a non-multisector bit
-        index_nonmultisector += (index & sv_index_type(1)) << b_nonmultisector;
-        ++b_nonmultisector;
-      }
-      index >>= 1;
+    sv_index_type index_multisector = 0;
+    for(std::size_t s = 0; s < sector_params.size(); ++s) {
+      sv_index_type ranked =
+          ranking[s](detail::extract_bits(index, sector_params[s].mask));
+      index_multisector += ranked * sector_strides[s];
     }
+    sv_index_type index_nonmultisector =
+        detail::extract_bits(index, nonmultisector_bits_mask);
 
-    index_nonmultisector += index << b_nonmultisector;
-
-    auto index_multisector = std::inner_product(
-        sector_map_index_data.begin(),
-        sector_map_index_data.end(),
-        sector_strides.begin(),
-        0,
-        std::plus<sv_index_type>(),
-        [](sector_map_index_data_t const& data, sv_index_type stride) {
-          return data.index * stride;
-        });
     return (index_multisector << M_nonmultisector) + index_nonmultisector;
   }
 
@@ -947,9 +803,8 @@ private:
 
     strides[strides.size() - 1] = 1;
     for(std::size_t i = strides.size() - 1; i-- != 0;)
-      strides[i] =
-          strides[i + 1] * detail::binomial(sector_params[i + 1].M,
-                                            sector_params[i + 1].N_counted);
+      strides[i] = strides[i + 1] * detail::binomial(sector_params[i + 1].M,
+                                                     sector_params[i + 1].N);
 
     return strides;
   }
@@ -957,76 +812,85 @@ private:
 
 // Get element type of the StateVector object adapted by a given
 // n_fermion_multisector_view object.
-template <typename StateVector, bool Ref>
-struct element_type<n_fermion_multisector_view<StateVector, Ref>> {
-  using type = typename n_fermion_multisector_view<StateVector>::scalar_type;
+template <typename StateVector, bool Ref, typename RankingAlgorithm>
+struct element_type<
+    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>> {
+  using type =
+      typename n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>::
+          scalar_type;
 };
 
 // Get state amplitude of the adapted StateVector object
 // at index view.map_index(n)
-template <typename StateVector, bool Ref>
-inline auto
-get_element(n_fermion_multisector_view<StateVector, Ref> const& view,
-            sv_index_type n) ->
-    typename n_fermion_sector_view<StateVector>::scalar_type {
+template <typename StateVector, bool Ref, typename RankingAlgorithm>
+inline auto get_element(
+    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm> const& view,
+    sv_index_type n) ->
+    typename n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>::
+        scalar_type {
   return get_element(view.state_vector, view.map_index(n));
 }
 
 // Add a constant to a state amplitude stored in the adapted StateVector object
 // at index view.map_index(n)
-template <typename StateVector, bool Ref, typename T>
-inline void
-update_add_element(n_fermion_multisector_view<StateVector, Ref>& view,
-                   sv_index_type n,
-                   T&& value) {
+template <typename StateVector, bool Ref, typename RankingAlgorithm, typename T>
+inline void update_add_element(
+    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>& view,
+    sv_index_type n,
+    T&& value) {
   update_add_element(view.state_vector,
                      view.map_index(n),
                      std::forward<T>(value));
 }
 
 // update_add_element() is not defined for constant views
-template <typename StateVector, bool Ref, typename T>
-inline void
-update_add_element(n_fermion_multisector_view<StateVector const, Ref>&,
-                   sv_index_type,
-                   T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
-  static_assert(!std::is_same<StateVector, StateVector>::value,
+template <typename StateVector, bool Ref, typename RankingAlgorithm, typename T>
+inline void update_add_element(
+    n_fermion_multisector_view<StateVector const, Ref, RankingAlgorithm>&,
+    sv_index_type,
+    T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
+  static_assert(false,
                 "update_add_element() is not supported for constant views");
 }
 
 // zeros_like() is not defined for views
-template <typename StateVector, bool Ref>
-inline StateVector
-zeros_like(n_fermion_multisector_view<StateVector, Ref> const&) {
-  static_assert(!std::is_same<StateVector, StateVector>::value,
-                "zeros_like() is not supported for views");
+template <typename StateVector, bool Ref, typename RankingAlgorithm>
+inline StateVector zeros_like(
+    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm> const&) {
+  static_assert(false, "zeros_like() is not supported for views");
 }
 
 // Set all amplitudes stored in the adapted StateVector object to zero
-template <typename StateVector, bool Ref>
-inline void set_zeros(n_fermion_multisector_view<StateVector, Ref>& view) {
+template <typename StateVector, bool Ref, typename RankingAlgorithm>
+inline void set_zeros(
+    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>& view) {
   set_zeros(view.state_vector);
 }
 
 // set_zeros() is not defined for constant views
-template <typename StateVector, bool Ref>
-inline void set_zeros(n_fermion_multisector_view<StateVector const, Ref>&) {
-  static_assert(!std::is_same<StateVector, StateVector>::value,
-                "set_zeros() is not supported for constant views");
+template <typename StateVector, bool Ref, typename RankingAlgorithm>
+inline void set_zeros(
+    n_fermion_multisector_view<StateVector const, Ref, RankingAlgorithm>&) {
+  static_assert(false, "set_zeros() is not supported for constant views");
 }
 
 // Apply functor `f` to all index/non-zero amplitude pairs
 // in the adapted StateVector object
-template <typename StateVector, bool Ref, typename Functor>
-inline void
-foreach(n_fermion_multisector_view<StateVector, Ref> const& view,
-        Functor&& f) { // NOLINT(cppcoreguidelines-missing-std-forward)
+template <typename StateVector,
+          bool Ref,
+          typename RankingAlgorithm,
+          typename Functor>
+inline void foreach(
+    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm> const& view,
+    Functor&& f) {
   if(view.sector_params.size() == 0 && view.M_nonmultisector == 0) return;
 
   auto dim_nonmultisector = detail::pow2(view.M_nonmultisector);
   sv_index_type multisector_index = 0;
-  view.for_each_comp([&](std::vector<std::vector<unsigned int>> const&
-                             lambdas) {
+
+  view.unranking.init();
+  while(!view.unranking.done()) {
+    sv_index_type unranked = view.unranking.next();
     for(sv_index_type index_nms = 0; index_nms < dim_nonmultisector;
         ++index_nms) {
 
@@ -1037,84 +901,97 @@ foreach(n_fermion_multisector_view<StateVector, Ref> const& view,
       ++multisector_index;
 
       using T =
-          typename n_fermion_multisector_view<StateVector, Ref>::scalar_type;
+          typename n_fermion_multisector_view<StateVector,
+                                              Ref,
+                                              RankingAlgorithm>::scalar_type;
       if(scalar_traits<T>::is_zero(a))
         continue;
-      else
-        std::forward<Functor>(f)(view.comp_to_index(lambdas, index_nms), a);
+      else {
+        sv_index_type index =
+            unranked +
+            detail::deposit_bits(index_nms, view.nonmultisector_bits_mask);
+        std::forward<Functor>(f)(index, a);
+      }
     }
-  });
+  }
 }
 
 // Make a list of basis state indices spanning the N-fermion multisector
 // The order of indices is consistent with that used by
 // n_fermion_multisector_view
-template <typename HSType>
+template <typename HSType, typename RankingAlgorithm = combination_ranking>
 inline std::vector<sv_index_type> n_fermion_multisector_basis_states(
     HSType const& hs,
     std::vector<sector_descriptor<HSType>> const& sectors) {
+
   auto sector_params = detail::make_sector_params(hs, sectors);
   if(hs.total_n_bits() == 0 && sector_params.empty()) return {};
 
-  detail::for_each_composition_multi for_each_comp(sector_params);
-  auto bit_to_sector = detail::make_bit_to_sector(hs, sectors);
-  detail::compositions_to_full_hs_index comp_to_index(sector_params,
-                                                      bit_to_sector);
+  detail::multisector_unranking_generator unranking(sector_params);
 
-  sv_index_type dim_multisector = std::accumulate(
-      sector_params.begin(),
-      sector_params.end(),
-      1,
-      [](sv_index_type dim, n_fermion_sector_params_t const& p) {
-        return dim * detail::binomial(p.M, p.N_counted);
-      });
-
+  sv_index_type nonmultisector_bits_mask = 0;
   unsigned int M_nonmultisector =
-      detail::compute_m_nonmultisector(hs, sector_params);
+      make_nonmultisector_mask(hs, sector_params, nonmultisector_bits_mask);
+
   sv_index_type dim_nonmultisector = detail::pow2(M_nonmultisector);
 
   std::vector<sv_index_type> basis_states;
-  basis_states.reserve(dim_multisector * dim_nonmultisector);
-  for_each_comp([&](std::vector<std::vector<unsigned int>> const& lambdas) {
+  sv_index_type dim_multisector_fermion = unranking.size();
+  basis_states.reserve(dim_multisector_fermion * dim_nonmultisector);
+
+  unranking.init();
+  while(!unranking.done()) {
+    sv_index_type unranked = unranking.next();
     for(sv_index_type index_nms = 0; index_nms < dim_nonmultisector;
         ++index_nms) {
-      basis_states.push_back(comp_to_index(lambdas, index_nms));
+
+      sv_index_type index =
+          unranked + detail::deposit_bits(index_nms, nonmultisector_bits_mask);
+      basis_states.push_back(index);
     }
-  });
+  }
 
   return basis_states;
 }
 
-template <typename StateVector>
+template <typename StateVector, typename RankingAlgorithm>
 using make_nfms_view_ret_t =
     n_fermion_multisector_view<remove_cvref_t<StateVector>,
-                               std::is_lvalue_reference<StateVector>::value>;
+                               std::is_lvalue_reference<StateVector>::value,
+                               RankingAlgorithm>;
 
 // Make a non-constant N-fermion sector view
-template <typename StateVector, typename HSType>
+template <typename StateVector,
+          typename HSType,
+          typename RankingAlgorithm = combination_ranking>
 auto make_nfms_view(StateVector&& sv,
                     HSType const& hs,
                     std::vector<sector_descriptor<HSType>> const& sectors)
-    -> make_nfms_view_ret_t<StateVector> {
-  return make_nfms_view_ret_t<StateVector>(std::forward<StateVector>(sv),
-                                           hs,
-                                           sectors);
+    -> make_nfms_view_ret_t<StateVector, RankingAlgorithm> {
+  return make_nfms_view_ret_t<StateVector, RankingAlgorithm>(
+      std::forward<StateVector>(sv),
+      hs,
+      sectors);
 }
 
-template <typename StateVector>
+template <typename StateVector, typename RankingAlgorithm>
 using make_const_nfms_view_ret_t =
     n_fermion_multisector_view<remove_cvref_t<StateVector> const,
-                               std::is_lvalue_reference<StateVector>::value>;
+                               std::is_lvalue_reference<StateVector>::value,
+                               RankingAlgorithm>;
 
 // Make a constant N-fermion sector view
-template <typename StateVector, typename HSType>
+template <typename StateVector,
+          typename HSType,
+          typename RankingAlgorithm = combination_ranking>
 auto make_const_nfms_view(StateVector&& sv,
                           HSType const& hs,
                           std::vector<sector_descriptor<HSType>> const& sectors)
-    -> make_const_nfms_view_ret_t<StateVector> {
-  return make_const_nfms_view_ret_t<StateVector>(std::forward<StateVector>(sv),
-                                                 hs,
-                                                 sectors);
+    -> make_const_nfms_view_ret_t<StateVector, RankingAlgorithm> {
+  return make_const_nfms_view_ret_t<StateVector, RankingAlgorithm>(
+      std::forward<StateVector>(sv),
+      hs,
+      sectors);
 }
 
 } // namespace libcommute
