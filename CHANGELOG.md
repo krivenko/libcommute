@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.0] - Unreleased
 
+- New pure virtual method ``elementary_space::dim()`` and its implementation in
+  derived classes.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit

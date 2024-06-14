@@ -13,6 +13,8 @@
 #ifndef LIBCOMMUTE_LOPERATOR_ELEMENTARY_SPACE_HPP_
 #define LIBCOMMUTE_LOPERATOR_ELEMENTARY_SPACE_HPP_
 
+#include "state_vector.hpp"
+
 #include <memory>
 #include <tuple>
 #include <utility>
@@ -73,6 +75,9 @@ public:
 
   // ID of the algebra this elementary space is associated with
   virtual int algebra_id() const = 0;
+
+  // Dimension of this elementary space
+  virtual sv_index_type dim() const = 0;
 
   // The minimal number of binary digits needed to represent any state
   // in this elementary space
