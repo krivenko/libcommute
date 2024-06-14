@@ -53,6 +53,9 @@ public:
   // ID of the algebra this elementary space is associated with
   int algebra_id() const override { return boson; }
 
+  // Dimension of this elementary space
+  sv_index_type dim() const override { return sv_index_type(1) << n_bits_; }
+
   // The minimal number of binary digits needed to represent any state
   // in this elementary space
   int n_bits() const override { return n_bits_; }

@@ -365,12 +365,19 @@ the elementary space to algebra generators acting in it.
     :expr:`es1.equal(es2)`, :expr:`es1.less(es2)` or :expr:`es1.greater(es2)`
     is called.
 
+  .. rubric:: Dimension
+
+  .. function:: virtual sv_index_type dim() const = 0
+
+  Dimension of this elementary space.
+
   .. rubric:: Binary representation of the basis state index
 
   .. function:: virtual int n_bits() const = 0
 
-  The number :math:`b` of bits occupied by this elementary space (dimension of
-  the space is :math:`2^b`).
+  The number :math:`b` of bits occupied by this elementary space.
+  :math:`b` is the smallest integer such that :math:`2^b \geq` dimension of the
+  space.
 
 .. rubric:: Predefined concrete elementary space types
 
@@ -445,8 +452,8 @@ the elementary space to algebra generators acting in it.
   *Defined in <libcommute/loperator/elementary_space_spin.hpp>*
 
   An elementary space associated with spin algebra generators. Dimension of
-  this elementary space depends on spin :math:`S`, and is computed as
-  :math:`2S+1` rounded up to the nearest power of 2.
+  this elementary space depends on spin :math:`S`, and is equal to
+  :math:`2S+1`.
 
   .. rubric:: Part of the interface not inherited from / identical to
               :class:`elementary_space`.

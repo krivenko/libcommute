@@ -30,6 +30,8 @@ All notable changes to this project will be documented in this file.
   even when all 63 bits are used up.
 - Improved performance and stability of ``space_partition::merge_subspaces()``
   by switching to a non-recursive variant of the algorithm.
+- New pure virtual method ``elementary_space::dim()`` and its implementation in
+  derived classes.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit

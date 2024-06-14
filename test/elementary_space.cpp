@@ -61,6 +61,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     for(auto* es : fermion_es) {
       CHECK(es->algebra_id() == fermion);
       CHECK(es->n_bits() == 1);
+      CHECK(es->dim() == 2);
     }
     check_equality(fermion_es);
     check_less_greater(fermion_es);
@@ -70,6 +71,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     for(auto* es : boson_es) {
       CHECK(es->algebra_id() == boson);
       CHECK(es->n_bits() == 4);
+      CHECK(es->dim() == 16);
     }
     check_equality(boson_es);
     check_less_greater(boson_es);
@@ -79,6 +81,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     for(auto* es : spin_es) {
       CHECK(es->algebra_id() == spin);
       CHECK(es->n_bits() == 1);
+      CHECK(es->dim() == 2);
     }
     check_equality(spin_es);
     check_less_greater(spin_es);
@@ -88,6 +91,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     for(auto* es : spin1_es) {
       CHECK(es->algebra_id() == spin);
       CHECK(es->n_bits() == 2);
+      CHECK(es->dim() == 3);
     }
     check_equality(spin1_es);
     check_less_greater(spin1_es);
@@ -97,6 +101,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     for(auto* es : spin32_es) {
       CHECK(es->algebra_id() == spin);
       CHECK(es->n_bits() == 2);
+      CHECK(es->dim() == 4);
     }
     check_equality(spin32_es);
     check_less_greater(spin32_es);

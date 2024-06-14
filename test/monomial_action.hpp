@@ -27,6 +27,7 @@ namespace libcommute {
 // Padding elementary space: used to 'pad' a Hilbert space with unused bits
 //   algebra_id() = fermion::algebra_id()-2
 //   n_bits() = 2
+//   dim() = 4
 //
 template <typename... IndexTypes>
 class elementary_space_padding final : public elementary_space<IndexTypes...> {
@@ -42,6 +43,7 @@ public:
   }
   int algebra_id() const final { return fermion - 2; }
   int n_bits() const final { return 2; }
+  sv_index_type dim() const final { return 4; }
 };
 
 //

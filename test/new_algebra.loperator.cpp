@@ -54,6 +54,8 @@ public:
   }
 
   int algebra_id() const final { return libcommute::gamma; }
+  // cppcheck-suppress duplInheritedMember
+  sv_index_type dim() const final { return 4; }
   int n_bits() const final { return 2; }
 };
 

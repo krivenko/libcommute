@@ -57,6 +57,7 @@ public:
 
   // We need 2 bits to enumerate all 4 = 2^2 basis vectors
   int n_bits() const override { return 2; }
+  sv_index_type dim() const override { return 4; }
 };
 
 } // namespace libcommute
