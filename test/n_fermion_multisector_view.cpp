@@ -85,6 +85,90 @@ build_basis_states_ref(hs_type const& hs,
   return basis_states;
 }
 
+TEST_CASE("Implementation details", "[detail]") {
+  using namespace detail;
+
+  SECTION("deposit_bits") {
+    CHECK(deposit_bits(0x3F, 0x07020408) == 0x07020408);
+    CHECK(deposit_bits(0x38, 0x07020408) == 0x07000000);
+    CHECK(deposit_bits(0x0F, 0x07020408) == 0x01020408);
+  }
+
+  SECTION("extract_bits") {
+    CHECK(extract_bits(0x00FF00FF, 0x07020408) == 5 /* 0b101 */);
+    CHECK(extract_bits(0xFF00FF00, 0x07020408) == 58 /* 0b111010 */);
+    CHECK(extract_bits(0xFF00000000000000, 0x0100000000000000) == 1);
+  }
+
+  SECTION("multisector_unranking_generator") {
+    using namespace static_indices;
+
+    using gen_t = multisector_unranking_generator;
+    using params_t = detail::n_fermion_sector_params_t;
+
+    auto check_output = [](gen_t const& g,
+                           std::vector<sv_index_type> const& unranked_ref) {
+      for(int i = 0; i < 2; ++i) {
+        std::vector<sv_index_type> unranked;
+        g.init();
+        while(!g.done()) {
+          unranked.emplace_back(g.next());
+        }
+        CHECK(unranked == unranked_ref);
+      }
+    };
+
+    hs_type hs;
+
+    // Empty Hilbert space
+    check_output(gen_t({}), {0});
+
+    // Empty sectors
+    check_output(gen_t({params_t(hs, sd_type{{}, 0})}), {0});
+    check_output(
+        gen_t({params_t(hs, sd_type{{}, 0}), params_t(hs, sd_type{{}, 0})}),
+        {0});
+
+    // Two sectors
+    for(unsigned int i = 0; i < 12; ++i)
+      hs.add(make_space_fermion(int(i)));
+
+    auto sda = sd_type{{{1}, {2}, {6}, {7}}, 2};
+    auto sdb = sd_type{{{3}, {4}, {9}}, 2};
+
+    // Sector A (N = 2, count_occupied == true)
+    // 1 2 6 7
+    //
+    // 1 1 0 0
+    // 1 0 1 0
+    // 1 0 0 1
+    // 0 1 1 0
+    // 0 1 0 1
+    // 0 0 1 1
+    std::vector<sv_index_type> ref_a = {(1 << 1) + (1 << 2),
+                                        (1 << 1) + (1 << 6),
+                                        (1 << 1) + (1 << 7),
+                                        (1 << 2) + (1 << 6),
+                                        (1 << 2) + (1 << 7),
+                                        (1 << 6) + (1 << 7)};
+    // Sector B (N = 2, count_occupied == false)
+    // 3 4 9
+    // 0 1 1
+    // 1 0 1
+    // 1 1 0
+    std::vector<sv_index_type> ref_b = {(1 << 4) + (1 << 9),
+                                        (1 << 3) + (1 << 9),
+                                        (1 << 3) + (1 << 4)};
+    std::vector<sv_index_type> ref;
+    for(auto i : ref_a) {
+      for(auto j : ref_b) {
+        ref.emplace_back(i + j); // cppcheck-suppress useStlAlgorithm
+      }
+    }
+    check_output(gen_t({params_t(hs, sda), params_t(hs, sdb)}), ref);
+  }
+}
+
 TEST_CASE("View of a state vector projected on a direct product of "
           "multiple N-fermion sectors",
           "[n_fermion_multisector_view]") {
@@ -253,33 +337,29 @@ TEST_CASE("View of a state vector projected on a direct product of "
     hs_type hs;
     state_vector st{};
 
-    auto const nmb = detail::non_multisector_bit;
-
     auto check_view = [](view_type const& view,
                          std::vector<unsigned int> const& M,
+                         std::vector<sv_index_type> const& masks,
                          std::vector<unsigned int> const& N,
-                         std::vector<int> const& bit_to_sector,
                          std::vector<sv_index_type> const& sector_strides,
-                         unsigned int M_nonmultisector) {
+                         unsigned int M_nonmultisector,
+                         sv_index_type nonmultisector_bits_mask) {
       REQUIRE(N.size() == M.size());
 
-      CHECK(view.sector_map_index_data.size() == M.size());
-      // cppcheck-suppress cppcheckError
       for(std::size_t i = 0; i < M.size(); ++i) {
         CHECK(view.sector_params[i].M == M[i]);
-        CHECK(view.sector_params[i].count_occupied == (N[i] <= M[i] / 2));
-        CHECK(view.sector_params[i].N_counted ==
-              ((N[i] <= M[i] / 2) ? N[i] : M[i] - N[i]));
+        CHECK(view.sector_params[i].mask == masks[i]);
+        CHECK(view.sector_params[i].N == N[i]);
       }
 
-      CHECK(view.bit_to_sector == bit_to_sector);
       CHECK(view.sector_strides == sector_strides);
       CHECK(view.M_nonmultisector == M_nonmultisector);
+      CHECK(view.nonmultisector_bits_mask == nonmultisector_bits_mask);
     };
 
-    check_view(view_type(st, hs, {}), {}, {}, {}, {}, 0);
-    check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, 0);
-    check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, 0);
+    check_view(view_type(st, hs, {}), {}, {}, {}, {}, 0, 0x0);
+    check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, 0, 0x0);
+    check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, 0, 0x0);
 
     CHECK_THROWS_AS(view_type(st, hs, {sda(0)}), std::runtime_error);
     CHECK_THROWS_AS(view_type(st, hs, {sda(1)}), std::runtime_error);
@@ -287,18 +367,42 @@ TEST_CASE("View of a state vector projected on a direct product of "
     hs.add(make_space_fermion(0));
 
     SECTION("One fermion") {
-      check_view(view_type(st, hs, {}), {}, {}, {}, {}, 1);
-      check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, 1);
-      check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, 1);
+      check_view(view_type(st, hs, {}), {}, {}, {}, {}, 1, 0x1);
+      check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, 1, 0x1);
+      check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, 1, 0x1);
 
-      check_view(view_type(st, hs, {sd0(0)}), {1}, {0}, {0}, {1}, 0);
-      check_view(view_type(st, hs, {sd0(1)}), {1}, {1}, {0}, {1}, 0);
+      check_view(view_type(st, hs, {sd0(0)}), {1}, {0x1}, {0}, {1}, 0, 0x0);
+      check_view(view_type(st, hs, {sd0(1)}), {1}, {0x1}, {1}, {1}, 0, 0x0);
 
-      check_view(view_type(st, hs, {sd0(0), sde(0)}), {1}, {0}, {0}, {1}, 0);
-      check_view(view_type(st, hs, {sd0(1), sde(0)}), {1}, {1}, {0}, {1}, 0);
+      check_view(view_type(st, hs, {sd0(0), sde(0)}),
+                 {1},
+                 {0x1},
+                 {0},
+                 {1},
+                 0,
+                 0x0);
+      check_view(view_type(st, hs, {sd0(1), sde(0)}),
+                 {1},
+                 {0x1},
+                 {1},
+                 {1},
+                 0,
+                 0x0);
 
-      check_view(view_type(st, hs, {sde(0), sd0(0)}), {1}, {0}, {0}, {1}, 0);
-      check_view(view_type(st, hs, {sde(0), sd0(1)}), {1}, {1}, {0}, {1}, 0);
+      check_view(view_type(st, hs, {sde(0), sd0(0)}),
+                 {1},
+                 {0x1},
+                 {0},
+                 {1},
+                 0,
+                 0x0);
+      check_view(view_type(st, hs, {sde(0), sd0(1)}),
+                 {1},
+                 {0x1},
+                 {1},
+                 {1},
+                 0,
+                 0x0);
 
       CHECK_THROWS_AS(view_type(st, hs, {sd0(2)}), std::runtime_error);
 
@@ -310,34 +414,109 @@ TEST_CASE("View of a state vector projected on a direct product of "
       hs.add(make_space_fermion(int(i)));
 
     SECTION("Multiple fermions") {
-      check_view(view_type(st, hs, {}), {}, {}, {}, {}, M_total);
-      check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, M_total);
-      check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, M_total);
+      sv_index_type full = (1 << M_total) - 1;
+
+      check_view(view_type(st, hs, {}), {}, {}, {}, {}, M_total, full);
+      check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, M_total, full);
+      check_view(view_type(st, hs, {sde(0), sde(0)}),
+                 {},
+                 {},
+                 {},
+                 {},
+                 M_total,
+                 full);
 
       unsigned int M = M_total - 1;
 
-      check_view(view_type(st, hs, {sd0(0)}), {1}, {0}, {0}, {1}, M);
-      check_view(view_type(st, hs, {sd0(1)}), {1}, {1}, {0}, {1}, M);
+      check_view(view_type(st, hs, {sd0(0)}),
+                 {1},
+                 {0x1},
+                 {0},
+                 {1},
+                 M,
+                 full - 1);
+      check_view(view_type(st, hs, {sd0(1)}),
+                 {1},
+                 {0x1},
+                 {1},
+                 {1},
+                 M,
+                 full - 1);
 
-      check_view(view_type(st, hs, {sd0(0), sde(0)}), {1}, {0}, {0}, {1}, M);
-      check_view(view_type(st, hs, {sd0(1), sde(0)}), {1}, {1}, {0}, {1}, M);
+      check_view(view_type(st, hs, {sd0(0), sde(0)}),
+                 {1},
+                 {0x1},
+                 {0},
+                 {1},
+                 M,
+                 full - 1);
+      check_view(view_type(st, hs, {sd0(1), sde(0)}),
+                 {1},
+                 {0x1},
+                 {1},
+                 {1},
+                 M,
+                 full - 1);
 
-      check_view(view_type(st, hs, {sde(0), sd0(0)}), {1}, {0}, {0}, {1}, M);
-      check_view(view_type(st, hs, {sde(0), sd0(1)}), {1}, {1}, {0}, {1}, M);
+      check_view(view_type(st, hs, {sde(0), sd0(0)}),
+                 {1},
+                 {0x1},
+                 {0},
+                 {1},
+                 M,
+                 full - 1);
+      check_view(view_type(st, hs, {sde(0), sd0(1)}),
+                 {1},
+                 {0x1},
+                 {1},
+                 {1},
+                 M,
+                 full - 1);
 
-      std::vector<int> b2s_r = {nmb, nmb, nmb, nmb, nmb, 0};
+      check_view(view_type(st, hs, {sd5(0)}),
+                 {1},
+                 {0x20},
+                 {0},
+                 {1},
+                 M,
+                 full - (1 << 5));
+      check_view(view_type(st, hs, {sd5(1)}),
+                 {1},
+                 {0x20},
+                 {1},
+                 {1},
+                 M,
+                 full - (1 << 5));
 
-      check_view(view_type(st, hs, {sd5(0)}), {1}, {0}, b2s_r, {1}, M);
-      check_view(view_type(st, hs, {sd5(1)}), {1}, {1}, b2s_r, {1}, M);
+      check_view(view_type(st, hs, {sd5(0), sde(0)}),
+                 {1},
+                 {0x20},
+                 {0},
+                 {1},
+                 M,
+                 full - (1 << 5));
+      check_view(view_type(st, hs, {sd5(1), sde(0)}),
+                 {1},
+                 {0x20},
+                 {1},
+                 {1},
+                 M,
+                 full - (1 << 5));
 
-      check_view(view_type(st, hs, {sd5(0), sde(0)}), {1}, {0}, b2s_r, {1}, M);
-      check_view(view_type(st, hs, {sd5(1), sde(0)}), {1}, {1}, b2s_r, {1}, M);
-
-      check_view(view_type(st, hs, {sde(0), sd5(0)}), {1}, {0}, b2s_r, {1}, M);
-      check_view(view_type(st, hs, {sde(0), sd5(1)}), {1}, {1}, b2s_r, {1}, M);
-
-      std::vector<int> b2s_r12 = {nmb, 0, 0, 1, 1, nmb, 0, 0, 1, 1};
-      std::vector<int> b2s_r21 = {nmb, 1, 1, 0, 0, nmb, 1, 1, 0, 0};
+      check_view(view_type(st, hs, {sde(0), sd5(0)}),
+                 {1},
+                 {0x20},
+                 {0},
+                 {1},
+                 M,
+                 full - (1 << 5));
+      check_view(view_type(st, hs, {sde(0), sd5(1)}),
+                 {1},
+                 {0x20},
+                 {1},
+                 {1},
+                 M,
+                 full - (1 << 5));
 
       M = M_total - 2 * 4;
 
@@ -347,53 +526,60 @@ TEST_CASE("View of a state vector projected on a direct product of "
 
           check_view(view_type(st, hs, {sda(N1), sdb(N2)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sde(0), sda(N1), sdb(N2)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sda(N1), sde(0), sdb(N2)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sda(N1), sdb(N2), sde(0)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
-
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sdb(N1), sda(N2)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sde(0), sdb(N1), sda(N2)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sdb(N1), sde(0), sda(N2)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
           check_view(view_type(st, hs, {sdb(N1), sda(N2), sde(0)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x421);
         }
 
         CHECK_THROWS_AS(view_type(st, hs, {sda(N1), sda(N1)}),
@@ -415,72 +601,101 @@ TEST_CASE("View of a state vector projected on a direct product of "
     SECTION("Fermions and bosons") {
       unsigned int M = M_total + 3;
 
-      check_view(view_type(st, hs, {}), {}, {}, {}, {}, M);
-      check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, M);
-      check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, M);
+      sv_index_type full = (1 << M) - 1;
 
-      check_view(view_type(st, hs, {sd0(0)}), {1}, {0}, {0}, {1}, M - 1);
-      check_view(view_type(st, hs, {sd0(1)}), {1}, {1}, {0}, {1}, M - 1);
+      check_view(view_type(st, hs, {}), {}, {}, {}, {}, M, full);
+      check_view(view_type(st, hs, {sde(0)}), {}, {}, {}, {}, M, full);
+      check_view(view_type(st, hs, {sde(0), sde(0)}), {}, {}, {}, {}, M, full);
+
+      check_view(view_type(st, hs, {sd0(0)}),
+                 {1},
+                 {0x1},
+                 {0},
+                 {1},
+                 M - 1,
+                 full - 1);
+      check_view(view_type(st, hs, {sd0(1)}),
+                 {1},
+                 {0x1},
+                 {1},
+                 {1},
+                 M - 1,
+                 full - 1);
 
       check_view(view_type(st, hs, {sd0(0), sde(0)}),
                  {1},
-                 {0},
+                 {0x1},
                  {0},
                  {1},
-                 M - 1);
+                 M - 1,
+                 full - 1);
       check_view(view_type(st, hs, {sd0(1), sde(0)}),
                  {1},
+                 {0x1},
                  {1},
-                 {0},
                  {1},
-                 M - 1);
+                 M - 1,
+                 full - 1);
 
       check_view(view_type(st, hs, {sde(0), sd0(0)}),
                  {1},
-                 {0},
+                 {0x1},
                  {0},
                  {1},
-                 M - 1);
+                 M - 1,
+                 full - 1);
       check_view(view_type(st, hs, {sde(0), sd0(1)}),
                  {1},
+                 {0x1},
                  {1},
+                 {1},
+                 M - 1,
+                 full - 1);
+
+      check_view(view_type(st, hs, {sd5(0)}),
+                 {1},
+                 {0x20},
                  {0},
                  {1},
-                 M - 1);
-
-      std::vector<int> b2s_r = {nmb, nmb, nmb, nmb, nmb, 0};
-
-      check_view(view_type(st, hs, {sd5(0)}), {1}, {0}, b2s_r, {1}, M - 1);
-      check_view(view_type(st, hs, {sd5(1)}), {1}, {1}, b2s_r, {1}, M - 1);
+                 M - 1,
+                 full - (1 << 5));
+      check_view(view_type(st, hs, {sd5(1)}),
+                 {1},
+                 {0x20},
+                 {1},
+                 {1},
+                 M - 1,
+                 full - (1 << 5));
 
       check_view(view_type(st, hs, {sd5(0), sde(0)}),
                  {1},
+                 {0x20},
                  {0},
-                 b2s_r,
                  {1},
-                 M - 1);
+                 M - 1,
+                 full - (1 << 5));
       check_view(view_type(st, hs, {sd5(1), sde(0)}),
                  {1},
+                 {0x20},
                  {1},
-                 b2s_r,
                  {1},
-                 M - 1);
+                 M - 1,
+                 full - (1 << 5));
 
       check_view(view_type(st, hs, {sde(0), sd5(0)}),
                  {1},
+                 {0x20},
                  {0},
-                 b2s_r,
                  {1},
-                 M - 1);
+                 M - 1,
+                 full - (1 << 5));
       check_view(view_type(st, hs, {sde(0), sd5(1)}),
                  {1},
+                 {0x20},
                  {1},
-                 b2s_r,
                  {1},
-                 M - 1);
-
-      std::vector<int> b2s_r12 = {nmb, 0, 0, 1, 1, nmb, 0, 0, 1, 1};
-      std::vector<int> b2s_r21 = {nmb, 1, 1, 0, 0, nmb, 1, 1, 0, 0};
+                 M - 1,
+                 full - (1 << 5));
 
       M = M_total + 3 - 2 * 4;
 
@@ -490,53 +705,61 @@ TEST_CASE("View of a state vector projected on a direct product of "
 
           check_view(view_type(st, hs, {sda(N1), sdb(N2)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
           check_view(view_type(st, hs, {sde(0), sda(N1), sdb(N2)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
           check_view(view_type(st, hs, {sda(N1), sde(0), sdb(N2)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
           check_view(view_type(st, hs, {sda(N1), sdb(N2), sde(0)}),
                      {4, 4},
+                     {0xc6, 0x318},
                      {N1, N2},
-                     b2s_r12,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
 
           check_view(view_type(st, hs, {sdb(N1), sda(N2)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
           check_view(view_type(st, hs, {sde(0), sdb(N1), sda(N2)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
           check_view(view_type(st, hs, {sdb(N1), sde(0), sda(N2)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
           check_view(view_type(st, hs, {sdb(N1), sda(N2), sde(0)}),
                      {4, 4},
+                     {0x318, 0xc6},
                      {N1, N2},
-                     b2s_r21,
                      strides_r,
-                     M);
+                     M,
+                     0x3c21);
         }
 
         CHECK_THROWS_AS(view_type(st, hs, {sda(N1), sda(N1)}),
@@ -555,9 +778,15 @@ TEST_CASE("View of a state vector projected on a direct product of "
     SECTION("Purely bosonic Hilbert space") {
       hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
 
-      check_view(view_type(st, hs_b, {}), {}, {}, {}, {}, 5);
-      check_view(view_type(st, hs_b, {sde(0)}), {}, {}, {}, {}, 5);
-      check_view(view_type(st, hs_b, {sde(0), sde(0)}), {}, {}, {}, {}, 5);
+      check_view(view_type(st, hs_b, {}), {}, {}, {}, {}, 5, 0x1f);
+      check_view(view_type(st, hs_b, {sde(0)}), {}, {}, {}, {}, 5, 0x1f);
+      check_view(view_type(st, hs_b, {sde(0), sde(0)}),
+                 {},
+                 {},
+                 {},
+                 {},
+                 5,
+                 0x1f);
 
       CHECK_THROWS_AS(view_type(st, hs_b, {sd0(0)}), std::runtime_error);
       CHECK_THROWS_AS(view_type(st, hs_b, {sd0(1)}), std::runtime_error);

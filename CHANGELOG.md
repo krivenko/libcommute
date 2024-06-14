@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit
-  manipulation operations (``popcount``).
+  manipulation operations (``popcount``, ``pdep``, ``pext``).
 
 ## [0.7.2] - 2022-11-12
 
