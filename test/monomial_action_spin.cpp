@@ -110,7 +110,8 @@ TEST_CASE("Action of a spin monomial on an index", "[monomial_action_spin]") {
   for(sv_index_type n12 : {0, 1}) {
     for(sv_index_type n1 : {0, 1, 2}) {
       for(sv_index_type n32 : {0, 1, 2, 3}) {
-        sv_index_type index = (1 << n_pad_bits) - 1;
+        sv_index_type index =
+            ~sv_index_type(0) >> (sv_index_width - n_pad_bits);
         index += n12 << n_pad_bits;
         index += n1 << (n_pad_bits + 1);
         index += n32 << (n_pad_bits + 3);
