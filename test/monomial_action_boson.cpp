@@ -98,7 +98,8 @@ TEST_CASE("Action of a bosonic monomial on an index",
 
   std::vector<sv_index_type> in_index_list(1 << n_op_bits);
   for(unsigned int i = 0; i < in_index_list.size(); i++)
-    in_index_list[i] = (i << n_pad_bits) + (1 << n_pad_bits) - 1;
+    in_index_list[i] = (i << n_pad_bits) +
+                       (~sv_index_type(0) >> (sv_index_width - n_pad_bits));
 
   SECTION("No operators") {
     mon_type mon;
