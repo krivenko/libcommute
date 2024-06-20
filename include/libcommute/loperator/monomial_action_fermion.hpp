@@ -103,7 +103,7 @@ private:
   // Compute parity of the number of set bits in i
   inline static bool parity_popcount(sv_index_type i) {
 #if defined(__GNUC__) || defined(__clang__)
-    return __builtin_popcountll(i) & 0x01;
+    return __builtin_parityll(i);
 #else
     i ^= i >> 32;
     i ^= i >> 16;
@@ -111,7 +111,7 @@ private:
     i ^= i >> 4;
     i ^= i >> 2;
     i ^= i >> 1;
-    return i & 0x01;
+    return i & 0x1;
 #endif
   }
 
