@@ -97,6 +97,10 @@
 <section id="unreleased">
 <h2>[0.8.0] - Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this heading"></a></h2>
 <ul class="simple">
+<li><p>Reduce the maximum allowed number of bits in the binary representation of
+a basis state index (<code class="docutils literal notranslate"><span class="pre">hilbert_space::max_n_bits</span></code>) to 63. This way
+<code class="docutils literal notranslate"><span class="pre">hilbert_space::dim()</span></code> can return a valid value of type <code class="docutils literal notranslate"><span class="pre">sv_index_type</span></code>
+even when all 63 bits are used up.</p></li>
 <li><p>Fixed a negative index bug in <code class="docutils literal notranslate"><span class="pre">n_fermion_sector_view</span></code>.
 Credits to Dr. Cezary Śliwa for providing the patch.</p></li>
 <li><p>Whenever possible, use compiler intrinsics to speed up complex bit

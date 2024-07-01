@@ -140,11 +140,15 @@ a direct product of basis vectors of the elementary spaces,</p>
 (<a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">sv_index_type</span></code></a>).
 The binary form of <span class="math notranslate nohighlight">\(|n\rangle_\mathcal{H}\)</span> is
 then a concatenation of binary forms of <span class="math notranslate nohighlight">\(|n_i\rangle_{\mathcal{H}_i}\)</span>.
-For example, the following picture shows memory representation of basis
+For example, the following picture shows memory representation of the basis
 state <span class="math notranslate nohighlight">\(|90\rangle_\mathcal{H} = |0\rangle_{\mathcal{H}_1} \otimes
 |5\rangle_{\mathcal{H}_2} \otimes |1\rangle_{\mathcal{H}_3} \otimes
 |1\rangle_{\mathcal{H}_4}\)</span>. Cells (bits) of the same color belong to the same
-elementary space and the higher blank cells 7-63 are unused – set to zero.</p>
+elementary space and the higher blank cells 7-62 are unused – set to zero. The
+most significant bit 63 is reserved and can never be occupied by an elementary
+space. This restriction is necessary to make sure that the size of a Hilbert
+space with all the allowed 63 bits used up is still representable by a value
+of the type <a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">sv_index_type</span></code></a>.</p>
 <a class="reference internal image-reference" href="../_images/basis_state.svg"><img alt="../_images/basis_state.svg" src="../_images/basis_state.svg" width="800" /></a>
 <p>The simplest way to construct a <a class="reference internal" href="#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">hilbert_space</span></code></a> object is by calling
 <a class="reference internal" href="#_CPPv4I0Dp0EN10libcommute18make_hilbert_spaceE13hilbert_spaceIDp10IndexTypesERK10expressionI10ScalarTypeDp10IndexTypesERR13ESConstructor" title="libcommute::make_hilbert_space"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_hilbert_space()</span></code></a> on an expression.</p>
@@ -226,7 +230,7 @@ which are used to construct this Hilbert space.</p>
 <dd><p>Construct from a list of elementary spaces. The elementary spaces need not
 be given in any particular order.
 Throws <a class="reference internal" href="#_CPPv4N10libcommute13hilbert_space21hilbert_space_too_bigE" title="libcommute::hilbert_space::hilbert_space_too_big"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">hilbert_space_too_big</span></code></a> if all elementary spaces together
-would overflow the 64-bit integer type of the basis state index.</p>
+would exceed the 63-bit limit of the basis state index.</p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -237,7 +241,7 @@ associated with algebra generators found in <span class="cpp-expr sig sig-inline
 Construction of the elementary spaces is performed by the functor
 <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4I00EN10libcommute13hilbert_space13hilbert_spaceERKN10libcommute10expressionI10ScalarTypeDp10IndexTypesEERR13ESConstructor" title="libcommute::hilbert_space::hilbert_space::es_constr"><span class="n">es_constr</span></a></span>.
 Throws <a class="reference internal" href="#_CPPv4N10libcommute13hilbert_space21hilbert_space_too_bigE" title="libcommute::hilbert_space::hilbert_space_too_big"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">hilbert_space_too_big</span></code></a> if all collected elementary spaces
-together would overflow the 64-bit integer type of the basis state index.</p>
+together would exceed the 63-bit limit of the basis state index.</p>
 </dd></dl>
 
 <p class="rubric">Copy/move-constructors and assignments</p>
@@ -277,7 +281,7 @@ together would overflow the 64-bit integer type of the basis state index.</p>
 <a class="reference internal" href="#_CPPv4N10libcommute13hilbert_space23elementary_space_existsE" title="libcommute::hilbert_space::elementary_space_exists"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">elementary_space_exists</span></code></a> if an elementary space equivalent to
 <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4N10libcommute13hilbert_space3addERK16elementary_spaceIDp10IndexTypesE" title="libcommute::hilbert_space::add::es"><span class="n">es</span></a></span> is already part of the product.
 Throws <a class="reference internal" href="#_CPPv4N10libcommute13hilbert_space21hilbert_space_too_bigE" title="libcommute::hilbert_space::hilbert_space_too_big"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">hilbert_space_too_big</span></code></a> if adding <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4N10libcommute13hilbert_space3addERK16elementary_spaceIDp10IndexTypesE" title="libcommute::hilbert_space::add::es"><span class="n">es</span></a></span> into the product
-would overflow the 64-bit integer type of the basis state index.</p>
+would exceed the 63-bit limit of the basis state index.</p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -334,9 +338,9 @@ index.</p>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK10libcommute13hilbert_space3dimEv">
-<span id="_CPPv3NK10libcommute13hilbert_space3dimEv"></span><span id="_CPPv2NK10libcommute13hilbert_space3dimEv"></span><span id="libcommute::hilbert_space::dimC"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dim</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute13hilbert_space3dimEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3NK10libcommute13hilbert_space3dimEv"></span><span id="_CPPv2NK10libcommute13hilbert_space3dimEv"></span><span id="libcommute::hilbert_space::dimC"></span><a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="n"><span class="pre">sv_index_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dim</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10libcommute13hilbert_space3dimEv" title="Permalink to this definition"></a><br /></dt>
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute13hilbert_space7get_dimERK13hilbert_space">
-<span id="_CPPv3N10libcommute13hilbert_space7get_dimERK13hilbert_space"></span><span id="_CPPv2N10libcommute13hilbert_space7get_dimERK13hilbert_space"></span><span id="libcommute::hilbert_space::get_dim__hilbert_spaceCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_dim</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><span class="n"><span class="pre">hilbert_space</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute13hilbert_space7get_dimERK13hilbert_space" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N10libcommute13hilbert_space7get_dimERK13hilbert_space"></span><span id="_CPPv2N10libcommute13hilbert_space7get_dimERK13hilbert_space"></span><span id="libcommute::hilbert_space::get_dim__hilbert_spaceCR"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><a class="reference internal" href="state_vector.html#_CPPv4N10libcommute13sv_index_typeE" title="libcommute::sv_index_type"><span class="n"><span class="pre">sv_index_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_dim</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><span class="n"><span class="pre">hilbert_space</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10libcommute13hilbert_space7get_dimERK13hilbert_space" title="Permalink to this definition"></a><br /></dt>
 <dd><p>The dimension of this Hilbert space computed as a product of dimensions
 of the elementary spaces.</p>
 </dd></dl>
@@ -373,7 +377,7 @@ the product.</p>
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N10libcommute13hilbert_space21hilbert_space_too_bigE">
 <span id="_CPPv3N10libcommute13hilbert_space21hilbert_space_too_bigE"></span><span id="_CPPv2N10libcommute13hilbert_space21hilbert_space_too_bigE"></span><span id="libcommute::hilbert_space::hilbert_space_too_big"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">hilbert_space_too_big</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">runtime_error</span></span><a class="headerlink" href="#_CPPv4N10libcommute13hilbert_space21hilbert_space_too_bigE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>The total basis state index size exceeds 64 bits.</p>
+<dd><p>The total basis state index size exceeds 63 bits.</p>
 </dd></dl>
 
 </dd></dl>

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.0] - Unreleased
 
+- Reduce the maximum allowed number of bits in the binary representation of
+  a basis state index (``hilbert_space::max_n_bits``) to 63. This way
+  ``hilbert_space::dim()`` can return a valid value of type ``sv_index_type``
+  even when all 63 bits are used up.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit
