@@ -348,17 +348,18 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
 
   SECTION("Very big Hilbert space") {
     hs_type hs1;
-    for(int i = 0; i < 32; ++i)
+    for(int i = 0; i < 31; ++i)
       hs1.add(make_space_spin(3.0 / 2, "s", i));
 
     using ex_type = hs_type::hilbert_space_too_big;
-    CHECK_THROWS_AS(hs1.add(make_space_spin(3.0 / 2, "s", 32)), ex_type);
+    CHECK_THROWS_AS(hs1.add(make_space_spin(3.0 / 2, "s", 31)), ex_type);
 
     auto expr = expression<double, std::string, int>(1);
-    for(int i = 0; i < 32; ++i)
+    for(int i = 0; i < 31; ++i)
       expr *= S_p<4>("s", i);
+    expr *= S_p<2>("s", 31);
     hs_type hs2(expr);
-    CHECK(hs2.total_n_bits() == 64);
+    CHECK(hs2.total_n_bits() == 63);
 
     expr *= S_p<4>("s", 32);
     CHECK_THROWS_AS(hs_type(expr), ex_type);

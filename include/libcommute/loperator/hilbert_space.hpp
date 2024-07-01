@@ -46,7 +46,8 @@ template <typename... IndexTypes> class hilbert_space {
 
   // Size of a Hilbert space must be representable by an integer with
   // at most this number of bits.
-  static constexpr int max_n_bits = std::numeric_limits<sv_index_type>::digits;
+  static constexpr int max_n_bits =
+      std::numeric_limits<sv_index_type>::digits - 1;
 
   // Compare two elementary_space_t objects wrapped in std::unique_ptr<T>
   struct less {
@@ -94,7 +95,7 @@ public:
     explicit hilbert_space_too_big(int n_bits)
       : std::runtime_error("Hilbert space size is not representable "
                            "by a " +
-                           std::to_string(max_n_bits) +
+                           std::to_string(max_n_bits + 1) +
                            "-bit integer (n_bits = " + std::to_string(n_bits) +
                            ")"),
         n_bits(n_bits) {}
@@ -227,8 +228,8 @@ public:
   int total_n_bits() const { return bit_range_end_ + 1; }
 
   // Dimension of this Hilbert space
-  std::size_t dim() const { return std::size_t(1) << total_n_bits(); }
-  friend std::size_t get_dim(hilbert_space const& hs) { return hs.dim(); }
+  sv_index_type dim() const { return sv_index_type(1) << total_n_bits(); }
+  friend sv_index_type get_dim(hilbert_space const& hs) { return hs.dim(); }
 
   // Apply functor `f` to all basis state indices
   template <typename Functor>

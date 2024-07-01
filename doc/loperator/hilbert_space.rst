@@ -55,11 +55,15 @@ In the code, the basis vectors are represented by 64-bit unsigned integers
 (:type:`sv_index_type`).
 The binary form of :math:`|n\rangle_\mathcal{H}` is
 then a concatenation of binary forms of :math:`|n_i\rangle_{\mathcal{H}_i}`.
-For example, the following picture shows memory representation of basis
+For example, the following picture shows memory representation of the basis
 state :math:`|90\rangle_\mathcal{H} = |0\rangle_{\mathcal{H}_1} \otimes
 |5\rangle_{\mathcal{H}_2} \otimes |1\rangle_{\mathcal{H}_3} \otimes
 |1\rangle_{\mathcal{H}_4}`. Cells (bits) of the same color belong to the same
-elementary space and the higher blank cells 7-63 are unused -- set to zero.
+elementary space and the higher blank cells 7-62 are unused -- set to zero. The
+most significant bit 63 is reserved and can never be occupied by an elementary
+space. This restriction is necessary to make sure that the size of a Hilbert
+space with all the allowed 63 bits used up is still representable by a value
+of the type :type:`sv_index_type`.
 
 .. image:: ../images/basis_state.svg
   :width: 800
@@ -153,7 +157,7 @@ does not matter -- they will be reordered automatically.
     Construct from a list of elementary spaces. The elementary spaces need not
     be given in any particular order.
     Throws :struct:`hilbert_space_too_big` if all elementary spaces together
-    would overflow the 64-bit integer type of the basis state index.
+    would exceed the 63-bit limit of the basis state index.
 
   .. function:: template<typename ScalarType, \
                          typename ESConstructor = default_es_constructor> \
@@ -166,8 +170,7 @@ does not matter -- they will be reordered automatically.
     Construction of the elementary spaces is performed by the functor
     :expr:`es_constr`.
     Throws :struct:`hilbert_space_too_big` if all collected elementary spaces
-    together would overflow the 64-bit integer type of the basis state index.
-
+    together would exceed the 63-bit limit of the basis state index.
 
   .. rubric:: Copy/move-constructors and assignments
 
@@ -191,7 +194,7 @@ does not matter -- they will be reordered automatically.
     :struct:`elementary_space_exists` if an elementary space equivalent to
     :expr:`es` is already part of the product.
     Throws :struct:`hilbert_space_too_big` if adding :expr:`es` into the product
-    would overflow the 64-bit integer type of the basis state index.
+    would exceed the 63-bit limit of the basis state index.
 
   .. function:: bool has(elementary_space<IndexTypes...> const& es) const
 
@@ -233,8 +236,8 @@ does not matter -- they will be reordered automatically.
     The total number of used bits in the binary representation of a basis state
     index.
 
-  .. function:: std::size_t dim() const
-                friend std::size_t get_dim(hilbert_space const& hs)
+  .. function:: sv_index_type dim() const
+                friend sv_index_type get_dim(hilbert_space const& hs)
 
     The dimension of this Hilbert space computed as a product of dimensions
     of the elementary spaces.
@@ -266,7 +269,7 @@ does not matter -- they will be reordered automatically.
 
   .. struct:: hilbert_space_too_big : public std::runtime_error
 
-    The total basis state index size exceeds 64 bits.
+    The total basis state index size exceeds 63 bits.
 
 .. function:: template<typename ScalarType, \
                        typename... IndexTypes, \
