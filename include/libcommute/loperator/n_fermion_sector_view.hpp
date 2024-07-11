@@ -99,6 +99,21 @@ inline unsigned int count_trailing_zeros(sv_index_type i) {
 #endif
 }
 
+// Count set bits
+inline unsigned int popcount(sv_index_type i) {
+#if defined(__GNUC__) || defined(__clang__)
+  return __builtin_popcountll(i);
+#else
+  i ^= i >> 32;
+  i ^= i >> 16;
+  i ^= i >> 8;
+  i ^= i >> 4;
+  i ^= i >> 2;
+  i ^= i >> 1;
+  return i;
+#endif
+}
+
 // Parallel bits deposit
 inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
 #if defined(__GNUC__) || defined(__clang__)
@@ -221,7 +236,7 @@ public:
   }
 
   // Rank a fermionic many-body state
-  sv_index_type operator()(sv_index_type index) const {
+  inline sv_index_type operator()(sv_index_type index) const {
     index = index ^ mask;
     sv_index_type i = 0;
     unsigned int k = 0;
@@ -230,6 +245,90 @@ public:
       index = index & (index - 1);
       i += binomial[c * N_counted + k];
       ++k;
+    }
+    return i;
+  }
+};
+
+// Staggered combination ranking algorithm
+template <unsigned int R> class staggered_ranking {
+
+  static_assert((R > 0) && (R < 64), "Chunk size R must belong to [1; 63]");
+
+  // 2^R
+  constexpr static sv_index_type rdim = sv_index_type(1) << R;
+
+  // Number of chunks + 1
+  unsigned int mpmax;
+
+  // Positions of heads (N' = 0, \alpha = 0) within lookup_table corresponding
+  // to each M'
+  std::vector<sv_index_type> mp_block_heads;
+
+  // Table of precomputed values of rank(\alpha, M', N')
+  std::vector<sv_index_type> lookup_table;
+
+  // Population count for each of the 2^R length-R states
+  std::vector<unsigned int> popcount_table;
+
+  // XOR-mask to be applied to input states
+  sv_index_type mask;
+
+  // rank(\alpha, M', N')
+  inline sv_index_type
+  rank(sv_index_type r, unsigned int Mp, unsigned int Np) const {
+    sv_index_type i = 0;
+    unsigned int k = 1;
+    while(r != 0) {
+      unsigned int c = detail::count_trailing_zeros(r);
+      r = r & (r - 1);
+      i += detail::binomial(Mp + c, Np + k);
+      ++k;
+    }
+    return i;
+  }
+
+public:
+  explicit staggered_ranking(detail::n_fermion_sector_params_t const& params)
+    : mpmax(params.M / R),
+      mask((params.N <= params.M / 2) ? sv_index_type(0) :
+                                        ((sv_index_type(1) << params.M) - 1)) {
+
+    // Fill mp_block_heads
+    mp_block_heads.reserve(mpmax);
+    for(unsigned int mp = 0; mp <= mpmax; ++mp) {
+      mp_block_heads.emplace_back((mp + R * (mp * mp - mp) / 2) * rdim);
+    }
+
+    // Fill lookup_table
+    lookup_table.reserve((mpmax + 1) * (R * mpmax + 2) * rdim / 2);
+    for(unsigned int mp = 0; mp <= mpmax; ++mp) {
+      unsigned int Mp = mp * R;
+      for(unsigned int Np = 0; Np <= Mp; ++Np) {
+        for(sv_index_type r = 0; r < rdim; ++r) {
+          lookup_table.emplace_back(rank(r, Mp, Np));
+        }
+      }
+    }
+
+    // Fill popcount_table
+    popcount_table.reserve(rdim);
+    for(sv_index_type r = 0; r < rdim; ++r) {
+      popcount_table.emplace_back(detail::popcount(r));
+    }
+  }
+
+  // Rank a fermionic many-body state
+  inline sv_index_type operator()(sv_index_type index) const {
+    index = index ^ mask;
+    sv_index_type i = 0;
+    unsigned int Np = 0;
+    sv_index_type r = 0;
+    for(unsigned int mp = 0; index != 0; ++mp) {
+      r = index & (rdim - 1);
+      i += lookup_table[mp_block_heads[mp] + Np * rdim + r];
+      Np += popcount_table[r];
+      index >>= R;
     }
     return i;
   }

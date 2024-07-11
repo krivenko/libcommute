@@ -70,6 +70,16 @@ TEST_CASE("Implementation details", "[detail]") {
       CHECK(count_trailing_zeros(sv_index_type(1) << i) == i);
   }
 
+  SECTION("popcount") {
+    for(unsigned int i = 0; i < 63; ++i)
+      CHECK(popcount(sv_index_type(1) << i) == 1);
+
+    sv_index_type one = 1;
+    CHECK(popcount((one << 32) + (one << 8)) == 2);
+    CHECK(popcount((one << 32) + (one << 4) + (one << 2)) == 3);
+    CHECK(popcount((one << 32) + (one << 8) + (one << 4) + (one << 2)) == 4);
+  }
+
   SECTION("n_fermion_sector_params_t") {
 
     hs_type hs;
@@ -121,123 +131,128 @@ TEST_CASE("Implementation details", "[detail]") {
   }
 }
 
-TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
+TEMPLATE_TEST_CASE("Ranking algorithms",
+                   "[ranking]",
+                   combination_ranking,
+                   staggered_ranking<1>,
+                   staggered_ranking<2>,
+                   staggered_ranking<4>,
+                   staggered_ranking<8>) {
 
   using namespace static_indices;
   using detail::n_fermion_sector_params_t;
 
-  using hs_type = hilbert_space<int>;
+  hilbert_space<int> hs;
 
-  SECTION("combination_ranking") {
+  CHECK(TestType(n_fermion_sector_params_t(hs, 0))(0x0) == 0);
 
-    hs_type hs;
+  hs.add(make_space_fermion(0));
 
-    CHECK(combination_ranking(n_fermion_sector_params_t(hs, 0))(0x0) == 0);
+  SECTION("One fermion") {
+    auto params0 = n_fermion_sector_params_t(hs, 0);
+    TestType rank0(params0);
+    CHECK(rank0(0x0) == 0);
+    auto params1 = n_fermion_sector_params_t(hs, 1);
+    TestType rank1(params1);
+    CHECK(rank1(0x1) == 0);
+  }
 
-    hs.add(make_space_fermion(0));
+  for(unsigned int i = 1; i < 5; ++i)
+    hs.add(make_space_fermion(int(i)));
 
-    SECTION("One fermion") {
-      auto params0 = n_fermion_sector_params_t(hs, 0);
-      combination_ranking rank0(params0);
-      CHECK(rank0(0x0) == 0);
-      auto params1 = n_fermion_sector_params_t(hs, 1);
-      combination_ranking rank1(params1);
-      CHECK(rank1(0x1) == 0);
+  SECTION("Multiple fermions") {
+    sv_index_type full = (1 << 5) - 1;
+
+    auto params0 = n_fermion_sector_params_t(hs, 0);
+    auto rank0 = TestType(params0);
+    auto params5 = n_fermion_sector_params_t(hs, 5);
+    auto rank5 = TestType(params5);
+    CHECK(rank0(0x0) == 0);
+    CHECK(rank5(full) == 0);
+
+    auto params1 = n_fermion_sector_params_t(hs, 1);
+    auto rank1 = TestType(params1);
+    auto params4 = n_fermion_sector_params_t(hs, 4);
+    auto rank4 = TestType(params4);
+    for(unsigned int i = 0; i < 5; ++i) {
+      CHECK(rank1(1 << i) == i);
+      CHECK(rank4(full ^ (1 << i)) == i);
     }
 
-    for(unsigned int i = 1; i < 5; ++i)
-      hs.add(make_space_fermion(int(i)));
-
-    SECTION("Multiple fermions") {
-      sv_index_type full = (1 << 5) - 1;
-
-      auto params0 = n_fermion_sector_params_t(hs, 0);
-      auto rank0 = combination_ranking(params0);
-      auto params5 = n_fermion_sector_params_t(hs, 5);
-      auto rank5 = combination_ranking(params5);
-      CHECK(rank0(0x0) == 0);
-      CHECK(rank5(full) == 0);
-
-      auto params1 = n_fermion_sector_params_t(hs, 1);
-      auto rank1 = combination_ranking(params1);
-      auto params4 = n_fermion_sector_params_t(hs, 4);
-      auto rank4 = combination_ranking(params4);
-      for(unsigned int i = 0; i < 5; ++i) {
-        CHECK(rank1(1 << i) == i);
-        CHECK(rank4(full ^ (1 << i)) == i);
-      }
-
-      auto params2 = n_fermion_sector_params_t(hs, 2);
-      auto rank2 = combination_ranking(params2);
-      auto params3 = n_fermion_sector_params_t(hs, 3);
-      auto rank3 = combination_ranking(params3);
-      unsigned int i = 0;
-      for(unsigned int i1 = 1; i1 < 5; ++i1) {
-        for(unsigned int i2 = 0; i2 < i1; ++i2) {
-          CHECK(rank2((1 << i1) + (1 << i2)) == i);
-          CHECK(rank3(full ^ ((1 << i1) + (1 << i2))) == i);
-          ++i;
-        }
+    auto params2 = n_fermion_sector_params_t(hs, 2);
+    auto rank2 = TestType(params2);
+    auto params3 = n_fermion_sector_params_t(hs, 3);
+    auto rank3 = TestType(params3);
+    unsigned int i = 0;
+    for(unsigned int i1 = 1; i1 < 5; ++i1) {
+      for(unsigned int i2 = 0; i2 < i1; ++i2) {
+        CHECK(rank2((1 << i1) + (1 << i2)) == i);
+        CHECK(rank3(full ^ ((1 << i1) + (1 << i2))) == i);
+        ++i;
       }
     }
   }
+}
 
-  SECTION("unranking_generator") {
-    auto check_output = [](unranking_generator const& g,
-                           std::vector<sv_index_type> const& unranked_ref) {
-      for(int i = 0; i < 2; ++i) {
-        std::vector<sv_index_type> unranked;
-        CHECK(g.size() == unranked_ref.size());
-        g.init();
-        while(!g.done()) {
-          unranked.emplace_back(g.next());
-        }
-        CHECK(unranked == unranked_ref);
+TEST_CASE("Generator of unranked basis states", "[unranking]") {
+
+  using namespace static_indices;
+  using detail::n_fermion_sector_params_t;
+
+  auto check_output = [](unranking_generator const& g,
+                         std::vector<sv_index_type> const& unranked_ref) {
+    for(int i = 0; i < 2; ++i) {
+      std::vector<sv_index_type> unranked;
+      CHECK(g.size() == unranked_ref.size());
+      g.init();
+      while(!g.done()) {
+        unranked.emplace_back(g.next());
       }
-    };
+      CHECK(unranked == unranked_ref);
+    }
+  };
 
-    hs_type hs;
+  hilbert_space<int> hs;
+
+  check_output(unranking_generator(n_fermion_sector_params_t(hs, 0)),
+               std::vector<sv_index_type>{0});
+
+  hs.add(make_space_fermion(0));
+
+  SECTION("One fermion") {
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 0)),
+                 std::vector<sv_index_type>{0x0});
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 1)),
+                 std::vector<sv_index_type>{0x1});
+  }
+
+  for(unsigned int i = 1; i < 5; ++i)
+    hs.add(make_space_fermion(int(i)));
+
+  SECTION("Multiple fermions") {
+    sv_index_type full = (1 << 5) - 1;
 
     check_output(unranking_generator(n_fermion_sector_params_t(hs, 0)),
-                 std::vector<sv_index_type>{0});
+                 std::vector<sv_index_type>{0x0});
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 5)),
+                 std::vector<sv_index_type>{0x1F});
 
-    hs.add(make_space_fermion(0));
+    std::vector<sv_index_type> ref1 = {0x1, 0x2, 0x4, 0x8, 0x10};
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 1)), ref1);
+    std::transform(ref1.begin(),
+                   ref1.end(),
+                   ref1.begin(),
+                   [full](sv_index_type i) { return full - i; });
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 4)), ref1);
 
-    SECTION("One fermion") {
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 0)),
-                   std::vector<sv_index_type>{0x0});
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 1)),
-                   std::vector<sv_index_type>{0x1});
-    }
-
-    for(unsigned int i = 1; i < 5; ++i)
-      hs.add(make_space_fermion(int(i)));
-
-    SECTION("Multiple fermions") {
-      sv_index_type full = (1 << 5) - 1;
-
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 0)),
-                   std::vector<sv_index_type>{0x0});
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 5)),
-                   std::vector<sv_index_type>{0x1F});
-
-      std::vector<sv_index_type> ref1 = {0x1, 0x2, 0x4, 0x8, 0x10};
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 1)), ref1);
-      std::transform(ref1.begin(),
-                     ref1.end(),
-                     ref1.begin(),
-                     [full](sv_index_type i) { return full - i; });
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 4)), ref1);
-
-      std::vector<sv_index_type> ref2 =
-          {0x3, 0x5, 0x6, 0x9, 0xA, 0xC, 0x11, 0x12, 0x14, 0x18};
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 2)), ref2);
-      std::transform(ref2.begin(),
-                     ref2.end(),
-                     ref2.begin(),
-                     [full](sv_index_type i) { return full - i; });
-      check_output(unranking_generator(n_fermion_sector_params_t(hs, 3)), ref2);
-    }
+    std::vector<sv_index_type> ref2 =
+        {0x3, 0x5, 0x6, 0x9, 0xA, 0xC, 0x11, 0x12, 0x14, 0x18};
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 2)), ref2);
+    std::transform(ref2.begin(),
+                   ref2.end(),
+                   ref2.begin(),
+                   [full](sv_index_type i) { return full - i; });
+    check_output(unranking_generator(n_fermion_sector_params_t(hs, 3)), ref2);
   }
 }
 
