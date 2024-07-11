@@ -376,6 +376,9 @@ struct n_fermion_sector_view {
   // Generator of unranked states
   unranking_generator unranking;
 
+  // Mask used to select fermionic modes
+  sv_index_type f_mask;
+
   // Number of bits corresponding to the non-fermionic modes
   unsigned int M_nonfermion;
 
@@ -388,10 +391,11 @@ struct n_fermion_sector_view {
       sector_params(hs, N),
       ranking(sector_params),
       unranking(sector_params),
+      f_mask((sv_index_type(1) << sector_params.M) - 1),
       M_nonfermion(hs.total_n_bits() - sector_params.M) {}
 
   sv_index_type map_index(sv_index_type index) const {
-    sv_index_type ranked = ranking(index);
+    sv_index_type ranked = ranking(index & f_mask);
     // Place the non-fermionic bits of 'index' to the least significant
     // positions and put the computed rank of the fermionic part after them.
     return (ranked << M_nonfermion) + (index >> sector_params.M);
