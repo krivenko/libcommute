@@ -137,25 +137,26 @@ TEST_CASE("Implementation details", "[detail]") {
     auto sdb = sd_type{{{3}, {4}, {9}}, 2};
 
     // Sector A (N = 2, count_occupied == true)
-    // 1 2 6 7
+    // 7 6 2 1
     //
-    // 1 1 0 0
-    // 1 0 1 0
-    // 1 0 0 1
-    // 0 1 1 0
-    // 0 1 0 1
     // 0 0 1 1
+    // 0 1 0 1
+    // 0 1 1 0
+    // 1 0 0 1
+    // 1 0 1 0
+    // 1 1 0 0
     std::vector<sv_index_type> ref_a = {(1 << 1) + (1 << 2),
                                         (1 << 1) + (1 << 6),
-                                        (1 << 1) + (1 << 7),
                                         (1 << 2) + (1 << 6),
+                                        (1 << 1) + (1 << 7),
                                         (1 << 2) + (1 << 7),
                                         (1 << 6) + (1 << 7)};
     // Sector B (N = 2, count_occupied == false)
-    // 3 4 9
-    // 0 1 1
-    // 1 0 1
+    // 9 4 3
+    //
     // 1 1 0
+    // 1 0 1
+    // 0 1 1
     std::vector<sv_index_type> ref_b = {(1 << 4) + (1 << 9),
                                         (1 << 3) + (1 << 9),
                                         (1 << 3) + (1 << 4)};
@@ -805,11 +806,11 @@ TEST_CASE("View of a state vector projected on a direct product of "
     std::iota(st.begin(), st.end(), 0);
 
     // 7029 == 11 0 11 01 1 10 10 1
-    // Sector A: 0110 (sector state 3)
+    // Sector A: 0110 (sector state 2)
     // Sector B: 1110 (sector state 0, count_occupied == false)
     // Non-multisector: 11011 == 27
     sv_index_type const index = 7029;
-    sv_index_type const sector_index = 27 + ((3 * 4 + 0) << 5);
+    sv_index_type const sector_index = 27 + ((2 * 4 + 0) << 5);
 
     SECTION("const") {
       auto view =

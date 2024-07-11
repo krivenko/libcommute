@@ -129,52 +129,6 @@ inline sv_index_type extract_bits(sv_index_type val, sv_index_type mask) {
 #endif
 }
 
-// Evaluator for sums of the following form,
-//
-// $$
-//   \sum_{j=2}^{\lambda} {{m+1-j}\choose{n-1}} =
-//   [m {{m-1}\choose{n-1}} - (m+1-\lambda){{m-\lambda}\choose{n-1}}] / n
-// $$
-//
-// The binomial coefficients are pre-computed and stored upon construction.
-struct binomial_sum_t {
-
-  // Pre-computed shifted binomial coefficients stored in a flattened 2D array
-  // coeffs[q * (M - N_counted + 1) + p] = Binomial[p + q, q],
-  // where $q \in [0, N_counted - 1]$ and $p \in [0, M - N_counted]$.
-  std::vector<sv_index_type> coeffs = {};
-
-  // M - N_counted + 1
-  unsigned int coeffs_stride;
-
-  inline binomial_sum_t(unsigned int M, unsigned int N_counted)
-    : coeffs_stride(M - N_counted + 1) {
-    assert(N_counted <= M);
-    if(N_counted > 0) {
-      // Fill 'coeffs'
-      coeffs.resize(N_counted * coeffs_stride);
-      std::fill(coeffs.begin(), coeffs.begin() + coeffs_stride, 1);
-      for(unsigned int q = 1; q < N_counted; ++q) {
-        for(unsigned int p = 0; p < coeffs_stride; ++p) {
-          coeffs[q * coeffs_stride + p] =
-              ((p + q) * coeffs[(q - 1) * coeffs_stride + p]) / q;
-        }
-      }
-    }
-    coeffs.shrink_to_fit();
-  }
-
-  inline sv_index_type
-  operator()(unsigned int n, unsigned int m, unsigned int lambda) const {
-    unsigned int lambdam1 = lambda - 1;
-    unsigned int coeffs_index_1 = (n - 1) * coeffs_stride + (m - n);
-    unsigned int coeffs_index_2 = coeffs_index_1 - lambdam1;
-    return (m * coeffs[coeffs_index_1] -
-            (m - lambdam1) * coeffs[coeffs_index_2]) /
-           n;
-  }
-};
-
 // Parameters of an N-fermion sector
 struct n_fermion_sector_params_t {
 
@@ -244,43 +198,40 @@ private:
 // Combination ranking algorithm
 class combination_ranking {
 
-  // Parameters of the sector
-  detail::n_fermion_sector_params_t const& sector_params;
-
-  // Count occupied or unoccupied fermionic modes
-  bool count_occupied;
-
   // Number of counted modes (either occupied or unoccupied)
   unsigned int N_counted;
 
-  // Sum of binomial coefficients
-  detail::binomial_sum_t binomial_sum;
+  // Precomputed binomial coefficients
+  std::vector<sv_index_type> binomial;
+
+  // XOR-mask to be applied to input states
+  sv_index_type mask;
 
 public:
   explicit combination_ranking(detail::n_fermion_sector_params_t const& params)
-    : sector_params(params),
-      count_occupied(params.N <= params.M / 2),
-      N_counted(count_occupied ? params.N : params.M - params.N),
-      binomial_sum(params.M, N_counted) {}
+    : N_counted((params.N <= params.M / 2) ? params.N : params.M - params.N),
+      binomial(params.M * N_counted),
+      mask((params.N == N_counted) ? sv_index_type(0) :
+                                     ((sv_index_type(1) << params.M) - 1)) {
+    for(unsigned int m = 0; m < params.M; ++m) {
+      for(unsigned int n = 1; n <= N_counted; ++n) {
+        binomial[m * N_counted + n - 1] = detail::binomial(m, n);
+      }
+    }
+  }
 
   // Rank a fermionic many-body state
   sv_index_type operator()(sv_index_type index) const {
-    unsigned int m = sector_params.M;
-    unsigned int n = N_counted;
-    sv_index_type r = 0;
-    unsigned int lambda = 1;
-    while(n > 0) {
-      if((index & sv_index_type(1)) == count_occupied) {
-        r += binomial_sum(n, m, lambda);
-        m -= lambda;
-        --n;
-        lambda = 1;
-      } else {
-        ++lambda;
-      }
-      index >>= 1;
+    index = index ^ mask;
+    sv_index_type i = 0;
+    unsigned int k = 0;
+    while(index != 0) {
+      unsigned int c = detail::count_trailing_zeros(index);
+      index = index & (index - 1);
+      i += binomial[c * N_counted + k];
+      ++k;
     }
-    return r;
+    return i;
   }
 };
 

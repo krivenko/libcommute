@@ -70,43 +70,6 @@ TEST_CASE("Implementation details", "[detail]") {
       CHECK(count_trailing_zeros(sv_index_type(1) << i) == i);
   }
 
-  SECTION("binomial_sum_t") {
-
-    auto check_b_sum = [](binomial_sum_t const& b_sum,
-                          unsigned int M,
-                          unsigned int N,
-                          std::vector<sv_index_type> const& coeffs,
-                          unsigned int coeffs_stride) {
-      CHECK(b_sum.coeffs == coeffs);
-      CHECK(b_sum.coeffs_stride == coeffs_stride);
-      for(unsigned int n = 1; n < N; ++n) {
-        for(unsigned int m = 1; m < M; ++m) {
-          for(unsigned int lambda = 1; lambda < m; ++lambda) {
-            sv_index_type ref = 0;
-            for(unsigned int j = 2; j <= lambda; ++j)
-              ref += binomial(m + 1 - j, n - 1);
-            CHECK(b_sum(n, m, lambda) == ref);
-          }
-        }
-      }
-    };
-
-    check_b_sum(binomial_sum_t(1, 0), 1, 0, {}, 2);
-
-    check_b_sum(binomial_sum_t(5, 0), 5, 0, {}, 6);
-    check_b_sum(binomial_sum_t(5, 1), 5, 1, {1, 1, 1, 1, 1}, 5);
-    check_b_sum(binomial_sum_t(5, 2), 5, 2, {1, 1, 1, 1, 1, 2, 3, 4}, 4);
-
-    check_b_sum(binomial_sum_t(6, 0), 6, 0, {}, 7);
-    check_b_sum(binomial_sum_t(6, 1), 6, 1, {1, 1, 1, 1, 1, 1}, 6);
-    check_b_sum(binomial_sum_t(6, 2), 6, 2, {1, 1, 1, 1, 1, 1, 2, 3, 4, 5}, 5);
-    check_b_sum(binomial_sum_t(6, 3),
-                6,
-                3,
-                {1, 1, 1, 1, 1, 2, 3, 4, 1, 3, 6, 10},
-                4);
-  }
-
   SECTION("n_fermion_sector_params_t") {
 
     hs_type hs;
@@ -179,7 +142,7 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
       CHECK(rank0(0x0) == 0);
       auto params1 = n_fermion_sector_params_t(hs, 1);
       combination_ranking rank1(params1);
-      CHECK(rank1(0x0) == 0);
+      CHECK(rank1(0x1) == 0);
     }
 
     for(unsigned int i = 1; i < 5; ++i)
@@ -209,8 +172,8 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
       auto params3 = n_fermion_sector_params_t(hs, 3);
       auto rank3 = combination_ranking(params3);
       unsigned int i = 0;
-      for(unsigned int i1 = 0; i1 < 5 - 1; ++i1) {
-        for(unsigned int i2 = i1 + 1; i2 < 5; ++i2) {
+      for(unsigned int i1 = 1; i1 < 5; ++i1) {
+        for(unsigned int i2 = 0; i2 < i1; ++i2) {
           CHECK(rank2((1 << i1) + (1 << i2)) == i);
           CHECK(rank3(full ^ ((1 << i1) + (1 << i2))) == i);
           ++i;
@@ -390,9 +353,9 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     state_vector st(n_fermion_sector_size(hs, N));
     std::iota(st.begin(), st.end(), 0);
 
-    // 70 == 10 00110: 2 bosons + fermions in modes 1 and 2 (sector state 4)
+    // 70 == 10 00110: 2 bosons + fermions in modes 1 and 2 (sector state 2)
     sv_index_type const index = 70;
-    sv_index_type const sector_index = 2 + (4 << 2);
+    sv_index_type const sector_index = 2 + (2 << 2);
 
     SECTION("const") {
       auto view = n_fermion_sector_view<state_vector const>(st, hs, N);
