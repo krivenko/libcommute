@@ -65,6 +65,11 @@ TEST_CASE("Implementation details", "[detail]") {
     CHECK(binomial(10, 6) == 210);
   }
 
+  SECTION("count_trailing_zeros") {
+    for(unsigned int i = 0; i < 63; ++i)
+      CHECK(count_trailing_zeros(sv_index_type(1) << i) == i);
+  }
+
   SECTION("binomial_sum_t") {
 
     auto check_b_sum = [](binomial_sum_t const& b_sum,
@@ -262,7 +267,7 @@ TEST_CASE("Ranking and unranking algorithms", "[ranking_unranking]") {
       check_output(unranking_generator(n_fermion_sector_params_t(hs, 4)), ref1);
 
       std::vector<sv_index_type> ref2 =
-          {0x3, 0x5, 0x9, 0x11, 0x6, 0xA, 0x12, 0xC, 0x14, 0x18};
+          {0x3, 0x5, 0x6, 0x9, 0xA, 0xC, 0x11, 0x12, 0x14, 0x18};
       check_output(unranking_generator(n_fermion_sector_params_t(hs, 2)), ref2);
       std::transform(ref2.begin(),
                      ref2.end(),

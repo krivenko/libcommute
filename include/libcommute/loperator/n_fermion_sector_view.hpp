@@ -67,6 +67,38 @@ inline sv_index_type binomial(unsigned int n, unsigned int k) {
   return C;
 }
 
+// Count trailing zeroes
+inline unsigned int count_trailing_zeros(sv_index_type i) {
+#if defined(__GNUC__) || defined(__clang__)
+  return __builtin_ctzll(i);
+#else
+  // https://blog.stephencleary.com/2010/10/
+  //   implementing-gccs-builtin-functions.html
+  unsigned int n = 1;
+  if((i & 0xffffffff) == 0) {
+    n = n + 32;
+    i = i >> 32;
+  }
+  if((i & 0x0000ffff) == 0) {
+    n = n + 16;
+    i = i >> 16;
+  }
+  if((i & 0x000000ff) == 0) {
+    n = n + 8;
+    i = i >> 8;
+  }
+  if((i & 0x0000000f) == 0) {
+    n = n + 4;
+    i = i >> 4;
+  }
+  if((i & 0x00000003) == 0) {
+    n = n + 2;
+    i = i >> 2;
+  }
+  return n - (i & 1);
+#endif
+}
+
 // Parallel bits deposit
 inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
 #if defined(__GNUC__) || defined(__clang__)
@@ -255,91 +287,56 @@ public:
 // Generator of unranked basis states
 class unranking_generator {
 
-  // Parameters of the sector
-  detail::n_fermion_sector_params_t const& sector_params;
-
   // Number of counted modes (either occupied or unoccupied)
   unsigned int N_counted;
 
-  // Restricted partition of params.M
-  std::vector<unsigned int> mutable lambdas;
+  // Total number of generated unranked states
+  sv_index_type total;
 
-  // Upper bounds for elements of 'lambdas'
-  std::vector<unsigned int> mutable lambdas_max;
+  // Index of current unranked state
+  sv_index_type mutable i = 0;
 
-  // Index of the element of 'lambdas' to be updated to generate
-  // the next state
-  int mutable i = 0;
+  // Current unranked state
+  sv_index_type mutable unranked;
 
-  // XOR-mask used when counting unoccupied states
-  sv_index_type const unoccupied_mask;
+  // XOR-mask to be applied to generated states
+  sv_index_type mask;
 
 public:
   explicit unranking_generator(detail::n_fermion_sector_params_t const& params)
-    : sector_params(params),
-      N_counted(params.N <= params.M / 2 ? params.N : params.M - params.N),
-      lambdas(N_counted, 0),
-      lambdas_max(N_counted, params.M - N_counted + 1),
-      unoccupied_mask(params.N <= params.M / 2 ? sv_index_type(0) :
-                                                 (detail::pow2(params.M) - 1)) {
-    lambdas.shrink_to_fit();
-    lambdas_max.shrink_to_fit();
-  }
+    : N_counted(params.N <= params.M / 2 ? params.N : params.M - params.N),
+      total(detail::binomial(params.M, N_counted)),
+      unranked((sv_index_type(1) << N_counted) - 1),
+      mask((params.N == N_counted) ? sv_index_type(0) :
+                                     ((sv_index_type(1) << params.M) - 1)) {}
 
   // Initialize iteration
   inline void init() const {
-    std::fill(lambdas.begin(), lambdas.end(), 0);
-    std::fill(lambdas_max.begin(),
-              lambdas_max.end(),
-              sector_params.M - N_counted + 1);
+    unranked = (sv_index_type(1) << N_counted) - 1;
     i = 0;
   }
 
   // Return the next state
   inline sv_index_type next() const {
-    if(N_counted == 0) {
-      --i;
-      return unoccupied_mask;
-    }
-
-    while(i >= 0) {
-      ++lambdas[i];
-      if(lambdas[i] > lambdas_max[i]) {
-        --i;
-        continue;
-      }
-
-      if(static_cast<unsigned int>(i + 1) == lambdas.size()) break;
-
+    if(i == 0) {
       ++i;
-      lambdas[i] = 0;
-      lambdas_max[i] = lambdas_max[i - 1] + 1 - lambdas[i - 1];
+      return unranked ^ mask;
     }
 
-    sv_index_type index = 0;
-    std::for_each(lambdas.rbegin(),
-                  lambdas.rend(),
-                  [&index](unsigned int lambda) {
-                    index <<= 1;
-                    index += 1;
-                    index <<= lambda - 1;
-                  });
-
-    return index ^ unoccupied_mask;
+    sv_index_type b = unranked | (unranked - 1);
+    ++b;
+    sv_index_type l = unranked & (~b);
+    l >>= detail::count_trailing_zeros(unranked) + 1;
+    unranked = b | l;
+    ++i;
+    return unranked ^ mask;
   }
 
   // Are there still states to be returned by next()?
-  inline bool done() const {
-    if(N_counted == 0)
-      return i != 0;
-    else
-      return lambdas[0] >= lambdas_max[0];
-  }
+  inline bool done() const { return i == total; }
 
   // Total number of generated unranked states
-  inline sv_index_type size() const {
-    return detail::binomial(sector_params.M, sector_params.N);
-  }
+  inline sv_index_type size() const { return total; }
 };
 
 //
