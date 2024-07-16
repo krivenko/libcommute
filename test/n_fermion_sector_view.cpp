@@ -137,7 +137,11 @@ TEMPLATE_TEST_CASE("Ranking algorithms",
                    staggered_ranking<1>,
                    staggered_ranking<2>,
                    staggered_ranking<4>,
-                   staggered_ranking<8>) {
+                   staggered_ranking<8>,
+                   trie_ranking<1>,
+                   trie_ranking<2>,
+                   trie_ranking<4>,
+                   trie_ranking<8>) {
 
   using namespace static_indices;
   using detail::n_fermion_sector_params_t;

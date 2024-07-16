@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstdint>
 #include <functional>
 #include <iterator>
 #include <numeric>
@@ -329,6 +330,141 @@ public:
       i += lookup_table[mp_block_heads[mp] + Np * rdim + r];
       Np += popcount_table[r];
       index >>= R;
+    }
+    return i;
+  }
+};
+
+// Trie-based ranking algorithm
+template <unsigned int R> class trie_ranking {
+
+  static_assert((R > 0) && (R < 64), "Chunk size R must belong to [1; 63]");
+
+  // Sizes of bit-string chunks (<=R for the last chunk, R for the rest)
+  std::vector<unsigned int> chunk_sizes;
+
+  // Masks used to extract bits from each chunk
+  std::vector<sv_index_type> pext_masks;
+
+  // Packed linearized representation of the trie
+  std::vector<std::int64_t> trie;
+
+  // XOR-mask to be applied to input states
+  sv_index_type mask;
+
+  inline static sv_index_type next_state(sv_index_type state) {
+    sv_index_type b = state | (state - 1);
+    ++b;
+    sv_index_type l = state & (~b);
+    l >>= detail::count_trailing_zeros(state) + 1;
+    return b | l;
+  }
+
+  std::tuple<sv_index_type, sv_index_type, sv_index_type>
+  make_trie(unsigned int level,
+            sv_index_type rank,
+            sv_index_type st,
+            sv_index_type k,
+            unsigned int M_subtree) {
+    unsigned int chunk_size = chunk_sizes[level];
+
+    sv_index_type P = ~((sv_index_type(1) << M_subtree) - 1);
+    sv_index_type p = st & P;
+
+    sv_index_type C = (sv_index_type(1) << chunk_size) - 1;
+    sv_index_type kp = k;
+    k += sv_index_type(1) << chunk_size;
+
+    sv_index_type c = C;
+    sv_index_type c0 = (st >> (M_subtree - chunk_size)) & C;
+
+    while((st & P) == p) {
+      c = (st >> (M_subtree - chunk_size)) & C;
+      if(level == pext_masks.size() - 1) { // Leaf
+        trie[kp + c] = -static_cast<std::int64_t>(rank);
+        if(st == 0x0) break; // There is exactly one state in an N = 0 sector
+        ++rank;
+        st = next_state(st);
+      } else { // Subtree
+
+        // Packing: Remove unused elements at the front of the child index
+        sv_index_type C_subtree =
+            (sv_index_type(1) << (chunk_sizes[level + 1])) - 1;
+        sv_index_type f =
+            (st >> (M_subtree - chunk_size - chunk_sizes[level + 1])) &
+            C_subtree;
+        if(k >= f) {
+          k -= f;
+        }
+        assert(k > kp);
+
+        trie[kp + c] = static_cast<std::int64_t>(k);
+        std::tie(rank, st, k) =
+            make_trie(level + 1, rank, st, k, M_subtree - chunk_size);
+
+        // There is exactly one state in an N = 0 sector
+        if(st == 0x0) break;
+      }
+    }
+
+    // Packing: Remove unused elements at the back of the child index
+    sv_index_type l = C - c;
+    sv_index_type table_head = kp + c0;
+    sv_index_type table_size = (sv_index_type(1) << chunk_size) - c0 - l;
+
+    k -= l;
+    if((level <= pext_masks.size() - 1) && (l > 0)) {
+      // Remove the unused elements and move the subtree backwards by l
+      for(sv_index_type kpp = table_head + table_size; kpp < k; ++kpp) {
+        trie[kpp] = trie[kpp + l];
+      }
+      // Update the non-leaf entrees of the subtree
+      for(sv_index_type kpp = table_head; kpp < k; ++kpp) {
+        if(trie[kpp] > 0) {
+          trie[kpp] -= l;
+        }
+      }
+    }
+
+    return std::make_tuple(rank, st, k);
+  }
+
+public:
+  explicit trie_ranking(detail::n_fermion_sector_params_t const& params)
+    : chunk_sizes(params.M / R, R),
+      trie(1 << (params.M + 1), 0),
+      mask((params.N <= params.M / 2) ? sv_index_type(0) :
+                                        ((sv_index_type(1) << params.M) - 1)) {
+
+    if(params.M % R != 0) chunk_sizes.push_back(params.M % R);
+
+    pext_masks.reserve(chunk_sizes.size());
+    unsigned int pext_mask_shift = params.M;
+    for(unsigned int size : chunk_sizes) {
+      sv_index_type pext_mask = (sv_index_type(1) << size) - 1;
+      pext_mask_shift -= size;
+      pext_masks.emplace_back(pext_mask << pext_mask_shift);
+    }
+
+    if(params.M > 0) {
+      unsigned int N_counted =
+          (params.N <= params.M / 2) ? params.N : (params.M - params.N);
+      sv_index_type k_final = 0;
+      std::tie(std::ignore, std::ignore, k_final) =
+          make_trie(0, 0x0, (sv_index_type(1) << N_counted) - 1, 0, params.M);
+      trie.resize(k_final);
+      std::for_each(trie.begin(), trie.end(), [](std::int64_t& theta) {
+        if(theta < 0) theta = -theta;
+      });
+    }
+  }
+
+  inline sv_index_type operator()(sv_index_type a) const {
+    a = a ^ mask;
+    sv_index_type i = 0;
+    for(auto const& pext_mask : pext_masks) {
+      sv_index_type r = detail::extract_bits(a, pext_mask);
+      i = trie[i + r];
     }
     return i;
   }
