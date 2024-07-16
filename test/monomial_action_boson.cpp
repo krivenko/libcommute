@@ -66,8 +66,8 @@ TEST_CASE("Action of a bosonic monomial on an index",
         bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
 
         auto const& bit_range = bit_ranges[ind];
-        int n_bits = bit_range.second - bit_range.first + 1;
-        int n_max = (1 << n_bits) - 1;
+        int const n_bits = bit_range.second - bit_range.first + 1;
+        int const n_max = (1 << n_bits) - 1;
 
         std::bitset<total_n_bits> in_bitset(index);
 

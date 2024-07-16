@@ -131,9 +131,11 @@ template <> struct print_tuple_impl<0> {
 } // namespace detail
 
 template <typename... T>
+// cppcheck-suppress constParameterReference
 inline void print_tuple(std::ostream& os, std::tuple<T...> const& t) {
   detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
 }
+// cppcheck-suppress constParameterReference
 inline void print_tuple(std::ostream& os, std::tuple<> const& t) {}
 
 //

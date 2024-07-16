@@ -98,6 +98,7 @@ public:
   }
 
   // Reference to underlying sequence
+  // cppcheck-suppress returnByReference
   explicit operator indices_t const&() const { return indices_; }
 
   // Stream output

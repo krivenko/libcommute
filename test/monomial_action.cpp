@@ -170,8 +170,8 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
         static std::vector<bit_range_t> bit_ranges = {{2, 3}, {4, 5}};
 
         auto const& bit_range = bit_ranges[ind];
-        int n_bits = bit_range.second - bit_range.first + 1;
-        int n_max = (1 << n_bits) - 1;
+        int const n_bits = bit_range.second - bit_range.first + 1;
+        int const n_max = (1 << n_bits) - 1;
 
         std::bitset<total_n_bits> in_bitset(index);
 
