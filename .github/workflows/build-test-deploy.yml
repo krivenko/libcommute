@@ -72,7 +72,7 @@ jobs:
              -DTESTS=ON                                                        \
              -DEXAMPLES=ON                                                     \
              -DDOCUMENTATION=${DOCS}
-           make -j3
+           make -j3 VERBOSE=1
 
     - name: Test libcommute
       run: |
