@@ -96,3 +96,6 @@ meaning.
 +------------------------------+-----------------------------------------------+
 | ``CPPCHECK_EXECUTABLE``      | [DEV] Path to the ``cppcheck`` executable.    |
 +------------------------------+-----------------------------------------------+
+| ``CPPCHECK_EXTRA_FLAGS``     | [DEV] Semicolon-separated list of additional  |
+|                              | flags to be passed to ``cppcheck``.           |
++------------------------------+-----------------------------------------------+
