@@ -17,7 +17,6 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <limits>
 #include <utility>
 #include <vector>
 
@@ -25,10 +24,6 @@ namespace libcommute {
 
 // Type of index into a state vector
 using sv_index_type = std::uint64_t;
-
-// Bit width of the state index type
-static constexpr int sv_index_width =
-    std::numeric_limits<sv_index_type>::digits;
 
 //
 // Implementation of the StateVector interface for std::vector

@@ -92,7 +92,7 @@ public:
         bit_range_t const& bit_range = hs.bit_range(es);
         int shift = bit_range.first;
         int n_bits = bit_range.second - bit_range.first + 1;
-        sv_index_type n_max = (~sv_index_type(0)) >> (sv_index_width - n_bits);
+        sv_index_type n_max = (sv_index_type(1) << n_bits) - 1;
 
         sqr_roots_size = std::max(sqr_roots_size, n_max + 1);
 
@@ -108,12 +108,12 @@ public:
         auto n_change = static_cast<std::int64_t>(dagger ? power : -power);
         std::int64_t state_change = n_change * (std::int64_t(1) << shift);
 
-        updates_.emplace_back(single_boson_update_t{
-            shift,
-            (~sv_index_type(0)) >> (sv_index_width - n_bits),
-            n_change,
-            n_max,
-            state_change});
+        updates_.emplace_back(
+            single_boson_update_t{shift,
+                                  (sv_index_type(1) << n_bits) - 1,
+                                  n_change,
+                                  n_max,
+                                  state_change});
 
         power = 1;
       } else

@@ -72,8 +72,7 @@ TEST_CASE("Action of a fermionic monomial on an index",
 
   std::vector<sv_index_type> in_index_list(1 << n_ops);
   for(unsigned int i = 0; i < in_index_list.size(); i++)
-    in_index_list[i] = (i << n_pad_bits) +
-                       (~sv_index_type(0) >> (sv_index_width - n_pad_bits));
+    in_index_list[i] = (i << n_pad_bits) + (1 << n_pad_bits) - 1;
 
   SECTION("No operators") {
     mon_type mon;

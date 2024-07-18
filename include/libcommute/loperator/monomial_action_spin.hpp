@@ -101,12 +101,12 @@ public:
             g.multiplicity() % 2 == 0 ? (s + 0.5) * (s + 0.5) : s * (s + 1);
         sqr_roots_size = std::max(sqr_roots_size, ss + 1);
 
-        updates_.emplace_back(single_spin_update_t{
-            sv_index_type(2 * s),
-            shift,
-            (~sv_index_type(0)) >> (sv_index_width - n_bits),
-            g.component(),
-            power});
+        updates_.emplace_back(
+            single_spin_update_t{sv_index_type(2 * s),
+                                 shift,
+                                 (sv_index_type(1) << n_bits) - 1,
+                                 g.component(),
+                                 power});
 
         power = 1;
       } else
