@@ -123,6 +123,7 @@ inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
   // https://www.chessprogramming.org/BMI2#Serial_Implementation
   sv_index_type res = 0;
   for(sv_index_type bb = 1; mask; bb += bb) {
+    // cppcheck-suppress oppositeExpression
     if(src & bb) res |= mask & -mask;
     mask &= mask - 1;
   }
@@ -186,13 +187,13 @@ private:
   static unsigned int
   init_mask(hilbert_space<IndexTypes...> const& hs,
             sector_descriptor<hilbert_space<IndexTypes...>> const& sector) {
-    sv_index_type mask = 0;
+    sv_index_type m = 0;
     for(auto const& i : sector.indices) {
       unsigned int b =
           hs.bit_range(elementary_space_fermion<IndexTypes...>(i)).first;
-      mask += pow2(b);
+      m += pow2(b);
     }
-    return mask;
+    return m;
   }
 
   inline unsigned int validated_n(unsigned int N) const {
