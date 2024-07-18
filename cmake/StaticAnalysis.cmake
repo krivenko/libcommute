@@ -28,7 +28,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.10)
   find_program(CPPCHECK_EXECUTABLE
                NAMES "cppcheck" REQUIRED
                DOC "Path to the cppcheck executable")
+  set(CPPCHECK_EXTRA_FLAGS "" CACHE STRING
+      "Semicolon-separated list of additional flags to be passed to cppcheck")
+
   mark_as_advanced(CPPCHECK_EXECUTABLE)
+  mark_as_advanced(CPPCHECK_EXTRA_FLAGS)
 
   message(STATUS "Using cppcheck: ${CPPCHECK_EXECUTABLE}")
   set(CMAKE_CXX_CPPCHECK
@@ -41,6 +45,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.10)
       "--force"
       "--quiet"
   )
+
+  if(CPPCHECK_EXTRA_FLAGS)
+    message(STATUS "Extra flags passed to cppcheck: ${CPPCHECK_EXTRA_FLAGS}")
+    list(APPEND CMAKE_CXX_CPPCHECK ${CPPCHECK_EXTRA_FLAGS})
+  endif(CPPCHECK_EXTRA_FLAGS)
 else(CMAKE_VERSION VERSION_GREATER_EQUAL 3.10)
   message(WARNING "CMake >= 3.10 is required to run cppcheck")
 endif(CMAKE_VERSION VERSION_GREATER_EQUAL 3.10)

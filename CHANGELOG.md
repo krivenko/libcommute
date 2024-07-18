@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit
   manipulation operations (``popcount``).
+- New CMake option ``CPPCHECK_EXTRA_FLAGS``. It can be used to pass additional
+  command line flags to ``cppcheck``.
 
 ## [0.7.2] - 2022-11-12
 
