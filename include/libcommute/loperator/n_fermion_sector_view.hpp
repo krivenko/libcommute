@@ -35,7 +35,7 @@
 #include <utility>
 #include <vector>
 
-#if (defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
+#if(defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
 #include <immintrin.h>
 #endif
 
@@ -117,7 +117,7 @@ inline unsigned int popcount(sv_index_type i) {
 
 // Parallel bits deposit
 inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
-#if (defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
+#if(defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
   return _pdep_u64(src, mask);
 #else
   // https://www.chessprogramming.org/BMI2#Serial_Implementation
@@ -132,7 +132,7 @@ inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
 
 // Parallel bits extract
 inline sv_index_type extract_bits(sv_index_type val, sv_index_type mask) {
-#if (defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
+#if(defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
   return _pext_u64(val, mask);
 #else
   // From https://www.chessprogramming.org/BMI2#Serial_Implementation_2
@@ -606,7 +606,12 @@ inline auto get_element(
 
 // Add a constant to a state amplitude stored in the adapted StateVector object
 // at index view.map_index(n)
-template <typename StateVector, bool Ref, typename RankingAlgorithm, typename T>
+template <typename StateVector,
+          bool Ref,
+          typename RankingAlgorithm,
+          typename T,
+          typename =
+              typename std::enable_if<!std::is_const<StateVector>::value>::type>
 inline void update_add_element(
     n_fermion_sector_view<StateVector, Ref, RankingAlgorithm>& view,
     sv_index_type n,
@@ -616,35 +621,15 @@ inline void update_add_element(
                      std::forward<T>(value));
 }
 
-// update_add_element() is not defined for constant views
-template <typename StateVector, bool Ref, typename RankingAlgorithm, typename T>
-inline void update_add_element(
-    n_fermion_sector_view<StateVector const, Ref, RankingAlgorithm>&,
-    sv_index_type,
-    T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
-  static_assert(false,
-                "update_add_element() is not supported for constant views");
-}
-
-// zeros_like() is not defined for views
-template <typename StateVector, bool Ref, typename RankingAlgorithm>
-inline StateVector
-zeros_like(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const&) {
-  static_assert(false, "zeros_like() is not supported for views");
-}
-
 // Set all amplitudes stored in the adapted StateVector object to zero
-template <typename StateVector, bool Ref, typename RankingAlgorithm>
+template <typename StateVector,
+          bool Ref,
+          typename RankingAlgorithm,
+          typename =
+              typename std::enable_if<!std::is_const<StateVector>::value>::type>
 inline void
 set_zeros(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm>& view) {
   set_zeros(view.state_vector);
-}
-
-// set_zeros() is not defined for constant views
-template <typename StateVector, bool Ref, typename RankingAlgorithm>
-inline void
-set_zeros(n_fermion_sector_view<StateVector const, Ref, RankingAlgorithm>&) {
-  static_assert(false, "set_zeros() is not supported for constant views");
 }
 
 // Apply functor `f` to all index/non-zero amplitude pairs
@@ -1009,7 +994,12 @@ inline auto get_element(
 
 // Add a constant to a state amplitude stored in the adapted StateVector object
 // at index view.map_index(n)
-template <typename StateVector, bool Ref, typename RankingAlgorithm, typename T>
+template <typename StateVector,
+          bool Ref,
+          typename RankingAlgorithm,
+          typename T,
+          typename =
+              typename std::enable_if<!std::is_const<StateVector>::value>::type>
 inline void update_add_element(
     n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>& view,
     sv_index_type n,
@@ -1019,35 +1009,15 @@ inline void update_add_element(
                      std::forward<T>(value));
 }
 
-// update_add_element() is not defined for constant views
-template <typename StateVector, bool Ref, typename RankingAlgorithm, typename T>
-inline void update_add_element(
-    n_fermion_multisector_view<StateVector const, Ref, RankingAlgorithm>&,
-    sv_index_type,
-    T&&) { // NOLINT(cppcoreguidelines-missing-std-forward)
-  static_assert(false,
-                "update_add_element() is not supported for constant views");
-}
-
-// zeros_like() is not defined for views
-template <typename StateVector, bool Ref, typename RankingAlgorithm>
-inline StateVector zeros_like(
-    n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm> const&) {
-  static_assert(false, "zeros_like() is not supported for views");
-}
-
 // Set all amplitudes stored in the adapted StateVector object to zero
-template <typename StateVector, bool Ref, typename RankingAlgorithm>
+template <typename StateVector,
+          bool Ref,
+          typename RankingAlgorithm,
+          typename =
+              typename std::enable_if<!std::is_const<StateVector>::value>::type>
 inline void set_zeros(
     n_fermion_multisector_view<StateVector, Ref, RankingAlgorithm>& view) {
   set_zeros(view.state_vector);
-}
-
-// set_zeros() is not defined for constant views
-template <typename StateVector, bool Ref, typename RankingAlgorithm>
-inline void set_zeros(
-    n_fermion_multisector_view<StateVector const, Ref, RankingAlgorithm>&) {
-  static_assert(false, "set_zeros() is not supported for constant views");
 }
 
 // Apply functor `f` to all index/non-zero amplitude pairs
