@@ -875,7 +875,7 @@ public:
       else
         partial_unranked[s] = partial_unranked[s - 1] + val;
 
-      if(s < sector_gens.size() - 1)
+      if(s < static_cast<int>(sector_gens.size()) - 1)
         s += 1;
       else
         break;
