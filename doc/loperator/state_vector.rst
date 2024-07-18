@@ -303,11 +303,19 @@ N-fermion sector views
 
 There are two more specialized flavours of the basis mapping views called
 :math:`N`-fermion sector views and :math:`N`-fermion multisector views. They
-can come in handy when working with particle-number preserving models of
-fermions. If the model is large, then generating and storing a basis state index
-map for :type:`mapped_basis_view` may become too expensive.
+can come in handy when working with particle-number preserving models with
+fermions. If a model involves :math:`M` fermionic degrees of freedom, then
+storing a basis state index map for :class:`mapped_basis_view` requires
+exponentially much memory, :math:`O(2^M)`.
+It is possible to alleviate the memory consumption problem by employing a
+(somewhat slower) algorithm that ranks bit patterns in the binary representation
+of a basis state index. A computed rank is then used to index into the
+:math:`N`-fermion (multi)sector.
 
-.. class:: template<typename StateVector, bool Ref = true> n_fermion_sector_view
+.. class:: template<typename StateVector, \
+                    bool Ref = true, \
+                    typename RankingAlgorithm = combination_ranking> \
+                    n_fermion_sector_view
 
   *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
 
@@ -315,12 +323,6 @@ map for :type:`mapped_basis_view` may become too expensive.
   a full :ref:`Hilbert space <hilbert_space>` to its subspace (sector) with a
   fixed total occupation of fermionic degrees of freedom :math:`N`. The full
   Hilbert space does not have to be purely fermionic.
-
-  :type:`n_fermion_sector_view` is generally less performant than
-  :type:`mapped_basis_view` in terms of the index translation speed. However,
-  its required storage space scales only as :math:`O(M \min(N, M - N))`, where
-  :math:`M` is the total number of the fermionic degrees of freedom. This
-  scaling law is much milder that the exponential growth of the sector size.
 
   :type:`StateVector` - type of the underlying state vector object. Defining a
   read-only view (such that prohibits :expr:`update_add_element()` operations)
@@ -330,11 +332,14 @@ map for :type:`mapped_basis_view` may become too expensive.
 
   .. _n_fermion_sector_view_Ref:
 
-  :type:`Ref` - by default, :type:`n_fermion_sector_view`
+  :type:`Ref` - by default, :class:`n_fermion_sector_view`
   stores a reference to the underlying state vector. Setting this option to
   ``false`` will result in a copy being created and stored instead. This feature
   can be useful when the underlying type is already a view-like object similar
   to ``Eigen::Map``.
+
+  :type:`RankingAlgorithm` - one of the types implementing
+  :ref:`bit pattern ranking <ranking_algorithms>`.
 
   .. function:: template <typename SV, typename HSType> \
                          n_fermion_sector_view(SV&& sv, \
@@ -363,7 +368,9 @@ map for :type:`mapped_basis_view` may become too expensive.
 
     Total occupation of the sector.
 
-.. class:: template<typename StateVector, bool Ref = true> \
+.. class:: template<typename StateVector, \
+                    bool Ref = true, \
+                    typename RankingAlgorithm = combination_ranking> \
            n_fermion_multisector_view
 
   *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
@@ -377,14 +384,7 @@ map for :type:`mapped_basis_view` may become too expensive.
   contributing to the multisector) as long as all subsets :math:`\{S_i\}` are
   disjoint. The full Hilbert space does not have to be purely fermionic.
 
-  :type:`n_fermion_multisector_view` is generally less performant than
-  :type:`mapped_basis_view` in terms of the index translation speed. However,
-  its required storage space scales only as
-  :math:`O(\sum_i M_i \min(N_i, M_i - N_i))`, where
-  :math:`M_i = |\{S_i\}|`. This scaling law is much milder that the exponential
-  growth of the multisector size.
-
-  It is advised to use :type:`n_fermion_sector_view` instead, if there is only
+  It is advised to use :class:`n_fermion_sector_view` instead, if there is only
   one contributing sector that also spans all fermionic degrees of freedom.
 
   :type:`StateVector` - type of the underlying state vector object. Defining a
@@ -395,11 +395,14 @@ map for :type:`mapped_basis_view` may become too expensive.
 
   .. _n_fermion_multisector_view_Ref:
 
-  :type:`Ref` - by default, :type:`n_fermion_multisector_view`
+  :type:`Ref` - by default, :class:`n_fermion_multisector_view`
   stores a reference to the underlying state vector. Setting this option to
   ``false`` will result in a copy being created and stored instead. This feature
   can be useful when the underlying type is already a view-like object similar
   to ``Eigen::Map``.
+
+  :type:`RankingAlgorithm` - one of the types implementing
+  :ref:`bit pattern ranking <ranking_algorithms>`.
 
   .. function:: template <typename SV, typename HSType> \
                 n_fermion_multisector_view(SV&& sv, HSType const& hs, \
@@ -430,6 +433,8 @@ utility functions that help working with (multi)sectors.
   :expr:`sv` within the full Hilbert space :expr:`hs`. If :expr:`sv` is not an
   lvalue reference, the resulting view will
   :ref:`hold a copy <n_fermion_sector_view_Ref>` of :expr:`sv`.
+  A returned view uses :class:`combination_ranking` as its bit pattern ranking
+  algorithm.
 
 .. function:: template <typename StateVector, typename HSType> \
               auto make_nfms_view(StateVector&& sv, HSType const& hs, \
@@ -444,6 +449,8 @@ utility functions that help working with (multi)sectors.
   :math:`(\{S_i\}, N_i)` pairs). If :expr:`sv` is not an lvalue reference,
   the resulting view will
   :ref:`hold a copy <n_fermion_sector_view_Ref>` of :expr:`sv`.
+  A returned view uses :class:`combination_ranking` as its bit pattern ranking
+  algorithm.
 
 .. function:: template <typename HSType> sv_index_type \
               n_fermion_sector_size(HSType const& hs, unsigned int N)
@@ -494,3 +501,45 @@ utility functions that help working with (multi)sectors.
     for(sv_index_type n = 0; n < basis_states.size(); ++n) {
       view.map_index(basis_states[n]) == n; // true for all n
     }
+
+.. _ranking_algorithms:
+
+The following classes implement the three ranking algorithms described in
+[WH22]_. They precompute and store a certain amount of data in order to speed up
+calculations.
+
+*
+  .. class:: combination_ranking
+
+    *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
+
+    The ranking algorithm based on the combinatorial number system.
+    The :math:`N`-fermion (multi)sector view types use this algorithm by
+    default. The storage space required by this class scales as
+    :math:`O(M \min(N, M - N))`, where :math:`M` is the total number of
+    the fermionic degrees of freedom.
+
+*
+  .. class:: template <unsigned int R> staggered_ranking
+
+    *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
+
+    The improved combinatorial ranking with staggered lookup and a chunk size of
+    :expr:`R` bits.
+    The storage space required by this class scales as
+    :math:`O\left(2^R (M-R+2)(\frac{M}{2R}+1)\right)`, where :math:`M` is the
+    total number of the fermionic degrees of freedom.
+
+*
+  .. class:: template <unsigned int R> trie_ranking
+
+    *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
+
+    The trie-based ranking algorithm with a chunk size of :expr:`R` bits.
+    The storage space required by this class is roughly proportional to the size
+    of the (multi)sector.
+
+.. [WH22] "Trie-based ranking of quantum many-body states",
+   M. Wallerberger and K. Held,
+   Phys. Rev. Research **4**, 033238 (2022),
+   https://doi.org/10.1103/PhysRevResearch.4.033238

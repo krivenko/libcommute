@@ -8,10 +8,17 @@ All notable changes to this project will be documented in this file.
   a basis state index (``hilbert_space::max_n_bits``) to 63. This way
   ``hilbert_space::dim()`` can return a valid value of type ``sv_index_type``
   even when all 63 bits are used up.
+- ``n_fermion_sector_view`` and ``n_fermion_multisector_view`` are now
+  parametrized on the type of ranking algorithm used to map basis state indices
+  from a full Hilbert space to a sector. Supported ranking algorithms are
+  ``combination_ranking`` (selected by default), ``staggered_ranking`` and
+  ``trie_ranking``. All three algorithms are described in M. Wallerberger,
+  [K. Held, Phys. Rev. Research 4, 033238 (2022)](
+  https://doi.org/10.1103/PhysRevResearch.4.033238).
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit
-  manipulation operations (``popcount``, ``pdep``, ``pext``).
+  manipulation operations (``popcount``, ``tzcount``, ``pdep``, ``pext``).
 - New CMake option ``CPPCHECK_EXTRA_FLAGS``. It can be used to pass additional
   command line flags to ``cppcheck``.
 
@@ -23,7 +30,7 @@ All notable changes to this project will be documented in this file.
   ``${CMAKE_INSTALL_PREFIX}/lib/cmake/libcommute``, which is the recommended
   location.
 - Upgraded bundled Catch2 to version 2.13.9 (this fixes issue #2 a.k.a.
-  catchorg/Catch2#2178).
+  [catchorg/Catch2#2178](https://github.com/catchorg/Catch2/issues/2178)).
 - Fixed compilation with clang/libc++ 15 (issue #5).
 - Added project citation information.
 
