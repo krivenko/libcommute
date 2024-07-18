@@ -35,7 +35,7 @@
 #include <utility>
 #include <vector>
 
-#if defined(__GNUC__) || defined(__clang__)
+#if (defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
 #include <immintrin.h>
 #endif
 
@@ -117,7 +117,7 @@ inline unsigned int popcount(sv_index_type i) {
 
 // Parallel bits deposit
 inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
-#if defined(__GNUC__) || defined(__clang__)
+#if (defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
   return _pdep_u64(src, mask);
 #else
   // https://www.chessprogramming.org/BMI2#Serial_Implementation
@@ -132,7 +132,7 @@ inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
 
 // Parallel bits extract
 inline sv_index_type extract_bits(sv_index_type val, sv_index_type mask) {
-#if defined(__GNUC__) || defined(__clang__)
+#if (defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
   return _pext_u64(val, mask);
 #else
   // From https://www.chessprogramming.org/BMI2#Serial_Implementation_2
