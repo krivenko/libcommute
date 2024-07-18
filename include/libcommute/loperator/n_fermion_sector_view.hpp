@@ -242,7 +242,7 @@ public:
     sv_index_type i = 0;
     unsigned int k = 0;
     while(index != 0) {
-      unsigned int c = detail::count_trailing_zeros(index);
+      unsigned int const c = detail::count_trailing_zeros(index);
       index = index & (index - 1);
       i += binomial[c * N_counted + k];
       ++k;
@@ -304,7 +304,7 @@ public:
     // Fill lookup_table
     lookup_table.reserve((mpmax + 1) * (R * mpmax + 2) * rdim / 2);
     for(unsigned int mp = 0; mp <= mpmax; ++mp) {
-      unsigned int Mp = mp * R;
+      unsigned int const Mp = mp * R;
       for(unsigned int Np = 0; Np <= Mp; ++Np) {
         for(sv_index_type r = 0; r < rdim; ++r) {
           lookup_table.emplace_back(rank(r, Mp, Np));
@@ -324,9 +324,8 @@ public:
     index = index ^ mask;
     sv_index_type i = 0;
     unsigned int Np = 0;
-    sv_index_type r = 0;
     for(unsigned int mp = 0; index != 0; ++mp) {
-      r = index & (rdim - 1);
+      sv_index_type const r = index & (rdim - 1);
       i += lookup_table[mp_block_heads[mp] + Np * rdim + r];
       Np += popcount_table[r];
       index >>= R;
@@ -368,15 +367,15 @@ template <unsigned int R> class trie_ranking {
             unsigned int M_subtree) {
     unsigned int chunk_size = chunk_sizes[level];
 
-    sv_index_type P = ~(detail::pow2(M_subtree) - 1);
-    sv_index_type p = st & P;
+    sv_index_type const P = ~(detail::pow2(M_subtree) - 1);
+    sv_index_type const p = st & P;
 
-    sv_index_type C = detail::pow2(chunk_size) - 1;
-    sv_index_type kp = k;
+    sv_index_type const C = detail::pow2(chunk_size) - 1;
+    sv_index_type const kp = k;
     k += detail::pow2(chunk_size);
 
     sv_index_type c = C;
-    sv_index_type c0 = (st >> (M_subtree - chunk_size)) & C;
+    sv_index_type const c0 = (st >> (M_subtree - chunk_size)) & C;
 
     while((st & P) == p) {
       c = (st >> (M_subtree - chunk_size)) & C;
@@ -388,8 +387,9 @@ template <unsigned int R> class trie_ranking {
       } else { // Subtree
 
         // Packing: Remove unused elements at the front of the child index
-        sv_index_type C_subtree = detail::pow2(chunk_sizes[level + 1]) - 1;
-        sv_index_type f =
+        sv_index_type const C_subtree =
+            detail::pow2(chunk_sizes[level + 1]) - 1;
+        sv_index_type const f =
             (st >> (M_subtree - chunk_size - chunk_sizes[level + 1])) &
             C_subtree;
         if(k >= f) {
@@ -407,9 +407,9 @@ template <unsigned int R> class trie_ranking {
     }
 
     // Packing: Remove unused elements at the back of the child index
-    sv_index_type l = C - c;
-    sv_index_type table_head = kp + c0;
-    sv_index_type table_size = detail::pow2(chunk_size) - c0 - l;
+    sv_index_type const l = C - c;
+    sv_index_type const table_head = kp + c0;
+    sv_index_type const table_size = detail::pow2(chunk_size) - c0 - l;
 
     k -= l;
     if((level <= pext_masks.size() - 1) && (l > 0)) {
@@ -446,7 +446,7 @@ public:
     }
 
     if(params.M > 0) {
-      unsigned int N_counted =
+      unsigned int const N_counted =
           (params.N <= params.M / 2) ? params.N : (params.M - params.N);
       sv_index_type k_final = 0;
       std::tie(std::ignore, std::ignore, k_final) =
@@ -577,7 +577,7 @@ struct n_fermion_sector_view {
       M_nonfermion(hs.total_n_bits() - sector_params.M) {}
 
   sv_index_type map_index(sv_index_type index) const {
-    sv_index_type ranked = ranking(index & f_mask);
+    sv_index_type const ranked = ranking(index & f_mask);
     // Place the non-fermionic bits of 'index' to the least significant
     // positions and put the computed rank of the fermionic part after them.
     return (ranked << M_nonfermion) + (index >> sector_params.M);
@@ -658,12 +658,12 @@ foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
         Functor&& f) { // NOLINT(cppcoreguidelines-missing-std-forward)
   if(view.sector_params.M == 0 && view.M_nonfermion == 0) return;
 
-  auto dim_nonfermion = detail::pow2(view.M_nonfermion);
+  sv_index_type const dim_nonfermion = detail::pow2(view.M_nonfermion);
   sv_index_type sector_index = 0;
 
   view.unranking.init();
   while(!view.unranking.done()) {
-    sv_index_type unranked = view.unranking.next();
+    sv_index_type const unranked = view.unranking.next();
     for(sv_index_type index_nf = 0; index_nf < dim_nonfermion; ++index_nf) {
 
       // Emulate decltype(auto)
@@ -691,12 +691,12 @@ inline std::vector<sv_index_type>
 n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
   detail::n_fermion_sector_params_t sector_params(hs, N);
 
-  unsigned int M_nonfermion = hs.total_n_bits() - sector_params.M;
+  unsigned int const M_nonfermion = hs.total_n_bits() - sector_params.M;
   if(sector_params.M == 0 && M_nonfermion == 0) return {};
 
   unranking_generator unranking(sector_params);
 
-  sv_index_type dim_nonfermion = detail::pow2(M_nonfermion);
+  sv_index_type const dim_nonfermion = detail::pow2(M_nonfermion);
 
   std::vector<sv_index_type> basis_states;
   basis_states.reserve(detail::binomial(sector_params.M, N) * dim_nonfermion);
@@ -899,7 +899,7 @@ inline sv_index_type n_fermion_multisector_size(
 
   detail::validate_sectors(hs, sectors);
 
-  auto total_n_bits = hs.total_n_bits();
+  auto const total_n_bits = hs.total_n_bits();
   if(total_n_bits == 0) return 0;
 
   unsigned int M_total = 0;
@@ -1061,7 +1061,7 @@ inline void foreach(
     Functor&& f) {
   if(view.sector_params.size() == 0 && view.M_nonmultisector == 0) return;
 
-  auto dim_nonmultisector = detail::pow2(view.M_nonmultisector);
+  sv_index_type const dim_nonmultisector = detail::pow2(view.M_nonmultisector);
   sv_index_type multisector_index = 0;
 
   view.unranking.init();
@@ -1106,10 +1106,10 @@ inline std::vector<sv_index_type> n_fermion_multisector_basis_states(
   detail::multisector_unranking_generator unranking(sector_params);
 
   sv_index_type nonmultisector_bits_mask = 0;
-  unsigned int M_nonmultisector =
+  unsigned int const M_nonmultisector =
       make_nonmultisector_mask(hs, sector_params, nonmultisector_bits_mask);
 
-  sv_index_type dim_nonmultisector = detail::pow2(M_nonmultisector);
+  sv_index_type const dim_nonmultisector = detail::pow2(M_nonmultisector);
 
   std::vector<sv_index_type> basis_states;
   sv_index_type dim_multisector_fermion = unranking.size();
