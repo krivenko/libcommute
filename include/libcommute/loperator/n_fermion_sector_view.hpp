@@ -54,7 +54,7 @@ template <typename HSType> struct sector_descriptor;
 namespace detail {
 
 // 2^n
-inline sv_index_type pow2(unsigned int n) {
+inline constexpr sv_index_type pow2(unsigned int n) {
   return sv_index_type(1) << n;
 }
 
@@ -159,7 +159,7 @@ struct n_fermion_sector_params_t {
 
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs, unsigned int N)
-    : M(init_m(hs)), mask((sv_index_type(1) << M) - 1), N(validated_n(N)) {}
+    : M(init_m(hs)), mask(pow2(M) - 1), N(validated_n(N)) {}
 
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs,
@@ -190,7 +190,7 @@ private:
     for(auto const& i : sector.indices) {
       unsigned int b =
           hs.bit_range(elementary_space_fermion<IndexTypes...>(i)).first;
-      mask += sv_index_type(1) << b;
+      mask += pow2(b);
     }
     return mask;
   }
@@ -228,7 +228,7 @@ public:
     : N_counted((params.N <= params.M / 2) ? params.N : params.M - params.N),
       binomial(params.M * N_counted),
       mask((params.N == N_counted) ? sv_index_type(0) :
-                                     ((sv_index_type(1) << params.M) - 1)) {
+                                     (detail::pow2(params.M) - 1)) {
     for(unsigned int m = 0; m < params.M; ++m) {
       for(unsigned int n = 1; n <= N_counted; ++n) {
         binomial[m * N_counted + n - 1] = detail::binomial(m, n);
@@ -257,7 +257,7 @@ template <unsigned int R> class staggered_ranking {
   static_assert((R > 0) && (R < 64), "Chunk size R must belong to [1; 63]");
 
   // 2^R
-  constexpr static sv_index_type rdim = sv_index_type(1) << R;
+  constexpr static sv_index_type rdim = detail::pow2(R);
 
   // Number of chunks + 1
   unsigned int mpmax;
@@ -293,7 +293,7 @@ public:
   explicit staggered_ranking(detail::n_fermion_sector_params_t const& params)
     : mpmax(params.M / R),
       mask((params.N <= params.M / 2) ? sv_index_type(0) :
-                                        ((sv_index_type(1) << params.M) - 1)) {
+                                        (detail::pow2(params.M) - 1)) {
 
     // Fill mp_block_heads
     mp_block_heads.reserve(mpmax);
@@ -368,12 +368,12 @@ template <unsigned int R> class trie_ranking {
             unsigned int M_subtree) {
     unsigned int chunk_size = chunk_sizes[level];
 
-    sv_index_type P = ~((sv_index_type(1) << M_subtree) - 1);
+    sv_index_type P = ~(detail::pow2(M_subtree) - 1);
     sv_index_type p = st & P;
 
-    sv_index_type C = (sv_index_type(1) << chunk_size) - 1;
+    sv_index_type C = detail::pow2(chunk_size) - 1;
     sv_index_type kp = k;
-    k += sv_index_type(1) << chunk_size;
+    k += detail::pow2(chunk_size);
 
     sv_index_type c = C;
     sv_index_type c0 = (st >> (M_subtree - chunk_size)) & C;
@@ -388,8 +388,7 @@ template <unsigned int R> class trie_ranking {
       } else { // Subtree
 
         // Packing: Remove unused elements at the front of the child index
-        sv_index_type C_subtree =
-            (sv_index_type(1) << (chunk_sizes[level + 1])) - 1;
+        sv_index_type C_subtree = detail::pow2(chunk_sizes[level + 1]) - 1;
         sv_index_type f =
             (st >> (M_subtree - chunk_size - chunk_sizes[level + 1])) &
             C_subtree;
@@ -410,7 +409,7 @@ template <unsigned int R> class trie_ranking {
     // Packing: Remove unused elements at the back of the child index
     sv_index_type l = C - c;
     sv_index_type table_head = kp + c0;
-    sv_index_type table_size = (sv_index_type(1) << chunk_size) - c0 - l;
+    sv_index_type table_size = detail::pow2(chunk_size) - c0 - l;
 
     k -= l;
     if((level <= pext_masks.size() - 1) && (l > 0)) {
@@ -432,16 +431,16 @@ template <unsigned int R> class trie_ranking {
 public:
   explicit trie_ranking(detail::n_fermion_sector_params_t const& params)
     : chunk_sizes(params.M / R, R),
-      trie(1 << (params.M + 1), 0),
+      trie(detail::pow2(params.M + 1), 0),
       mask((params.N <= params.M / 2) ? sv_index_type(0) :
-                                        ((sv_index_type(1) << params.M) - 1)) {
+                                        (detail::pow2(params.M) - 1)) {
 
     if(params.M % R != 0) chunk_sizes.push_back(params.M % R);
 
     pext_masks.reserve(chunk_sizes.size());
     unsigned int pext_mask_shift = params.M;
     for(unsigned int size : chunk_sizes) {
-      sv_index_type pext_mask = (sv_index_type(1) << size) - 1;
+      sv_index_type pext_mask = detail::pow2(size) - 1;
       pext_mask_shift -= size;
       pext_masks.emplace_back(pext_mask << pext_mask_shift);
     }
@@ -451,7 +450,7 @@ public:
           (params.N <= params.M / 2) ? params.N : (params.M - params.N);
       sv_index_type k_final = 0;
       std::tie(std::ignore, std::ignore, k_final) =
-          make_trie(0, 0x0, (sv_index_type(1) << N_counted) - 1, 0, params.M);
+          make_trie(0, 0x0, detail::pow2(N_counted) - 1, 0, params.M);
       trie.resize(k_final);
       std::for_each(trie.begin(), trie.end(), [](std::int64_t& theta) {
         if(theta < 0) theta = -theta;
@@ -492,13 +491,13 @@ public:
   explicit unranking_generator(detail::n_fermion_sector_params_t const& params)
     : N_counted(params.N <= params.M / 2 ? params.N : params.M - params.N),
       total(detail::binomial(params.M, N_counted)),
-      unranked((sv_index_type(1) << N_counted) - 1),
+      unranked(detail::pow2(N_counted) - 1),
       mask((params.N == N_counted) ? sv_index_type(0) :
-                                     ((sv_index_type(1) << params.M) - 1)) {}
+                                     (detail::pow2(params.M) - 1)) {}
 
   // Initialize iteration
   inline void init() const {
-    unranked = (sv_index_type(1) << N_counted) - 1;
+    unranked = detail::pow2(N_counted) - 1;
     i = 0;
   }
 
@@ -574,7 +573,7 @@ struct n_fermion_sector_view {
       sector_params(hs, N),
       ranking(sector_params),
       unranking(sector_params),
-      f_mask((sv_index_type(1) << sector_params.M) - 1),
+      f_mask(detail::pow2(sector_params.M) - 1),
       M_nonfermion(hs.total_n_bits() - sector_params.M) {}
 
   sv_index_type map_index(sv_index_type index) const {
@@ -814,7 +813,7 @@ unsigned int make_nonmultisector_mask(HSType const& hs,
                                       sector_params_vec_t const& sector_params,
                                       sv_index_type& mask) {
   unsigned int M = hs.total_n_bits();
-  mask = (sv_index_type(1) << hs.total_n_bits()) - 1;
+  mask = detail::pow2(hs.total_n_bits()) - 1;
   for(auto const& p : sector_params) {
     mask -= p.mask;
     M -= p.M;
