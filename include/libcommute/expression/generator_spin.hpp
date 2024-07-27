@@ -32,7 +32,7 @@ namespace libcommute {
 //
 
 // S_+, S_- or S_z
-enum spin_component : int { plus = 0, minus = 1, z = 2 };
+enum spin_component : std::uint8_t { plus = 0, minus = 1, z = 2 };
 
 template <typename... IndexTypes>
 class generator_spin : public generator<IndexTypes...> {

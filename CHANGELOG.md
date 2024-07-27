@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit
   manipulation operations (``popcount``, ``tzcount``, ``pdep``, ``pext``).
+- Change base type of ``spin_component`` to the 1-byte wide ``std::uint8_t``.
 - New CMake option ``CPPCHECK_EXTRA_FLAGS``. It can be used to pass additional
   command line flags to ``cppcheck``.
 
