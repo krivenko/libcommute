@@ -111,6 +111,7 @@ from a full Hilbert space to a sector. Supported ranking algorithms are
 Credits to Dr. Cezary Śliwa for providing the patch.</p></li>
 <li><p>Whenever possible, use compiler intrinsics to speed up complex bit
 manipulation operations (<code class="docutils literal notranslate"><span class="pre">popcount</span></code>, <code class="docutils literal notranslate"><span class="pre">tzcount</span></code>, <code class="docutils literal notranslate"><span class="pre">pdep</span></code>, <code class="docutils literal notranslate"><span class="pre">pext</span></code>).</p></li>
+<li><p>Change base type of <code class="docutils literal notranslate"><span class="pre">spin_component</span></code> to the 1-byte wide <code class="docutils literal notranslate"><span class="pre">std::uint8_t</span></code>.</p></li>
 <li><p>New CMake option <code class="docutils literal notranslate"><span class="pre">CPPCHECK_EXTRA_FLAGS</span></code>. It can be used to pass additional
 command line flags to <code class="docutils literal notranslate"><span class="pre">cppcheck</span></code>.</p></li>
 </ul>

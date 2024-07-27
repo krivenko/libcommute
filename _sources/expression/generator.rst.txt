@@ -462,7 +462,7 @@ In other words,
 - Among operators with the same :math:`S` and index sequence, :math:`S_+` comes
   first followed by :math:`S_-` and eventually by :math:`S_z`.
 
-.. enum:: spin_component : int
+.. enum:: spin_component : std::uint8_t
 
   Component of spin operator.
 
