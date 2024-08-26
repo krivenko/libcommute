@@ -345,17 +345,15 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
     auto sp = space_partition(Hop, hs);
 
-    std::vector<decltype(Hop)> Cd, C, all_ops;
-    for(std::string spin : {"dn", "up"}) {
-      for(int o = 0; o < n_orbs; ++o) {
-        Cd.emplace_back(c_dag(spin, o), hs);
-        C.emplace_back(c(spin, o), hs);
+    std::vector<decltype(Hop)> ops1, ops2, all_ops;
+    for(int o = 0; o < n_orbs; ++o) {
+      ops1.emplace_back(c_dag("up", o) + c("dn", o), hs);
+      ops2.emplace_back(c("up", o) + c_dag("dn", o), hs);
 
-        all_ops.emplace_back(Cd.back());
-        all_ops.emplace_back(C.back());
+      all_ops.emplace_back(ops1.back());
+      all_ops.emplace_back(ops2.back());
 
-        sp.merge_subspaces(Cd.back(), C.back(), hs);
-      }
+      sp.merge_subspaces(ops1.back(), ops2.back(), hs);
     }
 
     // Calculated classification of states
