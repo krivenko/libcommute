@@ -18,7 +18,6 @@
 #include "loperator.hpp"
 #include "sparse_state_vector.hpp"
 
-#include <functional>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -169,56 +168,27 @@ public:
       set_zeros(in_state);
     });
 
-    // 'Zigzag' traversal algorithm
-    while(!Cd_conn.empty()) {
+    // Merge all 'out' subspaces corresponding to the same 'in' subspace
+    // in 'conn'.
+    auto merge_conn_targets =
+        [this](std::multimap<sv_index_type, sv_index_type> const& conn) {
+          if(conn.empty()) return;
 
-      // Take one C^+ - connection
-      // C^+|lower_subspace> = |upper_subspace>
-
-      // C++17 structured bindings would be the real solution here
-      // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
-      sv_index_type lower_subspace, upper_subspace;
-      std::tie(lower_subspace, upper_subspace) = *std::begin(Cd_conn);
-
-      // - Reveals all subspaces reachable from lower_subspace by application of
-      //   a 'zigzag' product C^+ C C^+ C C^+ ... of any length.
-      // - Removes all visited connections from Cd_connections/C_connections.
-      // - Merges lower_subspace with all subspaces generated from
-      //   lower_subspace by application of (C C^+)^(2*n).
-      // - Merges upper_subspace with all subspaces generated from
-      //   upper_subspace by application of (C^+ C)^(2*n).
-      std::function<void(sv_index_type, bool)> zigzag_traversal =
-          [this,
-           lower_subspace,
-           upper_subspace,
-           &Cd_conn,
-           &C_conn,
-           &zigzag_traversal](
-              sv_index_type
-                  in_subspace, // find all connections from in_subspace
-              bool upwards // if true, C^+ connection, otherwise C connection
-          ) {
-            std::multimap<sv_index_type, sv_index_type>::iterator it;
-            while((it = (upwards ? Cd_conn : C_conn).find(in_subspace)) !=
-                  (upwards ? Cd_conn : C_conn).end()) {
-
-              auto out_subspace = it->second;
-              (upwards ? Cd_conn : C_conn).erase(it);
-
-              if(upwards)
-                ds.set_union(out_subspace, upper_subspace);
-              else
-                ds.set_union(out_subspace, lower_subspace);
-
-              // Recursively apply to all found out_subspace's with
-              // a 'flipped' direction
-              zigzag_traversal(out_subspace, !upwards);
+          auto conn_it = conn.cbegin();
+          sv_index_type in_subspace = conn_it->first;
+          sv_index_type out_subspace = conn_it->second;
+          ++conn_it;
+          for(; conn_it != conn.cend(); ++conn_it) {
+            if(conn_it->first == in_subspace) {
+              ds.set_union(out_subspace, conn_it->second);
+            } else {
+              std::tie(in_subspace, out_subspace) = *conn_it;
             }
-          };
+          }
+        };
 
-      // Apply to all C^+ connections starting from lower_subspace
-      zigzag_traversal(lower_subspace, true);
-    }
+    merge_conn_targets(Cd_conn);
+    merge_conn_targets(C_conn);
 
     update_root_to_subspace();
 

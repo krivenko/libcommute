@@ -15,6 +15,7 @@
 
 #include <libcommute/expression/factories.hpp>
 #include <libcommute/loperator/space_partition.hpp>
+#include <libcommute/loperator/sparse_state_vector.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -343,54 +344,102 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
   SECTION("merge_subspaces()") {
 
-    auto sp = space_partition(Hop, hs);
+    auto check_one_to_one = [](space_partition const& sp,
+                               std::vector<decltype(Hop)> const& ops) {
+      // Calculated classification of states
+      std::vector<std::set<sv_index_type>> v_cl(sp.n_subspaces());
+      foreach(sp, [&](int i, int subspace) { v_cl[subspace].insert(i); });
+      std::set<std::set<sv_index_type>> cl{v_cl.cbegin(), v_cl.cend()};
 
-    std::vector<decltype(Hop)> ops1, ops2, all_ops;
-    for(int o = 0; o < n_orbs; ++o) {
-      ops1.emplace_back(c_dag("up", o) + c("dn", o), hs);
-      ops2.emplace_back(c("up", o) + c_dag("dn", o), hs);
+      sparse_state_vector<double> in_state(sp.dim());
+      sparse_state_vector<double> out_state(sp.dim());
 
-      all_ops.emplace_back(ops1.back());
-      all_ops.emplace_back(ops2.back());
+      for(auto const& op : ops) {
+        for(auto const& i_sp : cl) {
+          std::set<sv_index_type> f_sp;
+          for(auto i : i_sp) {
+            in_state[i] = 1.0;
+            op(in_state, out_state);
+            foreach(out_state, [&f_sp](sv_index_type f, double a) {
+              if(std::abs(a) < 1e-10) return;
+              f_sp.insert(f);
+            });
+            set_zeros(in_state);
+          }
 
-      sp.merge_subspaces(ops1.back(), ops2.back(), hs);
+          // op maps i_sp onto zero
+          if(f_sp.size() == 0) continue;
+
+          // Check if op maps i_sp to only one subspace
+          auto n =
+              std::count_if(cl.begin(),
+                            cl.end(),
+                            [&f_sp](std::set<sv_index_type> const& f_sp_ref) {
+                              return std::includes(f_sp_ref.cbegin(),
+                                                   f_sp_ref.cend(),
+                                                   f_sp.cbegin(),
+                                                   f_sp.cend());
+                            });
+          CHECK(n == 1);
+        }
+      }
+    };
+
+    SECTION("Hubbard-Kanamori") {
+      auto sp = space_partition(Hop, hs);
+
+      std::vector<decltype(Hop)> ops1, ops2, all_ops;
+      for(int o = 0; o < n_orbs; ++o) {
+        ops1.emplace_back(c_dag("up", o) + c("dn", o), hs);
+        ops2.emplace_back(c("up", o) + c_dag("dn", o), hs);
+
+        all_ops.emplace_back(ops1.back());
+        all_ops.emplace_back(ops2.back());
+
+        sp.merge_subspaces(ops1.back(), ops2.back(), hs);
+      }
+
+      check_one_to_one(sp, all_ops);
     }
 
-    // Calculated classification of states
-    std::vector<std::set<sv_index_type>> v_cl(sp.n_subspaces());
-    foreach(sp, [&](int i, int subspace) { v_cl[subspace].insert(i); });
-    std::set<std::set<sv_index_type>> cl{v_cl.cbegin(), v_cl.cend()};
+    SECTION("4 bath orbitals") {
+      int const n_bath_orbs = 4;
+      std::vector<double> const eps = {-0.2, -0.1, 0.1, 0.2};
+      double const V = 0.7;
 
-    std::vector<double> in_state(sp.dim());
-
-    for(auto const& op : all_ops) {
-      for(auto const& i_sp : cl) {
-        std::set<sv_index_type> f_sp;
-        for(auto i : i_sp) {
-          in_state[i] = 1.0;
-          auto out_state = op(in_state);
-          foreach(out_state, [&f_sp](sv_index_type f, double a) {
-            if(std::abs(a) < 1e-10) return;
-            f_sp.insert(f);
-          });
-          in_state[i] = 0;
+      for(std::string spin : {"dn", "up"}) {
+        for(int o = 0; o < n_bath_orbs; ++o) {
+          H += eps[o] * n(spin, n_orbs + o);
         }
-
-        // op maps i_sp onto zero
-        if(f_sp.size() == 0) continue;
-
-        // Check if op maps i_sp to only one subspace
-        auto n =
-            std::count_if(cl.begin(),
-                          cl.end(),
-                          [&f_sp](std::set<sv_index_type> const& f_sp_ref) {
-                            return std::includes(f_sp_ref.cbegin(),
-                                                 f_sp_ref.cend(),
-                                                 f_sp.cbegin(),
-                                                 f_sp.cend());
-                          });
-        CHECK(n == 1);
+        for(int o1 = 0; o1 < n_orbs; ++o1) {
+          for(int o2 = 0; o2 < n_bath_orbs; ++o2) {
+            H += V * (c_dag(spin, o1) * c(spin, n_orbs + o2) +
+                      c_dag(spin, n_orbs + o2) * c(spin, o1));
+          }
+        }
       }
+
+      // Hilbert space
+      auto hs_bath = make_hilbert_space(H);
+      // Linear operator form of the Hamiltonian
+      auto H_bath_op = make_loperator(H, hs_bath);
+
+      auto sp = space_partition(H_bath_op, hs_bath);
+
+      std::vector<decltype(Hop)> Cd, C, all_ops;
+      for(std::string spin : {"dn", "up"}) {
+        for(int o = 0; o < n_orbs + n_bath_orbs; ++o) {
+          Cd.emplace_back(c_dag(spin, o), hs_bath);
+          C.emplace_back(c(spin, o), hs_bath);
+
+          all_ops.emplace_back(Cd.back());
+          all_ops.emplace_back(C.back());
+
+          sp.merge_subspaces(Cd.back(), C.back(), hs_bath);
+        }
+      }
+
+      check_one_to_one(sp, all_ops);
     }
   }
 
