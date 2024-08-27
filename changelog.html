@@ -97,16 +97,18 @@
 <section id="unreleased">
 <h2>[0.8.0] - Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Reduce the maximum allowed number of bits in the binary representation of
-a basis state index (<code class="docutils literal notranslate"><span class="pre">hilbert_space::max_n_bits</span></code>) to 63. This way
-<code class="docutils literal notranslate"><span class="pre">hilbert_space::dim()</span></code> can return a valid value of type <code class="docutils literal notranslate"><span class="pre">sv_index_type</span></code>
-even when all 63 bits are used up.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_fermion_sector_view</span></code> and <code class="docutils literal notranslate"><span class="pre">n_fermion_multisector_view</span></code> are now
 parametrized on the type of ranking algorithm used to map basis state indices
 from a full Hilbert space to a sector. Supported ranking algorithms are
 <code class="docutils literal notranslate"><span class="pre">combination_ranking</span></code> (selected by default), <code class="docutils literal notranslate"><span class="pre">staggered_ranking</span></code> and
 <code class="docutils literal notranslate"><span class="pre">trie_ranking</span></code>. All three algorithms are described in M. Wallerberger,
 <a class="reference external" href="https://doi.org/10.1103/PhysRevResearch.4.033238">K. Held, Phys. Rev. Research 4, 033238 (2022)</a>.</p></li>
+<li><p>Reduced the maximum allowed number of bits in the binary representation of
+a basis state index (<code class="docutils literal notranslate"><span class="pre">hilbert_space::max_n_bits</span></code>) to 63. This way
+<code class="docutils literal notranslate"><span class="pre">hilbert_space::dim()</span></code> can return a valid value of type <code class="docutils literal notranslate"><span class="pre">sv_index_type</span></code>
+even when all 63 bits are used up.</p></li>
+<li><p>Improved performance and stability of <code class="docutils literal notranslate"><span class="pre">space_partition::merge_subspaces()</span></code>
+by switching to a non-recursive variant of the algorithm.</p></li>
 <li><p>Fixed a negative index bug in <code class="docutils literal notranslate"><span class="pre">n_fermion_sector_view</span></code>.
 Credits to Dr. Cezary Śliwa for providing the patch.</p></li>
 <li><p>Whenever possible, use compiler intrinsics to speed up complex bit

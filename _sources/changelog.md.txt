@@ -4,10 +4,6 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.0] - Unreleased
 
-- Reduce the maximum allowed number of bits in the binary representation of
-  a basis state index (``hilbert_space::max_n_bits``) to 63. This way
-  ``hilbert_space::dim()`` can return a valid value of type ``sv_index_type``
-  even when all 63 bits are used up.
 - ``n_fermion_sector_view`` and ``n_fermion_multisector_view`` are now
   parametrized on the type of ranking algorithm used to map basis state indices
   from a full Hilbert space to a sector. Supported ranking algorithms are
@@ -15,6 +11,12 @@ All notable changes to this project will be documented in this file.
   ``trie_ranking``. All three algorithms are described in M. Wallerberger,
   [K. Held, Phys. Rev. Research 4, 033238 (2022)](
   https://doi.org/10.1103/PhysRevResearch.4.033238).
+- Reduced the maximum allowed number of bits in the binary representation of
+  a basis state index (``hilbert_space::max_n_bits``) to 63. This way
+  ``hilbert_space::dim()`` can return a valid value of type ``sv_index_type``
+  even when all 63 bits are used up.
+- Improved performance and stability of ``space_partition::merge_subspaces()``
+  by switching to a non-recursive variant of the algorithm.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit
