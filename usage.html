@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to use libcommute in your project &mdash; libcommute 0.8.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/_static/theme_overrides.css" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=6a14807c"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/documentation_options.js?v=486e5634"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -85,7 +85,7 @@
            <div itemprop="articleBody">
              
   <section id="how-to-use-libcommute-in-your-project">
-<span id="usage"></span><h1>How to use <em>libcommute</em> in your project<a class="headerlink" href="#how-to-use-libcommute-in-your-project" title="Permalink to this heading"></a></h1>
+<span id="usage"></span><h1>How to use <em>libcommute</em> in your project<a class="headerlink" href="#how-to-use-libcommute-in-your-project" title="Link to this heading"></a></h1>
 <p>There are two ways to use <em>libcommute</em>, depending on what build system your C++
 project is based on. Either way, you would need a compiler that supports at
 least C++11 and – optionally – C++17, if you are interested in using the
@@ -94,7 +94,7 @@ least C++11 and – optionally – C++17, if you are interested in using the
 all <em>libcommute</em>’s headers. The entire library is under 5000 lines of code and
 compilation times should normally not be a concern.</p>
 <section id="makefiles-no-build-system">
-<h2>Makefiles/no build system<a class="headerlink" href="#makefiles-no-build-system" title="Permalink to this heading"></a></h2>
+<h2>Makefiles/no build system<a class="headerlink" href="#makefiles-no-build-system" title="Link to this heading"></a></h2>
 <p>Assume that <code class="docutils literal notranslate"><span class="pre">&lt;libcommute&gt;</span></code> is either a directory with unpacked
 <em>libcommute</em> sources or the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">installation</span></a>
 directory. Just one <code class="docutils literal notranslate"><span class="pre">-I</span></code> flag on compiler’s command line is sufficient to
@@ -105,7 +105,7 @@ make <em>libcommute</em>’s header files visible to your code.</p>
 <p>(similar for <code class="docutils literal notranslate"><span class="pre">clang++</span></code> and other compilers).</p>
 </section>
 <section id="pkg-config">
-<h2>pkg-config<a class="headerlink" href="#pkg-config" title="Permalink to this heading"></a></h2>
+<h2>pkg-config<a class="headerlink" href="#pkg-config" title="Link to this heading"></a></h2>
 <p><em>libcommute</em> installs a pkg-config configuration file <code class="docutils literal notranslate"><span class="pre">libcommute.pc</span></code> under
 <code class="docutils literal notranslate"><span class="pre">&lt;libcommute_prefix&gt;/share/pkgconfig</span></code>. One can run</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pkg-config<span class="w"> </span>--cflags<span class="w"> </span>libcommute
@@ -116,7 +116,7 @@ make <em>libcommute</em>’s header files visible to your code.</p>
 (modification of the <code class="docutils literal notranslate"><span class="pre">PKG_CONFIG_PATH</span></code> environment variable may be needed).</p>
 </section>
 <section id="cmake">
-<h2>CMake<a class="headerlink" href="#cmake" title="Permalink to this heading"></a></h2>
+<h2>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h2>
 <p>Here is a minimal example of a root <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> script for your
 project.</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.8.0</span><span class="w"> </span><span class="s">FATAL_ERROR</span><span class="p">)</span>
