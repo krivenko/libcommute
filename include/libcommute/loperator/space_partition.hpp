@@ -138,7 +138,9 @@ public:
     using loperator_t = loperator<LOpScalarType, LOpAlgebraIDs...>;
     using scalar_type = typename loperator_t::scalar_type;
     matrix_elements_map<scalar_type> Cd_elements, C_elements;
-    std::multimap<sv_index_type, sv_index_type> Cd_conn, C_conn;
+
+    using conn_t = std::multimap<sv_index_type, sv_index_type>;
+    conn_t Cd_conn, C_conn;
 
     sv_index_type d = get_dim(hs);
 
@@ -149,10 +151,9 @@ public:
       in_state[in_index] = scalar_traits<scalar_type>::make_const(1);
       sv_index_type in_subspace = ds.find_root(in_index);
 
-      auto fill_conn = [&,
-                        this](loperator_t const& lop,
-                              std::multimap<sv_index_type, sv_index_type>& conn,
-                              matrix_elements_map<scalar_type>& elem) {
+      auto fill_conn = [&, this](loperator_t const& lop,
+                                 conn_t& conn,
+                                 matrix_elements_map<scalar_type>& elem) {
         lop(in_state, out_state);
         // Iterate over non-zero final amplitudes
         foreach(out_state, [&](sv_index_type out_index, scalar_type const& a) {
@@ -170,25 +171,39 @@ public:
 
     // Merge all 'out' subspaces corresponding to the same 'in' subspace
     // in 'conn'.
-    auto merge_conn_targets =
-        [this](std::multimap<sv_index_type, sv_index_type> const& conn) {
-          if(conn.empty()) return;
+    auto merge_conn_targets = [this](conn_t const& conn) -> bool {
+      if(conn.empty()) return false;
 
-          auto conn_it = conn.cbegin();
-          sv_index_type in_subspace = conn_it->first;
-          sv_index_type out_subspace = conn_it->second;
-          ++conn_it;
-          for(; conn_it != conn.cend(); ++conn_it) {
-            if(conn_it->first == in_subspace) {
-              ds.set_union(out_subspace, conn_it->second);
-            } else {
-              std::tie(in_subspace, out_subspace) = *conn_it;
-            }
+      bool subspaces_linked = false;
+
+      auto conn_it = conn.cbegin();
+      sv_index_type in_subspace = ds.find_root(conn_it->first);
+      sv_index_type out_subspace = ds.find_root(conn_it->second);
+      ++conn_it;
+      for(; conn_it != conn.cend(); ++conn_it) {
+        if(ds.find_root(conn_it->first) == ds.find_root(in_subspace)) {
+          sv_index_type out_subspace1 = ds.find_root(out_subspace);
+          sv_index_type out_subspace2 = ds.find_root(conn_it->second);
+          if(out_subspace1 != out_subspace2) {
+            ds.root_union(out_subspace1, out_subspace2);
+            subspaces_linked = true;
           }
-        };
+        } else {
+          in_subspace = ds.find_root(conn_it->first);
+          out_subspace = ds.find_root(conn_it->second);
+        }
+      }
 
-    merge_conn_targets(Cd_conn);
-    merge_conn_targets(C_conn);
+      return subspaces_linked;
+    };
+
+    // Repeatedly call merge_conn_targets() until no further subspaces can
+    // be merged.
+    bool sl_Cd, sl_C;
+    do {
+      sl_Cd = merge_conn_targets(Cd_conn);
+      sl_C = merge_conn_targets(C_conn);
+    } while(sl_Cd || sl_C);
 
     update_root_to_subspace();
 
