@@ -52,6 +52,7 @@ TEST_CASE("Implementation details", "[detail]") {
     CHECK(pow2(4) == 16);
   }
 
+  // cppcheck-suppress-begin knownConditionTrueFalse
   SECTION("Binomial coefficient") {
     CHECK(binomial(0, 0) == 1);
     CHECK(binomial(0, 1) == 0);
@@ -79,6 +80,7 @@ TEST_CASE("Implementation details", "[detail]") {
     CHECK(popcount((one << 32) + (one << 4) + (one << 2)) == 3);
     CHECK(popcount((one << 32) + (one << 8) + (one << 4) + (one << 2)) == 4);
   }
+  // cppcheck-suppress-end knownConditionTrueFalse
 
   SECTION("n_fermion_sector_params_t") {
 

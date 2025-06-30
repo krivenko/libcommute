@@ -199,6 +199,7 @@ public:
 
     // Repeatedly call merge_conn_targets() until no further subspaces can
     // be merged.
+    // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
     bool sl_Cd, sl_C;
     do {
       sl_Cd = merge_conn_targets(Cd_conn);

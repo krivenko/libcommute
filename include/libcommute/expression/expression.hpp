@@ -81,6 +81,7 @@ public:
   template <typename S>
   // cppcheck-suppress noExplicitConstructor
   expression(expression<S, IndexTypes...> const& x) {
+    // NOLINTNEXTLINE(modernize-type-traits)
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
     *this = x;
@@ -88,6 +89,7 @@ public:
 
   // Construct expression with one constant term
   template <typename S> explicit expression(S const& x) {
+    // NOLINTNEXTLINE(modernize-type-traits)
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
     if(!scalar_traits<S>::is_zero(x)) monomials_.emplace(monomial_t{}, x);
@@ -96,6 +98,7 @@ public:
   // Construct from a monomial
   template <typename S>
   explicit expression(S const& x, monomial_t const& monomial) {
+    // NOLINTNEXTLINE(modernize-type-traits)
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in construction");
     if(!scalar_traits<S>::is_zero(x))
@@ -106,10 +109,12 @@ private:
   // Internal: Construct from a linear function of generators
   explicit expression(
       typename monomial_t::generator_type::linear_function_t const& f) {
+    // cppcheck-suppress knownConditionTrueFalse
     if(!scalar_traits<ScalarType>::is_zero(f.const_term))
       monomials_.emplace(monomial_t{}, f.const_term);
     for(auto const& g : f.terms) {
       auto v = scalar_traits<ScalarType>::make_const(g.second);
+      // cppcheck-suppress knownConditionTrueFalse
       if(!scalar_traits<ScalarType>::is_zero(v))
         *this += expression(v, monomial_t({g.first->clone()}));
     }
@@ -118,6 +123,7 @@ private:
 public:
   template <typename S>
   expression& operator=(expression<S, IndexTypes...> const& x) {
+    // NOLINTNEXTLINE(modernize-type-traits)
     static_assert(std::is_constructible<scalar_type, S>::value,
                   "Incompatible scalar type in assignment");
     monomials_.clear();
@@ -194,6 +200,7 @@ public:
     typename monomial_t::generator_type::linear_function_t f;
     for(auto const& m : expr.monomials_) {
       auto coeff = scalar_traits<ScalarType>::conj(m.second);
+      // cppcheck-suppress knownConditionTrueFalse
       if(!scalar_traits<ScalarType>::is_zero(coeff)) {
         m_contrib = expression(coeff);
         for(auto m_it = m.first.rbegin(); m_it != m.first.rend(); ++m_it) {
@@ -597,8 +604,9 @@ private:
   //
 
   // Store monomial in a map while taking care of possible collisions
-  static void
-  store_monomial(monomial_t&& m, scalar_type coeff, monomials_map_t& target) {
+  static void store_monomial(monomial_t&& m,
+                             scalar_type const& coeff,
+                             monomials_map_t& target) {
     // C++17 structured bindings would be the real solution here
     // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
     bool is_new_monomial;
@@ -711,6 +719,7 @@ private:
             if(f.vanishing()) return;
 
             auto v = scalar_traits<ScalarType>::make_const(f.const_term);
+            // cppcheck-suppress knownConditionTrueFalse
             if(!scalar_traits<ScalarType>::is_zero(v))
               reduce_powers_and_store(
                   concatenate(std::make_pair(m.begin(), it - power + 2),
@@ -719,6 +728,7 @@ private:
                   target);
             for(auto const& g : f.terms) {
               v = scalar_traits<ScalarType>::make_const(g.second);
+              // cppcheck-suppress knownConditionTrueFalse
               if(!scalar_traits<ScalarType>::is_zero(v))
                 normalize_and_store(
                     concatenate(std::make_pair(m.begin(), it - power + 2),

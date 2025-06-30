@@ -50,7 +50,10 @@ public:
 
   template <typename Arg,
             typename = std::enable_if_t<
-                (!std::is_same_v<remove_cvref_t<Arg>, indices_t>)&&(
+                // NOLINTNEXTLINE(*-avoid-c-arrays)
+                (!std::is_same_v<remove_cvref_t<Arg>, indices_t>) &&
+                (
+                    // NOLINTNEXTLINE(*-avoid-c-arrays)
                     !std::is_same_v<remove_cvref_t<Arg>, dyn_indices_generic>)>>
   explicit dyn_indices_generic(Arg&& arg) {
     indices_.emplace_back(std::forward<Arg>(arg));
