@@ -4,7 +4,7 @@ Jaynes-Cummings ladder
 ======================
 
 The Jaynes-Cummings model was introduced in quantum optics to describe
-interaction of a two-level atom with a single quantized mode of an optical
+interaction of a two-level atom with a single quantised mode of an optical
 cavity [JC63]_. Phonons in the mode are created/destroyed by bosonic ladder
 operators :math:`a^\dagger`/:math:`a`. Atom's Hilbert space is spanned by the
 ground state :math:`|g\rangle` and the excited state :math:`|e\rangle`, and is
@@ -13,7 +13,7 @@ are raising and lowering operators :math:`S_+ = |e\rangle\langle g|`,
 :math:`S_- = |g\rangle\langle e|` and the atomic inversion operator
 :math:`2S_z = |e\rangle\langle e| - |g\rangle\langle g|`.
 
-Under the assumpion that the photon frequency :math:`\omega_c` and the atomic
+Under the assumption that the photon frequency :math:`\omega_c` and the atomic
 transition frequency :math:`\omega_a` satisfy
 :math:`|\omega_c - \omega_a| \ll \omega_c + \omega_a` (small detuning
 :math:`\delta = \omega_a - \omega_c`), one can write down the Jaynes-Cummings
@@ -26,7 +26,7 @@ Hamiltonian in the rotating wave approximation as follows,
 
 where :math:`\Omega` is the atom-field interaction strength. The Jaynes-Cummings
 Hamiltonian commutes with operator :math:`\hat N = a^\dagger a + S_z`, which
-means :math:`\hat H` takes on a block-digonal structure. The ground state
+means :math:`\hat H` takes on a block-diagonal structure. The ground state
 :math:`|n = 0, g\rangle` is within its own one-dimensional block, while the
 rest of the blocks are spanned by a pair :math:`|n-1, e\rangle`,
 :math:`|n, g\rangle` each (:math:`n = \overline{1,\infty}`). Accordingly,

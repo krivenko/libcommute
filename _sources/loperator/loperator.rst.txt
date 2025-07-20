@@ -33,7 +33,7 @@ operator is as easy as
 
   auto L = libcommute::make_loperator(expr, hs);
 
-Futhermore, let us declare a couple of objects that model the
+Furthermore, let us declare a couple of objects that model the
 :ref:`state vectors <state_vector>` concept (in this particular case, they are
 standard vectors)
 

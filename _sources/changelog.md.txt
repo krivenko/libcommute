@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8.0] - Unreleased
 
 - ``n_fermion_sector_view`` and ``n_fermion_multisector_view`` are now
-  parametrized on the type of ranking algorithm used to map basis state indices
+  parameterized on the type of ranking algorithm used to map basis state indices
   from a full Hilbert space to a sector. Supported ranking algorithms are
   ``combination_ranking`` (selected by default), ``staggered_ranking`` and
   ``trie_ranking``. All three algorithms are described in M. Wallerberger,
