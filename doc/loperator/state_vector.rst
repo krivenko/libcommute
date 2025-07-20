@@ -301,7 +301,7 @@ factory class :class:`basis_mapper` and its methods
 N-fermion sector views
 ----------------------
 
-There are two more specialized flavours of the basis mapping views called
+There are two more specialised flavours of the basis mapping views called
 :math:`N`-fermion sector views and :math:`N`-fermion multisector views. They
 can come in handy when working with particle-number preserving models with
 fermions. If a model involves :math:`M` fermionic degrees of freedom, then

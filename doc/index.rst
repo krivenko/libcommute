@@ -20,7 +20,7 @@ libcommute
   expression that can mix bosonic/fermionic
   (`CCR and CAR algebras <https://en.wikipedia.org/wiki/CCR_and_CAR_algebras>`_)
   and spin operators. It supports all standard arithmetic operations,
-  compound-assignement operators, Hermitian conjugation and gives access to
+  compound-assignment operators, Hermitian conjugation and gives access to
   individual monomials via an iteration interface. No matrix representation is
   internally used to store the expressions, so there is virtually no limit on
   their size.
