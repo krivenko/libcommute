@@ -15,6 +15,9 @@
 
 #include "metafunctions.hpp"
 
+#include <array>
+#include <cassert>
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -150,6 +153,74 @@ struct noncopyable {
   noncopyable(noncopyable&&) noexcept = default;
   noncopyable& operator=(noncopyable const&) = delete;
   noncopyable& operator=(noncopyable&&) noexcept = default;
+};
+
+//
+// Variadic number -- a tagged union of an integer, a rational number and a
+// general real floating point number. This type is used to hold structure
+// constants of algebras.
+//
+
+struct var_number {
+  union {
+    int i;
+    std::array<int, 2> r;
+    double x;
+  };
+  enum : std::uint8_t { integer, rational, real } number_type;
+
+  // cppcheck-suppress noExplicitConstructor
+  inline var_number(int i) : i(i), number_type(integer) {}
+  inline var_number(int num, int denom)
+    : r{num, denom}, number_type(rational) {}
+  // cppcheck-suppress noExplicitConstructor
+  inline var_number(double x) : x(x), number_type(real) {}
+
+  inline bool operator==(var_number const& vn) const {
+    if(number_type != vn.number_type) return false;
+    switch(number_type) {
+    case integer: return i == vn.i;
+    case rational: return (r[0] == vn.r[0]) && (r[1] == vn.r[1]);
+    case real: return x == vn.x;
+    }
+  }
+
+  inline bool is_zero() const {
+    switch(number_type) {
+    case integer: return i == 0;
+    case rational: return r[0] == 0;
+    case real: return x == 0.0;
+    }
+  }
+
+  inline explicit operator int() const {
+    assert(number_type == integer);
+    return i;
+  }
+  inline int numerator() const {
+    assert(number_type == rational);
+    return r[0];
+  }
+  inline int denominator() const {
+    assert(number_type == rational);
+    return r[1];
+  }
+  inline explicit operator double() const {
+    switch(number_type) {
+    case integer: return double(i);
+    case rational: return double(r[0]) / double(r[1]);
+    case real: return x;
+    }
+  }
+
+  // Stream output
+  friend std::ostream& operator<<(std::ostream& os, var_number const& vn) {
+    switch(vn.number_type) {
+    case integer: return os << vn.i;
+    case rational: return os << vn.r[0] << " / " << vn.r[1];
+    case real: return os << vn.x;
+    }
+  }
 };
 
 //

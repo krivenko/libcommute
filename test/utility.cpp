@@ -13,6 +13,8 @@
 
 #include <catch.hpp>
 
+#include "print_matcher.hpp"
+
 #include <libcommute/utility.hpp>
 
 #include <complex>
@@ -82,6 +84,47 @@ TEST_CASE("print_tuple()", "[print_tuple]") {
   std::tuple<int, std::string, double> t(5, "Hello, World!", 1.2);
   print_tuple(ss, t);
   CHECK(ss.str() == "5,Hello, World!,1.2");
+}
+
+TEST_CASE("var_number", "[var_number]") {
+  var_number vn1(2);
+  CHECK(vn1.number_type == var_number::integer);
+  CHECK(int(vn1) == 2);
+  CHECK(double(vn1) == 2.0);
+  CHECK_FALSE(vn1.is_zero());
+  CHECK_THAT(vn1, Prints<var_number>("2"));
+  var_number vn2(0);
+  CHECK(vn2.number_type == var_number::integer);
+  CHECK(int(vn2) == 0);
+  CHECK(double(vn2) == 0.0);
+  CHECK(vn2.is_zero());
+  CHECK_THAT(vn2, Prints<var_number>("0"));
+
+  var_number vn3(3, 4);
+  CHECK(vn3.number_type == var_number::rational);
+  CHECK(vn3.numerator() == 3);
+  CHECK(vn3.denominator() == 4);
+  CHECK(double(vn3) == 0.75);
+  CHECK_FALSE(vn3.is_zero());
+  CHECK_THAT(vn3, Prints<var_number>("3 / 4"));
+  var_number vn4(0, 4);
+  CHECK(vn4.number_type == var_number::rational);
+  CHECK(vn4.numerator() == 0);
+  CHECK(vn4.denominator() == 4);
+  CHECK(double(vn4) == 0.0);
+  CHECK(vn4.is_zero());
+  CHECK_THAT(vn4, Prints<var_number>("0 / 4"));
+
+  var_number vn5(4.1);
+  CHECK(vn5.number_type == var_number::real);
+  CHECK(double(vn5) == 4.1);
+  CHECK_FALSE(vn5.is_zero());
+  CHECK_THAT(vn5, Prints<var_number>("4.1"));
+  var_number vn6(0.0);
+  CHECK(vn6.number_type == var_number::real);
+  CHECK(double(vn6) == 0.0);
+  CHECK(vn6.is_zero());
+  CHECK_THAT(vn6, Prints<var_number>("0"));
 }
 
 TEST_CASE("linear_function<T>", "[linear_function]") {
