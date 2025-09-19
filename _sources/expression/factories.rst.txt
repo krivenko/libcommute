@@ -36,11 +36,13 @@ into their complex analogs.
 .. function:: template<typename... IndexTypes> \
               static_indices::expr_complex<IndexTypes...> \
               make_complex(static_indices::expr_real<IndexTypes...> const& e)
+  :nocontentsentry:
 
   Complexify a real expression with statically typed indices.
 
 .. function:: dynamic_indices::expr_complex \
               make_complex(dynamic_indices::expr_real const& e)
+  :nocontentsentry:
 
   Complexify a real expression with dynamic indices.
 
