@@ -48,23 +48,23 @@ void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
   linear_function_t f;
   for(std::size_t i = 0; i < v.size(); ++i) {
     for(std::size_t j = i + 1; j < v.size(); ++j) {
-      double c = v[j]->swap_with(*v[i], f);
+      var_number c = v[j]->swap_with(*v[i], f);
       if(one_half) {
         if(j % 3 == 1 && i == j - 1) { // S_- S_+ = 1/2 - S_z
-          CHECK(c == 0);
-          CHECK_LINEAR_FUNCTION_1(f, 0.5, -1, *v[i + 2]);
+          CHECK(double(c) == 0);
+          CHECK_LINEAR_FUNCTION_1(f, var_number(1, 2), -1, *v[i + 2]);
         } else if(j % 3 == 2 && i == j - 2) { // S_z S_+ = 1/2 S_+
-          CHECK(c == 0);
-          CHECK_LINEAR_FUNCTION_1(f, 0, 0.5, *v[i]);
+          CHECK(double(c) == 0);
+          CHECK_LINEAR_FUNCTION_1(f, 0, var_number(1, 2), *v[i]);
         } else if(j % 3 == 2 && i == j - 1) { // S_z S_- = -1/2 S_-
-          CHECK(c == 0);
-          CHECK_LINEAR_FUNCTION_1(f, 0, -0.5, *v[i]);
+          CHECK(double(c) == 0);
+          CHECK_LINEAR_FUNCTION_1(f, 0, var_number(-1, 2), *v[i]);
         } else {
-          CHECK(c == 1);
+          CHECK(double(c) == 1);
           CHECK_LINEAR_FUNCTION_0(f, 0);
         }
       } else {
-        CHECK(c == 1);
+        CHECK(double(c) == 1);
         if(j % 3 == 1 && i == j - 1) { // S_- S_+ = S_+ * S_- - 2*S_z
           CHECK_LINEAR_FUNCTION_1(f, 0, -2, *v[i + 2]);
         } else if(j % 3 == 2 && i == j - 2) { // S_z S_+ = S_+ * S_z + S_+
@@ -94,16 +94,16 @@ void check_generator_spin_simplify_prod(std::vector<gen_type*> const& v,
           CHECK_LINEAR_FUNCTION_0(f, 0);
         } else if(i % 3 == 2 && j == i) { // S_z * S_z = 1/4
           CHECK(c);
-          CHECK_LINEAR_FUNCTION_0(f, 0.25);
+          CHECK_LINEAR_FUNCTION_0(f, var_number(1, 4));
         } else if(i % 3 == 0 && j == i + 1) { // S_+ * S_- = 1/2 + S_z
           CHECK(c);
-          CHECK_LINEAR_FUNCTION_1(f, 0.5, 1, *v[i + 2]);
+          CHECK_LINEAR_FUNCTION_1(f, var_number(1, 2), 1, *v[i + 2]);
         } else if(i % 3 == 0 && j == i + 2) { // S_+ * S_z = -1/2 S_+
           CHECK(c);
-          CHECK_LINEAR_FUNCTION_1(f, 0, -0.5, *v[i]);
+          CHECK_LINEAR_FUNCTION_1(f, 0, var_number(-1, 2), *v[i]);
         } else if(i % 3 == 1 && j == i + 1) { // S_- * S_z = 1/2 S_-
           CHECK(c);
-          CHECK_LINEAR_FUNCTION_1(f, 0, 0.5, *v[i]);
+          CHECK_LINEAR_FUNCTION_1(f, 0, var_number(1, 2), *v[i]);
         } else {
           CHECK_FALSE(c);
         }
@@ -200,7 +200,7 @@ TEST_CASE("Algebra generators", "[generator]") {
     linear_function_t f;
     for(std::size_t i = 0; i < fermion_ops.size(); ++i) {
       for(std::size_t j = i + 1; j < fermion_ops.size(); ++j) {
-        double c = fermion_ops[j]->swap_with(*fermion_ops[i], f);
+        var_number c = fermion_ops[j]->swap_with(*fermion_ops[i], f);
         CHECK(c == -1);
         CHECK_LINEAR_FUNCTION_0(f, ((j == 2 && i == 1) || (j == 3 && i == 0)));
       }
@@ -239,7 +239,7 @@ TEST_CASE("Algebra generators", "[generator]") {
     linear_function_t f;
     for(std::size_t i = 0; i < boson_ops.size(); ++i) {
       for(std::size_t j = i + 1; j < boson_ops.size(); ++j) {
-        double c = boson_ops[j]->swap_with(*boson_ops[i], f);
+        var_number c = boson_ops[j]->swap_with(*boson_ops[i], f);
         CHECK(c == 1);
         CHECK_LINEAR_FUNCTION_0(f, ((j == 2 && i == 1) || (j == 3 && i == 0)));
       }
@@ -389,7 +389,7 @@ TEST_CASE("Algebra generators", "[generator]") {
     linear_function_t f;
     for(std::size_t i = 0; i < all_ops.size(); ++i) {
       for(std::size_t j = i + 1; j < all_ops.size(); ++j) {
-        double c = swap_with(*all_ops[j], *all_ops[i], f);
+        var_number c = swap_with(*all_ops[j], *all_ops[i], f);
         if(all_ops[j]->algebra_id() != all_ops[i]->algebra_id()) {
           CHECK(c == 1);
           CHECK_LINEAR_FUNCTION_0(f, 0);

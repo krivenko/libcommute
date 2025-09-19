@@ -90,7 +90,8 @@ public:
   // to the product g1 * g2 to put it into the canonical order.
   // swap_with() returns the constant 'c' and writes the linear function f(g)
   // into its second argument. 'c' is allowed to be zero.
-  virtual double swap_with(generator const& g2, linear_function_t& f) const = 0;
+  virtual var_number swap_with(generator const& g2,
+                               linear_function_t& f) const = 0;
 
   // Given a pair g1 = *this and g2 such that g1 * g2 is in the canonical order
   // (g1 <= g2), optionally apply a simplifying transformation
@@ -116,7 +117,7 @@ public:
   }
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t& f) const { f.set(0, clone(), 1.0); }
+  virtual void conj(linear_function_t& f) const { f.set(0, clone(), 1); }
 
   // Stream output
   friend std::ostream& operator<<(std::ostream& os, generator const& g) {
@@ -147,7 +148,7 @@ protected:
 // Check if g1 and g2 belong to the same algebra
 // and call g1.swap_with(g2, f) accordingly
 template <typename... IndexTypes>
-inline double
+inline var_number
 swap_with(generator<IndexTypes...> const& g1,
           generator<IndexTypes...> const& g2,
           linear_function<std::unique_ptr<generator<IndexTypes...>>>& f) {

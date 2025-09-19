@@ -236,14 +236,17 @@ struct linear_function : std::conditional<std::is_copy_constructible<T>::value,
   using basis_type = T;
 
   linear_function() = default;
-  explicit linear_function(double const_term) : const_term(const_term) {}
+  explicit linear_function(var_number const& const_term)
+    : const_term(const_term) {}
   template <typename... Args>
-  linear_function(double const_term, Args&&... args) : const_term(const_term) {
+  linear_function(var_number const& const_term, Args&&... args)
+    : const_term(const_term) {
     static_assert(sizeof...(Args) % 2 == 0,
                   "This constructor requires an odd number of arguments");
     construct_impl(std::forward<Args>(args)...);
   }
-  linear_function(double const_term, std::vector<std::pair<T, double>> terms)
+  linear_function(var_number const& const_term,
+                  std::vector<std::pair<T, var_number>> terms)
     : const_term(const_term), terms(std::move(terms)) {}
 
   linear_function(linear_function const&) = default;
@@ -255,23 +258,23 @@ struct linear_function : std::conditional<std::is_copy_constructible<T>::value,
   ~linear_function() = default;
 
   // Reset contents
-  template <typename... Args> void set(double const_term, Args&&... args) {
+  template <typename... Args> void set(var_number const_term, Args&&... args) {
     this->const_term = const_term;
     terms.clear();
     construct_impl(std::forward<Args>(args)...);
   }
-  void set(double const_term) {
+  void set(var_number const_term) {
     this->const_term = const_term;
     terms.clear();
   }
 
   // Is this linear function identically zero?
-  bool vanishing() const { return const_term == 0 && terms.empty(); }
+  bool vanishing() const { return const_term.is_zero() && terms.empty(); }
 
   // Constant term
-  double const_term = 0;
+  var_number const_term = 0;
   // Basis objects and their respective coefficients
-  std::vector<std::pair<T, double>> terms;
+  std::vector<std::pair<T, var_number>> terms;
 
 private:
   template <typename T1, typename T2, typename... Tail>

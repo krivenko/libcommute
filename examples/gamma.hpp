@@ -60,19 +60,19 @@ public:
   // canonical order,
   //
   // g1 * g2 -> -g2 * g1 + 2\eta(g1, g2)
-  double swap_with(base const& g2, linear_function_t& f) const override {
+  var_number swap_with(base const& g2, linear_function_t& f) const override {
 
     // Do g1 and g2 have the same indices?
     bool diag = base::equal(g2);
 
     // Minkowski metric
     int index = std::get<0>(base::indices());
-    double eta = diag ? (index == 0 ? 1 : -1) : 0;
+    int eta = diag ? (index == 0 ? 1 : -1) : 0;
 
     // Set f(g) to be the constant 2\eta(g1, g2)
     f.set(2 * eta);
 
-    // Return coefficient in front of g2 * g1 in the transformed expression
+    // Return the coefficient in front of g2 * g1 in the transformed expression
     return -1;
   }
 

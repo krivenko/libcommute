@@ -69,7 +69,7 @@ public:
   }
 
   // Generators with different indices or multiplicities commute.
-  double swap_with(base const& g2, linear_function_t& f) const override {
+  var_number swap_with(base const& g2, linear_function_t& f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
     if(base::equal(g2) && this->multiplicity_ == g2_.multiplicity_) {
@@ -96,16 +96,16 @@ public:
     if(!base::equal(g2) || this->multiplicity_ != 2) return false;
 
     if(this->c_ == g2_.c_) {
-      f.set(this->c_ == spin_component::z ? 0.25 : 0);
+      f.set(this->c_ == spin_component::z ? var_number(1, 4) : var_number(0));
     } else {
       if(g2_.c_ == spin_component::z) {
         if(this->c_ == spin_component::plus) {
-          f.set(0, clone(), -0.5);
+          f.set(0, clone(), var_number(-1, 2));
         } else { /// c_ == spin_component::minus
-          f.set(0, clone(), 0.5);
+          f.set(0, clone(), var_number(1, 2));
         }
       } else { // c_ == spin_component::plus && g2.c_ == spin_component::minus
-        f.set(0.5, g2_.clone(), 1);
+        f.set(var_number(1, 2), g2_.clone(), 1);
         dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
             spin_component::z;
       }
@@ -197,16 +197,16 @@ private:
   //  S_- * S_+ = 1/2 - S_z
   //  S_z * S_+ = 1/2 S_+
   //  S_z * S_- = -1/2 S_-
-  double swap_with_spin_one_half(generator_spin const& g2_,
-                                 linear_function_t& f) const {
+  var_number swap_with_spin_one_half(generator_spin const& g2_,
+                                     linear_function_t& f) const {
     if(c_ == spin_component::z) {
       if(g2_.c_ == spin_component::plus) {
-        f.set(0, g2_.clone(), 0.5);
+        f.set(0, g2_.clone(), var_number(1, 2));
       } else { /// g2.c_ == spin_component::minus
-        f.set(0, g2_.clone(), -0.5);
+        f.set(0, g2_.clone(), var_number(-1, 2));
       }
     } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
-      f.set(0.5, g2_.clone(), -1);
+      f.set(var_number(1, 2), g2_.clone(), -1);
       dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
           spin_component::z;
     }
@@ -216,8 +216,8 @@ private:
   //  S_- * S_+ = S_+ * S_- - 2*S_z
   //  S_z * S_+ = S_+ * S_z + S_+
   //  S_z * S_- = S_- * S_z - S_-
-  double swap_with_higher_spin(generator_spin const& g2_,
-                               linear_function_t& f) const {
+  var_number swap_with_higher_spin(generator_spin const& g2_,
+                                   linear_function_t& f) const {
 
     if(c_ == spin_component::z) {
       if(g2_.c_ == spin_component::plus) {

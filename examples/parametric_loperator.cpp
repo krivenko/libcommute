@@ -119,8 +119,10 @@ template <> struct scalar_traits<polynomial> {
       return c == 0;
     });
   }
-  // Make a constant polynomial from a double value
-  static polynomial make_const(double x) { return polynomial{x}; }
+  // Make a constant polynomial from a constant
+  static polynomial make_const(var_number const& x) {
+    return polynomial{double(x)};
+  }
 };
 
 } // namespace libcommute

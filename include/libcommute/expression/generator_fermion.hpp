@@ -56,10 +56,10 @@ public:
   }
 
   // c = -1, f(g) = \delta(g1, g2^+)
-  double swap_with(base const& g2, linear_function_t& f) const override {
+  var_number swap_with(base const& g2, linear_function_t& f) const override {
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_fermion const&>(g2);
-    auto delta = static_cast<double>(base::equal(g2) && dagger_ != g2_.dagger_);
+    auto delta = static_cast<int>(base::equal(g2) && dagger_ != g2_.dagger_);
     f.set(delta);
     return -1;
   }

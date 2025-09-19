@@ -30,7 +30,7 @@
 using namespace libcommute;
 
 TEST_CASE("Action of a bosonic monomial on an index",
-          "[monomial_action_fermion]") {
+          "[monomial_action_boson]") {
 
   using namespace static_indices;
 

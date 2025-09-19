@@ -73,7 +73,7 @@ public:
   // L_m * L_n -> L_n * L_m + (m-n)*L_{m+n} + c(m^3 - m)\delta(m,-n)
   //
   // L_m will be passed to swap_with() as *this, i.e. L_m.swap_with(L_n, f).
-  double swap_with(base const& L_n, linear_function_t& f) const override {
+  var_number swap_with(base const& L_n, linear_function_t& f) const override {
     // Ensure that L_m > L_n, or equivalently m > n.
     assert(*this > L_n);
 

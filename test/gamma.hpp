@@ -51,7 +51,7 @@ public:
   }
 
   // c = -1, f(g) = 2\eta(g1, g2)
-  double swap_with(base const& g2, linear_function_t& f) const final {
+  var_number swap_with(base const& g2, linear_function_t& f) const final {
     assert(*this > g2);
     bool diag = base::equal(g2);
     f.set(diag * (std::get<0>(base::indices()) == 0 ? 2 : -2));

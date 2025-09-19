@@ -134,11 +134,11 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f0.vanishing());
 
   linear_function<std::string> f1(3.0);
-  CHECK(f1.const_term == 3.0);
+  CHECK(f1.const_term == var_number(3.0));
   CHECK(f1.terms.empty());
   CHECK_FALSE(f1.vanishing());
 
-  std::vector<std::pair<std::string, double>> terms = {
+  std::vector<std::pair<std::string, var_number>> terms = {
       std::make_pair("obj1", 2.0),
       std::make_pair("obj2", 3.0)};
   linear_function<std::string> f2(4.0, terms);
