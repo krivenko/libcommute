@@ -66,9 +66,13 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 .. _algebra_ids:
 
 .. var:: static constexpr int fermion = -3
+  :nocontentsentry:
 .. var:: static constexpr int boson = -2
+  :nocontentsentry:
 .. var:: static constexpr int spin = -1
+  :nocontentsentry:
 .. var:: static constexpr int min_user_defined_algebra_id = 0
+  :nocontentsentry:
 
 .. _gen_base:
 
