@@ -176,13 +176,16 @@ struct var_number {
   // cppcheck-suppress noExplicitConstructor
   inline var_number(double x) : x(x), number_type(real) {}
 
-  inline bool operator==(var_number const& vn) const {
-    if(number_type != vn.number_type) return false;
-    switch(number_type) {
-    case integer: return i == vn.i;
-    case rational: return (r[0] == vn.r[0]) && (r[1] == vn.r[1]);
-    case real: return x == vn.x;
+  inline friend bool operator==(var_number const& vn1, var_number const& vn2) {
+    if(vn1.number_type != vn2.number_type) return false;
+    switch(vn1.number_type) {
+    case integer: return vn1.i == vn2.i;
+    case rational: return (vn1.r[0] == vn2.r[0]) && (vn1.r[1] == vn2.r[1]);
+    case real: return vn1.x == vn2.x;
     }
+  }
+  inline friend bool operator!=(var_number const& vn1, var_number const& vn2) {
+    return !operator==(vn1, vn2);
   }
 
   inline bool is_zero() const {
