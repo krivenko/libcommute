@@ -62,7 +62,7 @@ public:
   // g1 * g2 -> -g2 * g1 + 2\eta(g1, g2)
   var_number swap_with(base const& g2, linear_function_t& f) const override {
 
-    // Do g1 and g2 have the same indices?
+    // Do g1 and g2 have the same index?
     bool diag = base::equal(g2);
 
     // Minkowski metric

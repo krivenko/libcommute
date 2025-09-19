@@ -250,7 +250,7 @@ Class definitions
 Custom scalar types
 -------------------
 
-Choosing :expr:`double` or :expr:`std::complex<double>` as the scalar type of
+Choosing ``double`` or ``std::complex<double>`` as the scalar type of
 expressions covers the vast majority of practically important cases.
 Nonetheless, sometimes it may be desirable to go beyond and pass a
 user-defined type as :type:`ScalarType <libcommute::expression::ScalarType>`.
@@ -291,11 +291,28 @@ how to deal with the new type.
     // Make a constant of type 'S' from a double value 'x'
     static S make_const(double x) { ... }
 
+    // Make a constant of type 'S' from a value of the variadic type
+    // 'var_number'
+    static S make_const(var_number const& vn) { ... }
+
     // OPTIONAL: Complex conjugate of 's'
     static S conj(S const& s) { ... }
   };
 
   }
+
+*libcommute* uses the variadic :expr:`var_number` objects to store structure
+constants of supported algebras along with the information about their type.
+Not every single :type:`ScalarType <libcommute::expression::ScalarType>` is
+compatible with any :ref:`algebra generator<generator>`. For example, an integer
+scalar type can be used to build an expression involving the
+:ref:`fermionic operators <generator_fermion>`, but not the
+:ref:`half-integer-spin ones <generator_spin>`, because multiplication of the
+latter introduces more general rational coefficients into expressions.
+For this reason, the static function
+:expr:`scalar_traits<S>::make_const(var_number const& vn)` must check the type
+of the value stored in :expr:`vn` (accessible via :expr:`vn.number_type`),
+and throw a :class:`std::runtime_error` if it cannot be converted to :expr:`S`.
 
 The static member :expr:`scalar_traits<S>::conj()` is optional and will only be
 called by the Hermitian conjugation function

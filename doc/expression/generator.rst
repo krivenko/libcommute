@@ -150,7 +150,7 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
   .. rubric:: Product simplification/transformation
 
-  .. function:: virtual double swap_with\
+  .. function:: virtual var_number swap_with\
                 (generator const& g2, linear_function_t & f) const = 0
 
     Given a pair of generators :math:`g_1` (:expr:`*this`) and :math:`g_2`
@@ -167,7 +167,7 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
     Given a pair of generators :math:`g_1` (:expr:`*this`) and :math:`g_2` such
     that :math:`g_1 g_2` is in the canonical order (:math:`g_1 \leq g_2`),
     optionally apply a simplifying transformation :math:`g_1 g_2 \mapsto f(g)`.
-    If a simplification is actually possible, :expr:`simplified_prod()` must
+    If a simplification is actually possible, :expr:`simplify_prod()` must
     return :expr:`true` and write the linear function :math:`f(g)` into its
     second argument. Otherwise return :expr:`false`.
 
@@ -206,11 +206,75 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
     Virtual stream output function to be overridden by the derived classes.
 
 
+.. struct:: var_number
+
+  *Defined in <libcommute/utility.hpp>*
+
+  A variadic type that holds an integer, a rational number or a general real
+  floating point number. The actual type of the incapsulated value is determined
+  at construction time.
+
+  .. function:: var_number(int i)
+
+    Construct an object holding an integer value ``i``.
+
+  .. function:: var_number(int num, int denom)
+
+    Construct an object holding a rational value ``num / denom``.
+
+  .. function:: var_number(double x)
+
+    Construct an object holding a real floating point value ``x``.
+
+  .. enum:: @number_type
+
+    .. enumerator:: integer
+    .. enumerator:: rational
+    .. enumerator:: real
+
+  .. var:: @number_type number_type
+
+      Type of the stored value.
+
+  .. function:: friend bool operator==(var_number const& vn1, \
+                                       var_number const& vn2)
+                friend bool operator!=(var_number const& vn1, \
+                                       var_number const& vn2)
+
+    Compare the values stored in two :expr:`var_number` objects. Two objects
+    storing values of different types are considered unequal even if the values
+    coincide numerically.
+
+  .. function:: bool is_zero() const
+
+    Check whether the stored value is exactly zero.
+
+  .. function:: explicit operator int() const
+
+    Retrieve the stored value assuming that it is an integer.
+
+  .. function:: explicit operator double() const
+
+    Convert the stored value to a floating point number.
+
+  .. function:: int numerator() const
+
+    Assume that a rational value is stored and retrieve its numerator.
+
+  .. function:: int denominator() const
+
+    Assume that a rational value is stored and retrieve its denominator.
+
+  .. function:: friend std::ostream& operator<< \
+                (std::ostream& os, var_number const& vn)
+
+    Output stream insertion operator.
+
 .. struct:: template<typename T> linear_function
 
   *Defined in <libcommute/utility.hpp>*
 
-  A linear function of objects of type :expr:`T` with :expr:`double`
+  A linear function of objects of type :expr:`T` with :struct:`var_number`
   coefficients,
 
   .. math::
@@ -219,11 +283,11 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
   .. type:: basis_type = T
 
-  .. member:: double const_term = 0;
+  .. member:: var_number const_term = 0;
 
     Constant term :math:`c`.
 
-  .. member:: std::vector<std::pair<T, double>> terms
+  .. member:: std::vector<std::pair<T, var_number>> terms
 
     List of pairs :math:`(x_1, c_1), \ldots, (x_n, c_n)`.
 
@@ -231,22 +295,22 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
     Construct an identically vanishing function :math:`f(x_1, \ldots, x_n) = 0`.
 
-  .. function:: linear_function(double const_term)
+  .. function:: linear_function(var_number const& const_term)
 
     Construct a constant function :math:`f(x_1, \ldots, x_n) = c`.
 
-  .. function:: linear_function(double const_term, Args&&... args)
+  .. function:: linear_function(var_number const& const_term, Args&&... args)
 
     Construct a linear function from a sequence of arguments
     :math:`c, x_1, c_1, x_2, c_2, \ldots, x_n, c_n`.
 
-  .. function:: linear_function(double const_term, \
-                                std::vector<std::pair<T, double>> terms)
+  .. function:: linear_function(var_number const& const_term, \
+                                std::vector<std::pair<T, var_number>> terms)
 
     Construct a linear function from a constant term and a list of pairs
     :math:`(x_1, c_1), \ldots, (x_n, c_n)`.
 
-  .. function:: void set(double const_term, Args&&... args)
+  .. function:: void set(var_number const& const_term, Args&&... args)
 
     Clear all terms and replace them with a sequence of arguments
     :math:`c, x_1, c_1, x_2, c_2, \ldots, x_n, c_n`.
