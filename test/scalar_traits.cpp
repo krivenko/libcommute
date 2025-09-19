@@ -34,6 +34,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<int>::is_zero(4));
     CHECK(scalar_traits<int>::make_const(0) == 0);
     CHECK(scalar_traits<int>::make_const(1) == 1);
+    CHECK(scalar_traits<int>::make_const(var_number(2)) == 2);
     CHECK(scalar_traits<int>::conj(4) == 4);
   }
 
@@ -42,6 +43,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<long>::is_zero(4));
     CHECK(scalar_traits<long>::make_const(0) == 0);
     CHECK(scalar_traits<long>::make_const(1) == 1);
+    CHECK(scalar_traits<long>::make_const(var_number(2)) == 2);
     CHECK(scalar_traits<long>::conj(4) == 4);
   }
 
@@ -51,6 +53,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<float>::is_zero(4.0));
     CHECK(scalar_traits<float>::make_const(0) == .0);
     CHECK(scalar_traits<float>::make_const(1) == 1.0);
+    CHECK(scalar_traits<float>::make_const(var_number(2.0)) == 2.0);
     CHECK(scalar_traits<float>::conj(4.0) == 4.0);
   }
 
@@ -60,6 +63,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<double>::is_zero(4.0));
     CHECK(scalar_traits<double>::make_const(0) == .0);
     CHECK(scalar_traits<double>::make_const(1) == 1.0);
+    CHECK(scalar_traits<double>::make_const(var_number(2.0)) == 2.0);
     CHECK(scalar_traits<double>::conj(4.0) == 4.0);
   }
 
@@ -86,6 +90,7 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<cmplx>::is_zero(cmplx(4.0, 4.0)));
     CHECK(scalar_traits<cmplx>::make_const(0) == cmplx(0));
     CHECK(scalar_traits<cmplx>::make_const(1) == cmplx(1.0));
+    CHECK(scalar_traits<cmplx>::make_const(var_number(2.0)) == cmplx(2.0));
     CHECK(scalar_traits<cmplx>::conj(cmplx(1.0, 2.0)) == cmplx(1.0, -2.0));
   }
 
@@ -96,6 +101,8 @@ TEST_CASE("Traits of scalar types", "[scalar_traits]") {
     CHECK_FALSE(scalar_traits<my_complex>::is_zero(my_complex{4, 4}));
     CHECK(scalar_traits<my_complex>::make_const(0) == my_complex{0, 0});
     CHECK(scalar_traits<my_complex>::make_const(1) == my_complex{1, 0});
+    CHECK(scalar_traits<my_complex>::make_const(var_number(2)) ==
+          my_complex{2, 0});
     CHECK(scalar_traits<my_complex>::conj(my_complex{1, 2}) ==
           my_complex{1, -2});
   }

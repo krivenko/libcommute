@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_SCALAR_TRAITS_HPP_
 
 #include "metafunctions.hpp"
+#include "utility.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -40,7 +41,7 @@ template <template <typename> class Trait, typename T>
 using with_trait = typename std::enable_if<Trait<T>::value>::type;
 
 // Traits of types that can be used as the ScalarType parameter of `expression`.
-// User-defined scalar types need to spcialize this structure.
+// User-defined scalar types need to specialize this structure.
 template <typename S, typename = void> struct scalar_traits {};
 
 //
@@ -53,6 +54,11 @@ template <typename S> struct scalar_traits<S, with_trait<std::is_integral, S>> {
   static S make_const(double x) {
     assert(std::nearbyint(x) == x);
     return S(std::nearbyint(x));
+  }
+  // Make a constant from a variadic number
+  static S make_const(var_number const& vn) {
+    assert(vn.number_type == var_number::integer);
+    return S(int(vn));
   }
   // Complex conjugate of x
   static S conj(S const& x) { return x; }
@@ -70,6 +76,8 @@ struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
   }
   // Make a constant from a double value
   static S make_const(double x) { return x; }
+  // Make a constant from a variadic number
+  static S make_const(var_number const& vn) { return S(double(vn)); }
   // Complex conjugate of x
   static S conj(S const& x) { return x; }
 };
@@ -86,6 +94,8 @@ template <typename S> struct scalar_traits<S, with_trait<is_complex, S>> {
   }
   // Make a constant from a double value
   static S make_const(double x) { return S(x); }
+  // Make a constant from a variadic number
+  static S make_const(var_number const& vn) { return S(double(vn)); }
   // Complex conjugate of x
   static S conj(S const& x) { return std::conj(x); }
 };

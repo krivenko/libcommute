@@ -81,7 +81,9 @@ template <> struct scalar_traits<my_complex> {
   // Zero value test
   static bool is_zero(my_complex const& x) { return x.re == 0 && x.im == 0; }
   // Make a constant from a double value
-  static my_complex make_const(double x) { return {static_cast<float>(x), 0}; }
+  static my_complex make_const(var_number const& x) {
+    return {static_cast<float>(double(x)), 0};
+  }
   // Real part of x
   static my_complex real(my_complex const& x) { return {x.re, 0}; }
   // Imaginary part of x
