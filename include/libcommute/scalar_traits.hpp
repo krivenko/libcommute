@@ -16,10 +16,12 @@
 #include "metafunctions.hpp"
 #include "utility.hpp"
 
-#include <cassert>
 #include <cmath>
 #include <complex>
 #include <limits>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 #include <type_traits>
 #include <utility>
 
@@ -52,12 +54,20 @@ template <typename S> struct scalar_traits<S, with_trait<std::is_integral, S>> {
   static bool is_zero(S const& x) { return x == 0; }
   // Make a constant from a double value
   static S make_const(double x) {
-    assert(std::nearbyint(x) == x);
+    if(std::nearbyint(x) != x) {
+      throw std::runtime_error("Cannot convert " + std::to_string(x) +
+                               " to an integral ScalarType");
+    }
     return S(std::nearbyint(x));
   }
   // Make a constant from a variadic number
   static S make_const(var_number const& vn) {
-    assert(vn.number_type == var_number::integer);
+    if(vn.number_type != var_number::integer) {
+      std::stringstream ss;
+      ss << vn;
+      throw std::runtime_error("Cannot convert the variadic number " +
+                               ss.str() + " to an integral ScalarType");
+    }
     return S(int(vn));
   }
   // Complex conjugate of x
