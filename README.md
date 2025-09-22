@@ -36,7 +36,7 @@ Installation
 *libcommute* is usable without installation, just add
 `-I/<path_to_libcommute_sources>/include` to the compiler command line.
 
-You will need CMake version 3.8.0 or newer [1] to build examples/unit tests and
+You will need CMake version 3.10.0 or newer [1] to build examples/unit tests and
 to install *libcommute* so that it can be used from other CMake projects.
 
 Assuming that *libcommute* is to be installed in `<libcommute_prefix>`,
@@ -65,7 +65,7 @@ Once *libcommute* is installed, you can use it in your CMake project. Here is
 a minimal example of an application `CMakeLists.txt` file.
 
 ```cmake
-  cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
+  cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
 
   project(myproject LANGUAGES CXX)
 

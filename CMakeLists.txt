@@ -9,7 +9,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 # Start configuration
-cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
 
 # Project name and version
 set(LIBCOMMUTE_VERSION 0.8.0)
@@ -104,7 +104,7 @@ if(DOCUMENTATION)
   message(STATUS "Building documentation")
 
   # FindPythonInterp has been deprecated since 3.12,
-  # but we still require only 3.8.
+  # but we still require only 3.10.
   cmake_policy(SET CMP0148 OLD)
 
   # Detect Sphinx, sphinx_rtd_theme and myst-parser

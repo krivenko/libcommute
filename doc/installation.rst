@@ -21,7 +21,7 @@ If your project uses `CMake <https://cmake.org/download/>`_ as its build system,
 you might want to install *libcommute* header files along with CMake
 configuration scripts. This will allow you to import *libcommute* targets,
 as well as to run unit tests and build example programs.
-The minimum required version of CMake is **3.8.0**.
+The minimum required version of CMake is **3.10.0**.
 
 The following sequence of shell commands will build unit tests and examples.
 
