@@ -73,6 +73,12 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
         DESTINATION share/pkgconfig
 )
 
+# Optionally find Boost
+find_package(Boost 1.70 CONFIG)
+if(Boost_FOUND)
+  message(STATUS "Found Boost version ${Boost_VERSION}")
+endif(Boost_FOUND)
+
 # Optionally find Eigen 3
 if(NOT POLICY CMP0074)
   set(Eigen3_DIR ${Eigen3_ROOT}/share/eigen3/cmake)

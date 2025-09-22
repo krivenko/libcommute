@@ -83,6 +83,18 @@ else()
   message(STATUS "Disabling C++17 tests")
 endif()
 
+# Tests using Boost
+if(Boost_FOUND)
+  message(STATUS "Enabling Boost tests")
+  set(BOOST_TESTS boost_rational)
+  foreach(t ${BOOST_TESTS})
+    set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
+    add_executable(${t} ${s})
+    target_link_libraries(${t} PRIVATE libcommute catch2 Boost::boost)
+    add_test(NAME ${t} COMMAND ${t})
+  endforeach()
+endif(Boost_FOUND)
+
 # Tests using Eigen 3
 if(Eigen3_FOUND)
   message(STATUS "Enabling Eigen 3 tests")
