@@ -276,7 +276,7 @@ instances must be
 
 Let us say we have a type :expr:`S` with the required algebraic properties.
 Before using it as a scalar type, we must define a specialization of structure
-:expr:`scalar_traits` in the namespace :expr:`libcommute` to teach *libcommute*
+:expr:`scalar_traits` in the namespace ``libcommute`` to teach *libcommute*
 how to deal with the new type.
 
 .. code-block:: cpp
@@ -303,18 +303,18 @@ how to deal with the new type.
 
 *libcommute* uses the variadic :expr:`var_number` objects to store structure
 constants of supported algebras along with the information about their type.
-Not every single :type:`ScalarType <libcommute::expression::ScalarType>` is
-compatible with any :ref:`algebra generator<generator>`. For example, an integer
-scalar type can be used to build an expression involving the
+**Not every single** :type:`ScalarType <libcommute::expression::ScalarType>`
+**is compatible with any** :ref:`algebra generator<generator>`. For example,
+an integer scalar type can be used to build an expression involving the
 :ref:`fermionic operators <generator_fermion>`, but not the
 :ref:`half-integer-spin ones <generator_spin>`, because multiplication of the
 latter introduces more general rational coefficients into expressions.
 For this reason, the static function
-:expr:`scalar_traits<S>::make_const(var_number const& vn)` must check the type
-of the value stored in :expr:`vn` (accessible via :expr:`vn.number_type`),
-and throw a :class:`std::runtime_error` if it cannot be converted to :expr:`S`.
+``scalar_traits<S>::make_const(var_number const& vn)`` must check the type
+of the value stored in ``vn`` (accessible via ``vn.number_type``),
+and throw a :class:`std::runtime_error` if it cannot be converted to ``S``.
 
-The static member :expr:`scalar_traits<S>::conj()` is optional and will only be
+The static member ``scalar_traits<S>::conj()`` is optional and will only be
 called by the Hermitian conjugation function
 :func:`conj() <libcommute::expression::conj()>`.
 

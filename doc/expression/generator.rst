@@ -347,6 +347,11 @@ In other words,
 - Creation operator with the smallest index sequence comes first;
 - Annihilation operator with the smallest index sequence comes last.
 
+Generators of the fermionic algebra are compatible with
+:ref:`expressions <expression>` of any
+:type:`ScalarType <libcommute::expression::ScalarType>`, including integer,
+rational and general real scalars.
+
 .. class:: template<typename... IndexTypes> \
            generator_fermion : public generator<IndexTypes...>
 
@@ -430,6 +435,11 @@ In other words,
 - Creation operators precede annihilation operators;
 - Creation operator with the smallest index sequence comes first;
 - Annihilation operator with the smallest index sequence comes last.
+
+Generators of the bosonic algebra are compatible with
+:ref:`expressions <expression>` of any
+:type:`ScalarType <libcommute::expression::ScalarType>`, including integer,
+rational and general real scalars.
 
 .. class:: template<typename... IndexTypes> \
            generator_boson : public generator<IndexTypes...>
@@ -529,6 +539,11 @@ In other words,
   index sequence comes first.
 - Among operators with the same :math:`S` and index sequence, :math:`S_+` comes
   first followed by :math:`S_-` and eventually by :math:`S_z`.
+
+Generators of the spin algebra are incompatible with
+:ref:`expressions <expression>` of an integer
+:type:`ScalarType <libcommute::expression::ScalarType>`, and require at least
+rational scalars.
 
 .. enum:: spin_component : std::uint8_t
 
