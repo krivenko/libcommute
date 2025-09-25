@@ -36,10 +36,10 @@ TEST_CASE("Scalar traits of boost::rational", "[boost_rational]") {
   CHECK(scalar_traits<rational_t>::conj(rational_t(4)) == rational_t(4));
 
   SECTION("Result types of arithmetic operations") {
-    CHECK(std::is_same<minus_type<rational_t>, rational_t>::value);
-    CHECK(std::is_same<sum_type<rational_t, rational_t>, rational_t>::value);
-    CHECK(std::is_same<diff_type<rational_t, rational_t>, rational_t>::value);
-    CHECK(std::is_same<mul_type<rational_t, rational_t>, rational_t>::value);
+    CHECK(std::is_same<uminus_res_t<rational_t>, rational_t>::value);
+    CHECK(std::is_same<sum_res_t<rational_t, rational_t>, rational_t>::value);
+    CHECK(std::is_same<diff_res_t<rational_t, rational_t>, rational_t>::value);
+    CHECK(std::is_same<mul_res_t<rational_t, rational_t>, rational_t>::value);
   }
 
   SECTION("Detect availability of compound assignments") {

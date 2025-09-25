@@ -23,7 +23,7 @@ namespace libcommute {
 //
 // Inspired by https://github.com/dafer45/TBTK
 //
-static constexpr struct {
+static constexpr struct hc_type {
 } hc;
 
 template <typename ScalarType, typename... IndexTypes>
@@ -39,6 +39,9 @@ operator-(expression<ScalarType, IndexTypes...> const& expr,
           decltype(hc) const&) {
   return expr - conj(expr);
 }
+
+// 'hc' is not allowed to be used as a scalar
+template <> struct is_scalar<hc_type> : std::false_type {};
 
 } // namespace libcommute
 

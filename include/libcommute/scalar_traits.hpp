@@ -114,24 +114,35 @@ template <typename S> struct scalar_traits<S, with_trait<is_complex, S>> {
 // Result types of arithmetic operations
 //
 
-// Type of unary minus result
-template <typename S> using minus_type = decltype(-std::declval<S>());
+template <typename S> struct uminus_res {
+  using type = decltype(-std::declval<S>());
+};
+template <typename S> using uminus_res_t = typename uminus_res<S>::type;
 
 // Type of sum of two objects with types S1 and S2
+template <typename S1, typename S2> struct sum_res {
+  using type = decltype(std::declval<S1>() + std::declval<S2>());
+};
 template <typename S1, typename S2>
-using sum_type = decltype(std::declval<S1>() + std::declval<S2>());
+using sum_res_t = typename sum_res<S1, S2>::type;
 
 // Type of difference of two objects with types S1 and S2
+template <typename S1, typename S2> struct diff_res {
+  using type = decltype(std::declval<S1>() - std::declval<S2>());
+};
 template <typename S1, typename S2>
-using diff_type = decltype(std::declval<S1>() - std::declval<S2>());
+using diff_res_t = typename diff_res<S1, S2>::type;
 
 // Type of product of two objects with types S1 and S2
+template <typename S1, typename S2> struct mul_res {
+  using type = decltype(std::declval<S1>() * std::declval<S2>());
+};
 template <typename S1, typename S2>
-using mul_type = decltype(std::declval<S1>() * std::declval<S2>());
+using mul_res_t = typename mul_res<S1, S2>::type;
 
 //
 // Given a pair of types S1, S2 and a binary operation OP, define a trait
-// structure that detect whether 'S1 OP S2' is a valid expression.
+// structure that detects whether 'S1 OP S2' is a valid expression.
 //
 #define DEFINE_HAS_OP(NAME, OP)                                                \
   template <typename S1, typename S2, typename = void>                         \

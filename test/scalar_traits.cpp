@@ -112,58 +112,58 @@ TEST_CASE("Result types of arithmetic operations", "[arithmetic_result_type]") {
   using cmplx = std::complex<double>;
 
   SECTION("minus") {
-    CHECK(std::is_same<minus_type<long>, long>::value);
-    CHECK(std::is_same<minus_type<double>, double>::value);
-    CHECK(std::is_same<minus_type<cmplx>, cmplx>::value);
+    CHECK(std::is_same<uminus_res_t<long>, long>::value);
+    CHECK(std::is_same<uminus_res_t<double>, double>::value);
+    CHECK(std::is_same<uminus_res_t<cmplx>, cmplx>::value);
   }
 
   SECTION("sum") {
-    CHECK(std::is_same<sum_type<long, long>, long>::value);
-    CHECK(std::is_same<sum_type<long, double>, double>::value);
-    CHECK(std::is_same<sum_type<double, long>, double>::value);
-    CHECK(std::is_same<sum_type<double, double>, double>::value);
+    CHECK(std::is_same<sum_res_t<long, long>, long>::value);
+    CHECK(std::is_same<sum_res_t<long, double>, double>::value);
+    CHECK(std::is_same<sum_res_t<double, long>, double>::value);
+    CHECK(std::is_same<sum_res_t<double, double>, double>::value);
 
-    CHECK(std::is_same<sum_type<double, cmplx>, cmplx>::value);
-    CHECK(std::is_same<sum_type<cmplx, double>, cmplx>::value);
-    CHECK(std::is_same<sum_type<cmplx, cmplx>, cmplx>::value);
+    CHECK(std::is_same<sum_res_t<double, cmplx>, cmplx>::value);
+    CHECK(std::is_same<sum_res_t<cmplx, double>, cmplx>::value);
+    CHECK(std::is_same<sum_res_t<cmplx, cmplx>, cmplx>::value);
   }
 
   SECTION("difference") {
-    CHECK(std::is_same<diff_type<long, long>, long>::value);
-    CHECK(std::is_same<diff_type<long, double>, double>::value);
-    CHECK(std::is_same<diff_type<double, long>, double>::value);
-    CHECK(std::is_same<diff_type<double, double>, double>::value);
+    CHECK(std::is_same<diff_res_t<long, long>, long>::value);
+    CHECK(std::is_same<diff_res_t<long, double>, double>::value);
+    CHECK(std::is_same<diff_res_t<double, long>, double>::value);
+    CHECK(std::is_same<diff_res_t<double, double>, double>::value);
 
-    CHECK(std::is_same<diff_type<double, cmplx>, cmplx>::value);
-    CHECK(std::is_same<diff_type<cmplx, double>, cmplx>::value);
-    CHECK(std::is_same<diff_type<cmplx, cmplx>, cmplx>::value);
+    CHECK(std::is_same<diff_res_t<double, cmplx>, cmplx>::value);
+    CHECK(std::is_same<diff_res_t<cmplx, double>, cmplx>::value);
+    CHECK(std::is_same<diff_res_t<cmplx, cmplx>, cmplx>::value);
   }
 
   SECTION("multiplication") {
-    CHECK(std::is_same<mul_type<long, long>, long>::value);
-    CHECK(std::is_same<mul_type<long, double>, double>::value);
-    CHECK(std::is_same<mul_type<double, long>, double>::value);
-    CHECK(std::is_same<mul_type<double, double>, double>::value);
+    CHECK(std::is_same<mul_res_t<long, long>, long>::value);
+    CHECK(std::is_same<mul_res_t<long, double>, double>::value);
+    CHECK(std::is_same<mul_res_t<double, long>, double>::value);
+    CHECK(std::is_same<mul_res_t<double, double>, double>::value);
 
-    CHECK(std::is_same<mul_type<double, cmplx>, cmplx>::value);
-    CHECK(std::is_same<mul_type<cmplx, double>, cmplx>::value);
-    CHECK(std::is_same<mul_type<cmplx, cmplx>, cmplx>::value);
+    CHECK(std::is_same<mul_res_t<double, cmplx>, cmplx>::value);
+    CHECK(std::is_same<mul_res_t<cmplx, double>, cmplx>::value);
+    CHECK(std::is_same<mul_res_t<cmplx, cmplx>, cmplx>::value);
   }
 
   SECTION("my_complex") {
-    CHECK(std::is_same<minus_type<my_complex>, my_complex>::value);
+    CHECK(std::is_same<uminus_res_t<my_complex>, my_complex>::value);
 
-    CHECK(std::is_same<sum_type<my_complex, int>, my_complex>::value);
-    CHECK(std::is_same<sum_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<sum_type<my_complex, my_complex>, my_complex>::value);
+    CHECK(std::is_same<sum_res_t<my_complex, int>, my_complex>::value);
+    CHECK(std::is_same<sum_res_t<int, my_complex>, my_complex>::value);
+    CHECK(std::is_same<sum_res_t<my_complex, my_complex>, my_complex>::value);
 
-    CHECK(std::is_same<diff_type<my_complex, int>, my_complex>::value);
-    CHECK(std::is_same<diff_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<diff_type<my_complex, my_complex>, my_complex>::value);
+    CHECK(std::is_same<diff_res_t<my_complex, int>, my_complex>::value);
+    CHECK(std::is_same<diff_res_t<int, my_complex>, my_complex>::value);
+    CHECK(std::is_same<diff_res_t<my_complex, my_complex>, my_complex>::value);
 
-    CHECK(std::is_same<mul_type<my_complex, int>, my_complex>::value);
-    CHECK(std::is_same<mul_type<int, my_complex>, my_complex>::value);
-    CHECK(std::is_same<mul_type<my_complex, my_complex>, my_complex>::value);
+    CHECK(std::is_same<mul_res_t<my_complex, int>, my_complex>::value);
+    CHECK(std::is_same<mul_res_t<int, my_complex>, my_complex>::value);
+    CHECK(std::is_same<mul_res_t<my_complex, my_complex>, my_complex>::value);
   }
 }
 
@@ -218,19 +218,19 @@ struct ST3 {
     a += x.a;
     return *this;
   }
-  ST3 operator+(ST2 const& x) { return {a + 2 * x.a}; }
+  ST3 operator+(ST2 const& x) const { return {a + 2 * x.a}; }
 
   ST3& operator-=(ST1 const& x) {
     a -= x.a;
     return *this;
   }
-  ST3 operator-(ST2 const& x) { return {a - 2 * x.a}; }
+  ST3 operator-(ST2 const& x) const { return {a - 2 * x.a}; }
 
   ST3& operator*=(ST1 const& x) {
     a *= x.a;
     return *this;
   }
-  ST3 operator*(ST2 const& x) { return {a * 2 * x.a}; }
+  ST3 operator*(ST2 const& x) const { return {a * 2 * x.a}; }
 };
 
 TEST_CASE("Functions *_assign()", "[op_assign]") {
