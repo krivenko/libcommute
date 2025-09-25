@@ -95,6 +95,19 @@ if(Boost_FOUND)
   endforeach()
 endif(Boost_FOUND)
 
+# Tests using GMP C++ bindings
+if(GMPXX_FOUND)
+  message(STATUS "Enabling GMPXX tests")
+  set(GMPXX_TESTS gmpxx_scalars)
+  foreach(t ${GMPXX_TESTS})
+    set(s ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
+    add_executable(${t} ${s})
+    target_link_libraries(${t} PRIVATE libcommute catch2)
+    link_to_gmpxx(${t})
+    add_test(NAME ${t} COMMAND ${t})
+  endforeach()
+endif(GMPXX_FOUND)
+
 # Tests using Eigen 3
 if(Eigen3_FOUND)
   message(STATUS "Enabling Eigen 3 tests")

@@ -79,6 +79,19 @@ if(Boost_FOUND)
   message(STATUS "Found Boost version ${Boost_VERSION}")
 endif(Boost_FOUND)
 
+# Optionally find GMP C++ bindings
+find_package(PkgConfig)
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(GMPXX gmpxx>=6.2)
+  if(GMPXX_FOUND)
+    message(STATUS "Found GMPXX version ${GMPXX_VERSION}")
+    macro(link_to_gmpxx target)
+      target_include_directories(${target} SYSTEM PRIVATE ${GMPXX_INCLUDE_DIRS})
+      target_link_libraries(${target} PRIVATE ${GMPXX_LIBRARIES})
+    endmacro(link_to_gmpxx)
+  endif(GMPXX_FOUND)
+endif(PKG_CONFIG_FOUND)
+
 # Optionally find Eigen 3
 if(NOT POLICY CMP0074)
   set(Eigen3_DIR ${Eigen3_ROOT}/share/eigen3/cmake)
