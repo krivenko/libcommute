@@ -332,6 +332,24 @@ called by the Hermitian conjugation function
   One can adjust the test and change the constant 100 to something else by
   defining a special macro :expr:`LIBCOMMUTE_FLOATING_POINT_TOL_EPS`.
 
+*libcommute* offers optional support for a few numerical types from external C++
+libraries as scalar types.
+
+- ``boost::rational`` objects from the `Boost.Rational library
+  <https://www.boost.org/doc/libs/latest/libs/rational/rational.html>`_.
+  Support can be enabled by inclusion of
+  ``<libcommute/scalars/boost_rational.hpp>``.
+
+- C++ classes from the `GNU Multiple Precision Arithmetic Library (GMP)
+  <https://gmplib.org/>`_. These include ``mpz_class`` (`multiple precision
+  integers <https://gmplib.org/manual/C_002b_002b-Interface-Integers>`_),
+  ``mpq_class`` (`multiple precision rationals
+  <https://gmplib.org/manual/C_002b_002b-Interface-Rationals>`_) and
+  ``mpf_class`` (`float with an arbitrary precision mantissa and a limited
+  precision exponent
+  <https://gmplib.org/manual/C_002b_002b-Interface-Floats>`_).
+  Support can be enabled by inclusion of ``<libcommute/scalars/gmpxx.hpp>``.
+
 .. _dyn_indices:
 
 [C++17] Dynamically typed index sequences
