@@ -95,8 +95,9 @@ if(USE_GMPXX)
       message(STATUS "Found GMPXX: ${GMPXX_PREFIX} "
                      "(found version \"${GMPXX_VERSION}\")")
       macro(link_to_gmpxx target)
-        target_include_directories(${target} SYSTEM PRIVATE ${GMPXX_INCLUDE_DIRS})
-        target_link_libraries(${target} PRIVATE ${GMPXX_LIBRARIES})
+        target_include_directories(${target} SYSTEM PRIVATE
+                                   ${GMPXX_INCLUDE_DIRS})
+        target_link_libraries(${target} PRIVATE ${GMPXX_LDFLAGS})
       endmacro(link_to_gmpxx)
     endif(GMPXX_FOUND)
   endif(PKG_CONFIG_FOUND)
