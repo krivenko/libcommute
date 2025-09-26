@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -182,6 +183,7 @@ struct var_number {
     case integer: return vn1.i == vn2.i;
     case rational: return (vn1.r[0] == vn2.r[0]) && (vn1.r[1] == vn2.r[1]);
     case real: return vn1.x == vn2.x;
+    default: throw std::logic_error("Unknown number_type in var_number");
     }
   }
   inline friend bool operator!=(var_number const& vn1, var_number const& vn2) {
@@ -193,6 +195,7 @@ struct var_number {
     case integer: return i == 0;
     case rational: return r[0] == 0;
     case real: return x == 0.0;
+    default: throw std::logic_error("Unknown number_type in var_number");
     }
   }
 
@@ -213,6 +216,7 @@ struct var_number {
     case integer: return double(i);
     case rational: return double(r[0]) / double(r[1]);
     case real: return x;
+    default: throw std::logic_error("Unknown number_type in var_number");
     }
   }
 
@@ -222,6 +226,7 @@ struct var_number {
     case integer: return os << vn.i;
     case rational: return os << vn.r[0] << " / " << vn.r[1];
     case real: return os << vn.x;
+    default: throw std::logic_error("Unknown number_type in var_number");
     }
   }
 };
