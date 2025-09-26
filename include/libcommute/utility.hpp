@@ -266,12 +266,13 @@ struct linear_function : std::conditional<std::is_copy_constructible<T>::value,
   ~linear_function() = default;
 
   // Reset contents
-  template <typename... Args> void set(var_number const_term, Args&&... args) {
+  template <typename... Args>
+  void set(var_number const& const_term, Args&&... args) {
     this->const_term = const_term;
     terms.clear();
     construct_impl(std::forward<Args>(args)...);
   }
-  void set(var_number const_term) {
+  void set(var_number const& const_term) {
     this->const_term = const_term;
     terms.clear();
   }
