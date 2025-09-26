@@ -14,10 +14,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - {os: "ubuntu-22.04", cc: "gcc", cxx: "g++-11"}
-          - {os: "ubuntu-22.04", cc: "clang", cxx: "clang++"}
-          - {os: "macos-13", cc: "gcc", cxx: "g++-12"}
-          - {os: "macos-13", cc: "clang", cxx: "clang++"}
+          - {os: "ubuntu-22.04", cxx: "g++-11"}
+          - {os: "ubuntu-22.04", cxx: "clang++"}
+          - {os: "macos-13", cxx: "g++-12"}
+          - {os: "macos-13", cxx: "clang++"}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -53,10 +53,18 @@ jobs:
       run: |
            mkdir installed
            mkdir build && cd build
+
+           USE_GMPXX=ON
            if [[ "${{ matrix.os }}" == ubuntu* ]]; then
              STATIC_ANALYSIS=ON
            else
              STATIC_ANALYSIS=OFF
+
+             # homebrew's GMP seems to be incompatible with gcc
+             # (missing symbols, possibly libraries built with -stdlib=libc++)
+             if [[ "${{ matrix.cxx }}" == g++* ]]; then
+               USE_GMPXX=OFF
+             fi
            fi
 
            if [[ "${{ matrix.cxx }}" == clang* ]]; then
@@ -71,6 +79,7 @@ jobs:
              -DSTATIC_ANALYSIS=${STATIC_ANALYSIS}                              \
              -DTESTS=ON                                                        \
              -DEXAMPLES=ON                                                     \
+             -DUSE_GMPXX=${USE_GMPXX}                                          \
              -DDOCUMENTATION=${DOCS}
            make -j3 VERBOSE=1
 
