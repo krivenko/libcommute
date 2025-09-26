@@ -19,6 +19,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 message(STATUS "Configuring ${PROJECT_NAME} version ${PROJECT_VERSION}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 # Prohibit in-source builds
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
@@ -76,7 +77,8 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
 # Optionally find Boost
 find_package(Boost 1.70 CONFIG)
 if(Boost_FOUND)
-  message(STATUS "Found Boost version ${Boost_VERSION}")
+  message(STATUS "Found Boost: ${Boost_INCLUDE_DIRS} "
+                 "(found version \"${Boost_VERSION}\")")
 endif(Boost_FOUND)
 
 # Optionally find GMP C++ bindings
@@ -84,7 +86,8 @@ find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
   pkg_search_module(GMPXX gmpxx>=6.2)
   if(GMPXX_FOUND)
-    message(STATUS "Found GMPXX version ${GMPXX_VERSION}")
+    message(STATUS "Found GMPXX: ${GMPXX_PREFIX} "
+                   "(found version \"${GMPXX_VERSION}\")")
     macro(link_to_gmpxx target)
       target_include_directories(${target} SYSTEM PRIVATE ${GMPXX_INCLUDE_DIRS})
       target_link_libraries(${target} PRIVATE ${GMPXX_LIBRARIES})
@@ -101,7 +104,8 @@ if(Eigen3_FOUND)
   if(NOT Eigen3_VERSION)
     set(Eigen3_VERSION "${EIGEN3_VERSION_STRING}")
   endif(NOT Eigen3_VERSION)
-  message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
+  message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIRS} "
+                 "(found version \"${Eigen3_VERSION}\")")
 
   macro(link_to_eigen3 target)
     if(TARGET Eigen3::Eigen)
