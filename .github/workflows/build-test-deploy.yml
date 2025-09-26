@@ -23,14 +23,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Eigen 3
+    - name: Install Boost, GMP, and Eigen 3
       run: |
            if [[ "${{ matrix.os }}" == ubuntu-* ]]; then
              sudo apt-get update -q
-             sudo apt-get install libeigen3-dev
+             sudo apt-get install libboost-dev libgmp-dev libeigen3-dev
            else
              brew update
-             brew install eigen
+             brew install boost gmp eigen
            fi
 
     - name: Set up Python 3.11
