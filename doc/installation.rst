@@ -89,6 +89,9 @@ meaning.
 | ``Eigen3_ROOT``              | Path to Eigen 3 installation (required to     |
 |                              | build some optional unit tests).              |
 +------------------------------+-----------------------------------------------+
+| ``Boost_ROOT``               | Path to Boost installation (required to build |
+|                              | some optional unit tests).                    |
++------------------------------+-----------------------------------------------+
 | ``STATIC_ANALYSIS=[ON|OFF]`` | [DEV] Run static analysis tools on C++        |
 |                              | sources of unit tests and examples.           |
 +------------------------------+-----------------------------------------------+
