@@ -51,7 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="loperator/index.html">Tools for exact diagonalization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Advanced examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#unreleased">[0.8.0] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased">[1.0.0] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">[0.7.2] - 2022-11-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.1] - 2021-12-17</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id3">[0.7.0] - 2021-10-09</a></li>
@@ -90,8 +90,20 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
 <section id="unreleased">
-<h2>[0.8.0] - Unreleased<a class="headerlink" href="#unreleased" title="Link to this heading"></a></h2>
+<h2>[1.0.0] - Unreleased<a class="headerlink" href="#unreleased" title="Link to this heading"></a></h2>
 <ul class="simple">
+<li><p>Better support for user-defined scalar types in <code class="docutils literal notranslate"><span class="pre">expression</span></code>. In particular,
+it is now possible to use integer-like and rational-like numeric types, as
+requested by Dr. Cezary Śliwa. Possible incompatibility of a scalar type with
+a certain algebra generator (e.g. spin operators vs an integer scalar) is
+checked at runtime. This is achieved by storing the structure constants of the
+algebra in the tagged union type <code class="docutils literal notranslate"><span class="pre">var_number</span></code>, which retains information
+about the category of the stored value (integer, rational or floating point).
+The compatibility is then checked in the trait method
+<code class="docutils literal notranslate"><span class="pre">scalar_traits&lt;ScalarType&gt;::make_const(var_number</span> <span class="pre">const&amp;</span> <span class="pre">vn)</span></code>.</p></li>
+<li><p>Added optional support for <a class="reference external" href="https://www.boost.org/doc/libs/latest/libs/rational/rational.html">boost::rational</a> and
+<a class="reference external" href="https://gmplib.org">GMP</a> C++ types <code class="docutils literal notranslate"><span class="pre">mpz_class</span></code>, <code class="docutils literal notranslate"><span class="pre">mpq_class</span></code>,
+<code class="docutils literal notranslate"><span class="pre">mpf_class</span></code> as <code class="docutils literal notranslate"><span class="pre">ScalarType</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_fermion_sector_view</span></code> and <code class="docutils literal notranslate"><span class="pre">n_fermion_multisector_view</span></code> are now
 parameterized on the type of ranking algorithm used to map basis state indices
 from a full Hilbert space to a sector. Supported ranking algorithms are

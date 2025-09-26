@@ -96,7 +96,7 @@ directory <code class="docutils literal notranslate"><span class="pre">libcommut
 you might want to install <em>libcommute</em> header files along with CMake
 configuration scripts. This will allow you to import <em>libcommute</em> targets,
 as well as to run unit tests and build example programs.
-The minimum required version of CMake is <strong>3.8.0</strong>.</p>
+The minimum required version of CMake is <strong>3.10.0</strong>.</p>
 <p>The following sequence of shell commands will build unit tests and examples.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>libcommute.build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>libcommute.build
 $<span class="w"> </span>cmake<span class="w"> </span>../libcommute.src<span class="w">                       </span><span class="se">\</span>
@@ -146,25 +146,43 @@ installed into.</p></td>
 tests and examples.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TESTS=[ON|OFF]</span></code></p></td>
-<td><p>Enable/disable compilation of unit tests.</p></td>
+<td><p>Enable/disable compilation of unit tests
+(default: <code class="docutils literal notranslate"><span class="pre">ON</span></code>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXAMPLES=[ON|OFF]</span></code></p></td>
-<td><p>Enable/disable compilation of examples.</p></td>
+<td><p>Enable/disable compilation of examples
+(default: <code class="docutils literal notranslate"><span class="pre">ON</span></code>).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DOCUMENTATION=[ON|OFF]</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">USE_BOOST=[ON|OFF]</span></code></p></td>
+<td><p>Try to build unit tests that use Boost
+(default: <code class="docutils literal notranslate"><span class="pre">ON</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">USE_GMPXX=[ON|OFF]</span></code></p></td>
+<td><p>Try to build unit tests that use GMP C++
+bindings (default: <code class="docutils literal notranslate"><span class="pre">ON</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">USE_EIGEN3=[ON|OFF]</span></code></p></td>
+<td><p>Try to build unit tests and examples that use
+Eigen 3 (default: <code class="docutils literal notranslate"><span class="pre">ON</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DOCUMENTATION=[ON|OFF]</span></code></p></td>
 <td><p>Enable/disable generation of <em>libcommute</em>’s
-Sphinx documentation.</p></td>
+Sphinx documentation (default: <code class="docutils literal notranslate"><span class="pre">OFF</span></code>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Sphinx_ROOT</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Sphinx_ROOT</span></code></p></td>
 <td><p>Path to Sphinx installation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MathJax_ROOT</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MathJax_ROOT</span></code></p></td>
 <td><p>Path to MathJax installation (directory
 containing <code class="docutils literal notranslate"><span class="pre">MathJax.js</span></code>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Eigen3_ROOT</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Eigen3_ROOT</span></code></p></td>
 <td><p>Path to Eigen 3 installation (required to
 build some optional unit tests).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Boost_ROOT</span></code></p></td>
+<td><p>Path to Boost installation (required to build
+some optional unit tests).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">STATIC_ANALYSIS=[ON|OFF]</span></code></p></td>
 <td><p>[DEV] Run static analysis tools on C++

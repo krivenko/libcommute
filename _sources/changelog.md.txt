@@ -2,8 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.8.0] - Unreleased
+## [1.0.0] - Unreleased
 
+- Better support for user-defined scalar types in ``expression``. In particular,
+  it is now possible to use integer-like and rational-like numeric types, as
+  requested by Dr. Cezary Śliwa. Possible incompatibility of a scalar type with
+  a certain algebra generator (e.g. spin operators vs an integer scalar) is
+  checked at runtime. This is achieved by storing the structure constants of the
+  algebra in the tagged union type ``var_number``, which retains information
+  about the category of the stored value (integer, rational or floating point).
+  The compatibility is then checked in the trait method
+  ``scalar_traits<ScalarType>::make_const(var_number const& vn)``.
+- Added optional support for [boost::rational](
+  https://www.boost.org/doc/libs/latest/libs/rational/rational.html) and
+  [GMP](https://gmplib.org) C++ types ``mpz_class``, ``mpq_class``,
+  ``mpf_class`` as ``ScalarType``.
 - ``n_fermion_sector_view`` and ``n_fermion_multisector_view`` are now
   parameterized on the type of ranking algorithm used to map basis state indices
   from a full Hilbert space to a sector. Supported ranking algorithms are

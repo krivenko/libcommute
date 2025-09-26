@@ -21,7 +21,7 @@ If your project uses `CMake <https://cmake.org/download/>`_ as its build system,
 you might want to install *libcommute* header files along with CMake
 configuration scripts. This will allow you to import *libcommute* targets,
 as well as to run unit tests and build example programs.
-The minimum required version of CMake is **3.8.0**.
+The minimum required version of CMake is **3.10.0**.
 
 The following sequence of shell commands will build unit tests and examples.
 
@@ -74,12 +74,23 @@ meaning.
 |                              | ``RelWithDebInfo``) used to compile unit      |
 |                              | tests and examples.                           |
 +------------------------------+-----------------------------------------------+
-| ``TESTS=[ON|OFF]``           | Enable/disable compilation of unit tests.     |
+| ``TESTS=[ON|OFF]``           | Enable/disable compilation of unit tests      |
+|                              | (default: ``ON``).                            |
 +------------------------------+-----------------------------------------------+
-| ``EXAMPLES=[ON|OFF]``        | Enable/disable compilation of examples.       |
+| ``EXAMPLES=[ON|OFF]``        | Enable/disable compilation of examples        |
+|                              | (default: ``ON``).                            |
++------------------------------+-----------------------------------------------+
+| ``USE_BOOST=[ON|OFF]``       | Try to build unit tests that use Boost        |
+|                              | (default: ``ON``).                            |
++------------------------------+-----------------------------------------------+
+| ``USE_GMPXX=[ON|OFF]``       | Try to build unit tests that use GMP C++      |
+|                              | bindings (default: ``ON``).                   |
++------------------------------+-----------------------------------------------+
+| ``USE_EIGEN3=[ON|OFF]``      | Try to build unit tests and examples that use |
+|                              | Eigen 3 (default: ``ON``).                    |
 +------------------------------+-----------------------------------------------+
 | ``DOCUMENTATION=[ON|OFF]``   | Enable/disable generation of *libcommute*'s   |
-|                              | Sphinx documentation.                         |
+|                              | Sphinx documentation (default: ``OFF``).      |
 +------------------------------+-----------------------------------------------+
 | ``Sphinx_ROOT``              | Path to Sphinx installation.                  |
 +------------------------------+-----------------------------------------------+
@@ -88,6 +99,9 @@ meaning.
 +------------------------------+-----------------------------------------------+
 | ``Eigen3_ROOT``              | Path to Eigen 3 installation (required to     |
 |                              | build some optional unit tests).              |
++------------------------------+-----------------------------------------------+
+| ``Boost_ROOT``               | Path to Boost installation (required to build |
+|                              | some optional unit tests).                    |
 +------------------------------+-----------------------------------------------+
 | ``STATIC_ANALYSIS=[ON|OFF]`` | [DEV] Run static analysis tools on C++        |
 |                              | sources of unit tests and examples.           |

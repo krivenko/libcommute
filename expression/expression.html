@@ -386,7 +386,7 @@ indices.</p>
 </section>
 <section id="custom-scalar-types">
 <span id="custom-scalar-type"></span><h2>Custom scalar types<a class="headerlink" href="#custom-scalar-types" title="Link to this heading"></a></h2>
-<p>Choosing <span class="cpp-expr sig sig-inline cpp"><span class="kt">double</span></span> or <span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">complex</span><span class="p">&lt;</span><span class="kt">double</span><span class="p">&gt;</span></span> as the scalar type of
+<p>Choosing <code class="docutils literal notranslate"><span class="pre">double</span></code> or <code class="docutils literal notranslate"><span class="pre">std::complex&lt;double&gt;</span></code> as the scalar type of
 expressions covers the vast majority of practically important cases.
 Nonetheless, sometimes it may be desirable to go beyond and pass a
 user-defined type as <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a>.
@@ -411,7 +411,7 @@ In particular, there must be a well-defined zero element.</p></li>
 </ul>
 <p>Let us say we have a type <span class="cpp-expr sig sig-inline cpp"><span class="n">S</span></span> with the required algebraic properties.
 Before using it as a scalar type, we must define a specialization of structure
-<span class="cpp-expr sig sig-inline cpp"><span class="n">scalar_traits</span></span> in the namespace <span class="cpp-expr sig sig-inline cpp"><span class="n">libcommute</span></span> to teach <em>libcommute</em>
+<span class="cpp-expr sig sig-inline cpp"><span class="n">scalar_traits</span></span> in the namespace <code class="docutils literal notranslate"><span class="pre">libcommute</span></code> to teach <em>libcommute</em>
 how to deal with the new type.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="w"> </span><span class="p">{</span>
 
@@ -423,6 +423,10 @@ how to deal with the new type.</p>
 <span class="w">  </span><span class="c1">// Make a constant of type &#39;S&#39; from a double value &#39;x&#39;</span>
 <span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="nf">make_const</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
 
+<span class="w">  </span><span class="c1">// Make a constant of type &#39;S&#39; from a value of the variadic type</span>
+<span class="w">  </span><span class="c1">// &#39;var_number&#39;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="nf">make_const</span><span class="p">(</span><span class="n">var_number</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">vn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+
 <span class="w">  </span><span class="c1">// OPTIONAL: Complex conjugate of &#39;s&#39;</span>
 <span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="nf">conj</span><span class="p">(</span><span class="n">S</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
 <span class="p">};</span>
@@ -430,7 +434,19 @@ how to deal with the new type.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The static member <span class="cpp-expr sig sig-inline cpp"><span class="n">scalar_traits</span><span class="p">&lt;</span><span class="n">S</span><span class="p">&gt;</span><span class="p">::</span><span class="n">conj</span><span class="p">(</span><span class="p">)</span></span> is optional and will only be
+<p><em>libcommute</em> uses the variadic <span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="generator.html#_CPPv4N10libcommute10var_numberE" title="libcommute::var_number"><span class="n">var_number</span></a></span> objects to store structure
+constants of supported algebras along with the information about their type.
+<strong>Not every single</strong> <a class="reference internal" href="#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ScalarType</span></code></a>
+<strong>is compatible with any</strong> <a class="reference internal" href="generator.html#generator"><span class="std std-ref">algebra generator</span></a>. For example,
+an integer scalar type can be used to build an expression involving the
+<a class="reference internal" href="generator.html#generator-fermion"><span class="std std-ref">fermionic operators</span></a>, but not the
+<a class="reference internal" href="generator.html#generator-spin"><span class="std std-ref">half-integer-spin ones</span></a>, because multiplication of the
+latter introduces more general rational coefficients into expressions.
+For this reason, the static function
+<code class="docutils literal notranslate"><span class="pre">scalar_traits&lt;S&gt;::make_const(var_number</span> <span class="pre">const&amp;</span> <span class="pre">vn)</span></code> must check the type
+of the value stored in <code class="docutils literal notranslate"><span class="pre">vn</span></code> (accessible via <code class="docutils literal notranslate"><span class="pre">vn.number_type</span></code>),
+and throw a <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::runtime_error</span></code> if it cannot be converted to <code class="docutils literal notranslate"><span class="pre">S</span></code>.</p>
+<p>The static member <code class="docutils literal notranslate"><span class="pre">scalar_traits&lt;S&gt;::conj()</span></code> is optional and will only be
 called by the Hermitian conjugation function
 <a class="reference internal" href="#_CPPv4N10libcommute10expression4conjERK10expression" title="libcommute::expression::conj"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">conj()</span></code></a>.</p>
 <div class="admonition note">
@@ -445,6 +461,19 @@ implemented as</p>
 <p>One can adjust the test and change the constant 100 to something else by
 defining a special macro <span class="cpp-expr sig sig-inline cpp"><span class="n">LIBCOMMUTE_FLOATING_POINT_TOL_EPS</span></span>.</p>
 </div>
+<p><em>libcommute</em> offers optional support for a few numerical types from external C++
+libraries as scalar types.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">boost::rational</span></code> objects from the <a class="reference external" href="https://www.boost.org/doc/libs/latest/libs/rational/rational.html">Boost.Rational library</a>.
+Support can be enabled by inclusion of
+<code class="docutils literal notranslate"><span class="pre">&lt;libcommute/scalars/boost_rational.hpp&gt;</span></code>.</p></li>
+<li><p>C++ classes from the <a class="reference external" href="https://gmplib.org/">GNU Multiple Precision Arithmetic Library (GMP)</a>. These include <code class="docutils literal notranslate"><span class="pre">mpz_class</span></code> (<a class="reference external" href="https://gmplib.org/manual/C_002b_002b-Interface-Integers">multiple precision
+integers</a>),
+<code class="docutils literal notranslate"><span class="pre">mpq_class</span></code> (<a class="reference external" href="https://gmplib.org/manual/C_002b_002b-Interface-Rationals">multiple precision rationals</a>) and
+<code class="docutils literal notranslate"><span class="pre">mpf_class</span></code> (<a class="reference external" href="https://gmplib.org/manual/C_002b_002b-Interface-Floats">float with an arbitrary precision mantissa and a limited
+precision exponent</a>).
+Support can be enabled by inclusion of <code class="docutils literal notranslate"><span class="pre">&lt;libcommute/scalars/gmpxx.hpp&gt;</span></code>.</p></li>
+</ul>
 </section>
 <section id="c-17-dynamically-typed-index-sequences">
 <span id="dyn-indices"></span><h2>[C++17] Dynamically typed index sequences<a class="headerlink" href="#c-17-dynamically-typed-index-sequences" title="Link to this heading"></a></h2>

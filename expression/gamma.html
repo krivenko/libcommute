@@ -166,19 +166,19 @@ matrix.</p></li>
 <span class="w">  </span><span class="c1">// canonical order,</span>
 <span class="w">  </span><span class="c1">//</span>
 <span class="w">  </span><span class="c1">// g1 * g2 -&gt; -g2 * g1 + 2\eta(g1, g2)</span>
-<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">swap_with</span><span class="p">(</span><span class="n">base</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">g2</span><span class="p">,</span><span class="w"> </span><span class="n">linear_function_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">var_number</span><span class="w"> </span><span class="n">swap_with</span><span class="p">(</span><span class="n">base</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">g2</span><span class="p">,</span><span class="w"> </span><span class="n">linear_function_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="c1">// Do g1 and g2 have the same indices?</span>
+<span class="w">    </span><span class="c1">// Do g1 and g2 have the same index?</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">diag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">g2</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Minkowski metric</span>
 <span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">indices</span><span class="p">());</span>
-<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">eta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diag</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">eta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diag</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">// Set f(g) to be the constant 2\eta(g1, g2)</span>
 <span class="w">    </span><span class="n">f</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eta</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// Return coefficient in front of g2 * g1 in the transformed expression</span>
+<span class="w">    </span><span class="c1">// Return the coefficient in front of g2 * g1 in the transformed expression</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 
@@ -221,6 +221,23 @@ matrix.</p></li>
 
 <span class="p">}</span><span class="w"> </span><span class="c1">// namespace libcommute</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the constants <span class="math notranslate nohighlight">\(c\)</span>, <span class="math notranslate nohighlight">\(F_{\alpha\beta}\)</span>,
+<span class="math notranslate nohighlight">\(f_{\alpha\beta}^\gamma\)</span> belong to a certain category of numbers
+(integers, rationals or general real values), then the generator is compatible
+with all <a class="reference internal" href="expression.html#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">ScalarType</span></code></a>’s belonging to
+the same or wider category.</p>
+<p><a class="reference internal" href="generator.html#_CPPv4I0EN10libcommute15linear_functionE" title="libcommute::linear_function"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">libcommute::linear_function</span></code></a> internally stores its coefficients as
+instances of the variadic type <a class="reference internal" href="generator.html#_CPPv4N10libcommute10var_numberE" title="libcommute::var_number"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">libcommute::var_number</span></code></a>. In the
+particular example presented here, all coefficients are integers, which are
+automatically converted to <a class="reference internal" href="generator.html#_CPPv4N10libcommute10var_numberE" title="libcommute::var_number"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">libcommute::var_number</span></code></a> in the expressions
+similar to <code class="docutils literal notranslate"><span class="pre">f.set(2</span> <span class="pre">*</span> <span class="pre">eta)</span></code>. In the case of the rational coefficients,
+it is recommended to explicitly construct the values by calling
+<code class="docutils literal notranslate"><span class="pre">var_number(numerator,</span> <span class="pre">denominator)</span></code> instead of just passing floating-point
+numbers. This way, the defined generators can be used with a rational
+<a class="reference internal" href="expression.html#_CPPv4I0DpEN10libcommute10expressionE" title="libcommute::expression::ScalarType"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">ScalarType</span></code></a>.</p>
 </div>
 <p>It is usually worth defining a factory function that creates an expression
 containing one generator with a unity prefactor.</p>

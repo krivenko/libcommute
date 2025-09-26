@@ -250,7 +250,7 @@ Class definitions
 Custom scalar types
 -------------------
 
-Choosing :expr:`double` or :expr:`std::complex<double>` as the scalar type of
+Choosing ``double`` or ``std::complex<double>`` as the scalar type of
 expressions covers the vast majority of practically important cases.
 Nonetheless, sometimes it may be desirable to go beyond and pass a
 user-defined type as :type:`ScalarType <libcommute::expression::ScalarType>`.
@@ -276,7 +276,7 @@ instances must be
 
 Let us say we have a type :expr:`S` with the required algebraic properties.
 Before using it as a scalar type, we must define a specialization of structure
-:expr:`scalar_traits` in the namespace :expr:`libcommute` to teach *libcommute*
+:expr:`scalar_traits` in the namespace ``libcommute`` to teach *libcommute*
 how to deal with the new type.
 
 .. code-block:: cpp
@@ -291,13 +291,30 @@ how to deal with the new type.
     // Make a constant of type 'S' from a double value 'x'
     static S make_const(double x) { ... }
 
+    // Make a constant of type 'S' from a value of the variadic type
+    // 'var_number'
+    static S make_const(var_number const& vn) { ... }
+
     // OPTIONAL: Complex conjugate of 's'
     static S conj(S const& s) { ... }
   };
 
   }
 
-The static member :expr:`scalar_traits<S>::conj()` is optional and will only be
+*libcommute* uses the variadic :expr:`var_number` objects to store structure
+constants of supported algebras along with the information about their type.
+**Not every single** :type:`ScalarType <libcommute::expression::ScalarType>`
+**is compatible with any** :ref:`algebra generator<generator>`. For example,
+an integer scalar type can be used to build an expression involving the
+:ref:`fermionic operators <generator_fermion>`, but not the
+:ref:`half-integer-spin ones <generator_spin>`, because multiplication of the
+latter introduces more general rational coefficients into expressions.
+For this reason, the static function
+``scalar_traits<S>::make_const(var_number const& vn)`` must check the type
+of the value stored in ``vn`` (accessible via ``vn.number_type``),
+and throw a :class:`std::runtime_error` if it cannot be converted to ``S``.
+
+The static member ``scalar_traits<S>::conj()`` is optional and will only be
 called by the Hermitian conjugation function
 :func:`conj() <libcommute::expression::conj()>`.
 
@@ -314,6 +331,24 @@ called by the Hermitian conjugation function
 
   One can adjust the test and change the constant 100 to something else by
   defining a special macro :expr:`LIBCOMMUTE_FLOATING_POINT_TOL_EPS`.
+
+*libcommute* offers optional support for a few numerical types from external C++
+libraries as scalar types.
+
+- ``boost::rational`` objects from the `Boost.Rational library
+  <https://www.boost.org/doc/libs/latest/libs/rational/rational.html>`_.
+  Support can be enabled by inclusion of
+  ``<libcommute/scalars/boost_rational.hpp>``.
+
+- C++ classes from the `GNU Multiple Precision Arithmetic Library (GMP)
+  <https://gmplib.org/>`_. These include ``mpz_class`` (`multiple precision
+  integers <https://gmplib.org/manual/C_002b_002b-Interface-Integers>`_),
+  ``mpq_class`` (`multiple precision rationals
+  <https://gmplib.org/manual/C_002b_002b-Interface-Rationals>`_) and
+  ``mpf_class`` (`float with an arbitrary precision mantissa and a limited
+  precision exponent
+  <https://gmplib.org/manual/C_002b_002b-Interface-Floats>`_).
+  Support can be enabled by inclusion of ``<libcommute/scalars/gmpxx.hpp>``.
 
 .. _dyn_indices:
 

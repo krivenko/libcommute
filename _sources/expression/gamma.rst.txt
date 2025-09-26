@@ -46,6 +46,24 @@ their canonical ordering. The identities we will be using in the code below are
   :language: cpp
   :lines: 18-116
 
+.. note::
+
+  If the constants :math:`c`, :math:`F_{\alpha\beta}`,
+  :math:`f_{\alpha\beta}^\gamma` belong to a certain category of numbers
+  (integers, rationals or general real values), then the generator is compatible
+  with all :var:`ScalarType <libcommute::expression::ScalarType>`'s belonging to
+  the same or wider category.
+
+  :struct:`libcommute::linear_function` internally stores its coefficients as
+  instances of the variadic type :struct:`libcommute::var_number`. In the
+  particular example presented here, all coefficients are integers, which are
+  automatically converted to :struct:`libcommute::var_number` in the expressions
+  similar to ``f.set(2 * eta)``. In the case of the rational coefficients,
+  it is recommended to explicitly construct the values by calling
+  ``var_number(numerator, denominator)`` instead of just passing floating-point
+  numbers. This way, the defined generators can be used with a rational
+  :var:`ScalarType <libcommute::expression::ScalarType>`.
+
 It is usually worth defining a factory function that creates an expression
 containing one generator with a unity prefactor.
 
