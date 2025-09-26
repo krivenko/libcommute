@@ -31,6 +31,9 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 option(TESTS "Build unit tests" ON)
 option(EXAMPLES "Build examples" ON)
 option(DOCUMENTATION "Build documentation" OFF)
+option(USE_BOOST "Try to build unit tests that use Boost" ON)
+option(USE_GMPXX "Try to build unit tests that use GMP C++ bindings" ON)
+option(USE_EIGEN3 "Try to build unit tests and examples that use Eigen 3" ON)
 
 # Install C++ headers
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include
@@ -75,52 +78,58 @@ install(FILES "${PROJECT_BINARY_DIR}/libcommute.pc"
 )
 
 # Optionally find Boost
-find_package(Boost 1.70 CONFIG)
-if(Boost_FOUND)
-  message(STATUS "Found Boost: ${Boost_INCLUDE_DIRS} "
-                 "(found version \"${Boost_VERSION}\")")
-endif(Boost_FOUND)
+if(USE_BOOST)
+  find_package(Boost 1.70 CONFIG)
+  if(Boost_FOUND)
+    message(STATUS "Found Boost: ${Boost_INCLUDE_DIRS} "
+                   "(found version \"${Boost_VERSION}\")")
+  endif(Boost_FOUND)
+endif(USE_BOOST)
 
 # Optionally find GMP C++ bindings
-find_package(PkgConfig)
-if(PKG_CONFIG_FOUND)
-  pkg_search_module(GMPXX gmpxx>=6.2)
-  if(GMPXX_FOUND)
-    message(STATUS "Found GMPXX: ${GMPXX_PREFIX} "
-                   "(found version \"${GMPXX_VERSION}\")")
-    macro(link_to_gmpxx target)
-      target_include_directories(${target} SYSTEM PRIVATE ${GMPXX_INCLUDE_DIRS})
-      target_link_libraries(${target} PRIVATE ${GMPXX_LIBRARIES})
-    endmacro(link_to_gmpxx)
-  endif(GMPXX_FOUND)
-endif(PKG_CONFIG_FOUND)
+if(USE_GMPXX)
+  find_package(PkgConfig)
+  if(PKG_CONFIG_FOUND)
+    pkg_search_module(GMPXX gmpxx>=6.2)
+    if(GMPXX_FOUND)
+      message(STATUS "Found GMPXX: ${GMPXX_PREFIX} "
+                     "(found version \"${GMPXX_VERSION}\")")
+      macro(link_to_gmpxx target)
+        target_include_directories(${target} SYSTEM PRIVATE ${GMPXX_INCLUDE_DIRS})
+        target_link_libraries(${target} PRIVATE ${GMPXX_LIBRARIES})
+      endmacro(link_to_gmpxx)
+    endif(GMPXX_FOUND)
+  endif(PKG_CONFIG_FOUND)
+endif(USE_GMPXX)
 
 # Optionally find Eigen 3
-if(NOT POLICY CMP0074)
-  set(Eigen3_DIR ${Eigen3_ROOT}/share/eigen3/cmake)
-endif(NOT POLICY CMP0074)
-find_package(Eigen3 CONFIG)
-if(Eigen3_FOUND)
-  if(NOT Eigen3_VERSION)
-    set(Eigen3_VERSION "${EIGEN3_VERSION_STRING}")
-  endif(NOT Eigen3_VERSION)
-  message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIRS} "
-                 "(found version \"${Eigen3_VERSION}\")")
+if(USE_EIGEN3)
+  if(NOT POLICY CMP0074)
+    set(Eigen3_DIR ${Eigen3_ROOT}/share/eigen3/cmake)
+  endif(NOT POLICY CMP0074)
+  find_package(Eigen3 CONFIG)
+  if(Eigen3_FOUND)
+    if(NOT Eigen3_VERSION)
+      set(Eigen3_VERSION "${EIGEN3_VERSION_STRING}")
+    endif(NOT Eigen3_VERSION)
+    message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIRS} "
+                   "(found version \"${Eigen3_VERSION}\")")
 
-  macro(link_to_eigen3 target)
-    if(TARGET Eigen3::Eigen)
-      target_link_libraries(${target} PRIVATE Eigen3::Eigen)
-    else(TARGET Eigen3::Eigen)
-      target_compile_definitions(${target} PRIVATE ${EIGEN3_DEFINITIONS})
-      target_include_directories(${target}
-                                 SYSTEM PRIVATE ${EIGEN3_INCLUDE_DIRS})
-    endif(TARGET Eigen3::Eigen)
-    if(NOT ${Eigen3_VERSION} VERSION_LESS "3.3.0")
-      target_compile_definitions(${target}
-                                 PRIVATE EIGEN_CAN_MIX_REAL_COMPLEX_EXPR)
-    endif(NOT ${Eigen3_VERSION} VERSION_LESS "3.3.0")
-  endmacro(link_to_eigen3)
-endif(Eigen3_FOUND)
+    macro(link_to_eigen3 target)
+      if(TARGET Eigen3::Eigen)
+        target_link_libraries(${target} PRIVATE Eigen3::Eigen)
+      else(TARGET Eigen3::Eigen)
+        target_compile_definitions(${target} PRIVATE ${EIGEN3_DEFINITIONS})
+        target_include_directories(${target}
+                                   SYSTEM PRIVATE ${EIGEN3_INCLUDE_DIRS})
+      endif(TARGET Eigen3::Eigen)
+      if(NOT ${Eigen3_VERSION} VERSION_LESS "3.3.0")
+        target_compile_definitions(${target}
+                                   PRIVATE EIGEN_CAN_MIX_REAL_COMPLEX_EXPR)
+      endif(NOT ${Eigen3_VERSION} VERSION_LESS "3.3.0")
+    endmacro(link_to_eigen3)
+  endif(Eigen3_FOUND)
+endif(USE_EIGEN3)
 
 # Build documentation
 if(DOCUMENTATION)

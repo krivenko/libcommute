@@ -74,12 +74,23 @@ meaning.
 |                              | ``RelWithDebInfo``) used to compile unit      |
 |                              | tests and examples.                           |
 +------------------------------+-----------------------------------------------+
-| ``TESTS=[ON|OFF]``           | Enable/disable compilation of unit tests.     |
+| ``TESTS=[ON|OFF]``           | Enable/disable compilation of unit tests      |
+|                              | (default: ``ON``).                            |
 +------------------------------+-----------------------------------------------+
-| ``EXAMPLES=[ON|OFF]``        | Enable/disable compilation of examples.       |
+| ``EXAMPLES=[ON|OFF]``        | Enable/disable compilation of examples        |
+|                              | (default: ``ON``).                            |
++------------------------------+-----------------------------------------------+
+| ``USE_BOOST=[ON|OFF]``       | Try to build unit tests that use Boost        |
+|                              | (default: ``ON``).                            |
++------------------------------+-----------------------------------------------+
+| ``USE_GMPXX=[ON|OFF]``       | Try to build unit tests that use GMP C++      |
+|                              | bindings (default: ``ON``).                   |
++------------------------------+-----------------------------------------------+
+| ``USE_EIGEN3=[ON|OFF]``      | Try to build unit tests and examples that use |
+|                              | Eigen 3 (default: ``ON``).                    |
 +------------------------------+-----------------------------------------------+
 | ``DOCUMENTATION=[ON|OFF]``   | Enable/disable generation of *libcommute*'s   |
-|                              | Sphinx documentation.                         |
+|                              | Sphinx documentation (default: ``OFF``).      |
 +------------------------------+-----------------------------------------------+
 | ``Sphinx_ROOT``              | Path to Sphinx installation.                  |
 +------------------------------+-----------------------------------------------+
