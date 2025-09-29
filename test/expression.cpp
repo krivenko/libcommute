@@ -282,4 +282,9 @@ TEST_CASE("Expression with static indices", "[expression]") {
     // Q3 is a higher-order integral of motion
     CHECK((H * Q3 - Q3 * H).size() == 0);
   }
+
+  SECTION("Incompatible algebra generator") {
+    auto expr = S_m<int>(1);
+    CHECK_THROWS_AS(expr * S_p<int>(1), std::runtime_error);
+  }
 }
