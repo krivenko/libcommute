@@ -181,7 +181,7 @@ public:
                HSType const& hs) {
     using scalar_type =
         typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
-    sv_index_type dim = get_dim(hs);
+    sv_index_type dim = get_vec_size(hs);
     sparse_state_vector<scalar_type> vac(dim);
     vac[0] = 1;
     auto st = O(vac);
@@ -206,7 +206,7 @@ public:
     }
     using scalar_type =
         typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
-    sparse_state_vector<scalar_type> vac(get_dim(hs));
+    sparse_state_vector<scalar_type> vac(get_vec_size(hs));
     vac[0] = 1;
     compositions_constructor_impl(O_list, vac, 0, 0, N);
   }

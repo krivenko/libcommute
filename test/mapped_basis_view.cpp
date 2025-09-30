@@ -56,7 +56,7 @@ TEST_CASE("Basis-mapped view of a state vector", "[mapped_basis_view]") {
             2 * c_dag("up", 2) * c("up", 1) * c_dag("dn", 2) * c("dn", 1);
 
   auto hs = make_hilbert_space(Hex + Hp);
-  REQUIRE(hs.dim() == 16);
+  REQUIRE(hs.vec_size() == 16);
 
   using static_indices::make_space_fermion;
   REQUIRE(hs.bit_range(make_space_fermion("dn", 1)) == std::make_pair(0, 0));

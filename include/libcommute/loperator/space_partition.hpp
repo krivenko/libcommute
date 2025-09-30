@@ -63,16 +63,16 @@ public:
 
   // Partition Hilbert space `hs` using Hermitian operator `h`.
   //
-  // `hs` can be of any type, for which `get_dim(hs)` returns the dimension of
-  // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
-  // to each basis state index in `hs`.
+  // `hs` can be of any type, for which `get_vec_size(hs)` returns the dimension
+  // of the corresponding Hilbert space, and `foreach(hs, f)` applies functor
+  // `f` to each basis state index in `hs`.
   template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
                   HSType const& hs)
-    : ds(get_dim(hs)) {
+    : ds(get_vec_size(hs)) {
     using scalar_type =
         typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
-    sv_index_type d = get_dim(hs);
+    sv_index_type d = get_vec_size(hs);
 
     sparse_state_vector<scalar_type> in_state(d);
     sparse_state_vector<scalar_type> out_state(d);
@@ -92,17 +92,17 @@ public:
   // non-vanishing matrix elements of `h` into the sparse storage object
   // `matrix_elements`.
   //
-  // `hs` can be of any type, for which `get_dim(hs)` returns the dimension of
-  // the corresponding Hilbert space, and `foreach(hs, f)` applies functor `f`
-  // to each basis state index in `hs`.
+  // `hs` can be of any type, for which `get_vec_size(hs)` returns the dimension
+  // of the corresponding Hilbert space, and `foreach(hs, f)` applies functor
+  // `f` to each basis state index in `hs`.
   template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
   space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
                   HSType const& hs,
                   loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>& me)
-    : ds(get_dim(hs)) {
+    : ds(get_vec_size(hs)) {
     using scalar_type =
         typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type;
-    sv_index_type d = get_dim(hs);
+    sv_index_type d = get_vec_size(hs);
 
     sparse_state_vector<scalar_type> in_state(d);
     sparse_state_vector<scalar_type> out_state(d);
@@ -142,7 +142,7 @@ public:
     using conn_t = std::multimap<sv_index_type, sv_index_type>;
     conn_t Cd_conn, C_conn;
 
-    sv_index_type d = get_dim(hs);
+    sv_index_type d = get_vec_size(hs);
 
     // Fill connection multimaps
     sparse_state_vector<scalar_type> in_state(d);
@@ -237,7 +237,7 @@ public:
 
     connections_map connections;
 
-    sv_index_type d = get_dim(hs);
+    sv_index_type d = get_vec_size(hs);
 
     sparse_state_vector<scalar_type> in_state(d);
     sparse_state_vector<scalar_type> out_state(d);

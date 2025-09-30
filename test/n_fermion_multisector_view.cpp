@@ -55,7 +55,7 @@ void check_map_index(view_type const& view,
                      StateSelector&& selector,
                      sv_index_type expected_multisector_size) {
   std::vector<sv_index_type> mapped_indices;
-  for(sv_index_type index = 0; index < hs.dim(); ++index) {
+  for(sv_index_type index = 0; index < hs.vec_size(); ++index) {
     if(std::forward<StateSelector>(selector)(index)) {
       mapped_indices.push_back(view.map_index(index));
     }
@@ -77,7 +77,7 @@ build_basis_states_ref(hs_type const& hs,
   auto view = view_type(st, hs, sectors);
   std::vector<sv_index_type> basis_states(
       n_fermion_multisector_size(hs, sectors));
-  for(sv_index_type index = 0; index < hs.dim(); ++index) {
+  for(sv_index_type index = 0; index < hs.vec_size(); ++index) {
     if(std::forward<StateSelector>(selector)(index)) {
       basis_states[view.map_index(index)] = index;
     }
@@ -920,7 +920,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
       hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
 
       auto view = view_type(st, hs_b, {sde(0)});
-      for(sv_index_type index = 0; index < hs_b.dim(); ++index) {
+      for(sv_index_type index = 0; index < hs_b.vec_size(); ++index) {
         CHECK(view.map_index(index) == index);
       }
     }

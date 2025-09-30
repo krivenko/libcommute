@@ -28,10 +28,17 @@ All notable changes to this project will be documented in this file.
   a basis state index (``hilbert_space::max_n_bits``) to 63. This way
   ``hilbert_space::dim()`` can return a valid value of type ``sv_index_type``
   even when all 63 bits are used up.
-- Improved performance and stability of ``space_partition::merge_subspaces()``
-  by switching to a non-recursive variant of the algorithm.
 - New pure virtual method ``elementary_space::dim()`` and its implementation in
   derived classes.
+- New method ``hilbert_space::is_sparse()`` that returns ``true`` if some of
+  the constituent elementary spaces have non-power-of-two dimensions.
+- New method ``hilbert_space::vec_size()`` that returns the minimal size of a
+  state vector compatible with this Hilbert space.
+- Semantics of the existing method ``hilbert_space::dim()`` has been changed:
+  Now it returns the exact dimension of the Hilbert space, which is smaller than
+  ``hilbert_space::vec_size()`` if the Hilbert space is sparse.
+- Improved performance and stability of ``space_partition::merge_subspaces()``
+  by switching to a non-recursive variant of the algorithm.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
   Credits to Dr. Cezary Śliwa for providing the patch.
 - Whenever possible, use compiler intrinsics to speed up complex bit

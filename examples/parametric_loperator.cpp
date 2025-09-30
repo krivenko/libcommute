@@ -158,7 +158,7 @@ int main() {
   //
 
   // Initial state |0>
-  std::vector<double> ket0(hs.dim());
+  std::vector<double> ket0(hs.vec_size());
   ket0[0] = 1.0;
 
   for(double lambda : {.0, 1.0, 2.0, 3.0}) {

@@ -74,7 +74,7 @@ int main() {
   auto alpha = [&](int n) { return std::atan(Omega * std::sqrt(n) / delta); };
 
   // Two state vectors in the complete Hilbert space
-  std::vector<double> phi(hs.dim()), psi(hs.dim());
+  std::vector<double> phi(hs.vec_size()), psi(hs.vec_size());
 
   // L^2 norm of |\spi> - E|\phi>
   // Will be used to verify correctness of the eigenpairs
@@ -82,7 +82,7 @@ int main() {
                   std::vector<double> const& phi,
                   double E) {
     double d = 0;
-    for(unsigned int i = 0; i < hs.dim(); ++i) {
+    for(unsigned int i = 0; i < psi.size(); ++i) {
       d += std::pow(psi[i] - E * phi[i], 2);
     }
     return std::sqrt(d);

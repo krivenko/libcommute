@@ -20,18 +20,15 @@ A :class:`hilbert_space` is defined as an (ordered) direct product of
                 \mathcal{H}_N.
 
 An elementary space associated with an :ref:`algebra generator <generator>`
-:math:`g` is a vector space of dimension :math:`2^b`, where :math:`b` is
-the smallest integer sufficient to construct a matrix representation of
-:math:`g`.
+:math:`g` is a vector space of dimension :math:`d \geq 1`.
 For instance, an elementary space associated with a fermionic
-creation/annihilation operator is two-dimensional (:math:`b = 1`); It is
-spanned by the occupation number states :math:`|0\rangle` and :math:`|1\rangle`.
-For a spin-1 operator, we have a 4-dimensional elementary space.
-There are three basis vectors :math:`|m=0\rangle`, :math:`|m=\pm 1\rangle` of
-the irreducible representation, but one has to round the dimension up to the
-nearest power of 2 (:math:`b = 2`). Finally, in the case of a bosonic generator
-one has to truncate the infinite-dimensional state space and manually set
-:math:`b\geq 1` (:math:`b = 1` would correspond to a hardcore boson with two
+creation/annihilation operator is two-dimensional; It is spanned by the
+occupation number states :math:`|0\rangle` and :math:`|1\rangle`.
+For a spin-1 operator, we have a 3-dimensional elementary space.
+There are three basis vectors of the irreducible representation,
+:math:`|m=0\rangle`, :math:`|m=\pm 1\rangle`. Finally, in the case of a bosonic
+generator one has to truncate the infinite-dimensional state space and manually
+set :math:`d\geq 1` (:math:`d = 2` would correspond to a hardcore boson with two
 allowed states :math:`|0\rangle` and :math:`|1\rangle`).
 
 The ordering of the elementary spaces in the product is established by the
@@ -40,10 +37,9 @@ algebra IDs of the generators :math:`g` these spaces are associated with
 are ordered according to the :ref:`rules specific to the corresponding
 algebra <elementary_spaces>`.
 
-The requirement of dimensions of the elementary spaces being powers of two is
-not arbitrary. It is justified by the way basis states of the full space
-:math:`\mathcal{H}` are enumerated. Each basis state of :math:`\mathcal{H}` is
-a direct product of basis vectors of the elementary spaces,
+Basis states of the full space :math:`\mathcal{H}` are enumerated in the
+following way. Each basis state of :math:`\mathcal{H}` is a direct product of
+basis vectors of the elementary spaces,
 
 .. math::
 
@@ -58,15 +54,29 @@ then a concatenation of binary forms of :math:`|n_i\rangle_{\mathcal{H}_i}`.
 For example, the following picture shows memory representation of the basis
 state :math:`|90\rangle_\mathcal{H} = |0\rangle_{\mathcal{H}_1} \otimes
 |5\rangle_{\mathcal{H}_2} \otimes |1\rangle_{\mathcal{H}_3} \otimes
-|1\rangle_{\mathcal{H}_4}`. Cells (bits) of the same color belong to the same
-elementary space and the higher blank cells 7-62 are unused -- set to zero. The
-most significant bit 63 is reserved and can never be occupied by an elementary
-space. This restriction is necessary to make sure that the size of a Hilbert
-space with all the allowed 63 bits used up is still representable by a value
-of the type :type:`sv_index_type`.
+|1\rangle_{\mathcal{H}_4}`.
 
 .. image:: ../images/basis_state.svg
   :width: 800
+
+Cells (bits) of the same color belong to the same elementary space and the
+higher blank cells 7-62 are unused -- set to zero. The most significant bit 63
+is reserved and can never be occupied by an elementary space. This restriction
+is necessary to make sure that the size of a Hilbert space with all the allowed
+63 bits used up is still representable by a value of the type
+:type:`sv_index_type`.
+
+A note should be made about the elementary spaces, whose dimension is not a
+power of 2. Those occupy :math:`b = \lceil\log_2(d)\rceil` bits in the binary
+representation of a basis state, which means that :math:`2^b - d` of the
+corresponding binary strings do not represent valid basis states. Such strings
+are never referenced in *libcommute*'s algorithms and have no effect on the
+calculation results. Nonetheless, the size of a
+:ref:`state vector <state_vector>` container compatible with the Hilbert space
+:math:`\mathcal{H}` **must still be at least** :math:`\prod_{i=1}^N 2^{b_i}`,
+which exceeds :math:`\dim(\mathcal{H}) = \prod_{i=1}^N d_i` as soon as there is
+at least one elementary space with a non-power-of-two dimension. We call such
+:class:`hilbert_space` objects sparse.
 
 The simplest way to construct a :class:`hilbert_space` object is by calling
 :func:`make_hilbert_space()` on an expression.
@@ -242,6 +252,18 @@ does not matter -- they will be reordered automatically.
     The dimension of this Hilbert space computed as a product of dimensions
     of the elementary spaces.
 
+  .. function:: sv_index_type vec_size() const
+                friend sv_index_type get_vec_size(hilbert_space const& hs)
+
+    Minimal size of a :ref:`state vector <state_vector>` object compatible with
+    this Hilbert space. This size is derived from the dimensions of the
+    elementary spaces :math:`\mathcal{H}_i` as
+    :math:`2^{\sum_{i=1}^N \lceil\log_2(\dim(\mathcal{H_i}))\rceil}`.
+
+  .. function:: bool is_sparse() const
+
+    Does this Hilbert space have a non-power-of-two dimension?
+
   .. function:: template<typename Functor> \
                 friend void foreach(hilbert_space const& hs, Functor&& f)
 
@@ -369,15 +391,14 @@ the elementary space to algebra generators acting in it.
 
   .. function:: virtual sv_index_type dim() const = 0
 
-  Dimension of this elementary space.
+  Dimension :math:`d` of this elementary space.
 
   .. rubric:: Binary representation of the basis state index
 
   .. function:: virtual int n_bits() const = 0
 
-  The number :math:`b` of bits occupied by this elementary space.
-  :math:`b` is the smallest integer such that :math:`2^b \geq` dimension of the
-  space.
+  The number of bits occupied by this elementary space,
+  :math:`b = \lceil \log_2(d) \rceil`.
 
 .. rubric:: Predefined concrete elementary space types
 
@@ -387,7 +408,7 @@ the elementary space to algebra generators acting in it.
   *Defined in <libcommute/loperator/elementary_space_fermion.hpp>*
 
   An elementary space associated with fermionic algebra generators. This
-  elementary space is two-dimensional (:math:`b = 1`).
+  elementary space is two-dimensional.
 
 .. function:: template<typename... IndexTypes> \
               elementary_space_fermion<IndexTypes...> \
@@ -506,7 +527,7 @@ argument. It is possible to customize the translation process by giving
       //
     }
 
-    // Other members if needed ...
+    // Other members as needed ...
   };
 
 This approach gives total control over elementary space creation. It works best
@@ -518,7 +539,7 @@ of various predefined algebras as well as generators of a new user-defined
 algebra ``my_algebra``. It would be desirable to instruct
 :func:`make_hilbert_space()` how to translate instances of
 :type:`generator_my_algebra` into :type:`elementary_space_my_algebra` without
-rewriting all the code needed to processed the predefined generators. This goal
+rewriting all the code needed to process the predefined generators. This goal
 can be achieved in a few steps by means of a special utility class
 :class:`es_constructor`.
 

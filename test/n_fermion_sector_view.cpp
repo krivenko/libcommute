@@ -413,7 +413,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     auto check_map_index =
         [&hs](view_type const& view, unsigned int M, unsigned int N) {
           std::vector<sv_index_type> mapped_indices;
-          for(sv_index_type index = 0; index < hs.dim(); ++index) {
+          for(sv_index_type index = 0; index < hs.vec_size(); ++index) {
             if(popcount(index, M) == N) {
               mapped_indices.push_back(view.map_index(index));
             }
@@ -447,7 +447,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
 
       auto view = view_type(st, hs_b, 0);
-      for(sv_index_type index = 0; index < hs_b.dim(); ++index) {
+      for(sv_index_type index = 0; index < hs_b.vec_size(); ++index) {
         CHECK(view.map_index(index) == index);
       }
     }
@@ -519,7 +519,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     auto build_basis_states_ref = [&st](hs_type const& hs, unsigned int N) {
       auto view = view_type(st, hs, N);
       std::vector<sv_index_type> basis_states(n_fermion_sector_size(hs, N));
-      for(sv_index_type index = 0; index < hs.dim(); ++index) {
+      for(sv_index_type index = 0; index < hs.vec_size(); ++index) {
         if(popcount(index, M) == N) {
           basis_states[view.map_index(index)] = index;
         }

@@ -25,6 +25,7 @@
 #include <iterator>
 #include <limits>
 #include <map>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -133,10 +134,19 @@ public:
       }
     }
     recompute_bit_ranges();
+
+    using value_type = typename decltype(elementary_spaces_)::value_type;
+    dim_ *= std::accumulate(elementary_spaces_.begin(),
+                            elementary_spaces_.end(),
+                            sv_index_type(1),
+                            [](sv_index_type d, value_type const& es) {
+                              return d * es.first->dim();
+                            });
   }
 
   // Value semantics
-  hilbert_space(hilbert_space const& hs) : bit_range_end_(hs.bit_range_end_) {
+  hilbert_space(hilbert_space const& hs)
+    : bit_range_end_(hs.bit_range_end_), dim_(hs.dim_) {
     for(auto const& es : hs.elementary_spaces_) {
       elementary_spaces_.emplace_hint(elementary_spaces_.end(),
                                       es.first->clone(),
@@ -152,6 +162,7 @@ public:
                                       es.first->clone(),
                                       es.second);
     }
+    dim_ = hs.dim_;
     return *this;
   }
   hilbert_space& operator=(hilbert_space&&) noexcept = default;
@@ -180,6 +191,7 @@ public:
     auto r = elementary_spaces_.emplace(es.clone(), bit_range_t(0, 0));
     if(!r.second) throw elementary_space_exists(es);
     recompute_bit_ranges();
+    dim_ *= es.dim();
   }
 
   // Is a given elementary space found in this Hilbert space?
@@ -227,14 +239,23 @@ public:
   // in this Hilbert space
   int total_n_bits() const { return bit_range_end_ + 1; }
 
+  // Minimal size of a StateVector object compatible with this Hilbert space
+  sv_index_type vec_size() const { return sv_index_type(1) << total_n_bits(); }
+  friend sv_index_type get_vec_size(hilbert_space const& hs) {
+    return hs.vec_size();
+  }
+
   // Dimension of this Hilbert space
-  sv_index_type dim() const { return sv_index_type(1) << total_n_bits(); }
+  sv_index_type dim() const { return dim_; }
   friend sv_index_type get_dim(hilbert_space const& hs) { return hs.dim(); }
+
+  // Does this Hilbert space have a non-power-of-two dimension?
+  bool is_sparse() const { return vec_size() > dim(); }
 
   // Apply functor `f` to all basis state indices
   template <typename Functor>
   inline friend void foreach(hilbert_space const& hs, Functor&& f) {
-    sv_index_type d = hs.dim();
+    sv_index_type d = hs.vec_size();
     for(sv_index_type i = 0; i < d; ++i) {
       std::forward<Functor>(f)(i);
     }
@@ -284,6 +305,9 @@ private:
 
   // End of the bit range spanned by this Hilbert space
   int bit_range_end_ = -1;
+
+  // Dimension of this Hilbert space
+  sv_index_type dim_ = 1;
 };
 
 // Convenience factory function

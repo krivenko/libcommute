@@ -39,8 +39,8 @@ standard vectors)
 
 .. code-block:: cpp
 
-  std::vector<double> psi(hs.dim());
-  std::vector<double> phi(hs.dim());
+  std::vector<double> psi(hs.vec_size());
+  std::vector<double> phi(hs.vec_size());
 
 The following code fragment shows three (nearly) equivalent ways to act with our
 operator on a state, :math:`|\phi\rangle = \hat L |\psi\rangle`.
@@ -162,8 +162,8 @@ output state vector. In other words, the extra arguments are effectively
   auto PL = libcommute::make_param_loperator(expr, hs);
 
   // Input and output state vectors
-  std::vector<double> psi(hs.dim());
-  std::vector<double> phi(hs.dim());
+  std::vector<double> psi(hs.vec_size());
+  std::vector<double> phi(hs.vec_size());
 
   //
   // Substitute 2.0 into the expression and act on 'psi'
