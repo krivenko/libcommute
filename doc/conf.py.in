@@ -182,7 +182,7 @@ html_static_path = [os.path.join('@CMAKE_CURRENT_SOURCE_DIR@', '_static')]
 htmlhelp_basename = 'libcommutedoc'
 
 html_css_files = [
-    '_static/theme_overrides.css'  # override wide tables in RTD theme
+    'theme_overrides.css'  # override wide tables in RTD theme
 ]
 
 # -- Options for LaTeX output ---------------------------------------------
