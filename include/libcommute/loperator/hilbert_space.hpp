@@ -22,9 +22,11 @@
 
 #include <algorithm>
 #include <cassert>
+#include <functional>
 #include <iterator>
 #include <limits>
 #include <map>
+#include <memory>
 #include <numeric>
 #include <stdexcept>
 #include <string>
@@ -32,6 +34,98 @@
 #include <vector>
 
 namespace libcommute {
+
+namespace detail {
+
+// The lowest power of 2 that is not smaller than i
+inline sv_index_type next_pow2(sv_index_type i) {
+  if(i < 2) return 1;
+#if defined(__GNUC__) || defined(__clang__)
+  return sv_index_type(1) << (64 - __builtin_clzll(i - 1));
+#else
+  // https://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2
+  --i;
+  i |= i >> 1;
+  i |= i >> 2;
+  i |= i >> 4;
+  i |= i >> 8;
+  i |= i >> 16;
+  i |= i >> 32;
+  ++i;
+  return i;
+#endif
+}
+
+// Iterate over a sparse range of basis states
+//
+// The sparse range is obtained by flattening a Cartesian product of integer
+// ranges. The strides used to flatten the product are computed from sizes of
+// the ranges rounded up to the nearest power of two.
+class sparse_foreach_basis_state {
+
+  // Sizes of the integer ranges
+  std::vector<sv_index_type> sizes_;
+  // Total number of states
+  sv_index_type n_states_;
+  // jumps_[d] is the additional jump in the basis state index introduced when
+  // indices_[d] reaches sizes_[d] and indices_[d + 1] is incremented.
+  std::vector<sv_index_type> jumps_;
+  // Current set of integers
+  std::vector<sv_index_type> mutable indices_;
+
+  static std::vector<sv_index_type>
+  init_jumps(std::vector<sv_index_type> const& sizes) {
+    assert(sizes.size() > 0);
+    std::vector<sv_index_type> jumps(sizes.size() - 1);
+    sv_index_type stride = 1;
+    for(std::size_t d = 0; d < sizes.size() - 1; ++d) {
+      sv_index_type size = sizes[d];
+      sv_index_type size_pow2 = next_pow2(size);
+      jumps[d] = stride * (size_pow2 - size);
+      stride *= size_pow2;
+    }
+    return jumps;
+  }
+
+public:
+  explicit sparse_foreach_basis_state(std::vector<sv_index_type> sizes)
+    : sizes_(std::move(sizes)),
+      n_states_(std::accumulate(sizes_.begin(),
+                                sizes_.end(),
+                                1,
+                                std::multiplies<sv_index_type>())),
+      jumps_(init_jumps(sizes_)),
+      indices_(sizes_.size()) {}
+
+  // Value semantics
+  sparse_foreach_basis_state(sparse_foreach_basis_state const&) = default;
+  sparse_foreach_basis_state(sparse_foreach_basis_state&&) noexcept = default;
+  sparse_foreach_basis_state&
+  operator=(sparse_foreach_basis_state const& hs) = default;
+  sparse_foreach_basis_state&
+  operator=(sparse_foreach_basis_state&&) noexcept = default;
+  ~sparse_foreach_basis_state() = default;
+
+  template <typename Function> inline void operator()(Function&& f) const {
+    std::fill(indices_.begin(), indices_.end(), 0);
+    sv_index_type state = 0;
+    for(sv_index_type i = 0; i < n_states_; ++i) {
+      std::forward<Function>(f)(state);
+      ++indices_[0];
+      ++state;
+
+      for(std::size_t d = 0;
+          d < indices_.size() - 1 && indices_[d] == sizes_[d];
+          ++d) {
+        indices_[d] = 0;
+        ++indices_[d + 1];
+        state += jumps_[d];
+      }
+    }
+  }
+};
+
+} // namespace detail
 
 // Range of bits in a bit string, [start;end]
 using bit_range_t = std::pair<int, int>;
@@ -116,8 +210,13 @@ public:
   // Construct from a vector of pointers to elementary spaces
   explicit hilbert_space(
       std::vector<elementary_space_t*> const& elementary_spaces) {
-    for(auto const* p : elementary_spaces)
-      add(*p);
+    for(auto const* p : elementary_spaces) {
+      auto r = elementary_spaces_.emplace(p->clone(), bit_range_t(0, 0));
+      if(!r.second) throw elementary_space_exists(*p);
+      dim_ *= p->dim();
+    }
+    recompute_bit_ranges();
+    init_foreach_alg();
   }
 
   // Inspect polynomial expression `expr` and collect elementary spaces
@@ -142,11 +241,18 @@ public:
                             [](sv_index_type d, value_type const& es) {
                               return d * es.first->dim();
                             });
+
+    init_foreach_alg();
   }
 
   // Value semantics
   hilbert_space(hilbert_space const& hs)
-    : bit_range_end_(hs.bit_range_end_), dim_(hs.dim_) {
+    : bit_range_end_(hs.bit_range_end_),
+      dim_(hs.dim_),
+      foreach_alg_(hs.foreach_alg_ ?
+                       make_unique<detail::sparse_foreach_basis_state>(
+                           *hs.foreach_alg_) :
+                       nullptr) {
     for(auto const& es : hs.elementary_spaces_) {
       elementary_spaces_.emplace_hint(elementary_spaces_.end(),
                                       es.first->clone(),
@@ -163,6 +269,10 @@ public:
                                       es.second);
     }
     dim_ = hs.dim_;
+    foreach_alg_ =
+        hs.foreach_alg_ ?
+            make_unique<detail::sparse_foreach_basis_state>(*hs.foreach_alg_) :
+            nullptr;
     return *this;
   }
   hilbert_space& operator=(hilbert_space&&) noexcept = default;
@@ -192,6 +302,7 @@ public:
     if(!r.second) throw elementary_space_exists(es);
     recompute_bit_ranges();
     dim_ *= es.dim();
+    init_foreach_alg();
   }
 
   // Is a given elementary space found in this Hilbert space?
@@ -255,9 +366,12 @@ public:
   // Apply functor `f` to all basis state indices
   template <typename Functor>
   inline friend void foreach(hilbert_space const& hs, Functor&& f) {
-    sv_index_type d = hs.vec_size();
-    for(sv_index_type i = 0; i < d; ++i) {
-      std::forward<Functor>(f)(i);
+    if(hs.foreach_alg_) { // Sparse Hilbert space
+      (*hs.foreach_alg_)(std::forward<Functor>(f));
+    } else {
+      for(sv_index_type i = 0; i < hs.dim(); ++i) {
+        std::forward<Functor>(f)(i);
+      }
     }
   }
 
@@ -296,6 +410,41 @@ private:
       throw hilbert_space_too_big(bit_range_end_ + 1);
   }
 
+  // Reset foreach_alg_
+  void init_foreach_alg() {
+    std::vector<sv_index_type> sizes;
+    sizes.reserve(elementary_spaces_.size());
+
+    // Fill 'sizes' while merging (replacing by the product) the adjacent
+    // power-of-two dimensions.
+    bool new_size = true;
+    for(auto const& es : elementary_spaces_) {
+      sv_index_type es_dim = es.first->dim();
+      // Non-power-of-two elementary space: Add dimension to 'sizes'
+      if(es_dim != (sv_index_type(1) << es.first->n_bits())) {
+        sizes.push_back(es_dim);
+        new_size = true;
+      } else {
+        // Power-of-two elementary space
+        // If the last added element corresponded to a power-of-two space,
+        // multiply it by the current dimension. Otherwise add a new element
+        // to 'sizes'.
+        if(new_size) {
+          sizes.push_back(es_dim);
+          new_size = false;
+        } else {
+          sizes.back() *= es_dim;
+        }
+      }
+    }
+
+    if(sizes.size() < 2) {
+      foreach_alg_.reset(nullptr);
+    } else {
+      foreach_alg_ = make_unique<detail::sparse_foreach_basis_state>(sizes);
+    }
+  }
+
   // List of base spaces in the product and their corresponding bit ranges
   std::map<es_ptr_type, bit_range_t, less> elementary_spaces_;
 
@@ -308,6 +457,9 @@ private:
 
   // Dimension of this Hilbert space
   sv_index_type dim_ = 1;
+
+  // Optional foreach() implementation for sparse spaces
+  std::unique_ptr<detail::sparse_foreach_basis_state> foreach_alg_;
 };
 
 // Convenience factory function

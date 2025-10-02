@@ -20,11 +20,95 @@
 #include <libcommute/loperator/hilbert_space.hpp>
 
 #include <cmath>
+#include <cstdlib>
+#include <set>
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 using namespace libcommute;
+
+TEST_CASE("Implementation details", "[detail]") {
+  using namespace detail;
+
+  // cppcheck-suppress-begin knownConditionTrueFalse
+  SECTION("next_pow2") {
+    CHECK(next_pow2(0) == 1);
+    CHECK(next_pow2(1) == 1);
+    CHECK(next_pow2(2) == 2);
+    CHECK(next_pow2(3) == 4);
+    CHECK(next_pow2(4) == 4);
+    CHECK(next_pow2(5) == 8);
+    CHECK(next_pow2(6) == 8);
+    CHECK(next_pow2(7) == 8);
+    CHECK(next_pow2(8) == 8);
+  }
+  // cppcheck-suppress-end knownConditionTrueFalse
+
+  SECTION("sparse_foreach_basis_state") {
+    auto foreach1 = sparse_foreach_basis_state({6});
+    std::vector<sv_index_type> sv_states1;
+    foreach1([&sv_states1](sv_index_type st) { sv_states1.push_back(st); });
+    CHECK(sv_states1 == std::vector<sv_index_type>{0, 1, 2, 3, 4, 5});
+
+    auto foreach2 = sparse_foreach_basis_state({3, 6});
+    std::vector<sv_index_type> sv_states2;
+    foreach2([&sv_states2](sv_index_type st) { sv_states2.push_back(st); });
+    // clang-format off
+    CHECK(sv_states2 == std::vector<sv_index_type>{
+              0,         1,         2,
+      1 * 4 + 0, 1 * 4 + 1, 1 * 4 + 2,
+      2 * 4 + 0, 2 * 4 + 1, 2 * 4 + 2,
+      3 * 4 + 0, 3 * 4 + 1, 3 * 4 + 2,
+      4 * 4 + 0, 4 * 4 + 1, 4 * 4 + 2,
+      5 * 4 + 0, 5 * 4 + 1, 5 * 4 + 2
+    });
+    // clang-format on
+
+    auto foreach3 = sparse_foreach_basis_state({4, 5, 2});
+    std::vector<sv_index_type> sv_states3;
+    foreach3([&sv_states3](sv_index_type st) { sv_states3.push_back(st); });
+    // clang-format off
+    CHECK(sv_states3 == std::vector<sv_index_type>{
+           (        0),      (        1),      (        2),      (        3),
+           (1 * 4 + 0),      (1 * 4 + 1),      (1 * 4 + 2),      (1 * 4 + 3),
+           (2 * 4 + 0),      (2 * 4 + 1),      (2 * 4 + 2),      (2 * 4 + 3),
+           (3 * 4 + 0),      (3 * 4 + 1),      (3 * 4 + 2),      (3 * 4 + 3),
+           (4 * 4 + 0),      (4 * 4 + 1),      (4 * 4 + 2),      (4 * 4 + 3),
+      32 + (        0), 32 + (        1), 32 + (        2), 32 + (        3),
+      32 + (1 * 4 + 0), 32 + (1 * 4 + 1), 32 + (1 * 4 + 2), 32 + (1 * 4 + 3),
+      32 + (2 * 4 + 0), 32 + (2 * 4 + 1), 32 + (2 * 4 + 2), 32 + (2 * 4 + 3),
+      32 + (3 * 4 + 0), 32 + (3 * 4 + 1), 32 + (3 * 4 + 2), 32 + (3 * 4 + 3),
+      32 + (4 * 4 + 0), 32 + (4 * 4 + 1), 32 + (4 * 4 + 2), 32 + (4 * 4 + 3)
+    });
+    // clang-format on
+
+    auto foreach4 = sparse_foreach_basis_state({2, 8, 2, 4});
+    std::vector<sv_index_type> sv_states4;
+    foreach4([&sv_states4](sv_index_type st) { sv_states4.push_back(st); });
+    std::vector<sv_index_type> sv_states4_ref(128);
+    std::iota(sv_states4_ref.begin(), sv_states4_ref.end(), 0);
+    CHECK(sv_states4 == sv_states4_ref);
+
+    auto foreach5 = sparse_foreach_basis_state({3, 5, 7, 9, 17});
+    std::set<sv_index_type> sv_states5;
+    foreach5([&sv_states5](sv_index_type st) {
+      sv_states5.insert(st);
+      auto s = std::ldiv(long(st), 4); // Extract bits 0-1
+      CHECK(s.rem <= 2);
+      s = std::ldiv(s.quot, 8); // Extract bits 2-4
+      CHECK(s.rem <= 4);
+      s = std::ldiv(s.quot, 8); // Extract bits 5-7
+      CHECK(s.rem <= 6);
+      s = std::ldiv(s.quot, 16); // Extract bits 8-11
+      CHECK(s.rem <= 8);
+      s = std::ldiv(s.quot, 32); // Extract bits 12-16
+      CHECK(s.rem <= 16);
+    });
+    CHECK(sv_states5.size() == 3 * 5 * 7 * 9 * 17);
+  }
+}
 
 TEST_CASE("Hilbert space", "[hilbert_space]") {
   using namespace static_indices;
@@ -322,12 +406,6 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs1.bit_range(es_s32_j) == std::make_pair(4, 5));
     CHECK(make_hilbert_space(expr) == hs1);
 
-    SECTION("foreach()") {
-      std::size_t count = 0;
-      foreach(hs1, [&count](int i) { count += i; });
-      CHECK(count == 2016);
-    }
-
     expr += a_dag("x", 0) + a("y", 0);
 
     using ex_type = es_construction_failure<std::string, int>;
@@ -358,6 +436,32 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs2.index(es_s32_j) == 5);
     CHECK(hs2.bit_range(es_s32_j) == std::make_pair(12, 13));
     CHECK(make_hilbert_space(expr, boson_es_constructor(4)) == hs2);
+
+    SECTION("foreach()") {
+      // Dense Hilbert space
+      std::vector<sv_index_type> st1;
+      std::vector<sv_index_type> st1_ref(64);
+      std::iota(st1_ref.begin(), st1_ref.end(), 0);
+      foreach(hs1, [&st1](int i) { st1.push_back(i); });
+      CHECK(st1 == st1_ref);
+
+      // Sparse Hilbert space
+      auto expr2 =
+          5.0 * n("up", 0) * n("dn", 0) + 2.0 * S_z<3>("i", 0) + S_z<4>("i", 0);
+      hs_type hs3(expr2, boson_es_constructor(2));
+      CHECK(hs3.dim() == 2 * 2 * 3 * 4);
+      CHECK(hs3.is_sparse());
+
+      std::vector<sv_index_type> st3;
+      std::vector<sv_index_type> st3_ref{
+          0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, // S-3/2 state |-3/2>
+          16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, // S-3/2 state |-1/2>
+          32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, // S-3/2 state |1/2>
+          48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59  // S-3/2 state |3/2>
+      };
+      foreach(hs3, [&st3](int i) { st3.push_back(i); });
+      CHECK(st3 == st3_ref);
+    }
   }
 
   SECTION("Very big Hilbert space") {
