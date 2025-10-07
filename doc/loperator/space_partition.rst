@@ -4,7 +4,6 @@ Finding invariant subspaces of a linear operator
 ================================================
 
 .. default-domain:: cpp
-
 .. namespace:: libcommute
 
 This page explains how to use :class:`space_partition`, an efficient tool to
@@ -31,16 +30,20 @@ For a detailed description of the algorithm see [SKFP16]_.
           matrix_elements_map = \
           std::map<std::pair<sv_index_type, sv_index_type>, ScalarType>;
 
+  *Defined in <libcommute/loperator/space_partition.hpp>*
+
   Sparse storage type for matrix elements of a linear operator :math:`\hat O`.
   Pairs of indices :math:`(i,j)` are mapped to
   :math:`\langle i| \hat O |j\rangle`.
 
-.. class:: space_partition
+.. class:: template<typename HSType> space_partition
 
-  Partition of a Hilbert space into disjoint subspaces.
+  *Defined in <libcommute/loperator/space_partition.hpp>*
 
-  .. function:: template<typename HSType, \
-                         typename LOpScalarType, int... LOpAlgebraIDs> \
+  Partition of a Hilbert space into disjoint subspaces. :type:`HSType` is the
+  type of the Hilbert space to be partitioned.
+
+  .. function:: template<typename LOpScalarType, int... LOpAlgebraIDs> \
                 space_partition( \
                   loperator<LOpScalarType, LOpAlgebraIDs...> const& h, \
                   HSType const& hs)
@@ -48,8 +51,7 @@ For a detailed description of the algorithm see [SKFP16]_.
     Partition Hilbert space :expr:`hs` into invariant subspaces of Hermitian
     linear operator :expr:`h` (Hamiltonian).
 
-  .. function:: template<typename HSType, \
-                         typename LOpScalarType, int... LOpAlgebraIDs> \
+  .. function:: template<typename LOpScalarType, int... LOpAlgebraIDs> \
                 space_partition( \
                   loperator<LOpScalarType, LOpAlgebraIDs...> const& h, \
                   HSType const& hs, \
@@ -59,12 +61,10 @@ For a detailed description of the algorithm see [SKFP16]_.
     linear operator :expr:`h` (Hamiltonian). This constructor reveals all
     matrix elements of :expr:`h` and writes them into :expr:`me`.
 
-  .. function:: template<typename HSType, \
-                         typename LOpScalarType, int... LOpAlgebraIDs> \
+  .. function:: template<typename LOpScalarType, int... LOpAlgebraIDs> \
                 auto merge_subspaces( \
                   loperator<LOpScalarType, LOpAlgebraIDs...> const& Od, \
                   loperator<LOpScalarType, LOpAlgebraIDs...> const& O, \
-                  HSType const& hs, \
                   bool store_matrix_elements = true \
                 ) -> \
                 std::pair<loperator_melem_t<LOpScalarType, LOpAlgebraIDs...>, \
@@ -102,11 +102,9 @@ For a detailed description of the algorithm see [SKFP16]_.
     The disjoint subspaces can be re-enumerated after a call to
     :func:`merge_subspaces()`.
 
-  .. function:: template<typename HSType, \
-                         typename LOpScalarType, int... LOpAlgebraIDs> \
+  .. function:: template<typename LOpScalarType, int... LOpAlgebraIDs> \
                 auto find_connections( \
-                  loperator<LOpScalarType, LOpAlgebraIDs...> const& op, \
-                  HSType const& hs \
+                  loperator<LOpScalarType, LOpAlgebraIDs...> const& op \
                 ) -> \
                 std::set<std::pair<sv_index_type, sv_index_type>>
 
@@ -133,6 +131,29 @@ For a detailed description of the algorithm see [SKFP16]_.
     Apply functor :expr:`f` to all basis states in a given space partition.
     The functor must take two arguments, index of the basis state,
     and serial number of the subspace this basis state belongs to.
+
+.. function:: template <typename HSType, \
+                        typename LOpScalarType, \
+                        int... LOpAlgebraIDs> \
+              space_partition<HSType> make_space_partition( \
+                loperator<LOpScalarType, LOpAlgebraIDs...> const& h, \
+                HSType const& hs)
+              template <typename HSType, \
+                        typename LOpScalarType, \
+                        int... LOpAlgebraIDs> \
+              space_partition<HSType> make_space_partition( \
+                loperator<LOpScalarType, LOpAlgebraIDs...> const& h, \
+                HSType const& hs, \
+                matrix_elements_map< \
+                typename loperator<LOpScalarType, \
+                                   LOpAlgebraIDs...>::scalar_type>& me)
+
+  *Defined in <libcommute/loperator/space_partition.hpp>*
+
+  Helper factory functions that construct a :class:`space_partition` instance
+  from a linear operator :expr:`h` and a Hilbert space :expr:`hs`.
+  These functions are more convenient equivalents of :class:`space_partition`'s
+  constructors.
 
 .. literalinclude:: ../../examples/partition.cpp
   :language: cpp

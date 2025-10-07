@@ -37,6 +37,14 @@ All notable changes to this project will be documented in this file.
 - Semantics of the existing method ``hilbert_space::dim()`` has been changed:
   Now it returns the exact dimension of the Hilbert space, which is smaller than
   ``hilbert_space::vec_size()`` if the Hilbert space is sparse.
+- Changed ``space_partition`` to store a constant reference to the Hilbert space
+  being partitioned. This change is necessary to enable support for the sparse
+  ``hilbert_space`` objects. ``space_partition`` is now templated on the Hilbert
+  space type, whereas its constructors are not.
+- ``space_partition::merge_subspaces()`` and
+  ``space_partition::find_connections()`` no longer accept the ``hs`` argument
+  and use the stored reference instead.
+- Two helper factory functions ``make_space_partition()`` have been added.
 - Improved performance and stability of ``space_partition::merge_subspaces()``
   by switching to a non-recursive variant of the algorithm.
 - Fixed a negative index bug in ``n_fermion_sector_view``.

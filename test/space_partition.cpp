@@ -25,6 +25,17 @@
 
 using namespace libcommute;
 
+using subspaces_t = std::set<std::set<sv_index_type>>;
+
+template <typename HSType>
+subspaces_t collect_subspaces(space_partition<HSType> const& sp) {
+  // Sets are used to neglect order of subspaces and of states within a subspace
+  std::vector<std::set<sv_index_type>> v_cl(sp.n_subspaces());
+  foreach(sp, [&](int i, int subspace) { v_cl[subspace].insert(i); });
+  subspaces_t cl{v_cl.cbegin(), v_cl.cend()};
+  return cl;
+}
+
 TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
   using namespace static_indices;
 
@@ -84,20 +95,13 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
   sv_index_type u2 = 1 << hs.bit_range(es_type("up", 2)).first;
 
   SECTION("space_partition()") {
-    auto sp = space_partition(Hop, hs);
+    auto sp = make_space_partition(Hop, hs);
 
     CHECK(sp.dim() == 64);
     CHECK(sp.n_subspaces() == 44);
 
-    // Calculated classification of states
-    // sets are used to neglect order of subspaces and of states within
-    // a subspace
-    std::vector<std::set<sv_index_type>> v_cl(sp.n_subspaces());
-    foreach(sp, [&](int i, int subspace) { v_cl[subspace].insert(i); });
-    std::set<std::set<sv_index_type>> cl{v_cl.cbegin(), v_cl.cend()};
-
     // Expected classification of states
-    std::set<std::set<sv_index_type>> ref_cl{
+    subspaces_t ref_cl{
         // N=0
         {0},
         // N=1
@@ -154,7 +158,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         // N=6
         {d0 + d1 + d2 + u0 + u1 + u2}};
 
-    CHECK(cl == ref_cl); // cppcheck-suppress knownConditionTrueFalse
+    CHECK(collect_subspaces(sp) == ref_cl);
 
     SECTION("subspace_bases()") {
       auto bases = sp.subspace_bases();
@@ -177,7 +181,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
   SECTION("Matrix elements") {
     matrix_elements_map<double> matrix_elements;
-    auto sp = space_partition(Hop, hs, matrix_elements);
+    auto sp = make_space_partition(Hop, hs, matrix_elements);
 
     struct melem_t {
       sv_index_type from;
@@ -344,15 +348,13 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
   SECTION("merge_subspaces()") {
 
-    auto check_one_to_one = [](space_partition const& sp,
-                               std::vector<decltype(Hop)> const& ops) {
+    auto check_one_to_one = [&hs](space_partition<decltype(hs)> const& sp,
+                                  std::vector<decltype(Hop)> const& ops) {
       // Calculated classification of states
-      std::vector<std::set<sv_index_type>> v_cl(sp.n_subspaces());
-      foreach(sp, [&](int i, int subspace) { v_cl[subspace].insert(i); });
-      std::set<std::set<sv_index_type>> cl{v_cl.cbegin(), v_cl.cend()};
+      auto cl = collect_subspaces(sp);
 
-      sparse_state_vector<double> in_state(sp.dim());
-      sparse_state_vector<double> out_state(sp.dim());
+      sparse_state_vector<double> in_state(hs.vec_size());
+      sparse_state_vector<double> out_state(hs.vec_size());
 
       for(auto const& op : ops) {
         for(auto const& i_sp : cl) {
@@ -386,7 +388,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
     };
 
     SECTION("Hubbard-Kanamori") {
-      auto sp = space_partition(Hop, hs);
+      auto sp = make_space_partition(Hop, hs);
 
       std::vector<decltype(Hop)> ops1, ops2, all_ops;
       for(int o = 0; o < n_orbs; ++o) {
@@ -396,7 +398,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         all_ops.emplace_back(ops1.back());
         all_ops.emplace_back(ops2.back());
 
-        sp.merge_subspaces(ops1.back(), ops2.back(), hs);
+        sp.merge_subspaces(ops1.back(), ops2.back());
       }
 
       check_one_to_one(sp, all_ops);
@@ -424,7 +426,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
       // Linear operator form of the Hamiltonian
       auto H_bath_op = make_loperator(H, hs_bath);
 
-      auto sp = space_partition(H_bath_op, hs_bath);
+      auto sp = make_space_partition(H_bath_op, hs_bath);
 
       std::vector<decltype(Hop)> Cd, C, all_ops;
       for(std::string spin : {"dn", "up"}) {
@@ -435,7 +437,7 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
           all_ops.emplace_back(Cd.back());
           all_ops.emplace_back(C.back());
 
-          sp.merge_subspaces(Cd.back(), C.back(), hs_bath);
+          sp.merge_subspaces(Cd.back(), C.back());
         }
       }
 
@@ -452,12 +454,12 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         c_dag("dn", 1) * c_dag("up", 1),
         n("up", 2)};
 
-    auto sp = space_partition(Hop, hs);
+    auto sp = make_space_partition(Hop, hs);
     auto op = make_loperator(expr[1] + expr[2] + expr[3] + expr[4], hs);
-    auto conns = sp.find_connections(op, hs);
+    auto conns = sp.find_connections(op);
 
     connections_map conns_ref;
-    std::vector<double> in_state(sp.dim());
+    std::vector<double> in_state(hs.vec_size());
     foreach(hs, [&](sv_index_type i) {
       in_state[i] = 1.0;
       auto out_state = op(in_state);
@@ -472,10 +474,10 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
 
     for(auto const& expr1 : expr) {
       for(auto const& expr2 : expr) {
-        auto conns1 = sp.find_connections(make_loperator(expr1, hs), hs);
-        auto conns2 = sp.find_connections(make_loperator(expr2, hs), hs);
+        auto conns1 = sp.find_connections(make_loperator(expr1, hs));
+        auto conns2 = sp.find_connections(make_loperator(expr2, hs));
         auto conns12 =
-            sp.find_connections(make_loperator(expr1 + expr2, hs), hs);
+            sp.find_connections(make_loperator(expr1 + expr2, hs));
 
         connections_map conns12_ref;
         std::set_union(conns1.begin(),
@@ -487,5 +489,77 @@ TEST_CASE("Automatic Hilbert space partition", "[space_partition]") {
         CHECK(conns12 == conns12_ref);
       }
     }
+  }
+
+  SECTION("Sparse Hilbert space") {
+    auto H_sp = (S_p<3>(0) * S_m<3>(1) + S_m<3>(0) * S_p<3>(1)) +
+                (S_p<3>(1) * S_m<3>(2) + S_m<3>(1) * S_p<3>(2)) +
+                (S_p<3>(2) * S_m<3>(0) + S_m<3>(2) * S_p<3>(0));
+    auto hs_sp = make_hilbert_space(H_sp);
+    REQUIRE(hs_sp.is_sparse());
+    auto H_sp_op = make_loperator(H_sp, hs_sp);
+    auto sp = make_space_partition(H_sp_op, hs_sp);
+
+    CHECK(sp.dim() == 27);
+    CHECK(sp.n_subspaces() == 7); // S=3 septuplet
+
+    using es_type = elementary_space_spin<int>;
+    sv_index_type S0_m1 = 0 << hs_sp.bit_range(es_type(1.0, 0)).first;
+    sv_index_type S0_0 = 1 << hs_sp.bit_range(es_type(1.0, 0)).first;
+    sv_index_type S0_p1 = 2 << hs_sp.bit_range(es_type(1.0, 0)).first;
+    sv_index_type S1_m1 = 0 << hs_sp.bit_range(es_type(1.0, 1)).first;
+    sv_index_type S1_0 = 1 << hs_sp.bit_range(es_type(1.0, 1)).first;
+    sv_index_type S1_p1 = 2 << hs_sp.bit_range(es_type(1.0, 1)).first;
+    sv_index_type S2_m1 = 0 << hs_sp.bit_range(es_type(1.0, 2)).first;
+    sv_index_type S2_0 = 1 << hs_sp.bit_range(es_type(1.0, 2)).first;
+    sv_index_type S2_p1 = 2 << hs_sp.bit_range(es_type(1.0, 2)).first;
+
+    // Expected classification of states
+    std::vector<std::set<sv_index_type>> ref_cl{
+        // S_z=-3
+        {S0_m1 + S1_m1 + S2_m1},
+        // S_z=-2
+        {S0_m1 + S1_m1 + S2_0, S0_m1 + S1_0 + S2_m1, S0_0 + S1_m1 + S2_m1},
+        // S_z=-1
+        {S0_m1 + S1_0 + S2_0,
+         S0_0 + S1_m1 + S2_0,
+         S0_0 + S1_0 + S2_m1,
+         S0_m1 + S1_m1 + S2_p1,
+         S0_m1 + S1_p1 + S2_m1,
+         S0_p1 + S1_m1 + S2_m1},
+        // S_z=0
+        {S0_0 + S1_0 + S2_0,
+         S0_m1 + S1_p1 + S2_0,
+         S0_p1 + S1_m1 + S2_0,
+         S0_0 + S1_m1 + S2_p1,
+         S0_0 + S1_p1 + S2_m1,
+         S0_m1 + S1_0 + S2_p1,
+         S0_p1 + S1_0 + S2_m1},
+        // S_z=1
+        {S0_p1 + S1_0 + S2_0,
+         S0_0 + S1_p1 + S2_0,
+         S0_0 + S1_0 + S2_p1,
+         S0_p1 + S1_p1 + S2_m1,
+         S0_p1 + S1_m1 + S2_p1,
+         S0_m1 + S1_p1 + S2_p1},
+        // S_z=2
+        {S0_p1 + S1_p1 + S2_0, S0_p1 + S1_0 + S2_p1, S0_0 + S1_p1 + S2_p1},
+        // S_z=3
+        {S0_p1 + S1_p1 + S2_p1}};
+    CHECK(collect_subspaces(sp) == subspaces_t(ref_cl.begin(), ref_cl.end()));
+
+    auto op_pp = make_loperator(S_p<3>(0) + S_m<3>(1), hs_sp);
+    auto op_mm = make_loperator(S_m<3>(0) + S_p<3>(1), hs_sp);
+    sp.merge_subspaces(op_pp, op_mm);
+
+    // Two subspaces: Even and odd S_z
+    std::set<sv_index_type> ref_cl_odd, ref_cl_even;
+    for(int S_z : {-3, -1, 1, 3})
+      ref_cl_odd.insert(ref_cl[S_z + 3].begin(), ref_cl[S_z + 3].end());
+    for(int S_z : {-2, 0, 2})
+      ref_cl_even.insert(ref_cl[S_z + 3].begin(), ref_cl[S_z + 3].end());
+
+    CHECK(sp.n_subspaces() == 2);
+    CHECK(collect_subspaces(sp) == subspaces_t{ref_cl_odd, ref_cl_even});
   }
 }

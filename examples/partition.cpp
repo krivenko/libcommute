@@ -89,7 +89,7 @@ int main() {
   // Reveal invariant subspaces of H
   //
 
-  auto sp1 = space_partition(Hop, hs);
+  auto sp1 = make_space_partition(Hop, hs);
 
   std::cout << "Total dimension of the Hilbert space is " << sp1.dim() << '\n';
 
@@ -100,7 +100,7 @@ int main() {
   //
 
   matrix_elements_map<double> H_elements;
-  auto sp2 = space_partition(Hop, hs, H_elements);
+  auto sp2 = make_space_partition(Hop, hs, H_elements);
 
   std::cout << "H has " << H_elements.size() << " non-vanishing matrix elements"
             << '\n';
@@ -115,7 +115,7 @@ int main() {
       auto Cdagop = make_loperator(c_dag(spin, o), hs);
       auto Cop = make_loperator(c(spin, o), hs);
 
-      auto matrix_elements = sp2.merge_subspaces(Cdagop, Cop, hs);
+      auto matrix_elements = sp2.merge_subspaces(Cdagop, Cop);
 
       std::cout << c_dag(spin, o) << " has " << matrix_elements.first.size()
                 << " non-vanishing matrix elements\n";
