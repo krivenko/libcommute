@@ -32,20 +32,6 @@ using namespace libcommute;
 TEST_CASE("Implementation details", "[detail]") {
   using namespace detail;
 
-  // cppcheck-suppress-begin knownConditionTrueFalse
-  SECTION("next_pow2") {
-    CHECK(next_pow2(0) == 1);
-    CHECK(next_pow2(1) == 1);
-    CHECK(next_pow2(2) == 2);
-    CHECK(next_pow2(3) == 4);
-    CHECK(next_pow2(4) == 4);
-    CHECK(next_pow2(5) == 8);
-    CHECK(next_pow2(6) == 8);
-    CHECK(next_pow2(7) == 8);
-    CHECK(next_pow2(8) == 8);
-  }
-  // cppcheck-suppress-end knownConditionTrueFalse
-
   SECTION("sparse_foreach_basis_state") {
     auto foreach1 = sparse_foreach_basis_state({6});
     std::vector<sv_index_type> sv_states1;

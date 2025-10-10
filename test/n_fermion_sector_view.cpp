@@ -46,12 +46,6 @@ TEST_CASE("Implementation details", "[detail]") {
 
   using hs_type = hilbert_space<int>;
 
-  SECTION("2^n") {
-    CHECK(pow2(0) == 1);
-    CHECK(pow2(1) == 2);
-    CHECK(pow2(4) == 16);
-  }
-
   // cppcheck-suppress-begin knownConditionTrueFalse
   SECTION("Binomial coefficient") {
     CHECK(binomial(0, 0) == 1);
@@ -64,21 +58,6 @@ TEST_CASE("Implementation details", "[detail]") {
     CHECK(binomial(10, 4) == 210);
     CHECK(binomial(10, 5) == 252);
     CHECK(binomial(10, 6) == 210);
-  }
-
-  SECTION("count_trailing_zeros") {
-    for(unsigned int i = 0; i < 63; ++i)
-      CHECK(count_trailing_zeros(sv_index_type(1) << i) == i);
-  }
-
-  SECTION("popcount") {
-    for(unsigned int i = 0; i < 63; ++i)
-      CHECK(popcount(sv_index_type(1) << i) == 1);
-
-    sv_index_type one = 1;
-    CHECK(popcount((one << 32) + (one << 8)) == 2);
-    CHECK(popcount((one << 32) + (one << 4) + (one << 2)) == 3);
-    CHECK(popcount((one << 32) + (one << 8) + (one << 4) + (one << 2)) == 4);
   }
   // cppcheck-suppress-end knownConditionTrueFalse
 

@@ -88,18 +88,6 @@ build_basis_states_ref(hs_type const& hs,
 TEST_CASE("Implementation details", "[detail]") {
   using namespace detail;
 
-  SECTION("deposit_bits") {
-    CHECK(deposit_bits(0x3F, 0x07020408) == 0x07020408);
-    CHECK(deposit_bits(0x38, 0x07020408) == 0x07000000);
-    CHECK(deposit_bits(0x0F, 0x07020408) == 0x01020408);
-  }
-
-  SECTION("extract_bits") {
-    CHECK(extract_bits(0x00FF00FF, 0x07020408) == 5 /* 0b101 */);
-    CHECK(extract_bits(0xFF00FF00, 0x07020408) == 58 /* 0b111010 */);
-    CHECK(extract_bits(0xFF00000000000000, 0x0100000000000000) == 1);
-  }
-
   SECTION("multisector_unranking_generator") {
     using namespace static_indices;
 

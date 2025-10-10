@@ -37,6 +37,7 @@ set(TESTS
   hc
   commutators
   new_algebra
+  bit_ops
   state_vector
   elementary_space
   hilbert_space

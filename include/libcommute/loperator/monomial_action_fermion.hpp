@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_LOPERATOR_MONOMIAL_ACTION_FERMION_HPP_
 
 #include "../expression/generator_fermion.hpp"
+#include "bit_ops.hpp"
 #include "elementary_space_fermion.hpp"
 #include "hilbert_space.hpp"
 #include "monomial_action.hpp"
@@ -93,29 +94,14 @@ public:
       return false; // Zero after acting with the creation operators
 
     index = ~(~inter_index & ~creation_mask);
-    bool minus = parity_popcount((inter_index & annihilation_count_mask) ^
-                                 (index & creation_count_mask));
+    bool minus =
+        detail::parity_popcount((inter_index & annihilation_count_mask) ^
+                                (index & creation_count_mask));
     if(minus) mul_assign(coeff, scalar_traits<ScalarType>::make_const(-1));
     return true;
   }
 
 private:
-  // Compute parity of the number of set bits in i
-  inline static bool parity_popcount(sv_index_type i) {
-#if defined(__GNUC__) || defined(__clang__)
-    return __builtin_parityll(i);
-#else
-    i ^= i >> 32;
-    i ^= i >> 16;
-    i ^= i >> 8;
-    i ^= i >> 4;
-    i ^= i >> 2;
-    i ^= i >> 1;
-    return i & 0x1;
-#endif
-  }
-
-  //
   inline static sv_index_type compute_count_mask(std::vector<int> const& d,
                                                  bit_range_t const& bit_range) {
     sv_index_type mask = 0;

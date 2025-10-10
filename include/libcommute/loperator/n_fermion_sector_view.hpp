@@ -16,6 +16,7 @@
 #include "../algebra_ids.hpp"
 #include "../utility.hpp"
 
+#include "bit_ops.hpp"
 #include "elementary_space_fermion.hpp"
 #include "hilbert_space.hpp"
 #include "state_vector.hpp"
@@ -35,10 +36,6 @@
 #include <utility>
 #include <vector>
 
-#if(defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
-#include <immintrin.h>
-#endif
-
 /* Ranking / unranking algorithms implemented here are described in
  *
  * `"Trie-based ranking of quantum many-body states",
@@ -53,11 +50,6 @@ template <typename HSType> struct sector_descriptor;
 
 namespace detail {
 
-// 2^n
-inline constexpr sv_index_type pow2(unsigned int n) {
-  return sv_index_type(1) << n;
-}
-
 // Binomial coefficient C(n, k)
 inline sv_index_type binomial(unsigned int n, unsigned int k) {
   if(k > n) return 0;
@@ -66,84 +58,6 @@ inline sv_index_type binomial(unsigned int n, unsigned int k) {
   for(unsigned int i = 0; i < k; ++i)
     C = (C * (n - i)) / (i + 1);
   return C;
-}
-
-// Count trailing zeroes
-inline unsigned int count_trailing_zeros(sv_index_type i) {
-#if defined(__GNUC__) || defined(__clang__)
-  return __builtin_ctzll(i);
-#else
-  // https://blog.stephencleary.com/2010/10/
-  //   implementing-gccs-builtin-functions.html
-  unsigned int n = 1;
-  if((i & 0xffffffff) == 0) {
-    n = n + 32;
-    i = i >> 32;
-  }
-  if((i & 0x0000ffff) == 0) {
-    n = n + 16;
-    i = i >> 16;
-  }
-  if((i & 0x000000ff) == 0) {
-    n = n + 8;
-    i = i >> 8;
-  }
-  if((i & 0x0000000f) == 0) {
-    n = n + 4;
-    i = i >> 4;
-  }
-  if((i & 0x00000003) == 0) {
-    n = n + 2;
-    i = i >> 2;
-  }
-  return n - (i & 1);
-#endif
-}
-
-// Count set bits
-inline unsigned int popcount(sv_index_type i) {
-#if defined(__GNUC__) || defined(__clang__)
-  return __builtin_popcountll(i);
-#else
-  i ^= i >> 32;
-  i ^= i >> 16;
-  i ^= i >> 8;
-  i ^= i >> 4;
-  i ^= i >> 2;
-  i ^= i >> 1;
-  return i;
-#endif
-}
-
-// Parallel bits deposit
-inline sv_index_type deposit_bits(sv_index_type src, sv_index_type mask) {
-#if(defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
-  return _pdep_u64(src, mask);
-#else
-  // https://www.chessprogramming.org/BMI2#Serial_Implementation
-  sv_index_type res = 0;
-  for(sv_index_type bb = 1; mask; bb += bb) {
-    // cppcheck-suppress oppositeExpression
-    if(src & bb) res |= mask & -mask;
-    mask &= mask - 1;
-  }
-  return res;
-#endif
-}
-
-// Parallel bits extract
-inline sv_index_type extract_bits(sv_index_type val, sv_index_type mask) {
-#if(defined(__GNUC__) || defined(__clang__)) && defined(__BMI2__)
-  return _pext_u64(val, mask);
-#else
-  // From https://www.chessprogramming.org/BMI2#Serial_Implementation_2
-  sv_index_type res = 0;
-  for(sv_index_type bb = 1; mask; bb += bb) {
-    if(val & mask & -mask) res |= bb;
-    mask &= mask - 1;
-  }
-  return res;
-#endif
 }
 
 // Parameters of an N-fermion sector
@@ -160,7 +74,7 @@ struct n_fermion_sector_params_t {
 
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs, unsigned int N)
-    : M(init_m(hs)), mask(pow2(M) - 1), N(validated_n(N)) {}
+    : M(init_m(hs)), mask(detail::pow2(M) - 1), N(validated_n(N)) {}
 
   template <typename HSType>
   n_fermion_sector_params_t(HSType const& hs,
@@ -191,7 +105,7 @@ private:
     for(auto const& i : sector.indices) {
       unsigned int b =
           hs.bit_range(elementary_space_fermion<IndexTypes...>(i)).first;
-      m += pow2(b);
+      m += detail::pow2(b);
     }
     return m;
   }

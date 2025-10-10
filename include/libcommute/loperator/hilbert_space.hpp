@@ -16,6 +16,7 @@
 #include "../expression/expression.hpp"
 #include "../metafunctions.hpp"
 #include "../utility.hpp"
+#include "bit_ops.hpp"
 #include "elementary_space.hpp"
 #include "es_constructor.hpp"
 #include "state_vector.hpp"
@@ -36,25 +37,6 @@
 namespace libcommute {
 
 namespace detail {
-
-// The lowest power of 2 that is not smaller than i
-inline sv_index_type next_pow2(sv_index_type i) {
-  if(i < 2) return 1;
-#if defined(__GNUC__) || defined(__clang__)
-  return sv_index_type(1) << (64 - __builtin_clzll(i - 1));
-#else
-  // https://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2
-  --i;
-  i |= i >> 1;
-  i |= i >> 2;
-  i |= i >> 4;
-  i |= i >> 8;
-  i |= i >> 16;
-  i |= i >> 32;
-  ++i;
-  return i;
-#endif
-}
 
 // Iterate over a sparse range of basis states
 //
