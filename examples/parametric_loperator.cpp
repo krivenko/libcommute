@@ -145,8 +145,8 @@ int main() {
 
   // H will act in the Hilbert space 'hs'. Since we are working with a boson,
   // we have to truncate the Hilbert space and allow a finite number of
-  // excitations (here, N = 0, 1, ..., 2^4 - 1).
-  auto hs = make_hilbert_space(H, boson_es_constructor(4));
+  // excitations (here, N = 0, 1, ..., 15).
+  auto hs = make_hilbert_space(H, boson_es_constructor(16));
 
   // Parametric quantum operator (depends on parameter \lambda)
   auto Hop = make_param_loperator(H, hs);

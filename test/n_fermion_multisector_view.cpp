@@ -270,7 +270,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
       }
     }
 
-    hs.add(make_space_boson(2, 0));
+    hs.add(make_space_boson(4, 0));
 
     SECTION("Fermions and bosons") {
       CHECK(n_fermion_multisector_size(hs, {}) == 8192); // No sectors
@@ -315,7 +315,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
       CHECK(n_fermion_multisector_size(hs_b, {}) == 32);
       CHECK_THROWS_AS(n_fermion_multisector_size(hs_b, {sda(1)}),
                       std::runtime_error);
@@ -584,8 +584,8 @@ TEST_CASE("View of a state vector projected on a direct product of "
       CHECK_THROWS_AS(view_type(st, hs, {sd0(2)}), std::runtime_error);
     }
 
-    hs.add(make_space_boson(1, 5));
-    hs.add(make_space_boson(2, 6));
+    hs.add(make_space_boson(2, 5));
+    hs.add(make_space_boson(4, 6));
 
     SECTION("Fermions and bosons") {
       unsigned int M = M_total + 3;
@@ -765,7 +765,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       check_view(view_type(st, hs_b, {}), {}, {}, {}, {}, 5, 0x1f);
       check_view(view_type(st, hs_b, {sde(0)}), {}, {}, {}, {}, 5, 0x1f);
@@ -783,7 +783,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
   }
 
   SECTION("get_element() and update_add_element()") {
-    hs_type hs{make_space_boson(2, 0)};
+    hs_type hs{make_space_boson(4, 0)};
     for(unsigned int i = 0; i < M_total; ++i)
       hs.add(make_space_fermion(int(i)));
 
@@ -870,8 +870,8 @@ TEST_CASE("View of a state vector projected on a direct product of "
       }
     }
 
-    hs.add(make_space_boson(2, int(M_total)));
-    hs.add(make_space_boson(2, int(M_total + 1)));
+    hs.add(make_space_boson(4, int(M_total)));
+    hs.add(make_space_boson(4, int(M_total + 1)));
 
     SECTION("Fermions and bosons") {
       unsigned int const M = M_total + 4;
@@ -905,7 +905,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       auto view = view_type(st, hs_b, {sde(0)});
       for(sv_index_type index = 0; index < hs_b.vec_size(); ++index) {
@@ -969,8 +969,8 @@ TEST_CASE("View of a state vector projected on a direct product of "
       }
     }
 
-    hs.add(make_space_boson(2, int(M_total)));
-    hs.add(make_space_boson(2, int(M_total + 1)));
+    hs.add(make_space_boson(4, int(M_total)));
+    hs.add(make_space_boson(4, int(M_total + 1)));
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= N5_max; ++N) {
@@ -997,7 +997,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       state_vector st(n_fermion_multisector_size(hs_b, {}));
       check_foreach(view_type(st, hs_b, {}), st);
@@ -1061,8 +1061,8 @@ TEST_CASE("View of a state vector projected on a direct product of "
       }
     }
 
-    hs.add(make_space_boson(2, int(M_total)));
-    hs.add(make_space_boson(2, int(M_total + 1)));
+    hs.add(make_space_boson(4, int(M_total)));
+    hs.add(make_space_boson(4, int(M_total + 1)));
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= N5_max; ++N) {
@@ -1095,7 +1095,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       std::vector<sv_index_type> ref(n_fermion_multisector_size(hs_b, {}));
       std::iota(ref.begin(), ref.end(), 0);
@@ -1172,7 +1172,7 @@ TEST_CASE("View of a state vector projected on a direct product of "
   }
 
   SECTION("loperator") {
-    hs_type hs{make_space_boson(2, 0)};
+    hs_type hs{make_space_boson(4, 0)};
 
     for(unsigned int i = 0; i < M_total; ++i)
       hs.add(make_space_fermion(int(i)));

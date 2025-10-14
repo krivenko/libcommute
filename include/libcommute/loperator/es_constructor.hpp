@@ -149,17 +149,17 @@ public:
 
 template <> class es_constructor<boson> {
 
-  int bits_per_boson_;
+  sv_index_type dim_boson_;
 
 public:
   es_constructor() = delete;
-  explicit es_constructor(int bits_per_boson)
-    : bits_per_boson_(bits_per_boson) {}
+  explicit es_constructor(sv_index_type dim_boson)
+    : dim_boson_(dim_boson) {}
 
   template <typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>
   operator()(generator<IndexTypes...> const& g) const {
-    return make_unique<elementary_space_boson<IndexTypes...>>(bits_per_boson_,
+    return make_unique<elementary_space_boson<IndexTypes...>>(dim_boson_,
                                                               g.indices());
   }
 };

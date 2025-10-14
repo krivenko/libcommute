@@ -86,13 +86,14 @@ public:
       if(!is_boson(*it)) throw unknown_generator<IndexTypes...>(*it);
 
       if(next_it == end_it || *next_it != *it) {
-        elementary_space_boson<IndexTypes...> es(0, it->indices());
+        elementary_space_boson<IndexTypes...> es(1, it->indices());
         if(!hs.has(es)) throw unknown_generator<IndexTypes...>(*it);
 
         bit_range_t const& bit_range = hs.bit_range(es);
+        sv_index_type dim = hs.dim(es);
         int shift = bit_range.first;
         int n_bits = bit_range.second - bit_range.first + 1;
-        sv_index_type n_max = (sv_index_type(1) << n_bits) - 1;
+        sv_index_type n_max = dim - 1;
 
         sqr_roots_size = std::max(sqr_roots_size, n_max + 1);
 

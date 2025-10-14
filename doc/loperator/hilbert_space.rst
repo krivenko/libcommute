@@ -112,8 +112,8 @@ generators at once.
     auto H = 2.0 * (a_dag(0) * a(0) - 0.5) + 3.0 * (a_dag(1) * a(1) - 0.5);
 
     // hs is a direct product of two bosonic elementary spaces, each with
-    // dimension 2^4 = 16.
-    auto hs = make_hilbert_space(H, boson_es_constructor(4));
+    // dimension 16.
+    auto hs = make_hilbert_space(H, boson_es_constructor(16));
 
 Other, more refined ways to create a Hilbert space are (a) to explicitly provide
 a list of elementary spaces or (b) to start from an empty product and add
@@ -130,15 +130,15 @@ generators are not necessarily found in ``H``.
     // std::string and int are index types of generators
     hilbert_space<std::string, int> hs1(
       make_space_fermion("dn", 0),   // Fermion
-      make_space_boson(4, "x", 0),   // Boson truncated to dim = 2^4
+      make_space_boson(16, "x", 0),  // Boson truncated to dim = 16
       make_space_spin(0.5, "i", 0)   // Spin-1/2
     );
 
     // Empty space, to be filled later
     hilbert_space<int> hs2;
     // Fill the space
-    hs2.add(make_space_fermion(0));  // Add a fermion
-    hs2.add(make_space_boson(4, 0)); // Add a boson
+    hs2.add(make_space_fermion(0));   // Add a fermion
+    hs2.add(make_space_boson(16, 0)); // Add a boson
 
 
 The order in which the elementary spaces are passed to the constructor or added
@@ -443,35 +443,34 @@ the elementary space to algebra generators acting in it.
   *Defined in <libcommute/loperator/elementary_space_boson.hpp>*
 
   An elementary space associated with bosonic algebra generators. This
-  elementary space is truncated and can have an arbitrary dimension of
-  form :math:`2^b`.
+  elementary space is truncated to an arbitrary fixed dimension.
 
   .. rubric:: Part of the interface not inherited from / identical to
               :class:`elementary_space`.
 
   .. function:: template<typename... Args> \
-                elementary_space_boson(int n_bits, Args&&... indices)
+                elementary_space_boson(sv_index_type dim, Args&&... indices)
 
-  Construct a bosonic elementary space of dimension :math:`2^\text{n_bits}`.
+    Construct a bosonic elementary space of dimension :var:`dim`.
 
 .. function:: template<typename... IndexTypes> \
               elementary_space_boson<IndexTypes...> \
-              libcommute::static_indices::make_space_boson(int n_bits, \
+              libcommute::static_indices::make_space_boson(sv_index_type dim, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/loperator/elementary_space_boson.hpp>*
 
-  Make an elementary space of dimension :math:`2^\text{n_bits}` associated with
+  Make an elementary space of dimension :var:`dim` associated with
   bosonic algebra generators with given indices.
 
 .. function:: template<typename... IndexTypes> \
               elementary_space_boson<dyn_indices> \
-              libcommute::dynamic_indices::make_space_boson(int n_bits, \
+              libcommute::dynamic_indices::make_space_boson(sv_index_type dim, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/loperator/elementary_space_boson.hpp>*
 
-  Make an elementary space of dimension :math:`2^\text{n_bits}` associated with
+  Make an elementary space of dimension :var:`dim` associated with
   bosonic algebra generators with a given dynamic index sequence.
 
 .. class:: template<typename... IndexTypes> \
@@ -624,8 +623,8 @@ use another elementary space constructor,
           :expr:`es_constructor<IDN>`. The arguments will be 'fed' into
           constructors of the single-ID objects in order, *at most one
           argument per constructor*. For example,
-          :expr:`es_constructor<fermion, boson, spin>(4)` will call
+          :expr:`es_constructor<fermion, boson, spin>(16)` will call
           :expr:`es_constructor<fermion>()`,
-          :expr:`es_constructor<boson>(4)` and
+          :expr:`es_constructor<boson>(16)` and
           :expr:`es_constructor<spin>()` because the bosonic constructor is the
           first in the sequence accepting one argument.

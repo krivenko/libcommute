@@ -37,9 +37,9 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
   auto es_f_up = make_space_fermion("up", 0);
   std::vector<es_type*> fermion_es = {&es_f_dn, &es_f_up};
 
-  // Bosonic elementary spaces (4 bits)
-  auto es_b_x = make_space_boson(4, "x", 0);
-  auto es_b_y = make_space_boson(4, "y", 0);
+  // Bosonic elementary spaces (dim = 13, 4 bits)
+  auto es_b_x = make_space_boson(13, "x", 0);
+  auto es_b_y = make_space_boson(13, "y", 0);
   std::vector<es_type*> boson_es = {&es_b_x, &es_b_y};
 
   // Spin-1/2 algebra elementary spaces
@@ -71,7 +71,7 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     for(auto* es : boson_es) {
       CHECK(es->algebra_id() == boson);
       CHECK(es->n_bits() == 4);
-      CHECK(es->dim() == 16);
+      CHECK(es->dim() == 13);
     }
     check_equality(boson_es);
     check_less_greater(boson_es);

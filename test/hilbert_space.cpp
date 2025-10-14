@@ -112,8 +112,8 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
   std::vector<es_type*> fermion_es = {&es_f_dn, &es_f_up};
 
   // Bosonic elementary spaces
-  auto es_b_x = make_space_boson(4, "x", 0);
-  auto es_b_y = make_space_boson(4, "y", 0);
+  auto es_b_x = make_space_boson(13, "x", 0);
+  auto es_b_y = make_space_boson(8, "y", 0);
   std::vector<es_type*> boson_es = {&es_b_x, &es_b_y};
 
   // Spin-1/2 elementary spaces
@@ -169,9 +169,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
                 es_f_dn,
                 es_f_up);
     CHECK(hs1.size() == 10);
-    CHECK(hs1.total_n_bits() == 20);
-    CHECK(hs1.dim() == 589824);
-    CHECK(hs1.vec_size() == 1048576);
+    CHECK(hs1.total_n_bits() == 19);
+    CHECK(hs1.dim() == 239616);
+    CHECK(hs1.vec_size() == 524288);
     CHECK(hs1.is_sparse());
 
     hs_type hs2(hs1);
@@ -224,7 +224,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
                es_f_up);
     CHECK(hs.size() == 8);
     CHECK(hs.total_n_bits() == 14);
-    CHECK(hs.dim() == 12288);
+    CHECK(hs.dim() == 9984);
     CHECK(hs.vec_size() == 16384);
     CHECK(hs.is_sparse());
     CHECK(hs.has_algebra(fermion));
@@ -248,7 +248,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs.basis_state_index(es_f_up, 1) == 2);
     CHECK(hs.has(es_b_x));
     CHECK(hs.index(es_b_x) == 2);
-    CHECK(hs.dim(es_b_x) == 16);
+    CHECK(hs.dim(es_b_x) == 13);
     CHECK(hs.bit_range(es_b_x) == std::make_pair(2, 5));
     CHECK(hs.basis_state_index(es_b_x, 0) == 0);
     CHECK(hs.basis_state_index(es_b_x, 1) == 4);
@@ -357,22 +357,22 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     hs.add(es_s_j);
     check_hs(es_s_j, 1, 5, 192, 8, 1, 1, -1, -1, -1, -1, 0, 7);
     hs.add(es_b_x);
-    check_hs(es_b_x, 0, 6, 3072, 12, 0, 3, -1, -1, 0, 3, 4, 11);
+    check_hs(es_b_x, 0, 6, 2496, 12, 0, 3, -1, -1, 0, 3, 4, 11);
     hs.add(es_f_dn);
-    check_hs(es_f_dn, 0, 7, 6144, 13, 0, 0, 0, 0, 1, 4, 5, 12);
+    check_hs(es_f_dn, 0, 7, 4992, 13, 0, 0, 0, 0, 1, 4, 5, 12);
     hs.add(es_f_up);
-    check_hs(es_f_up, 1, 8, 12288, 14, 1, 1, 0, 1, 2, 5, 6, 13);
+    check_hs(es_f_up, 1, 8, 9984, 14, 1, 1, 0, 1, 2, 5, 6, 13);
 
     CHECK_THROWS_AS(hs.add(es_s_j), hs_type::elementary_space_exists);
 
-    check_hs(es_f_dn, 0, 8, 12288, 14, 0, 0, 0, 1, 2, 5, 6, 13);
-    check_hs(es_f_up, 1, 8, 12288, 14, 1, 1, 0, 1, 2, 5, 6, 13);
-    check_hs(es_b_x, 2, 8, 12288, 14, 2, 5, 0, 1, 2, 5, 6, 13);
-    check_hs(es_s_i, 3, 8, 12288, 14, 6, 6, 0, 1, 2, 5, 6, 13);
-    check_hs(es_s_j, 4, 8, 12288, 14, 7, 7, 0, 1, 2, 5, 6, 13);
-    check_hs(es_s1_j, 5, 8, 12288, 14, 8, 9, 0, 1, 2, 5, 6, 13);
-    check_hs(es_s32_i, 6, 8, 12288, 14, 10, 11, 0, 1, 2, 5, 6, 13);
-    check_hs(es_s32_j, 7, 8, 12288, 14, 12, 13, 0, 1, 2, 5, 6, 13);
+    check_hs(es_f_dn, 0, 8, 9984, 14, 0, 0, 0, 1, 2, 5, 6, 13);
+    check_hs(es_f_up, 1, 8, 9984, 14, 1, 1, 0, 1, 2, 5, 6, 13);
+    check_hs(es_b_x, 2, 8, 9984, 14, 2, 5, 0, 1, 2, 5, 6, 13);
+    check_hs(es_s_i, 3, 8, 9984, 14, 6, 6, 0, 1, 2, 5, 6, 13);
+    check_hs(es_s_j, 4, 8, 9984, 14, 7, 7, 0, 1, 2, 5, 6, 13);
+    check_hs(es_s1_j, 5, 8, 9984, 14, 8, 9, 0, 1, 2, 5, 6, 13);
+    check_hs(es_s32_i, 6, 8, 9984, 14, 10, 11, 0, 1, 2, 5, 6, 13);
+    check_hs(es_s32_j, 7, 8, 9984, 14, 12, 13, 0, 1, 2, 5, 6, 13);
     CHECK(hs.algebra_bit_range(fermion) == std::make_pair(0, 1));
     CHECK(hs.algebra_bit_range(boson) == std::make_pair(2, 5));
     CHECK(hs.algebra_bit_range(spin) == std::make_pair(6, 13));
@@ -411,12 +411,12 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     using ex_type = es_construction_failure<std::string, int>;
     CHECK_THROWS_AS(hs_type(expr), ex_type);
 
-    hs_type hs2(expr, boson_es_constructor(4));
+    hs_type hs2(expr, boson_es_constructor(13));
     CHECK(hs2.size() == 6);
     CHECK(hs2.total_n_bits() == 14);
-    CHECK(hs2.dim() == 16384);
+    CHECK(hs2.dim() == 10816);
     CHECK(hs2.vec_size() == 16384);
-    CHECK_FALSE(hs2.is_sparse());
+    CHECK(hs2.is_sparse());
     CHECK(hs2.has(es_f_dn));
     CHECK(hs2.index(es_f_dn) == 0);
     CHECK(hs2.dim(es_f_dn) == 2);
@@ -427,11 +427,11 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs2.bit_range(es_f_up) == std::make_pair(1, 1));
     CHECK(hs2.has(es_b_x));
     CHECK(hs2.index(es_b_x) == 2);
-    CHECK(hs2.dim(es_b_x) == 16);
+    CHECK(hs2.dim(es_b_x) == 13);
     CHECK(hs2.bit_range(es_b_x) == std::make_pair(2, 5));
     CHECK(hs2.has(es_b_y));
     CHECK(hs2.index(es_b_y) == 3);
-    CHECK(hs2.dim(es_b_y) == 16);
+    CHECK(hs2.dim(es_b_y) == 13);
     CHECK(hs2.bit_range(es_b_y) == std::make_pair(6, 9));
     CHECK(hs2.has(es_s32_i));
     CHECK(hs2.index(es_s32_i) == 4);
@@ -441,7 +441,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs2.index(es_s32_j) == 5);
     CHECK(hs2.dim(es_s32_j) == 4);
     CHECK(hs2.bit_range(es_s32_j) == std::make_pair(12, 13));
-    CHECK(make_hilbert_space(expr, boson_es_constructor(4)) == hs2);
+    CHECK(make_hilbert_space(expr, boson_es_constructor(13)) == hs2);
 
     SECTION("foreach()") {
       // Dense Hilbert space
@@ -454,7 +454,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
       // Sparse Hilbert space
       auto expr2 =
           5.0 * n("up", 0) * n("dn", 0) + 2.0 * S_z<3>("i", 0) + S_z<4>("i", 0);
-      hs_type hs3(expr2, boson_es_constructor(2));
+      hs_type hs3(expr2, boson_es_constructor(1));
       CHECK(hs3.dim() == 2 * 2 * 3 * 4);
       CHECK(hs3.is_sparse());
 

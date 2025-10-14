@@ -38,7 +38,7 @@ using namespace libcommute;
 
 int main() {
   int const L = 4;       // Length of the chain
-  int const b = 1;       // 2^b phonon states per chain site
+  int const n_p = 2;     // Phonon states per chain site
   double const t = 0.5;  // Electron hopping constant
   double const mu = 1.0; // Chemical potential
   double const U = 2.0;  // Coulomb repulsion
@@ -77,8 +77,8 @@ int main() {
     H += g * (n(i, "up") + n(i, "down")) * (a_dag(i, "") + a(i, ""));
 
   // Automatically analyse structure of 'H' and construct a Hilbert space.
-  // Only the lowest 2^b states will be accounted for for each localized phonon.
-  auto hs = make_hilbert_space(H, boson_es_constructor(b));
+  // Only the lowest n_p states will be accounted for for each localized phonon.
+  auto hs = make_hilbert_space(H, boson_es_constructor(n_p));
   std::cout << "Full Hilbert space dimension: " << hs.dim() << '\n';
 
   // Construct an 'loperator' object that represents action of the expression

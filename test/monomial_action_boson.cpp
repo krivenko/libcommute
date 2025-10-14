@@ -54,10 +54,10 @@ TEST_CASE("Action of a bosonic monomial on an index",
   hs_type hs;
   for(int i = 0; i < n_pad_spaces; ++i)
     hs.add(pad_es_type(i));
+  std::vector<sv_index_type> dims = {2, 7, 3};
   std::vector<bit_range_t> bit_ranges = {{4, 4}, {5, 7}, {8, 9}};
   for(int i = 0; i < n_ops; ++i) {
-    int n_bits = bit_ranges[i].second - bit_ranges[i].first + 1;
-    hs.add(make_space_boson(n_bits, i));
+    hs.add(make_space_boson(dims[i], i));
   }
 
   auto ref_a_dag_a_action =
@@ -65,9 +65,10 @@ TEST_CASE("Action of a bosonic monomial on an index",
         int ind = std::get<0>(g.indices());
         bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
 
+        sv_index_type const dim = dims[ind];
         auto const& bit_range = bit_ranges[ind];
         int const n_bits = bit_range.second - bit_range.first + 1;
-        int const n_max = (1 << n_bits) - 1;
+        sv_index_type const n_max = dim - 1;
 
         std::bitset<total_n_bits> in_bitset(index);
 
@@ -96,9 +97,17 @@ TEST_CASE("Action of a bosonic monomial on an index",
         return true;
       };
 
-  std::vector<sv_index_type> in_index_list(1 << n_op_bits);
-  for(unsigned int i = 0; i < in_index_list.size(); i++)
-    in_index_list[i] = (i << n_pad_bits) + (1 << n_pad_bits) - 1;
+  std::vector<sv_index_type> in_index_list;
+  for(unsigned int n1 = 0; n1 < dims[0]; ++n1) {
+    for(unsigned int n2 = 0; n2 < dims[1]; ++n2) {
+      for(unsigned int n3 = 0; n3 < dims[2]; ++n3) {
+        in_index_list.push_back((n1 << bit_ranges[0].first) +
+                                (n2 << bit_ranges[1].first) +
+                                (n3 << bit_ranges[2].first) +
+                                ((1 << n_pad_bits) - 1));
+      }
+    }
+  }
 
   SECTION("No operators") {
     mon_type mon;

@@ -55,9 +55,9 @@ int main() {
   std::cout << "[H, N] = " << (H * N - N * H) << '\n';
 
   // Complete Hilbert space of the system is a product of the isospin-1/2 space
-  // and the bosonic space truncated to 2^10 - 1 excitations.
+  // and the bosonic space truncated to 1024 - 1 excitations.
   auto es_spin = static_indices::make_space_spin(0.5);
-  auto es_boson = static_indices::make_space_boson(10);
+  auto es_boson = static_indices::make_space_boson(1024);
 
   hilbert_space</* Our operators have no indices */> hs(es_spin, es_boson);
 

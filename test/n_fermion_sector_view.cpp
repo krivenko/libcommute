@@ -104,7 +104,7 @@ TEST_CASE("Implementation details", "[detail]") {
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       check_params(n_fermion_sector_params_t(hs_b, 0), 0, 0x0, 0);
       CHECK_THROWS_AS(n_fermion_sector_params_t(hs_b, 1), std::runtime_error);
@@ -272,14 +272,14 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     CHECK(n_fermion_sector_size(hs, 3) == 1);
 
     // Fermions and bosons
-    hs.add(make_space_boson(4, 3));
+    hs.add(make_space_boson(16, 3));
     CHECK(n_fermion_sector_size(hs, 0) == 16);
     CHECK(n_fermion_sector_size(hs, 1) == 48);
     CHECK(n_fermion_sector_size(hs, 2) == 48);
     CHECK(n_fermion_sector_size(hs, 3) == 16);
 
     // Purely bosonic Hilbert space
-    hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+    hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
     CHECK(n_fermion_sector_size(hs_b, 0) == 32);
     CHECK(n_fermion_sector_size(hs_b, 1) == 0);
   }
@@ -318,8 +318,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
                       std::runtime_error);
     }
 
-    hs.add(make_space_boson(2, 5));
-    hs.add(make_space_boson(3, 6));
+    hs.add(make_space_boson(4, 5));
+    hs.add(make_space_boson(8, 6));
 
     SECTION("Fermions and bosons") {
       unsigned int const M_bosons = hs.algebra_bit_range(boson).second -
@@ -333,7 +333,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
       unsigned int const M_bosons = hs_b.algebra_bit_range(boson).second -
                                     hs_b.algebra_bit_range(boson).first + 1;
 
@@ -346,7 +346,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     unsigned int const M = 5;
     unsigned int const N = 2;
 
-    hs_type hs{make_space_boson(2, 0)};
+    hs_type hs{make_space_boson(4, 0)};
     for(unsigned int i = 0; i < M; ++i)
       hs.add(make_space_fermion(int(i)));
 
@@ -413,8 +413,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       }
     }
 
-    hs.add(make_space_boson(2, int(M)));
-    hs.add(make_space_boson(2, int(M + 1)));
+    hs.add(make_space_boson(4, int(M)));
+    hs.add(make_space_boson(4, int(M + 1)));
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= M; ++N) {
@@ -423,7 +423,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       auto view = view_type(st, hs_b, 0);
       for(sv_index_type index = 0; index < hs_b.vec_size(); ++index) {
@@ -468,8 +468,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       }
     }
 
-    hs.add(make_space_boson(2, int(M)));
-    hs.add(make_space_boson(2, int(M + 1)));
+    hs.add(make_space_boson(4, int(M)));
+    hs.add(make_space_boson(4, int(M + 1)));
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= M; ++N) {
@@ -479,7 +479,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       state_vector st(n_fermion_sector_size(hs_b, 0));
       check_foreach(view_type(st, hs_b, 0), st);
@@ -516,8 +516,8 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       }
     }
 
-    hs.add(make_space_boson(2, int(M)));
-    hs.add(make_space_boson(2, int(M + 1)));
+    hs.add(make_space_boson(4, int(M)));
+    hs.add(make_space_boson(4, int(M + 1)));
 
     SECTION("Fermions and bosons") {
       for(unsigned int N = 0; N <= M; ++N) {
@@ -527,7 +527,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     }
 
     SECTION("Purely bosonic Hilbert space") {
-      hs_type hs_b(make_space_boson(2, 0), make_space_boson(3, 1));
+      hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
 
       CHECK_THROWS_AS(n_fermion_sector_basis_states(hs_b, 1),
                       std::runtime_error);
@@ -586,7 +586,7 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
   SECTION("loperator") {
     unsigned int const M = 5;
 
-    hs_type hs{make_space_boson(2, 0)};
+    hs_type hs{make_space_boson(4, 0)};
 
     for(unsigned int i = 0; i < M; ++i)
       hs.add(make_space_fermion(int(i)));

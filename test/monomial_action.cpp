@@ -43,7 +43,7 @@ TEST_CASE("Different algebra IDs", "[monomial_action_IDs]") {
     using namespace static_indices;
 
     hs_type hs(make_space_fermion("dn", 0),
-               make_space_boson(4, "x", 0),
+               make_space_boson(16, "x", 0),
                make_space_spin(1.0, "i", 0));
 
     SECTION("Constant monomial") {
@@ -110,8 +110,8 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
 
   hs_type hs(make_space_fermion(0),
              make_space_fermion(1),
-             make_space_boson(2, 0),
-             make_space_boson(2, 1),
+             make_space_boson(3, 0),
+             make_space_boson(3, 1),
              make_space_spin(0.5, 0),
              make_space_spin(1.0, 1),
              make_space_spin(1.5, 2));
@@ -167,11 +167,13 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
         int ind = std::get<0>(g.indices());
         bool dagger = dynamic_cast<generator_boson<int> const&>(g).dagger();
 
+        static std::vector<int> dims = {3, 3};
         static std::vector<bit_range_t> bit_ranges = {{2, 3}, {4, 5}};
 
+        int const dim = dims[ind];
         auto const& bit_range = bit_ranges[ind];
         int const n_bits = bit_range.second - bit_range.first + 1;
-        int const n_max = (1 << n_bits) - 1;
+        int const n_max = dim - 1;
 
         std::bitset<total_n_bits> in_bitset(index);
 
@@ -266,8 +268,8 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
   std::vector<sv_index_type> in_index_list;
   for(sv_index_type f1 : {0, 1}) {
     for(sv_index_type f2 : {0, 1}) {
-      for(sv_index_type b1 : {0, 1, 2, 3}) {
-        for(sv_index_type b2 : {0, 1, 2, 3}) {
+      for(sv_index_type b1 : {0, 1, 2}) {
+        for(sv_index_type b2 : {0, 1, 2}) {
           for(sv_index_type s12 : {0, 1}) {
             for(sv_index_type s1 : {0, 1, 2}) {
               for(sv_index_type s32 : {0, 1, 2, 3}) {

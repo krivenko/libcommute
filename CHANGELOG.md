@@ -47,6 +47,9 @@ All notable changes to this project will be documented in this file.
   ``space_partition::find_connections()`` no longer accept the ``hs`` argument
   and use the stored reference instead.
 - Two helper factory functions ``make_space_partition()`` have been added.
+- Dimension of ``elementary_space_boson`` had to be a power of 2. Now this
+  restriction is lifted. Arguments of its constructor and of
+  ``make_space_boson()`` have been adjusted accordingly.
 - Improved performance and stability of ``space_partition::merge_subspaces()``
   by switching to a non-recursive variant of the algorithm.
 - Fixed a negative index bug in ``n_fermion_sector_view``.
