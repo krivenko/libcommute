@@ -301,6 +301,15 @@ public:
       return std::distance(elementary_spaces_.begin(), it);
   }
 
+  // Dimension of elementary space
+  sv_index_type dim(elementary_space_t const& es) const {
+    auto it = elementary_spaces_.find(es.clone());
+    if(it == elementary_spaces_.end())
+      throw elementary_space_not_found(es);
+    else
+      return (it->first)->dim();
+  }
+
   // Bit range spanned by elementary space
   bit_range_t bit_range(elementary_space_t const& es) const {
     auto it = elementary_spaces_.find(es.clone());

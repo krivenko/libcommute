@@ -202,25 +202,32 @@ does not matter -- they will be reordered automatically.
 
     Insert a new elementary space into the product. Throws
     :struct:`elementary_space_exists` if an elementary space equivalent to
-    :expr:`es` is already part of the product.
-    Throws :struct:`hilbert_space_too_big` if adding :expr:`es` into the product
+    :var:`es` is already part of the product.
+    Throws :struct:`hilbert_space_too_big` if adding :var:`es` into the product
     would exceed the 63-bit limit of the basis state index.
 
   .. function:: bool has(elementary_space<IndexTypes...> const& es) const
 
-    Is elementary space :expr:`es` part of the product?
+    Is elementary space :var:`es` part of the product?
 
   .. function:: int index(elementary_space<IndexTypes...> const& es) const
 
     Position of a given elementary space in the product.
 
+  .. function:: sv_index_type dim( \
+                elementary_space<IndexTypes...> const& es) const
+
+    Returns the dimension of the elementary space :var:`es`.
+    Throws :struct:`elementary_space_not_found` if :var:`es` is not part of
+    the product.
+
   .. function:: std::pair<int, int> bit_range( \
                 elementary_space<IndexTypes...> const& es) const
 
     Returns the range of bits in the binary representation of a
-    basis state index that is occupied by the elementary space :expr:`es`.
+    basis state index that is occupied by the elementary space :var:`es`.
     The range is returned as a pair (first_bit, last_bit).
-    Throws :struct:`elementary_space_not_found` if :expr:`es` is not part of
+    Throws :struct:`elementary_space_not_found` if :var:`es` is not part of
     the product.
 
   .. function:: bool has_algebra(int algebra_id) const
