@@ -106,14 +106,14 @@ generators at once.
 
 .. code:: cpp
 
-    using namespace libcommute;
-    using namespace static_indices; // For a_dag() and a()
+  using namespace libcommute;
+  using namespace static_indices; // For a_dag() and a()
 
-    auto H = 2.0 * (a_dag(0) * a(0) - 0.5) + 3.0 * (a_dag(1) * a(1) - 0.5);
+  auto H = 2.0 * (a_dag(0) * a(0) - 0.5) + 3.0 * (a_dag(1) * a(1) - 0.5);
 
-    // hs is a direct product of two bosonic elementary spaces, each with
-    // dimension 16.
-    auto hs = make_hilbert_space(H, boson_es_constructor(16));
+  // hs is a direct product of two bosonic elementary spaces, each with
+  // dimension 16.
+  auto hs = make_hilbert_space(H, boson_es_constructor(16));
 
 Other, more refined ways to create a Hilbert space are (a) to explicitly provide
 a list of elementary spaces or (b) to start from an empty product and add
@@ -123,22 +123,22 @@ generators are not necessarily found in ``H``.
 
 .. code:: cpp
 
-    using namespace libcommute;
-    using namespace static_indices; // For make_space_*()
+  using namespace libcommute;
+  using namespace static_indices; // For make_space_*()
 
-    // A product of three elementary spaces
-    // std::string and int are index types of generators
-    hilbert_space<std::string, int> hs1(
-      make_space_fermion("dn", 0),   // Fermion
-      make_space_boson(16, "x", 0),  // Boson truncated to dim = 16
-      make_space_spin(0.5, "i", 0)   // Spin-1/2
-    );
+  // A product of three elementary spaces
+  // std::string and int are index types of generators
+  hilbert_space<std::string, int> hs1(
+    make_space_fermion("dn", 0),   // Fermion
+    make_space_boson(16, "x", 0),  // Boson truncated to dim = 16
+    make_space_spin(0.5, "i", 0)   // Spin-1/2
+  );
 
-    // Empty space, to be filled later
-    hilbert_space<int> hs2;
-    // Fill the space
-    hs2.add(make_space_fermion(0));   // Add a fermion
-    hs2.add(make_space_boson(16, 0)); // Add a boson
+  // Empty space, to be filled later
+  hilbert_space<int> hs2;
+  // Fill the space
+  hs2.add(make_space_fermion(0));   // Add a fermion
+  hs2.add(make_space_boson(16, 0)); // Add a boson
 
 
 The order in which the elementary spaces are passed to the constructor or added
@@ -172,13 +172,13 @@ does not matter -- they will be reordered automatically.
   .. function:: template<typename ScalarType, \
                          typename ESConstructor = default_es_constructor> \
             hilbert_space(libcommute::expression<ScalarType, IndexTypes...> \
-                            const& expr, \
+                          const& expr, \
                           ESConstructor&& es_constr = {})
 
-    Inspect an expression :expr:`expr` and collect all elementary spaces
-    associated with algebra generators found in :expr:`expr`.
+    Inspect an expression :var:`expr` and collect all elementary spaces
+    associated with algebra generators found in :var:`expr`.
     Construction of the elementary spaces is performed by the functor
-    :expr:`es_constr`.
+    :var:`es_constr`.
     Throws :struct:`hilbert_space_too_big` if all collected elementary spaces
     together would exceed the 63-bit limit of the basis state index.
 
@@ -274,14 +274,14 @@ does not matter -- they will be reordered automatically.
   .. function:: template<typename Functor> \
                 friend void foreach(hilbert_space const& hs, Functor&& f)
 
-    Apply functor :expr:`f` to all basis state indices in :expr:`hs`.
-    :expr:`f` must accept one argument of type :type:`sv_index_type`.
+    Apply functor :var:`f` to all basis state indices in :var:`hs`.
+    :var:`f` must accept one argument of type :type:`sv_index_type`.
 
   .. function:: sv_index_type \
                 basis_state_index(elementary_space<IndexTypes...> const& es, \
                                   sv_index_type n)
 
-    Given an elementary space :expr:`es` and an index :expr:`n` of a basis state
+    Given an elementary space :var:`es` and an index :var:`n` of a basis state
     within it, return the corresponding basis state index within the full
     Hilbert space.
 
@@ -311,7 +311,7 @@ does not matter -- they will be reordered automatically.
   *Defined in <libcommute/loperator/hilbert_space.hpp>*
 
   A helper factory function that constructs an :class:`hilbert_space` instance
-  from an expression :expr:`expr` using an
+  from an expression :var:`expr` using an
   :ref:`elementary space constructor <es_constructor>`. This function is a
   more convenient equivalent of one of :class:`hilbert_space`'s constructors.
 
@@ -376,9 +376,9 @@ the elementary space to algebra generators acting in it.
                 protected virtual bool greater(elementary_space const& es) const
 
     These methods can be overridden by the derived classes to establish
-    the order of :expr:`es` w.r.t. :expr:`*this` assuming both elementary spaces
+    the order of :var:`es` w.r.t. ``*this`` assuming both elementary spaces
     are associated with the same algebra. The default implementation compares
-    index tuples of :expr:`*this` and :expr:`es`.
+    index tuples of ``*this`` and :var:`es`.
 
   .. function:: friend bool operator==(generator const& es1, \
                                        generator const& es2)
@@ -390,22 +390,21 @@ the elementary space to algebra generators acting in it.
                                       generator const& es2)
 
     Comparison operators for a pair of elementary spaces. First, they compare
-    algebra IDs of :expr:`es1` and :expr:`es2`. If those are equal,
-    :expr:`es1.equal(es2)`, :expr:`es1.less(es2)` or :expr:`es1.greater(es2)`
-    is called.
+    algebra IDs of :var:`es1` and :var:`es2`. If those are equal,
+    ``es1.equal(es2)``, ``es1.less(es2)`` or ``es1.greater(es2)`` is called.
 
   .. rubric:: Dimension
 
   .. function:: virtual sv_index_type dim() const = 0
 
-  Dimension :math:`d` of this elementary space.
+    Dimension :math:`d` of this elementary space.
 
   .. rubric:: Binary representation of the basis state index
 
   .. function:: virtual int n_bits() const = 0
 
-  The number of bits occupied by this elementary space,
-  :math:`b = \lceil \log_2(d) \rceil`.
+    The number of bits occupied by this elementary space,
+    :math:`b = \lceil \log_2(d) \rceil`.
 
 .. rubric:: Predefined concrete elementary space types
 
@@ -488,7 +487,7 @@ the elementary space to algebra generators acting in it.
   .. function:: template<typename... Args> \
                 elementary_space_spin(double spin, Args&&... indices)
 
-    Construct a spin elementary space with a given spin :math:`S` = :expr:`spin`.
+    Construct a spin elementary space with a given spin :math:`S` = :var:`spin`.
 
 .. function:: template<typename... IndexTypes> \
               elementary_space_spin<IndexTypes...> \
@@ -497,7 +496,7 @@ the elementary space to algebra generators acting in it.
 
   *Defined in <libcommute/loperator/elementary_space_spin.hpp>*
 
-  Make a spin elementary space with :math:`S` = :expr:`spin` and given indices.
+  Make a spin elementary space with :math:`S` = :var:`spin` and given indices.
 
 .. function:: template<typename... IndexTypes> \
               elementary_space_spin<dyn_indices> \
@@ -506,7 +505,7 @@ the elementary space to algebra generators acting in it.
 
   *Defined in <libcommute/loperator/elementary_space_spin.hpp>*
 
-  Make a spin elementary space with :math:`S` = :expr:`spin` and a given
+  Make a spin elementary space with :math:`S` = :var:`spin` and a given
   dynamic index sequence.
 
 .. _es_constructor:
@@ -538,13 +537,13 @@ argument. It is possible to customize the translation process by giving
 
 This approach gives total control over elementary space creation. It works best
 when expressions to be translated do not mix too many algebras and the body
-of :expr:`my_es_constructor::operator()` can be kept relatively simple.
+of ``my_es_constructor::operator()`` can be kept relatively simple.
 
 Now imagine a different, more common situation, when expressions mix generators
 of various predefined algebras as well as generators of a new user-defined
 algebra ``my_algebra``. It would be desirable to instruct
 :func:`make_hilbert_space()` how to translate instances of
-:type:`generator_my_algebra` into :type:`elementary_space_my_algebra` without
+``generator_my_algebra`` into ``elementary_space_my_algebra`` without
 rewriting all the code needed to process the predefined generators. This goal
 can be achieved in a few steps by means of a special utility class
 :class:`es_constructor`.
@@ -553,7 +552,7 @@ can be achieved in a few steps by means of a special utility class
 
   *Defined in <libcommute/loperator/es_constructor.hpp>*
 
-* Define a new algebra ID, e.g. :expr:`my_algebra_id`.
+* Define a new algebra ID, e.g. ``my_algebra_id``.
 
   .. code-block:: cpp
 
@@ -591,7 +590,7 @@ can be achieved in a few steps by means of a special utility class
 
     auto es_constr = es_constructor<fermion, spin, my_algebra_id>();
 
-  Now, :expr:`es_constr` knows how to process
+  Now, ``es_constr`` knows how to process
   :var:`fermionic <libcommute::fermion>`,
   :var:`spin <libcommute::spin>` and ``my_algebra`` generators.
 

@@ -15,7 +15,7 @@ the extra steps needed to plug the new algebra into the
 :ref:`linear operator <loperator>` framework.
 
 * Declare a new :ref:`elementary space <elementary_spaces>` class.
-  The elementary space must share algebra ID with :expr:`generator_gamma`.
+  The elementary space must share algebra ID with ``generator_gamma``.
   Its dimension is 4, so the :ref:`number of occupied bits <hilbert_space>` is
   :math:`b = 2`.
 
@@ -39,16 +39,16 @@ the extra steps needed to plug the new algebra into the
     *Defined in <libcommute/loperator/monomial_action.hpp>*
 
     Action of a product of generators belonging to the same algebra
-    :expr:`AlgebraID` on a basis vector.
+    :var:`AlgebraID` on a basis vector.
 
     .. function:: template<typename... IndexTypes> \
                   monomial_action( \
                     monomial<IndexTypes...>::range_type const& m_range, \
                     hilbert_space<IndexTypes...> const& hs)
 
-      :expr:`m_range` is a pair of :class:`monomial::const_iterator`'s.
+      :var:`m_range` is a pair of :class:`monomial::const_iterator`'s.
       This range represents the product of generators one wants to act with.
-      :expr:`hs` is the Hilbert space to act in.
+      :var:`hs` is the Hilbert space to act in.
 
     .. function:: template<typename ScalarType> \
                   bool act(sv_index_type & index, ScalarType & coeff) const
@@ -57,9 +57,9 @@ the extra steps needed to plug the new algebra into the
       therefore, of a monomial) maps a single basis state to a single basis
       state multiplied by a constant.
 
-      :expr:`index` is the index of the input and output basis states.
+      :var:`index` is the index of the input and output basis states.
 
-      :expr:`coeff` must be multiplied by the overall constant factor acquired
+      :var:`coeff` must be multiplied by the overall constant factor acquired
       as a result of monomial action.
 
       This method should return ``false`` if the action result is the identical

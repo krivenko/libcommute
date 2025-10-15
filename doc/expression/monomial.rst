@@ -68,8 +68,8 @@ are always canonically ordered, that need not be true in general.
 
   .. class:: const_iterator
 
-      Random access constant iterator to the list of algebra generators.
-      The dereference type is :type:`generator_type`.
+    Random access constant iterator to the list of algebra generators.
+    The dereference type is :type:`generator_type`.
 
   .. function:: const_iterator begin() const noexcept
                 const_iterator cbegin() const noexcept
@@ -97,7 +97,7 @@ are always canonically ordered, that need not be true in general.
 
   .. function:: generator_type const& operator[](std::size_t n) const
 
-    Access an algebra generator by its position :expr:`n` in the monomial.
+    Access an algebra generator by its position :var:`n` in the monomial.
 
   .. rubric:: Other methods and friend functions
 
@@ -127,7 +127,7 @@ are always canonically ordered, that need not be true in general.
 
   .. function:: void swap_generators(std::size_t n1, std::size_t n2)
 
-    Swap algebra generators at positions :expr:`n1` and :expr:`n2` within the
+    Swap algebra generators at positions :var:`n1` and :var:`n2` within the
     list.
 
   .. function:: void append(generator_type const& g)

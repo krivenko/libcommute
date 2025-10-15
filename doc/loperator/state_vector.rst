@@ -12,9 +12,9 @@ State vectors
 
 .. namespace:: libcommute
 
-Let us say we want to make type :type:`SV` a *libcommute*-compatible state
+Let us say we want to make type ``SV`` a *libcommute*-compatible state
 vector type so that :ref:`linear operators <loperator>` can act on instances
-of :type:`SV`. For this we have to make :type:`SV` model the ``StateVector``
+of ``SV``. For this we have to make ``SV`` model the ``StateVector``
 concept.
 In a nutshell, a ``StateVector`` type is a one-dimensional array of numbers
 (quantum amplitudes) allowing integer indexing and implementing a certain
@@ -29,52 +29,52 @@ Acceptable index values must be at least 64-bit wide unsigned integers since
   Type of basis state indices.
 
 The table below shows the interface (a set of free functions and a
-metafunction) that needs be implemented for an object :expr:`sv` of type
-:type:`SV`.
+metafunction) that needs be implemented for an object ``sv`` of type
+``SV``.
 
 *libcommute* provides an implementation of the ``StateVector`` concept for
-:type:`std::vector` (see *<libcommute/loperator/state_vector.hpp>*).
+``std::vector`` (see *<libcommute/loperator/state_vector.hpp>*).
 
 .. list-table::
   :header-rows: 1
 
   * - Function/metafunction
     - Description
-    - Implementation for :expr:`std::vector<T>`
-  * - :expr:`element_type<SV>::type`
+    - Implementation for ``std::vector<T>``
+  * - ``element_type<SV>::type``
     - Type of the elements.
-    - :expr:`T`
+    - ``T``
 
-  * - :expr:`get_element(sv, n)`
-    - Return the :expr:`n`-th element of :expr:`sv`.
-    - :expr:`sv[n]`
+  * - ``get_element(sv, n)``
+    - Return the ``n``-th element of ``sv``.
+    - ``sv[n]``
 
-  * - :expr:`update_add_element(sv, n, value)`
-    - Add a value of some type :type:`U` to the :expr:`n`-th element of
-      :expr:`sv`.
-    - :expr:`sv[n] += value` or :expr:`sv[n] = sv[n] + value`
+  * - ``update_add_element(sv, n, value)``
+    - Add a value of some type ``U`` to the ``n``-th element of
+      ``sv``.
+    - ``sv[n] += value`` or ``sv[n] = sv[n] + value``
 
-      The compound-assignment from type :type:`U` will be used
-      whenever :expr:`sv`'s elements support it. Otherwise, the implementation
+      The compound-assignment from type ``U`` will be used
+      whenever ``sv``'s elements support it. Otherwise, the implementation
       will fall back to the simple addition.
 
-  * - :expr:`set_zeros(sv)`
-    - Fill :expr:`sv` with zeros.
-    - :expr:`std::fill(sv.begin(), sv.end(), zero)`.
+  * - ``set_zeros(sv)``
+    - Fill ``sv`` with zeros.
+    - ``std::fill(sv.begin(), sv.end(), zero)``.
 
-      The zero value is created by
-      :expr:`make_const(0)` as described in ":ref:`custom_scalar_type`".
+      The zero value is created by ``make_const(0)`` as described in
+      ":ref:`custom_scalar_type`".
 
-  * - :expr:`zeros_like(sv)`
-    - Return an object of the same type and size as :expr:`sv` but filled with
+  * - ``zeros_like(sv)``
+    - Return an object of the same type and size as ``sv`` but filled with
       zeros.
-    - Creates a new object as :expr:`std::vector<T>(sv.size(), zero)`.
+    - Creates a new object as ``std::vector<T>(sv.size(), zero)``.
 
-  * - :expr:`foreach(sv, f)`
-    - Apply a function-like object :expr:`f` to all basis state index/non-zero
-      element pairs :expr:`(n, a)` in :expr:`sv`.
-    - In a for-loop, calls :expr:`f(n, a)` for all non-zero elements :expr:`a`
-      as detected by :expr:`is_zero()` (see ":ref:`custom_scalar_type`").
+  * - ``foreach(sv, f)``
+    - Apply a function-like object ``f`` to all basis state index/non-zero
+      element pairs ``(n, a)`` in ``sv``.
+    - In a for-loop, calls ``f(n, a)`` for all non-zero elements ``a``
+      as detected by ``is_zero()`` (see ":ref:`custom_scalar_type`").
 
 Inclusion of *<libcommute/loperator/state_vector_eigen3.hpp>* makes some
 `Eigen 3 <https://eigen.tuxfamily.org/>`_ types (`column vectors`_,
@@ -110,12 +110,12 @@ only the part of its interface not covered by ``StateVector``.
 .. class:: template<typename ScalarType> sparse_state_vector
 
   State vector with a sparse storage of elements (quantum amplitudes).
-  :expr:`ScalarType` is the type of the elements.
+  :type:`ScalarType` is the type of the elements.
 
   .. function::   sparse_state_vector() = delete
                   sparse_state_vector(sv_index_type size)
 
-    Construct a zero (empty) sparse vector with a given :expr:`size` --
+    Construct a zero (empty) sparse vector with a given :var:`size` --
     dimension of the corresponding Hilbert space.
 
   .. function:: sv_index_type size() const
@@ -124,7 +124,7 @@ only the part of its interface not covered by ``StateVector``.
 
   .. function:: ScalarType & operator[](sv_index_type n)
 
-    Access the :expr:`n`-th element. If it is zero (missing from the storage),
+    Access the :var:`n`-th element. If it is zero (missing from the storage),
     then a new value-initialized element will be inserted and a reference to
     it will be returned.
 
@@ -146,7 +146,7 @@ only the part of its interface not covered by ``StateVector``.
 
   .. function:: template<typename UnaryPredicate> void prune(UnaryPredicate&& p)
 
-    Remove unordered map elements (amplitudes) for which predicate :expr:`p`
+    Remove unordered map elements (amplitudes) for which predicate :var:`p`
     returns ``true``.
 
 .. _mapped_basis_view:
@@ -199,7 +199,7 @@ factory class :class:`basis_mapper` and its methods
   .. function:: basis_mapper(std::vector<sv_index_type> const& \
                              basis_state_indices)
 
-    Build a mapping from a list of basis states :expr:`basis_state_indices`
+    Build a mapping from a list of basis states :var:`basis_state_indices`
     to their positions within the list.
 
     .. code-block:: cpp
@@ -228,7 +228,7 @@ factory class :class:`basis_mapper` and its methods
     Build a mapping from a set of all basis states contributing to
     :math:`\hat O|0\rangle`.
 
-    Operator :expr:`O` acts in the Hilbert space :expr:`hs`.
+    Operator :var:`O` acts in the Hilbert space :var:`hs`.
     :math:`|0\rangle` is the basis state with index 0 ('vacuum' state in
     the case of fermions and bosons).
     Mapped values are assigned continuously starting from 0 without any specific
@@ -248,7 +248,7 @@ factory class :class:`basis_mapper` and its methods
     :math:`\hat O_1^{n_1} \hat O_2^{n_2} \ldots \hat O_M^{n_M} |0\rangle`,
     where :math:`n_m \geq 0` and :math:`\sum_{m=1}^M n_M = N`.
 
-    Operators in :expr:`O_list` act in the Hilbert space :expr:`hs`.
+    Operators in :var:`O_list` act in the Hilbert space :var:`hs`.
     :math:`|0\rangle` is the basis state with index 0 ('vacuum' state in
     the case of fermions and bosons).
     Mapped values are assigned continuously starting from 0 without any specific
@@ -266,10 +266,10 @@ factory class :class:`basis_mapper` and its methods
                 mapped_basis_view<StateVector const> \
                 make_const_view(StateVector && sv) const
 
-    Make a read/write or constant view of :expr:`sv`.
+    Make a read/write or constant view of :var:`sv`.
     Constant views will not be accepted by :func:`update_add_element()`.
-    If :expr:`sv` is not an lvalue reference, the resulting view will
-    :ref:`hold a copy <mapped_basis_view_Ref>` of :expr:`sv`.
+    If :var:`sv` is not an lvalue reference, the resulting view will
+    :ref:`hold a copy <mapped_basis_view_Ref>` of :var:`sv`.
 
     .. warning::
 
@@ -345,12 +345,12 @@ of a basis state index. A computed rank is then used to index into the
                          n_fermion_sector_view(SV&& sv, \
                          HSType const& hs, unsigned int N)
 
-    Construct a view of the state vector :expr:`sv`, defined in the
-    :expr:`N`-fermion sector of the full Hilbert space :expr:`hs`.
+    Construct a view of the state vector :var:`sv`, defined in the
+    :var:`N`-fermion sector of the full Hilbert space :var:`hs`.
 
   .. function:: sv_index_type map_index(sv_index_type index) const
 
-    Translate a basis state :expr:`index` from the full Hilbert space to the
+    Translate a basis state :var:`index` from the full Hilbert space to the
     sector.
 
 .. struct:: template <typename HSType> sector_descriptor
@@ -408,14 +408,14 @@ of a basis state index. A computed rank is then used to index into the
                 n_fermion_multisector_view(SV&& sv, HSType const& hs, \
                 std::vector<sector_descriptor<HSType>> const& sectors)
 
-    Construct a view of the state vector :expr:`sv`, defined in the
-    :math:`N`-fermion multisector of the full Hilbert space :expr:`hs`.
-    The multisector is defined via a list of contributing :expr:`sectors`
+    Construct a view of the state vector :var:`sv`, defined in the
+    :math:`N`-fermion multisector of the full Hilbert space :var:`hs`.
+    The multisector is defined via a list of contributing :var:`sectors`
     (list of :math:`(\{S_i\}, N_i)` pairs).
 
   .. function:: sv_index_type map_index(sv_index_type index) const
 
-    Translate a basis state :expr:`index` from the full Hilbert space to the
+    Translate a basis state :var:`index` from the full Hilbert space to the
     multisector.
 
 Besides :class:`n_fermion_sector_view` and :class:`n_fermion_multisector_view`,
@@ -429,10 +429,10 @@ utility functions that help working with (multi)sectors.
               auto make_const_nfs_view(StateVector&& sv, HSType const& hs, \
               unsigned int N)
 
-  Make and return a read/write or constant :expr:`N`-fermion sector view of
-  :expr:`sv` within the full Hilbert space :expr:`hs`. If :expr:`sv` is not an
+  Make and return a read/write or constant :var:`N`-fermion sector view of
+  :var:`sv` within the full Hilbert space :var:`hs`. If :var:`sv` is not an
   lvalue reference, the resulting view will
-  :ref:`hold a copy <n_fermion_sector_view_Ref>` of :expr:`sv`.
+  :ref:`hold a copy <n_fermion_sector_view_Ref>` of :var:`sv`.
   A returned view uses :class:`combination_ranking` as its bit pattern ranking
   algorithm.
 
@@ -444,32 +444,32 @@ utility functions that help working with (multi)sectors.
               std::vector<sector_descriptor<HSType>> const& sectors)
 
   Make and return a read/write or constant :math:`N`-fermion multisector view of
-  :expr:`sv` within the full Hilbert space :expr:`hs`. The multisector is
-  defined via a list of contributing :expr:`sectors` (list of
-  :math:`(\{S_i\}, N_i)` pairs). If :expr:`sv` is not an lvalue reference,
+  :var:`sv` within the full Hilbert space :var:`hs`. The multisector is
+  defined via a list of contributing :var:`sectors` (list of
+  :math:`(\{S_i\}, N_i)` pairs). If :var:`sv` is not an lvalue reference,
   the resulting view will
-  :ref:`hold a copy <n_fermion_sector_view_Ref>` of :expr:`sv`.
+  :ref:`hold a copy <n_fermion_sector_view_Ref>` of :var:`sv`.
   A returned view uses :class:`combination_ranking` as its bit pattern ranking
   algorithm.
 
 .. function:: template <typename HSType> sv_index_type \
               n_fermion_sector_size(HSType const& hs, unsigned int N)
 
-  Size of the :expr:`N`-fermion sector within the full Hilbert space :expr:`hs`.
+  Size of the :var:`N`-fermion sector within the full Hilbert space :var:`hs`.
 
 .. function:: template <typename HSType> sv_index_type \
               n_fermion_multisector_size(HSType const& hs, \
               std::vector<sector_descriptor<HSType>> const& sectors)
 
   Size of the :math:`N`-fermion multisector within the full Hilbert space
-  :expr:`hs`. The multisector is defined via a list of contributing
-  :expr:`sectors` (list of :math:`(\{S_i\}, N_i)` pairs).
+  :var:`hs`. The multisector is defined via a list of contributing
+  :var:`sectors` (list of :math:`(\{S_i\}, N_i)` pairs).
 
 .. function:: template <typename HSType> std::vector<sv_index_type> \
               n_fermion_sector_basis_states(HSType const& hs, unsigned int N)
 
-  Build and return a list of basis state indices forming the :expr:`N`-fermion
-  sector within the full Hilbert space :expr:`hs`. The order of the indices in
+  Build and return a list of basis state indices forming the :var:`N`-fermion
+  sector within the full Hilbert space :var:`hs`. The order of the indices in
   the list is consistent with the results of
   :func:`n_fermion_sector_view::map_index()`.
 
@@ -487,8 +487,8 @@ utility functions that help working with (multi)sectors.
               std::vector<sector_descriptor<HSType>> const& sectors)
 
   Build and return a list of basis state indices forming an :math:`N`-fermion
-  multisector within the full Hilbert space :expr:`hs`. The multisector is
-  defined via a list of contributing :expr:`sectors` (list of
+  multisector within the full Hilbert space :var:`hs`. The multisector is
+  defined via a list of contributing :var:`sectors` (list of
   :math:`(\{S_i\}, N_i)` pairs). The order of the indices in the list is
   consistent with the results of
   :func:`n_fermion_multisector_view::map_index()`.
@@ -525,7 +525,7 @@ calculations.
     *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
 
     The improved combinatorial ranking with staggered lookup and a chunk size of
-    :expr:`R` bits.
+    :var:`R` bits.
     The storage space required by this class scales as
     :math:`O\left(2^R (M-R+2)(\frac{M}{2R}+1)\right)`, where :math:`M` is the
     total number of the fermionic degrees of freedom.
@@ -535,7 +535,7 @@ calculations.
 
     *Defined in <libcommute/loperator/n_fermion_sector_view.hpp>*
 
-    The trie-based ranking algorithm with a chunk size of :expr:`R` bits.
+    The trie-based ranking algorithm with a chunk size of :var:`R` bits.
     The storage space required by this class is roughly proportional to the size
     of the (multi)sector.
 

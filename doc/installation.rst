@@ -12,7 +12,7 @@ directory ``libcommute.src`` containing the latest *libcommute* source files.
 
 .. code-block:: shell
 
-    $ git clone https://github.com/krivenko/libcommute.git libcommute.src
+  $ git clone https://github.com/krivenko/libcommute.git libcommute.src
 
 You can then use *libcommute* in your own code by passing
 '``-I/path/to/libcommute.src/include``' to the compiler command line.
@@ -27,12 +27,12 @@ The following sequence of shell commands will build unit tests and examples.
 
 .. code-block:: shell
 
-    $ mkdir libcommute.build && cd libcommute.build
-    $ cmake ../libcommute.src                       \
-      -DCMAKE_INSTALL_PREFIX=<libcommute_prefix>    \
-      -DEXAMPLES=ON                                 \
-      -DTESTS=ON
-    $ make
+  $ mkdir libcommute.build && cd libcommute.build
+  $ cmake ../libcommute.src                       \
+    -DCMAKE_INSTALL_PREFIX=<libcommute_prefix>    \
+    -DEXAMPLES=ON                                 \
+    -DTESTS=ON
+  $ make
 
 Compilation of the tests can be disabled with CMake flag ``-DTESTS=OFF``
 *(not recommended)*. Examples are compiled by default and can be disabled
@@ -43,7 +43,7 @@ to detect potential problems early on.
 
 .. code-block:: shell
 
-    $ make test
+  $ make test
 
 Failed tests (having anything different from ``Passed`` in the test result
 column) signal host-specific compilation/linking problems or bugs in the library
@@ -52,7 +52,7 @@ itself. The following command completes installation of library's files into
 
 .. code-block:: shell
 
-    $ make install
+  $ make install
 
 Documentation of *libcommute* can optionally be built and installed using the
 ``DOCUMENTATION`` CMake flag (requires

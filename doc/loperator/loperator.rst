@@ -24,9 +24,9 @@ Simple linear operator
 
 Simple linear operators are instances of class template :class:`loperator`.
 
-Let us assume that :expr:`expr` is a real expression involving only the
-predefined algebras (fermions, bosons and spins), and :expr:`hs` is a Hilbert
-space object compatible with :expr:`expr`. Then creating a simple linear
+Let us assume that ``expr`` is a real expression involving only the
+predefined algebras (fermions, bosons and spins), and ``hs`` is a Hilbert
+space object compatible with ``expr``. Then creating a simple linear
 operator is as easy as
 
 .. code-block:: cpp
@@ -110,16 +110,16 @@ it eliminates the need for a temporary object to store
                 template<typename StateVector> \
                 StateVector operator*(StateVector const& psi) const
 
-    Act on a state vector :expr:`psi` and return the result
+    Act on a state vector :var:`psi` and return the result
     :math:`\hat L|\psi\rangle`.
 
   .. function:: template<typename SrcStateVector, typename DstStateVector> \
                 void operator()(SrcStateVector && psi, \
                                 DstStateVector && phi) const
 
-    Act on a state vector :expr:`psi` and write the result into :expr:`phi`,
+    Act on a state vector :var:`psi` and write the result into :var:`phi`,
     :math:`|\phi\rangle = \hat L |\psi\rangle`. This method is faster than the
-    previous two because the result is written directly into :expr:`phi` without
+    previous two because the result is written directly into :var:`phi` without
     making a temporary object.
 
 .. function:: template<typename ScalarType, typename... IndexTypes> \
@@ -235,18 +235,18 @@ For an extensive example of :class:`parametric_loperator`'s use have a look at
                 StateVector \
                 operator()(StateVector const& psi, CoeffArgs&&... args) const
 
-        Act on a state vector :expr:`psi` and return the result
-        :math:`\hat L(\text{args}\ldots)|\psi\rangle`.
+    Act on a state vector :var:`psi` and return the result
+    :math:`\hat L(\text{args}\ldots)|\psi\rangle`.
 
   .. function:: template<typename StateVector, typename... CoeffArgs> \
                 void operator()(StateVector const& psi, \
                                 StateVector & phi, \
                                 CoeffArgs&&... args) const
 
-    Act on a state vector :expr:`psi` and write the result into :expr:`phi`,
+    Act on a state vector :var:`psi` and write the result into :var:`phi`,
     :math:`|\phi\rangle = \hat L(\text{args}\ldots) |\psi\rangle`.
     This method is faster than the previous one because the result is written
-    directly into :expr:`phi` without making a temporary object.
+    directly into :var:`phi` without making a temporary object.
 
   .. function:: template<typename StateVector, typename... CoeffArgs> \
                 void act_and_store_coeffs( \
@@ -255,17 +255,17 @@ For an extensive example of :class:`parametric_loperator`'s use have a look at
                 std::vector<evaluated_coeff_t<CoeffArgs...>>& evaluated_coeffs,\
                 CoeffArgs&&... args) const
 
-  Similar to the previous method, but using the external vector
-  :expr:`evaluated_coeffs` to store coefficient values after parameter
-  substitution. When called multiple times, only the first invocation will
-  resize :expr:`evaluated_coeffs` and allocate memory.
+    Similar to the previous method, but using the external vector
+    :var:`evaluated_coeffs` to store coefficient values after parameter
+    substitution. When called multiple times, only the first invocation will
+    resize :var:`evaluated_coeffs` and allocate memory.
 
   .. function:: template<typename... CoeffArgs> \
                 loperator<evaluated_coeff_t<CoeffArgs...>, AlgebraIDs...> \
                 at(CoeffArgs&&... args) const
 
     Transform this parametric linear operator into the non-parametric form
-    by substituting parameters :expr:`args` into it.
+    by substituting parameters :var:`args` into it.
 
 .. function:: template<typename ScalarType, typename... IndexTypes> \
               parametric_loperator<ScalarType, fermion, boson, spin> \
