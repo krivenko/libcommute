@@ -21,8 +21,8 @@ All notable changes to this project will be documented in this file.
   parameterized on the type of ranking algorithm used to map basis state indices
   from a full Hilbert space to a sector. Supported ranking algorithms are
   ``combination_ranking`` (selected by default), ``staggered_ranking`` and
-  ``trie_ranking``. All three algorithms are described in M. Wallerberger,
-  [K. Held, Phys. Rev. Research 4, 033238 (2022)](
+  ``trie_ranking``. All three algorithms are described in
+  [M. Wallerberger, K. Held, Phys. Rev. Research 4, 033238 (2022)](
   https://doi.org/10.1103/PhysRevResearch.4.033238).
 - Reduced the maximum allowed number of bits in the binary representation of
   a basis state index (``hilbert_space::max_n_bits``) to 63. This way
