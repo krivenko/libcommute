@@ -230,6 +230,13 @@ does not matter -- they will be reordered automatically.
     Throws :struct:`elementary_space_not_found` if :var:`es` is not part of
     the product.
 
+  .. function:: template <typename Functor> \
+                void foreach_elementary_space(Functor&& f) const
+
+    Successively apply a functor :var:`f` to all elementary spaces
+    in the product. :var:`f` must accept a constant reference to
+    :class:`elementary_space`.
+
   .. function:: bool has_algebra(int algebra_id) const
 
     Is an elementary space with a given algebra ID found in this Hilbert space?

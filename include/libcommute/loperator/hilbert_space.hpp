@@ -42,7 +42,7 @@ namespace detail {
 //
 // The sparse range is obtained by flattening a Cartesian product of integer
 // ranges. The strides used to flatten the product are computed from sizes of
-// the ranges rounded up to the nearest power of two.
+// the ranges rounded up to the nearest powers of two.
 class sparse_foreach_basis_state {
 
   // Sizes of the integer ranges
@@ -317,6 +317,13 @@ public:
       throw elementary_space_not_found(es);
     else
       return it->second;
+  }
+
+  // Apply functor `f` to all elementary spaces
+  template <typename Functor> void foreach_elementary_space(Functor&& f) const {
+    for(auto const& es : elementary_spaces_) {
+      std::forward<Functor>(f)(*es.first);
+    }
   }
 
   // Is an elementary space with a given algebra ID found in this Hilbert space?

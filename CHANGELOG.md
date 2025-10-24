@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
   ``hilbert_space::vec_size()`` if the Hilbert space is sparse.
 - New method overload ``hilbert_space::dim(elementary_space<...> const& es)``
   that returns dimension of a constituent elementary space.
+- New method ``hilbert_space::foreach_elementary_space()``.
 - Changed ``space_partition`` to store a constant reference to the Hilbert space
   being partitioned. This change is necessary to enable support for the sparse
   ``hilbert_space`` objects. ``space_partition`` is now templated on the Hilbert

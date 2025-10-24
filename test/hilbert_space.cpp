@@ -157,6 +157,9 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs_empty.dim() == 1);
     CHECK(hs_empty.vec_size() == 1);
     CHECK_FALSE(hs_empty.is_sparse());
+    int n_es = 0;
+    hs_empty.foreach_elementary_space([&n_es](es_type const& es) { ++n_es; });
+    CHECK(n_es == 0);
 
     hs_type hs1(es_s32_i,
                 es_s32_j,
@@ -233,6 +236,21 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs.algebra_bit_range(fermion) == std::make_pair(0, 1));
     CHECK(hs.algebra_bit_range(boson) == std::make_pair(2, 5));
     CHECK(hs.algebra_bit_range(spin) == std::make_pair(6, 13));
+
+    std::vector<es_type*> es_ref = {&es_f_dn,
+                                    &es_f_up,
+                                    &es_b_x,
+                                    &es_s_i,
+                                    &es_s_j,
+                                    &es_s1_j,
+                                    &es_s32_i,
+                                    &es_s32_j};
+    int i = 0;
+    hs.foreach_elementary_space([&i, &es_ref](es_type const& es) {
+      CHECK(es == *es_ref[i]);
+      ++i;
+    });
+    CHECK(i == es_ref.size());
 
     CHECK(hs.has(es_f_dn));
     CHECK(hs.index(es_f_dn) == 0);
