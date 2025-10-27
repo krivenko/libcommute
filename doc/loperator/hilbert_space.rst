@@ -155,6 +155,14 @@ does not matter -- they will be reordered automatically.
   :class:`elementary_space` and/or :class:`libcommute::expression` objects,
   which are used to construct this Hilbert space.
 
+  .. type:: index_types = std::tuple<IndexTypes...>
+
+    Index tuple type.
+
+  .. type:: elementary_space_t = elementary_space<IndexTypes...>
+
+    Type of the elementary spaces in the product.
+
   .. rubric:: Constructors
 
   .. function:: expression() = default

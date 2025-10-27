@@ -105,6 +105,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
 
   REQUIRE(
       std::is_same<hs_type::index_types, std::tuple<std::string, int>>::value);
+  REQUIRE(std::is_same<hs_type::elementary_space_t, es_type>::value);
 
   // Fermionic elementary spaces
   auto es_f_dn = make_space_fermion("dn", 0);

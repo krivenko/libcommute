@@ -117,8 +117,10 @@ using bit_range_t = std::pair<int, int>;
 //
 
 template <typename... IndexTypes> class hilbert_space {
-
+public:
   using elementary_space_t = elementary_space<IndexTypes...>;
+
+private:
   using es_ptr_type = std::unique_ptr<elementary_space_t>;
 
   // Size of a Hilbert space must be representable by an integer with
@@ -419,7 +421,7 @@ private:
     for(auto const& es : elementary_spaces_) {
       sv_index_type es_dim = es.first->dim();
       // Non-power-of-two elementary space: Add dimension to 'sizes'
-      if(es_dim != (sv_index_type(1) << es.first->n_bits())) {
+      if(es_dim != detail::pow2(es.first->n_bits())) {
         sizes.push_back(es_dim);
         new_size = true;
       } else {
