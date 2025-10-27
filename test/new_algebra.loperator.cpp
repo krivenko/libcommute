@@ -105,7 +105,7 @@ template <typename ExprType>
 void check_loperator(ExprType const& expr1, ExprType const& expr2) {
   hilbert_space<int> hs{elementary_space_gamma()};
 
-  using libcommute::gamma;
+  using libcommute::gamma; // cppcheck-suppress selfAssignment
   auto lop1 = loperator<std::complex<double>, gamma>(expr1, hs);
   auto lop2 = loperator<std::complex<double>, gamma>(expr2, hs);
 

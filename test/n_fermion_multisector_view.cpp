@@ -1214,8 +1214,10 @@ TEST_CASE("View of a state vector projected on a direct product of "
 
         sv_index_type index_in_f = 0;
         for(unsigned int n1 = 0; n1 < N1; ++n1)
+          // cppcheck-suppress useStlAlgorithm
           index_in_f += detail::pow2(sector_a_modes[n1]);
         for(unsigned int n2 = 0; n2 < N2; ++n2)
+          // cppcheck-suppress useStlAlgorithm
           index_in_f += detail::pow2(sector_b_modes[n2]);
 
         in[view_in.map_index(index_in_f + detail::pow2(M_total))] = 1;

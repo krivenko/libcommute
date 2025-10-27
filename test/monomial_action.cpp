@@ -154,7 +154,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
 
         int n = 0;
         for(int i = 0; i < ind; ++i)
-          n += in_bitset[i];
+          n += in_bitset[i]; // cppcheck-suppress useStlAlgorithm
         index = dagger ? in_bitset.set(ind).to_ulong() :
                          in_bitset.reset(ind).to_ulong();
         coeff *= (n % 2 == 0 ? 1 : -1);
