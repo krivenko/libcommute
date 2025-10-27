@@ -282,6 +282,10 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
     hs_type hs_b(make_space_boson(4, 0), make_space_boson(8, 1));
     CHECK(n_fermion_sector_size(hs_b, 0) == 32);
     CHECK(n_fermion_sector_size(hs_b, 1) == 0);
+
+    // Sparse Hilbert space
+    hs_b.add(make_space_boson(5, 2));
+    CHECK_THROWS_AS(n_fermion_sector_size(hs_b, 0), std::runtime_error);
   }
 
   SECTION("Construction") {
@@ -339,6 +343,10 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
 
       check_view(view_type(st, hs_b, 0), 0, 0, M_bosons);
       CHECK_THROWS_AS(view_type(st, hs_b, 1), std::runtime_error);
+
+      // Sparse Hilbert space
+      hs_b.add(make_space_boson(5, 2));
+      CHECK_THROWS_AS(view_type(st, hs_b, 0), std::runtime_error);
     }
   }
 
@@ -536,6 +544,11 @@ TEST_CASE("View of a state vector projected on a single N-fermion sector",
       std::iota(ref.begin(), ref.end(), 0);
 
       CHECK(n_fermion_sector_basis_states(hs_b, 0) == ref);
+
+      // Sparse Hilbert space
+      hs_b.add(make_space_boson(5, 2));
+      CHECK_THROWS_AS(n_fermion_sector_basis_states(hs_b, 0),
+                      std::runtime_error);
     }
   }
 

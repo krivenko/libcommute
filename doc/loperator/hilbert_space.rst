@@ -66,6 +66,8 @@ is necessary to make sure that the size of a Hilbert space with all the allowed
 63 bits used up is still representable by a value of the type
 :type:`sv_index_type`.
 
+.. _sparse_hilbert_space:
+
 A note should be made about the elementary spaces, whose dimension is not a
 power of 2. Those occupy :math:`b = \lceil\log_2(d)\rceil` bits in the binary
 representation of a basis state, which means that :math:`2^b - d` of the

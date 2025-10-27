@@ -446,6 +446,10 @@ public:
 // Size of the fermionic sector with N particles
 template <typename HSType>
 inline sv_index_type n_fermion_sector_size(HSType const& hs, unsigned int N) {
+  if(hs.is_sparse())
+    throw std::runtime_error(
+        "n_fermion_sector_size: sparse Hilbert spaces are not supported");
+
   auto total_n_bits = hs.total_n_bits();
   if(total_n_bits == 0) return 0;
   unsigned int M = 0;
@@ -489,7 +493,11 @@ struct n_fermion_sector_view {
       ranking(sector_params),
       unranking(sector_params),
       f_mask(detail::pow2(sector_params.M) - 1),
-      M_nonfermion(hs.total_n_bits() - sector_params.M) {}
+      M_nonfermion(hs.total_n_bits() - sector_params.M) {
+    if(hs.is_sparse())
+      throw std::runtime_error(
+          "n_fermion_sector_view: sparse Hilbert spaces are not supported");
+  }
 
   sv_index_type map_index(sv_index_type index) const {
     sv_index_type const ranked = ranking(index & f_mask);
@@ -589,6 +597,10 @@ foreach(n_fermion_sector_view<StateVector, Ref, RankingAlgorithm> const& view,
 template <typename HSType, typename RankingAlgorithm = combination_ranking>
 inline std::vector<sv_index_type>
 n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
+  if(hs.is_sparse())
+    throw std::runtime_error("n_fermion_sector_basis_states: sparse Hilbert "
+                             "spaces are not supported");
+
   detail::n_fermion_sector_params_t sector_params(hs, N);
 
   unsigned int const M_nonfermion = hs.total_n_bits() - sector_params.M;
@@ -797,6 +809,10 @@ inline sv_index_type n_fermion_multisector_size(
     HSType const& hs,
     std::vector<sector_descriptor<HSType>> const& sectors) {
 
+  if(hs.is_sparse())
+    throw std::runtime_error(
+        "n_fermion_multisector_size: sparse Hilbert spaces are not supported");
+
   detail::validate_sectors(hs, sectors);
 
   auto const total_n_bits = hs.total_n_bits();
@@ -853,6 +869,9 @@ struct n_fermion_multisector_view {
       ranking(sector_params.begin(), sector_params.end()),
       sector_strides(init_sector_strides(sector_params)),
       unranking(sector_params) {
+    if(hs.is_sparse())
+      throw std::runtime_error("n_fermion_multisector_view: sparse Hilbert "
+                               "spaces are not supported");
     M_nonmultisector =
         make_nonmultisector_mask(hs, sector_params, nonmultisector_bits_mask);
   }
@@ -984,6 +1003,10 @@ template <typename HSType, typename RankingAlgorithm = combination_ranking>
 inline std::vector<sv_index_type> n_fermion_multisector_basis_states(
     HSType const& hs,
     std::vector<sector_descriptor<HSType>> const& sectors) {
+
+  if(hs.is_sparse())
+    throw std::runtime_error("n_fermion_multisector_basis_states: sparse "
+                             "Hilbert spaces are not supported");
 
   auto sector_params = detail::make_sector_params(hs, sectors);
   if(hs.total_n_bits() == 0 && sector_params.empty()) return {};

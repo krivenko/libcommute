@@ -319,6 +319,10 @@ TEST_CASE("View of a state vector projected on a direct product of "
       CHECK(n_fermion_multisector_size(hs_b, {}) == 32);
       CHECK_THROWS_AS(n_fermion_multisector_size(hs_b, {sda(1)}),
                       std::runtime_error);
+
+      // Sparse Hilbert space
+      hs_b.add(make_space_boson(5, 2));
+      CHECK_THROWS_AS(n_fermion_multisector_size(hs_b, {}), std::runtime_error);
     }
   }
 
@@ -779,6 +783,10 @@ TEST_CASE("View of a state vector projected on a direct product of "
 
       CHECK_THROWS_AS(view_type(st, hs_b, {sd0(0)}), std::runtime_error);
       CHECK_THROWS_AS(view_type(st, hs_b, {sd0(1)}), std::runtime_error);
+
+      // Sparse Hilbert space
+      hs_b.add(make_space_boson(5, 2));
+      CHECK_THROWS_AS(view_type(st, hs_b, {}), std::runtime_error);
     }
   }
 
@@ -1117,6 +1125,11 @@ TEST_CASE("View of a state vector projected on a direct product of "
       CHECK_THROWS_AS(n_fermion_multisector_basis_states(hs_b, {sd0(0)}),
                       std::runtime_error);
       CHECK_THROWS_AS(n_fermion_multisector_basis_states(hs_b, {sd0(1)}),
+                      std::runtime_error);
+
+      // Sparse Hilbert space
+      hs_b.add(make_space_boson(5, 2));
+      CHECK_THROWS_AS(n_fermion_multisector_basis_states(hs_b, {}),
                       std::runtime_error);
     }
   }

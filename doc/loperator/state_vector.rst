@@ -312,6 +312,11 @@ It is possible to alleviate the memory consumption problem by employing a
 of a basis state index. A computed rank is then used to index into the
 :math:`N`-fermion (multi)sector.
 
+.. warning::
+
+  :class:`n_fermion_sector_view` and :class:`n_fermion_multisector_view` are
+  incompatible with :ref:`sparse Hilbert spaces <sparse_hilbert_space>`.
+
 .. class:: template<typename StateVector, \
                     bool Ref = true, \
                     typename RankingAlgorithm = combination_ranking> \
