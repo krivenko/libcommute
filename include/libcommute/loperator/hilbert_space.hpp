@@ -57,7 +57,7 @@ class sparse_foreach_basis_state {
 
   static std::vector<sv_index_type>
   init_jumps(std::vector<sv_index_type> const& sizes) {
-    assert(sizes.size() > 0);
+    if(sizes.empty()) return {};
     std::vector<sv_index_type> jumps(sizes.size() - 1);
     sv_index_type stride = 1;
     for(std::size_t d = 0; d < sizes.size() - 1; ++d) {
@@ -72,7 +72,8 @@ class sparse_foreach_basis_state {
 public:
   explicit sparse_foreach_basis_state(std::vector<sv_index_type> sizes)
     : sizes_(std::move(sizes)),
-      n_states_(std::accumulate(sizes_.begin(),
+      n_states_(sizes_.empty() ? 0 :
+                std::accumulate(sizes_.begin(),
                                 sizes_.end(),
                                 1,
                                 std::multiplies<sv_index_type>())),

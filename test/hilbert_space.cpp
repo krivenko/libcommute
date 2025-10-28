@@ -33,6 +33,9 @@ TEST_CASE("Implementation details", "[detail]") {
   using namespace detail;
 
   SECTION("sparse_foreach_basis_state") {
+    auto foreach0 = sparse_foreach_basis_state({});
+    foreach0([](sv_index_type) { CHECK(true); });
+
     auto foreach1 = sparse_foreach_basis_state({6});
     std::vector<sv_index_type> sv_states1;
     foreach1([&sv_states1](sv_index_type st) { sv_states1.push_back(st); });
