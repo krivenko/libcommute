@@ -72,11 +72,12 @@ class sparse_foreach_basis_state {
 public:
   explicit sparse_foreach_basis_state(std::vector<sv_index_type> sizes)
     : sizes_(std::move(sizes)),
-      n_states_(sizes_.empty() ? 0 :
-                std::accumulate(sizes_.begin(),
-                                sizes_.end(),
-                                1,
-                                std::multiplies<sv_index_type>())),
+      n_states_(sizes_.empty() ?
+                    0 :
+                    std::accumulate(sizes_.begin(),
+                                    sizes_.end(),
+                                    1,
+                                    std::multiplies<sv_index_type>())),
       jumps_(init_jumps(sizes_)),
       indices_(sizes_.size()) {}
 
@@ -416,30 +417,23 @@ private:
     std::vector<sv_index_type> sizes;
     sizes.reserve(elementary_spaces_.size());
 
-    // Fill 'sizes' while merging (replacing by the product) the adjacent
-    // power-of-two dimensions.
-    bool new_size = true;
+    // Fill 'sizes' while merging (replacing by the product) dimensions of
+    // a non-power-of-two elementary space and all power-of-two spaces
+    // preceding it.
+    sv_index_type merged_dim = 1;
     for(auto const& es : elementary_spaces_) {
       sv_index_type es_dim = es.first->dim();
-      // Non-power-of-two elementary space: Add dimension to 'sizes'
+      merged_dim *= es_dim;
+
+      // Non-power-of-two elementary space: Add merged dimension to 'sizes'
       if(es_dim != detail::pow2(es.first->n_bits())) {
-        sizes.push_back(es_dim);
-        new_size = true;
-      } else {
-        // Power-of-two elementary space
-        // If the last added element corresponded to a power-of-two space,
-        // multiply it by the current dimension. Otherwise add a new element
-        // to 'sizes'.
-        if(new_size) {
-          sizes.push_back(es_dim);
-          new_size = false;
-        } else {
-          sizes.back() *= es_dim;
-        }
+        sizes.push_back(merged_dim);
+        merged_dim = 1;
       }
     }
+    if(merged_dim != 1) sizes.push_back(merged_dim);
 
-    if(sizes.size() < 2) {
+    if(sizes.size() <= 1) {
       foreach_alg_.reset(nullptr);
     } else {
       foreach_alg_ = make_unique<detail::sparse_foreach_basis_state>(sizes);
