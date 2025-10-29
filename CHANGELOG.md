@@ -41,6 +41,9 @@ All notable changes to this project will be documented in this file.
   that returns dimension of a constituent elementary space.
 - New method ``hilbert_space::foreach_elementary_space()``.
 - Type alias ``hilbert_space::elementary_space_t`` has been made public.
+- New class ``compressed_state_view``. It implements a view of a compressed
+  state vector (continuous array) storing only the amplitudes corresponding to
+  the physical basis states of a sparse Hilbert space.
 - Changed ``space_partition`` to store a constant reference to the Hilbert space
   being partitioned. This change is necessary to enable support for the sparse
   ``hilbert_space`` objects. ``space_partition`` is now templated on the Hilbert

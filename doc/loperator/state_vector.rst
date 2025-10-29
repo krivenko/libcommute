@@ -109,6 +109,8 @@ only the part of its interface not covered by ``StateVector``.
 
 .. class:: template<typename ScalarType> sparse_state_vector
 
+  *Defined in <libcommute/loperator/sparse_state_vector.hpp>*
+
   State vector with a sparse storage of elements (quantum amplitudes).
   :type:`ScalarType` is the type of the elements.
 
@@ -149,6 +151,84 @@ only the part of its interface not covered by ``StateVector``.
     Remove unordered map elements (amplitudes) for which predicate :var:`p`
     returns ``true``.
 
+.. _compressed_state_view:
+
+View of a compressed state vector
+---------------------------------
+
+Another way to save memory, in particular in the situation when the
+:ref:`Hilbert space is sparse <sparse_hilbert_space>`, is by using
+:class:`compressed_state_view`. A simple array-like container
+(e.g. ``std::vector``) compatible with a sparse Hilbert space must have the
+size :func:`hilbert_space::vec_size()`, which exceeds the actual dimension of
+the space,
+:func:`hilbert_space::dim() <sv_index_type hilbert_space::dim() const>`.
+The extra required memory is the price to pay for improved performance. This
+price, however, can be very steep for the bigger and sparser (i.e. including
+many elementary spaces of non-power-of-two dimensions) Hilbert spaces. For
+example, a vector storing a state of a system of :math:`N=10` spins
+:math:`S=1` needs to be :math:`4^N` elements long, while only :math:`3^N` of its
+elements represent amplitudes of the physical basis states. As a result, the
+memory overhead in this case is huge, :math:`1 - (3/4)^N \approx 94\%`.
+
+One can solve this issue by allocating an array of the size :math:`d =`
+:func:`hilbert_space::dim() <sv_index_type hilbert_space::dim() const>`
+(only the physical amplitudes are actually stored) and using a
+:class:`compressed_state_view` object to adapt it.
+:class:`compressed_state_view` models the ``StateVector`` concept and maps
+indices of the physical basis states onto a continuous integer range
+:math:`[0; d-1]` (this operation consumes a bit of extra time). The mapped
+indices are then used to address elements of the underlying array.
+
+.. class:: template<typename StateVector, bool Ref = true> compressed_state_view
+
+  *Defined in <libcommute/loperator/compressed_state_view.hpp>*
+
+  View of a :type:`StateVector` object that translates indices of basis states
+  from a (possibly) :ref:`sparse Hilbert space <sparse_hilbert_space>` onto
+  a continuous range. It is, therefore, sufficient to store only the
+  :func:`hilbert_space::dim() <sv_index_type hilbert_space::dim() const>`
+  physical amplitudes in the underlying state vector object, which can be
+  much more memory-efficient than storing all :func:`hilbert_space::vec_size()`
+  elements.
+
+  :type:`StateVector` - type of the underlying state vector object. Defining a
+  read-only view (such that prohibits :expr:`update_add_element()` operations)
+  requires using a ``const``-qualified type here. For example, one can use
+  ``StateVector = std::vector<double>`` for a read-write view, and
+  ``StateVector = const std::vector<double>`` for a read-only view.
+
+  :type:`Ref` - by default, :type:`compressed_state_view`
+  stores a reference to the underlying state vector. Setting this option to
+  ``false`` will result in a copy being created and stored instead. This feature
+  can be useful when the underlying type is already a view-like object similar
+  to ``Eigen::Map``.
+
+  .. function:: template <typename SV, typename HSType> \
+                         compressed_state_view(SV&& sv, HSType const& hs)
+
+    Construct a view of the state vector :var:`sv`, defined in the
+    (sparse) Hilbert space :var:`hs`.
+
+  .. function:: sv_index_type map_index(sv_index_type index) const
+
+    Translate a basis state :var:`index` from the Hilbert space to the
+    continuous range ``[0; hs.dim()-1]``. If the Hilbert space is sparse,
+    and :var:`index` does not correspond to a physical basis state, then
+    the result is undefined.
+
+*<libcommute/loperator/compressed_state_view.hpp>* defines two supplemental
+factory functions for the :class:`compressed_state_view` objects.
+
+.. function:: template <typename StateVector, typename HSType> \
+              auto make_comp_state_view(StateVector&& sv, HSType const& hs)
+              template <typename StateVector, typename HSType> \
+              auto make_const_comp_state_view(StateVector&& sv, \
+                                              HSType const& hs)
+
+  Make and return a read/write or constant view of a compressed state vector
+  :var:`sv` from the Hilbert space :var:`hs`.
+
 .. _mapped_basis_view:
 
 Mapped basis view
@@ -168,6 +248,8 @@ that subspace. Such a situation naturally emerges when working with
 :ref:`invariant subspaces of operators <space_partition>`.
 
 .. class:: template<typename StateVector, bool Ref = true> mapped_basis_view
+
+  *Defined in <libcommute/loperator/mapped_basis_view.hpp>*
 
   View of a :type:`StateVector` object that translates basis state indices
   according to a certain mapping.
@@ -191,6 +273,8 @@ factory class :class:`basis_mapper` and its methods
 :func:`basis_mapper:: make_view()`/:func:`basis_mapper::make_const_view()`.
 
 .. class:: basis_mapper
+
+  *Defined in <libcommute/loperator/mapped_basis_view.hpp>*
 
   Factory class for :class:`mapped_basis_view`.
 

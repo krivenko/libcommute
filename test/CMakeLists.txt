@@ -51,6 +51,7 @@ set(TESTS
   sparse_state_vector
   space_partition
   mapped_basis_view
+  compressed_state_view
   n_fermion_sector_view
   n_fermion_multisector_view
 )
