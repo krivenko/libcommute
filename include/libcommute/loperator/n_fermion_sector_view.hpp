@@ -340,7 +340,7 @@ template <unsigned int R> class trie_ranking {
       }
     }
 
-    return std::make_tuple(rank, st, k);
+    return {rank, st, k};
   }
 
 public:
@@ -624,30 +624,20 @@ n_fermion_sector_basis_states(HSType const& hs, unsigned int N) {
   return basis_states;
 }
 
-template <typename StateVector>
-using make_nfs_view_ret_t =
-    n_fermion_sector_view<remove_cvref_t<StateVector>,
-                          std::is_lvalue_reference<StateVector>::value>;
-
 // Make a non-constant N-fermion sector view
 template <typename StateVector, typename HSType>
 auto make_nfs_view(StateVector&& sv, HSType const& hs, unsigned int N)
-    -> make_nfs_view_ret_t<StateVector> {
-  return make_nfs_view_ret_t<StateVector>(std::forward<StateVector>(sv), hs, N);
+    -> n_fermion_sector_view<remove_cvref_t<StateVector>,
+                             std::is_lvalue_reference<StateVector>::value> {
+  return {std::forward<StateVector>(sv), hs, N};
 }
-
-template <typename StateVector>
-using make_const_nfs_view_ret_t =
-    n_fermion_sector_view<remove_cvref_t<StateVector> const,
-                          std::is_lvalue_reference<StateVector>::value>;
 
 // Make a constant N-fermion sector view
 template <typename StateVector, typename HSType>
 auto make_const_nfs_view(StateVector&& sv, HSType const& hs, unsigned int N)
-    -> make_const_nfs_view_ret_t<StateVector> {
-  return make_const_nfs_view_ret_t<StateVector>(std::forward<StateVector>(sv),
-                                                hs,
-                                                N);
+    -> n_fermion_sector_view<remove_cvref_t<StateVector> const,
+                             std::is_lvalue_reference<StateVector>::value> {
+  return {std::forward<StateVector>(sv), hs, N};
 }
 
 //
@@ -1038,36 +1028,26 @@ inline std::vector<sv_index_type> n_fermion_multisector_basis_states(
   return basis_states;
 }
 
-template <typename StateVector>
-using make_nfms_view_ret_t =
-    n_fermion_multisector_view<remove_cvref_t<StateVector>,
-                               std::is_lvalue_reference<StateVector>::value>;
-
 // Make a non-constant N-fermion sector view
 template <typename StateVector, typename HSType>
 auto make_nfms_view(StateVector&& sv,
                     HSType const& hs,
                     std::vector<sector_descriptor<HSType>> const& sectors)
-    -> make_nfms_view_ret_t<StateVector> {
-  return make_nfms_view_ret_t<StateVector>(std::forward<StateVector>(sv),
-                                           hs,
-                                           sectors);
+    -> n_fermion_multisector_view<
+        remove_cvref_t<StateVector>,
+        std::is_lvalue_reference<StateVector>::value> {
+  return {std::forward<StateVector>(sv), hs, sectors};
 }
-
-template <typename StateVector>
-using make_const_nfms_view_ret_t =
-    n_fermion_multisector_view<remove_cvref_t<StateVector> const,
-                               std::is_lvalue_reference<StateVector>::value>;
 
 // Make a constant N-fermion sector view
 template <typename StateVector, typename HSType>
 auto make_const_nfms_view(StateVector&& sv,
                           HSType const& hs,
                           std::vector<sector_descriptor<HSType>> const& sectors)
-    -> make_const_nfms_view_ret_t<StateVector> {
-  return make_const_nfms_view_ret_t<StateVector>(std::forward<StateVector>(sv),
-                                                 hs,
-                                                 sectors);
+    -> n_fermion_multisector_view<
+        remove_cvref_t<StateVector> const,
+        std::is_lvalue_reference<StateVector>::value> {
+  return {std::forward<StateVector>(sv), hs, sectors};
 }
 
 } // namespace libcommute

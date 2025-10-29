@@ -209,7 +209,7 @@ public:
 
     update_root_to_subspace();
 
-    return std::make_pair(Cd_elements, C_elements);
+    return {Cd_elements, C_elements};
   }
 
   // Hilbert space dimension
@@ -306,7 +306,7 @@ template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
 space_partition<HSType>
 make_space_partition(loperator<LOpScalarType, LOpAlgebraIDs...> const& h,
                      HSType const& hs) {
-  return space_partition<HSType>(h, hs);
+  return {h, hs};
 }
 
 template <typename HSType, typename LOpScalarType, int... LOpAlgebraIDs>
@@ -315,7 +315,7 @@ space_partition<HSType> make_space_partition(
     HSType const& hs,
     matrix_elements_map<
         typename loperator<LOpScalarType, LOpAlgebraIDs...>::scalar_type>& me) {
-  return space_partition<HSType>(h, hs, me);
+  return {h, hs, me};
 }
 
 } // namespace libcommute

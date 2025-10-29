@@ -37,14 +37,14 @@ template <typename IntType> struct scalar_traits<boost::rational<IntType>> {
       throw std::runtime_error("Cannot convert " + std::to_string(x) +
                                " to boost::rational");
     }
-    return rational_t(IntType(std::nearbyint(x)));
+    return {IntType(std::nearbyint(x))};
   }
   // Make a constant from a variadic number
   static rational_t make_const(var_number const& vn) {
     if(vn.number_type == var_number::integer)
-      return rational_t(int(vn));
+      return {int(vn)};
     else if(vn.number_type == var_number::rational)
-      return rational_t(vn.numerator(), vn.denominator());
+      return {vn.numerator(), vn.denominator()};
     else {
       std::stringstream ss;
       ss << vn;

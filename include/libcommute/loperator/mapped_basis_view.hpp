@@ -233,28 +233,20 @@ public:
     return inv_map;
   }
 
-  template <typename StateVector>
-  using make_view_ret_t =
-      mapped_basis_view<remove_cvref_t<StateVector>,
-                        std::is_lvalue_reference<StateVector>::value>;
-
   // Make a non-constant basis mapping view
   template <typename StateVector>
-  auto make_view(StateVector&& sv) const -> make_view_ret_t<StateVector> {
-    return make_view_ret_t<StateVector>(std::forward<StateVector>(sv), map_);
+  auto make_view(StateVector&& sv) const
+      -> mapped_basis_view<remove_cvref_t<StateVector>,
+                           std::is_lvalue_reference<StateVector>::value> {
+    return {std::forward<StateVector>(sv), map_};
   }
-
-  template <typename StateVector>
-  using make_const_view_ret_t =
-      mapped_basis_view<remove_cvref_t<StateVector> const,
-                        std::is_lvalue_reference<StateVector>::value>;
 
   // Make a constant basis mapping view
   template <typename StateVector>
   auto make_const_view(StateVector&& sv) const
-      -> make_const_view_ret_t<StateVector> {
-    return make_const_view_ret_t<StateVector>(std::forward<StateVector>(sv),
-                                              map_);
+      -> mapped_basis_view<remove_cvref_t<StateVector> const,
+                           std::is_lvalue_reference<StateVector>::value> {
+    return {std::forward<StateVector>(sv), map_};
   }
 };
 

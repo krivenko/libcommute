@@ -133,19 +133,13 @@ public:
   // Constant iterator over generators comprising this monomial
   class const_iterator;
 
-  inline const_iterator begin() const noexcept {
-    return const_iterator(generators_.begin());
-  }
+  inline const_iterator begin() const noexcept { return {generators_.begin()}; }
   inline const_iterator cbegin() const noexcept {
-    return const_iterator(generators_.cbegin());
+    return {generators_.cbegin()};
   }
 
-  inline const_iterator end() const noexcept {
-    return const_iterator(generators_.end());
-  }
-  inline const_iterator cend() const noexcept {
-    return const_iterator(generators_.cend());
-  }
+  inline const_iterator end() const noexcept { return {generators_.end()}; }
+  inline const_iterator cend() const noexcept { return {generators_.cend()}; }
 
   using range_type = std::pair<const_iterator, const_iterator>;
 
@@ -153,17 +147,17 @@ public:
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   inline const_reverse_iterator rbegin() const noexcept {
-    return const_reverse_iterator(generators_.rbegin());
+    return {generators_.rbegin()};
   }
   inline const_reverse_iterator crbegin() const noexcept {
-    return const_reverse_iterator(generators_.crbegin());
+    return {generators_.crbegin()};
   }
 
   inline const_reverse_iterator rend() const noexcept {
-    return const_reverse_iterator(generators_.rend());
+    return {generators_.rend()};
   }
   inline const_reverse_iterator crend() const noexcept {
-    return const_reverse_iterator(generators_.crend());
+    return {generators_.crend()};
   }
 
   // Element access
@@ -354,13 +348,13 @@ public:
     return *this;
   }
   friend const_iterator operator+(const_iterator const& it, std::size_t n) {
-    return const_iterator(it.v_it_ + n);
+    return {it.v_it_ + n};
   }
   friend const_iterator operator+(std::size_t n, const_iterator const& it) {
-    return const_iterator(it.v_it_ + n);
+    return {it.v_it_ + n};
   }
   friend const_iterator operator-(const_iterator const& it, std::size_t n) {
-    return const_iterator(it.v_it_ - n);
+    return {it.v_it_ - n};
   }
   friend difference_type operator-(const_iterator const& it1,
                                    const_iterator const& it2) {

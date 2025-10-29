@@ -138,7 +138,7 @@ S_y(IndexTypes&&... indices) { // NOLINT(cppcoreguidelines-missing-std-forward)
 template <typename... IndexTypes>
 inline expr_complex<IndexTypes...>
 make_complex(expr_real<IndexTypes...> const& expr) {
-  return expr_complex<IndexTypes...>(expr);
+  return {expr};
 }
 
 } // namespace static_indices
