@@ -287,7 +287,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs.basis_state_index(es_s_i, 1) == 64);
     CHECK(hs.has(es_s_j));
     CHECK(hs.index(es_s_j) == 4);
-    CHECK(hs.dim(es_s_i) == 2);
+    CHECK(hs.dim(es_s_j) == 2);
     CHECK(hs.bit_range(es_s_j) == std::make_pair(7, 7));
     CHECK_FALSE(hs.has(es_s1_i));
     CHECK_THROWS_AS(hs.index(es_s1_i), hs_type::elementary_space_not_found);
@@ -302,7 +302,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs.basis_state_index(es_s1_j, 2) == 512);
     CHECK(hs.has(es_s32_i));
     CHECK(hs.index(es_s32_i) == 6);
-    CHECK(hs.dim(es_s32_j) == 4);
+    CHECK(hs.dim(es_s32_i) == 4);
     CHECK(hs.bit_range(es_s32_i) == std::make_pair(10, 11));
     CHECK(hs.basis_state_index(es_s32_i, 0) == 0);
     CHECK(hs.basis_state_index(es_s32_i, 1) == 1024);
@@ -445,7 +445,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
     CHECK(hs2.bit_range(es_f_dn) == std::make_pair(0, 0));
     CHECK(hs2.has(es_f_up));
     CHECK(hs2.index(es_f_up) == 1);
-    CHECK(hs2.dim(es_f_dn) == 2);
+    CHECK(hs2.dim(es_f_up) == 2);
     CHECK(hs2.bit_range(es_f_up) == std::make_pair(1, 1));
     CHECK(hs2.has(es_b_x));
     CHECK(hs2.index(es_b_x) == 2);
@@ -478,6 +478,7 @@ TEST_CASE("Hilbert space", "[hilbert_space]") {
           5.0 * n("up", 0) * n("dn", 0) + 2.0 * S_z<3>("i", 0) + S_z<4>("i", 0);
       hs_type hs3(expr2, boson_es_constructor(1));
       CHECK(hs3.dim() == 2 * 2 * 3 * 4);
+      CHECK(hs3.vec_size() == 2 * 2 * 4 * 4);
       CHECK(hs3.is_sparse());
 
       std::vector<sv_index_type> st3;
