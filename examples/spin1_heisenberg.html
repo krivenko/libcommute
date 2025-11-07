@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spin-1 Heisenberg ring: Compressed storage of state vectors &mdash; libcommute 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=9bead9b5" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Partial diagonalization of a one-dimensional Hubbard-Holstein model" href="hubbard_holstein_1d.html" />
+    <link rel="prev" title="N-fermion sector views and exact diagonalization with Eigen 3" href="n_fermion_sectors.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            libcommute
+              <img src="../_static/logo_small.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use <em>libcommute</em> in your project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loperator/index.html">Tools for exact diagonalization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kanamori.html">Kanamori interaction Hamiltonian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaynes_cummings.html">Jaynes-Cummings ladder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heisenberg_chain.html">Spin-1/2 Heisenberg chain and its integrals of motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametric_loperator.html">Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="virasoro_algebra.html">Virasoro algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="n_fermion_sectors.html">N-fermion sector views and exact diagonalization with Eigen 3</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Spin-1 Heisenberg ring: Compressed storage of state vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hubbard_holstein_1d.html">Partial diagonalization of a one-dimensional Hubbard-Holstein model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search.html">Search Page</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">libcommute</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Advanced examples</a></li>
+      <li class="breadcrumb-item active">Spin-1 Heisenberg ring: Compressed storage of state vectors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/spin1_heisenberg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="spin-1-heisenberg-ring-compressed-storage-of-state-vectors">
+<span id="spin1-heisenberg"></span><h1>Spin-1 Heisenberg ring: Compressed storage of state vectors<a class="headerlink" href="#spin-1-heisenberg-ring-compressed-storage-of-state-vectors" title="Link to this heading"></a></h1>
+<p>In this example we explore the concept of a
+<a class="reference internal" href="../loperator/hilbert_space.html#sparse-hilbert-space"><span class="std std-ref">sparse Hilbert space</span></a>, and illustrate how using the
+<a class="reference internal" href="../loperator/state_vector.html#_CPPv4I0_bEN10libcommute21compressed_state_viewE" title="libcommute::compressed_state_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">compressed_state_view</span></code></a> objects
+can lead to a dramatic reduction in memory footprint. To this end, we consider
+a ring of <span class="math notranslate nohighlight">\(N\)</span> spins <span class="math notranslate nohighlight">\(S=1\)</span> interacting via the antiferromagnetic
+Heisenberg exchange coupling,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat H = \sum_{i=0}^{N-1} \mathbf{S}_i \cdot \mathbf{S}_{(i+1)\bmod N} =
+         \sum_{\substack{i=0,\\j = (i+1)\bmod N}}^{N-1} S_{z,i} S_{z,j} +
+            \frac{1}{2} \left[ S_{+,i} S_{-,j} + S_{-,i} S_{+,j} \right].\end{split}\]</div>
+<p>The state space of each spin is spanned by the <span class="math notranslate nohighlight">\(S_z\)</span>-triplet
+<span class="math notranslate nohighlight">\(|0\rangle, |\pm1\rangle\)</span>, and the dimension of the model’s Hilbert space
+is thus <span class="math notranslate nohighlight">\(3^N\)</span>. From the computing standpoint, however, it takes 2 bits to
+specify one of the three basis states, with the bit combination <code class="docutils literal notranslate"><span class="pre">0b11</span></code> not
+representing any physical state. According to the
+<a class="reference internal" href="../loperator/hilbert_space.html#hilbert-space"><span class="std std-ref">convention</span></a> adopted in <em>libcommute</em>, one then needs a bit
+string of length <span class="math notranslate nohighlight">\(2N\)</span> to encode a basis state of the entire system.
+Although not all such strings correspond to physical basis states (most of the
+strings are, in fact, unphysical for <span class="math notranslate nohighlight">\(N\geq 3\)</span>), naively one would have to
+allocate an array of size <span class="math notranslate nohighlight">\(4^N\)</span> to store a state vector compatible with
+<a class="reference internal" href="../loperator/loperator.html#loperator"><span class="std std-ref">linear operators</span></a> acting in this Hilbert space. This situation
+is an example of a <em>sparse Hilbert space</em>, i.e. of a space whose basis state
+indices do not form a continuous integer range. Sparse Hilbert spaces are
+characterized by non-power-of-two dimensions.</p>
+<p>It is a valid (and faster) option to allocate <code class="docutils literal notranslate"><span class="pre">std::vector</span></code>
+(<code class="docutils literal notranslate"><span class="pre">Eigen::Vector</span></code>, etc) objects of the size <span class="math notranslate nohighlight">\(4^N\)</span> to store state
+vectors, even though some of their elements will never be referenced. Another
+option offered by <em>libcommute</em> is to allocate containers of the exponentially
+smaller size <span class="math notranslate nohighlight">\(3^N\)</span>, and to employ the
+<a class="reference internal" href="../loperator/state_vector.html#_CPPv4I0_bEN10libcommute21compressed_state_viewE" title="libcommute::compressed_state_view"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">compressed_state_view</span></code></a> adaptor
+that – at the cost of a certain speed loss – translates indices of
+the physical basis states onto the continuous range <span class="math notranslate nohighlight">\([0;3^N-1]\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// &#39;state_vector_eigen3.hpp&#39; must be included before &#39;libcommute.hpp&#39;.</span>
+<span class="linenos"> 2</span><span class="c1">// This way libcommute will know how to deal with Eigen&#39;s vector types.</span>
+<span class="linenos"> 3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;libcommute/loperator/state_vector_eigen3.hpp&gt;</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;libcommute/libcommute.hpp&gt;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Eigen/Eigenvalues&gt;</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">libcommute</span><span class="p">;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">12</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span><span class="w"> </span><span class="c1">// Number of spins</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="w">  </span><span class="c1">// Expression of the Heisenberg Hamiltonian to be constructed.</span>
+<span class="linenos">15</span><span class="w">  </span><span class="c1">// Every creation and annihilation operator found in the expression carries</span>
+<span class="linenos">16</span><span class="w">  </span><span class="c1">// one integer index (ring site).</span>
+<span class="linenos">17</span><span class="w">  </span><span class="n">static_indices</span><span class="o">::</span><span class="n">expr_real</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">H</span><span class="p">;</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="w">  </span><span class="c1">// The following functions return operators with statically typed indices.</span>
+<span class="linenos">20</span><span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">static_indices</span><span class="o">::</span><span class="n">S_z</span><span class="p">;</span><span class="w"> </span><span class="c1">// Spin projection operator S_z</span>
+<span class="linenos">21</span><span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">static_indices</span><span class="o">::</span><span class="n">S_p</span><span class="p">;</span><span class="w"> </span><span class="c1">// Spin-raising operator S_+</span>
+<span class="linenos">22</span><span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">static_indices</span><span class="o">::</span><span class="n">S_m</span><span class="p">;</span><span class="w"> </span><span class="c1">// Spin-lowering operator S_-</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="w">  </span><span class="c1">// Heisenberg interaction of the S=1 spins</span>
+<span class="linenos">25</span><span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">26</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
+<span class="linenos">27</span><span class="w">    </span><span class="n">H</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">S_z</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S_z</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="linenos">28</span><span class="w">         </span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">S_p</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S_m</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">S_m</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S_p</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+<span class="linenos">29</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="w">  </span><span class="c1">// Automatically analyse structure of &#39;H&#39; and construct a Hilbert space.</span>
+<span class="linenos">32</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">);</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="w">  </span><span class="c1">// The Hilbert space &#39;hs&#39; is sparse: The minimal required container size for</span>
+<span class="linenos">35</span><span class="w">  </span><span class="c1">// state vectors exceeds the dimension of the space.</span>
+<span class="linenos">36</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Is the Hilbert space sparse? &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">is_sparse</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="linenos">37</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Hilbert space dimension: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="linenos">38</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Minimal container size for state vectors: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">vec_size</span><span class="p">()</span>
+<span class="linenos">39</span><span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">();</span><span class="w"> </span><span class="c1">// 3^N</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span><span class="w">  </span><span class="c1">// Construct an &#39;loperator&#39; object that represents action of the expression</span>
+<span class="linenos">44</span><span class="w">  </span><span class="c1">// &#39;H&#39; on state vectors in the Hilbert space &#39;hs&#39;.</span>
+<span class="linenos">45</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">Hop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_loperator</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span><span class="w">  </span><span class="c1">// Preallocate an input state vector of the length 3^N.</span>
+<span class="linenos">48</span><span class="w">  </span><span class="c1">// This container is compressed, i.e. it stores quantum amplitudes of</span>
+<span class="linenos">49</span><span class="w">  </span><span class="c1">// the *physical* basis states only!</span>
+<span class="linenos">50</span><span class="w">  </span><span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span><span class="w"> </span><span class="n">psi</span><span class="p">(</span><span class="n">dim</span><span class="p">);</span>
+<span class="linenos">51</span>
+<span class="linenos">52</span><span class="w">  </span><span class="c1">// Preallocate a Hamiltonian matrix to be filled and diagonalized.</span>
+<span class="linenos">53</span><span class="w">  </span><span class="c1">// This matrix is also compressed.</span>
+<span class="linenos">54</span><span class="w">  </span><span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXd</span><span class="w"> </span><span class="n">Hmat</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span><span class="p">);</span>
+<span class="linenos">55</span>
+<span class="linenos">56</span><span class="w">  </span><span class="c1">// Create a view of the compressed state &#39;psi&#39;.</span>
+<span class="linenos">57</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">psi_view</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_const_comp_state_view</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="w">  </span><span class="c1">// Fill &#39;Hmat&#39;</span>
+<span class="linenos">60</span><span class="w">  </span><span class="c1">// Important: k takes on values corresponding to the *physical* basis states</span>
+<span class="linenos">61</span><span class="w">  </span><span class="c1">// only.</span>
+<span class="linenos">62</span><span class="w">  </span><span class="n">foreach</span><span class="p">(</span><span class="n">hs</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">dim</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">hs</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">Hop</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">psi</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">psi_view</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">Hmat</span><span class="p">](</span><span class="n">sv_index_type</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">63</span><span class="w">    </span><span class="c1">// Translate k into the compressed (continuous) range [0; 3^N-1]</span>
+<span class="linenos">64</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">k_comp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psi_view</span><span class="p">.</span><span class="n">map_index</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+<span class="linenos">65</span>
+<span class="linenos">66</span><span class="w">    </span><span class="c1">// Reset vector |\psi&gt; to zero.</span>
+<span class="linenos">67</span><span class="w">    </span><span class="n">psi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span><span class="o">::</span><span class="n">Zero</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">dim</span><span class="p">);</span>
+<span class="linenos">68</span>
+<span class="linenos">69</span><span class="w">    </span><span class="c1">// Now, &#39;psi&#39; is the basis vector corresponding to &#39;k&#39;.</span>
+<span class="linenos">70</span><span class="w">    </span><span class="n">psi</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">k_comp</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos">71</span>
+<span class="linenos">72</span><span class="w">    </span><span class="c1">// Create a view of the column of &#39;Hmat&#39; that corresponds to &#39;k&#39;.</span>
+<span class="linenos">73</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">HMat_col_view</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_comp_state_view</span><span class="p">(</span><span class="n">Hmat</span><span class="p">.</span><span class="n">col</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">k_comp</span><span class="p">),</span><span class="w"> </span><span class="n">hs</span><span class="p">);</span>
+<span class="linenos">74</span>
+<span class="linenos">75</span><span class="w">    </span><span class="c1">// Act with &#39;Hop&#39; on the basis state &#39;k&#39; and write the result into</span>
+<span class="linenos">76</span><span class="w">    </span><span class="c1">// the column of &#39;Hmat&#39; that also corresponds to &#39;k&#39;.</span>
+<span class="linenos">77</span><span class="w">    </span><span class="n">Hop</span><span class="p">(</span><span class="n">psi_view</span><span class="p">,</span><span class="w"> </span><span class="n">HMat_col_view</span><span class="p">);</span>
+<span class="linenos">78</span><span class="w">  </span><span class="p">});</span>
+<span class="linenos">79</span>
+<span class="linenos">80</span><span class="w">  </span><span class="c1">// Diagonalize &#39;Hmat&#39;.</span>
+<span class="linenos">81</span><span class="w">  </span><span class="n">Eigen</span><span class="o">::</span><span class="n">SelfAdjointEigenSolver</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXd</span><span class="o">&gt;</span><span class="w"> </span><span class="n">diag</span><span class="p">(</span><span class="n">Hmat</span><span class="p">,</span>
+<span class="linenos">82</span><span class="w">                                                      </span><span class="n">Eigen</span><span class="o">::</span><span class="n">EigenvaluesOnly</span><span class="p">);</span>
+<span class="linenos">83</span>
+<span class="linenos">84</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;10 lowest eigenvalues of H = &quot;</span>
+<span class="linenos">85</span><span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">diag</span><span class="p">.</span><span class="n">eigenvalues</span><span class="p">().</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="n">transpose</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="linenos">86</span>
+<span class="linenos">87</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">88</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="n_fermion_sectors.html" class="btn btn-neutral float-left" title="N-fermion sector views and exact diagonalization with Eigen 3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hubbard_holstein_1d.html" class="btn btn-neutral float-right" title="Partial diagonalization of a one-dimensional Hubbard-Holstein model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016-2025, Igor Krivenko.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

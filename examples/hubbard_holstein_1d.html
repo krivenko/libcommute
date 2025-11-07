@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partial diagonalization of a one-dimensional Hubbard-Holstein model &mdash; libcommute 0.8.0 documentation</title>
+  <title>Partial diagonalization of a one-dimensional Hubbard-Holstein model &mdash; libcommute 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=9bead9b5" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=486e5634"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Changelog" href="../changelog.html" />
-    <link rel="prev" title="N-fermion sector views and exact diagonalization with Eigen 3" href="n_fermion_sectors.html" /> 
+    <link rel="prev" title="Spin-1 Heisenberg ring: Compressed storage of state vectors" href="spin1_heisenberg.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,6 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parametric_loperator.html">Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="virasoro_algebra.html">Virasoro algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="n_fermion_sectors.html">N-fermion sector views and exact diagonalization with Eigen 3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spin1_heisenberg.html">Spin-1 Heisenberg ring: Compressed storage of state vectors</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Partial diagonalization of a one-dimensional Hubbard-Holstein model</a></li>
 </ul>
 </li>
@@ -124,7 +125,7 @@ and <span class="math notranslate nohighlight">\(|1\rangle\)</span>. Diagonaliza
 <span class="linenos"> 10</span>
 <span class="linenos"> 11</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos"> 12</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w">       </span><span class="c1">// Length of the chain</span>
-<span class="linenos"> 13</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">       </span><span class="c1">// 2^b phonon states per chain site</span>
+<span class="linenos"> 13</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">n_p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">     </span><span class="c1">// Phonon states per chain site</span>
 <span class="linenos"> 14</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="p">;</span><span class="w">  </span><span class="c1">// Electron hopping constant</span>
 <span class="linenos"> 15</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// Chemical potential</span>
 <span class="linenos"> 16</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// Coulomb repulsion</span>
@@ -163,8 +164,8 @@ and <span class="math notranslate nohighlight">\(|1\rangle\)</span>. Diagonaliza
 <span class="linenos"> 49</span><span class="w">    </span><span class="n">H</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;up&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;down&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">a_dag</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">));</span>
 <span class="linenos"> 50</span>
 <span class="linenos"> 51</span><span class="w">  </span><span class="c1">// Automatically analyse structure of &#39;H&#39; and construct a Hilbert space.</span>
-<span class="linenos"> 52</span><span class="w">  </span><span class="c1">// Only the lowest 2^b states will be accounted for for each localized phonon.</span>
-<span class="linenos"> 53</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">boson_es_constructor</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+<span class="linenos"> 52</span><span class="w">  </span><span class="c1">// Only the lowest n_p states will be accounted for for each localized phonon.</span>
+<span class="linenos"> 53</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_hilbert_space</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">boson_es_constructor</span><span class="p">(</span><span class="n">n_p</span><span class="p">));</span>
 <span class="linenos"> 54</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Full Hilbert space dimension: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">dim</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
 <span class="linenos"> 55</span>
 <span class="linenos"> 56</span><span class="w">  </span><span class="c1">// Construct an &#39;loperator&#39; object that represents action of the expression</span>
@@ -247,7 +248,7 @@ Phys. Rev. B 8, p. 081102 (2003),
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="n_fermion_sectors.html" class="btn btn-neutral float-left" title="N-fermion sector views and exact diagonalization with Eigen 3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="spin1_heisenberg.html" class="btn btn-neutral float-left" title="Spin-1 Heisenberg ring: Compressed storage of state vectors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -21,13 +21,40 @@ All notable changes to this project will be documented in this file.
   parameterized on the type of ranking algorithm used to map basis state indices
   from a full Hilbert space to a sector. Supported ranking algorithms are
   ``combination_ranking`` (selected by default), ``staggered_ranking`` and
-  ``trie_ranking``. All three algorithms are described in M. Wallerberger,
-  [K. Held, Phys. Rev. Research 4, 033238 (2022)](
+  ``trie_ranking``. All three algorithms are described in
+  [M. Wallerberger, K. Held, Phys. Rev. Research 4, 033238 (2022)](
   https://doi.org/10.1103/PhysRevResearch.4.033238).
 - Reduced the maximum allowed number of bits in the binary representation of
   a basis state index (``hilbert_space::max_n_bits``) to 63. This way
   ``hilbert_space::dim()`` can return a valid value of type ``sv_index_type``
   even when all 63 bits are used up.
+- New pure virtual method ``elementary_space::dim()`` and its implementation in
+  derived classes.
+- New method ``hilbert_space::is_sparse()`` that returns ``true`` if some of
+  the constituent elementary spaces have non-power-of-two dimensions.
+- New method ``hilbert_space::vec_size()`` that returns the minimal size of a
+  state vector compatible with this Hilbert space.
+- Semantics of the existing method ``hilbert_space::dim()`` has been changed:
+  Now it returns the exact dimension of the Hilbert space, which is smaller than
+  ``hilbert_space::vec_size()`` if the Hilbert space is sparse.
+- New method overload ``hilbert_space::dim(elementary_space<...> const& es)``
+  that returns dimension of a constituent elementary space.
+- New method ``hilbert_space::foreach_elementary_space()``.
+- Type alias ``hilbert_space::elementary_space_t`` has been made public.
+- New class ``compressed_state_view``. It implements a view of a compressed
+  state vector (continuous array) storing only the amplitudes corresponding to
+  the physical basis states of a sparse Hilbert space.
+- Changed ``space_partition`` to store a constant reference to the Hilbert space
+  being partitioned. This change is necessary to enable support for the sparse
+  ``hilbert_space`` objects. ``space_partition`` is now templated on the Hilbert
+  space type, whereas its constructors are not.
+- ``space_partition::merge_subspaces()`` and
+  ``space_partition::find_connections()`` no longer accept the ``hs`` argument
+  and use the stored reference instead.
+- Two helper factory functions ``make_space_partition()`` have been added.
+- Dimension of ``elementary_space_boson`` had to be a power of 2. Now this
+  restriction is lifted. Arguments of its constructor and of
+  ``make_space_boson()`` have been adjusted accordingly.
 - Improved performance and stability of ``space_partition::merge_subspaces()``
   by switching to a non-recursive variant of the algorithm.
 - Fixed a negative index bug in ``n_fermion_sector_view``.

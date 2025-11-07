@@ -9,12 +9,12 @@ a chain with :math:`L` sites reads
 
 .. math::
 
-    \hat H = -t \sum_{\sigma}\sum_{i=0}^{L-2}
-        (c^\dagger_{i,\sigma} c_{i+1,\sigma} + h.c.)
-    -\mu \sum_{i=0}^{L-1} n_{i,\sigma}
-    +U \sum_{i=0}^{L-1} n_{i,\uparrow} n_{i,\downarrow} +\\+
-    \omega \sum_{i=0}^{L-1} a^\dagger_i a_i +
-    g \sum_{i=0}^{L-1} (n_{i,\uparrow} + n_{i,\downarrow})(a^\dagger_i + a_i),
+  \hat H = -t \sum_{\sigma}\sum_{i=0}^{L-2}
+      (c^\dagger_{i,\sigma} c_{i+1,\sigma} + h.c.)
+  -\mu \sum_{i=0}^{L-1} n_{i,\sigma}
+  +U \sum_{i=0}^{L-1} n_{i,\uparrow} n_{i,\downarrow} +\\+
+  \omega \sum_{i=0}^{L-1} a^\dagger_i a_i +
+  g \sum_{i=0}^{L-1} (n_{i,\uparrow} + n_{i,\downarrow})(a^\dagger_i + a_i),
 
 where :math:`c^\dagger_{i,\sigma}`, :math:`c_{i,\sigma}` and
 :math:`n_{i,\sigma}` are electron creation, annihilation and occupation number

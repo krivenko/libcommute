@@ -38,9 +38,9 @@ Class definitions
 
   :type:`ScalarType` is the type of coefficients
   :math:`C_{i_1 i_2 \ldots i_n}`. The most common choices of :type:`ScalarType`
-  are :expr:`double` for expressions with real coefficients and
-  :expr:`std::complex<double>` for the complex expressions. There are two
-  convenience type aliases in the :expr:`libcommute::static_indices` namespace
+  are ``double`` for expressions with real coefficients and
+  ``std::complex<double>`` for the complex expressions. There are two
+  convenience type aliases in the ``libcommute::static_indices`` namespace
   for these particular scalar types, :type:`static_indices::expr_real` and
   :type:`static_indices::expr_complex`.
   Use of custom scalar types -- subject to some
@@ -77,23 +77,23 @@ Class definitions
 
   .. function:: expression() = default
 
-   Construct a trivial expression, i.e. an expression containing no monomials.
+    Construct a trivial expression, i.e. an expression containing no monomials.
 
   .. function:: template<typename S> \
                 expression(expression<S, IndexTypes...> const& x)
 
-  Construct a copy of an expression :expr:`x` with a different
-  scalar type :expr:`S` by converting its coefficients to :type:`ScalarType`.
+    Construct a copy of an expression :var:`x` with a different
+    scalar type :type:`S` by converting its coefficients to :type:`ScalarType`.
 
   .. function:: template<typename S> explicit expression(S const& x)
 
-  Construct a constant expression :math:`E = x M^{(0)}`.
+    Construct a constant expression :math:`E = x M^{(0)}`.
 
   .. function:: template<typename S> \
                 explicit expression(S const& x, monomial_t const& monomial)
 
-  Construct an expression made of exactly one monomial,
-  :math:`E = x M^{(n)}_{i_1 i_2 \ldots i_n}`.
+    Construct an expression made of exactly one monomial,
+    :math:`E = x M^{(n)}_{i_1 i_2 \ldots i_n}`.
 
   The constructors listed here have limited functionality. One is supposed to
   use the :ref:`factory functions <factories>` to build expressions most
@@ -151,7 +151,7 @@ Class definitions
 
   Compound assignments ``+=``, ``-=``, ``*=`` are available under the same
   scalar type compatibility conditions between LHS and RHS. If the RHS is
-  of a non-expression type :expr:`S`, *libcommute* will attempt to select
+  of a non-expression type ``S``, *libcommute* will attempt to select
   the optimized compound operator :expr:`ScalarType::operator+=(S const& x)`
   first (similarly for ``-=``, ``*=``). If it fails,
   :expr:`ScalarType::operator+(S const& x)` and the regular assignment will
@@ -163,9 +163,9 @@ Class definitions
   .. class:: const_iterator
 
     Constant bidirectional iterator over monomial-coefficient pairs
-    :math:`(M,C)` in a polynomial expression. Given an iterator :expr:`it`,
-    :expr:`it->monomial` returns a constant reference to the :type:`monomial`
-    object :math:`M`, and :expr:`it->coeff` is a constant reference to
+    :math:`(M,C)` in a polynomial expression. Given an iterator ``it``,
+    ``it->monomial`` returns a constant reference to the :type:`monomial`
+    object :math:`M`, and ``it->coeff`` is a constant reference to
     the respective coefficient :math:`C`.
 
   .. function:: const_iterator begin() const noexcept
@@ -274,9 +274,9 @@ instances must be
 - A semigroup under multiplication (``operator*``).
 - Multiplication must be distributive with respect to addition.
 
-Let us say we have a type :expr:`S` with the required algebraic properties.
+Let us say we have a type ``S`` with the required algebraic properties.
 Before using it as a scalar type, we must define a specialization of structure
-:expr:`scalar_traits` in the namespace ``libcommute`` to teach *libcommute*
+``scalar_traits`` in the namespace ``libcommute`` to teach *libcommute*
 how to deal with the new type.
 
 .. code-block:: cpp
@@ -301,8 +301,9 @@ how to deal with the new type.
 
   }
 
-*libcommute* uses the variadic :expr:`var_number` objects to store structure
-constants of supported algebras along with the information about their type.
+*libcommute* uses objects of the variant type :type:`var_number` to store
+structure constants of supported algebras along with the information about their
+type.
 **Not every single** :type:`ScalarType <libcommute::expression::ScalarType>`
 **is compatible with any** :ref:`algebra generator<generator>`. For example,
 an integer scalar type can be used to build an expression involving the
@@ -330,7 +331,7 @@ called by the Hermitian conjugation function
     }
 
   One can adjust the test and change the constant 100 to something else by
-  defining a special macro :expr:`LIBCOMMUTE_FLOATING_POINT_TOL_EPS`.
+  defining a special macro ``LIBCOMMUTE_FLOATING_POINT_TOL_EPS``.
 
 *libcommute* offers optional support for a few numerical types from external C++
 libraries as scalar types.
@@ -361,8 +362,8 @@ expression must agree in types with the :type:`IndexTypes
 situations, however, it is more natural to have generators with different
 numbers/types of indices mixed in one expression. This is where the dynamically
 typed index sequences step in. They are instantiations of the
-:expr:`dyn_indices_generic` class template defined in a special nested namespace
-:expr:`libcommute::dynamic_indices`.
+:type:`dynamic_indices::dyn_indices_generic` class template defined in a special
+nested namespace ``libcommute::dynamic_indices``.
 
 .. class:: template<typename... IndexTypes> \
            dynamic_indices::dyn_indices_generic
@@ -413,7 +414,7 @@ typed index sequences step in. They are instantiations of the
                 friend bool operator>(dyn_indices_generic const& ind1, \
                                       dyn_indices_generic const& ind2)
 
-    Compare two dynamic index sequences :expr:`ind1` and :expr:`ind2`.
+    Compare two dynamic index sequences :var:`ind1` and :var:`ind2`.
     These operators compare sequences' lengths first, and in the case of equal
     lengths call the `corresponding methods of std::vector
     <https://en.cppreference.com/w/cpp/container/vector/operator_cmp>`_.
@@ -438,13 +439,13 @@ typed index sequences step in. They are instantiations of the
   // An expression with dynamically typed indices
   libcommute::expression<double, my_dyn_indices> dyn_expr;
 
-:expr:`dyn_expr` is an expression with dynamically typed indices. It can
+``dyn_expr`` is an expression with dynamically typed indices. It can
 contain generators that effectively carry a variable number of indices,
-each of type :expr:`int`, :expr:`std::string` or of the user-defined enumeration
-type :expr:`spin`.
+each of type ``int``, ``std::string`` or of the user-defined enumeration
+type ``spin``.
 
 There is also a special set of :ref:`factory functions <factories_dyn>` defined
-in namespaces nested under :expr:`libcommute::dynamic_indices`. Those return
+in namespaces nested under ``libcommute::dynamic_indices``. Those return
 commonly used QM operators with the dynamically typed indices.
 Some related type aliases are declared in the same namespace for the sake of
 convenience.
@@ -478,54 +479,54 @@ This allows for writing complex expression analysis algorithms.
 .. code-block:: cpp
   :caption: Expression iteration example
 
-    using namespace libcommute;
+  using namespace libcommute;
 
-    // We are going to analyse the structure of this expression
-    expression<double, int> E;
+  // We are going to analyse the structure of this expression
+  expression<double, int> E;
 
-    //
-    // Fill expression 'E' ...
-    //
+  //
+  // Fill expression 'E' ...
+  //
 
-    // Iterate over all monomial-coefficient pairs in 'E'
-    for(auto const& mc : E) {
-      std::cout << "Coefficient: " << mc.coeff << "\n";
-      std::cout << "Monomial: ";
+  // Iterate over all monomial-coefficient pairs in 'E'
+  for(auto const& mc : E) {
+    std::cout << "Coefficient: " << mc.coeff << "\n";
+    std::cout << "Monomial: ";
 
-      // Iterate over algebra generators in current monomial
-      for(auto const& g : mc.monomial) {
+    // Iterate over algebra generators in current monomial
+    for(auto const& g : mc.monomial) {
 
-        if(is_fermion(g)) { // Print information about fermionic operators
-          auto const& f = dynamic_cast<generator_fermion<int> const&>(g);
-          std::cout << (f.dagger() ? "  c^+(" : "  c(");
-          std::cout << std::get<0>(g.indices());
-          std::cout << ")";
-        }
-
-        if(is_fermion(g)) { // Print information about bosonic operators
-          auto const& a = dynamic_cast<generator_boson<int> const&>(g);
-          std::cout << (a.dagger() ? "  a^+(" : "  a(");
-          std::cout << std::get<0>(g.indices());
-          std::cout << ")";
-        }
-
-        if(is_spin(g)) { // Print information about spin operators
-          auto const& s = dynamic_cast<generator_spin<int> const&>(g);
-          switch(s.component()) {
-            case plus:
-              std::cout << "S_+("; break;
-            case minus:
-              std::cout << "S_-("; break;
-            case z:
-              std::cout << "S_z("; break;
-          }
-          std::cout << std::get<0>(g.indices());
-          std::cout << ")";
-        }
-
+      if(is_fermion(g)) { // Print information about fermionic operators
+        auto const& f = dynamic_cast<generator_fermion<int> const&>(g);
+        std::cout << (f.dagger() ? "  c^+(" : "  c(");
+        std::cout << std::get<0>(g.indices());
+        std::cout << ")";
       }
-      std::cout << '\n';
+
+      if(is_fermion(g)) { // Print information about bosonic operators
+        auto const& a = dynamic_cast<generator_boson<int> const&>(g);
+        std::cout << (a.dagger() ? "  a^+(" : "  a(");
+        std::cout << std::get<0>(g.indices());
+        std::cout << ")";
+      }
+
+      if(is_spin(g)) { // Print information about spin operators
+        auto const& s = dynamic_cast<generator_spin<int> const&>(g);
+        switch(s.component()) {
+          case plus:
+            std::cout << "S_+("; break;
+          case minus:
+            std::cout << "S_-("; break;
+          case z:
+            std::cout << "S_z("; break;
+        }
+        std::cout << std::get<0>(g.indices());
+        std::cout << ")";
+      }
+
     }
+    std::cout << '\n';
+  }
 
 .. note:: Only the constant iterators are implemented by :type:`expression` and
           :type:`monomial`.
@@ -548,51 +549,51 @@ taken to be different on odd and even chain links.
 .. code-block:: cpp
   :caption: :func:`transform() <libcommute::expression::transform>` example
 
-    using namespace libcommute;
+  using namespace libcommute;
 
-    // Hamiltonian of the atomic chain
-    expression<double, int> H;
+  // Hamiltonian of the atomic chain
+  expression<double, int> H;
 
-    using static_indices::c_dag;
-    using static_indices::c;
+  using static_indices::c_dag;
+  using static_indices::c;
 
-    // Length of the chain
-    int const N = 10;
-    // Hopping matrix element
-    double const v = 1.0;
+  // Length of the chain
+  int const N = 10;
+  // Hopping matrix element
+  double const v = 1.0;
 
-    // Add hopping terms
-    for(int a = 0; a < N - 1; ++a) {
-      H += v * (c_dag(a) * c(a + 1) + c_dag(a + 1) * c(a));
-    }
+  // Add hopping terms
+  for(int a = 0; a < N - 1; ++a) {
+    H += v * (c_dag(a) * c(a + 1) + c_dag(a + 1) * c(a));
+  }
 
-    std::cout << "H = " << H << '\n';
+  std::cout << "H = " << H << '\n';
 
-    // Construct the Su-Schrieffer-Heeger (SSH) model by changing hopping
-    // constants on all even links of the chain.
+  // Construct the Su-Schrieffer-Heeger (SSH) model by changing hopping
+  // constants on all even links of the chain.
 
-    // Hopping matrix element on the even links
-    double const w = 0.5;
+  // Hopping matrix element on the even links
+  double const w = 0.5;
 
-    // Transformation operation
-    auto update_hopping_element = [v, w](decltype(H)::monomial_t const& m,
-                                  double coeff) -> double {
-      // The monomial 'm' we are expecting here is a product c^\dagger(a1) c(a2)
+  // Transformation operation
+  auto update_hopping_element = [v, w](decltype(H)::monomial_t const& m,
+                                double coeff) -> double {
+    // The monomial 'm' we are expecting here is a product c^\dagger(a1) c(a2)
 
-      // Site index of c^\dagger
-      int a1 = std::get<0>(m[0].indices());
-      // Site index of c
-      int a2 = std::get<0>(m[1].indices());
-      // Index of link connecting a1 and a2
-      int link = std::min(a1, a2);
+    // Site index of c^\dagger
+    int a1 = std::get<0>(m[0].indices());
+    // Site index of c
+    int a2 = std::get<0>(m[1].indices());
+    // Index of link connecting a1 and a2
+    int link = std::min(a1, a2);
 
-      // Return the updated matrix element
-      return (link % 2 == 1 ? w : v);
-    };
+    // Return the updated matrix element
+    return (link % 2 == 1 ? w : v);
+  };
 
-    auto H_SSH = transform(H, update_hopping_element);
+  auto H_SSH = transform(H, update_hopping_element);
 
-    std::cout << "H_SSH = " << H_SSH << '\n';
+  std::cout << "H_SSH = " << H_SSH << '\n';
 
 .. _hc:
 

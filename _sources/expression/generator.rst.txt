@@ -47,20 +47,20 @@ The following table summarizes information about predefined generators.
     - Generator type
     - Algebra ID
   * - Fermions :math:`c^\dagger_i`/:math:`c_i`
-    - :expr:`libcommute::generator_fermion`
-    - :expr:`libcommute::fermion`
+    - :type:`libcommute::generator_fermion`
+    - :var:`libcommute::fermion`
   * - Bosons :math:`a^\dagger_i`/:math:`a_i`
-    - :expr:`libcommute::generator_boson`
-    - :expr:`libcommute::boson`
+    - :type:`libcommute::generator_boson`
+    - :var:`libcommute::boson`
   * - Spins :math:`S_\pm`/:math:`S_z`
-    - :expr:`libcommute::generator_spin`
-    - :expr:`libcommute::spin`
+    - :type:`libcommute::generator_spin`
+    - :var:`libcommute::spin`
   * - User-defined algebra
     - A class derived from :type:`libcommute::generator`
-    - >= :expr:`libcommute::min_user_defined_algebra_id`
+    - >= :var:`libcommute::min_user_defined_algebra_id`
 
-Integer constants :expr:`fermion`, :expr:`boson`, :expr:`spin` and
-:expr:`min_user_defined_algebra_id`
+Integer constants :var:`fermion`, :var:`boson`, :var:`spin` and
+:var:`min_user_defined_algebra_id`
 mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
 .. _algebra_ids:
@@ -135,9 +135,9 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
                 protected virtual bool greater(generator const& g) const
 
     These methods can be overridden by the derived classes to establish
-    the canonical order of :expr:`g` w.r.t. :expr:`*this` assuming both
+    the canonical order of :var:`g` w.r.t. ``*this`` assuming both
     generators belong to the same algebra. The default implementation compares
-    index tuples of :expr:`*this` and :expr:`g`.
+    index tuples of ``*this`` and :var:`g`.
 
   .. function:: friend bool operator==(generator const& g1, generator const& g2)
                 friend bool operator!=(generator const& g1, generator const& g2)
@@ -145,61 +145,61 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
                 friend bool operator>(generator const& g1, generator const& g2)
 
     Comparison operators for a pair of generators. First, they compare algebra
-    IDs of :expr:`g1` and :expr:`g2`. If those are equal, :expr:`g1.equal(g2)`,
-    :expr:`g1.less(g2)` or :expr:`g1.greater(g2)` is called.
+    IDs of :var:`g1` and :var:`g2`. If those are equal, ``g1.equal(g2)``,
+    ``g1.less(g2)`` or ``g1.greater(g2)`` is called.
 
   .. rubric:: Product simplification/transformation
 
   .. function:: virtual var_number swap_with\
                 (generator const& g2, linear_function_t & f) const = 0
 
-    Given a pair of generators :math:`g_1` (:expr:`*this`) and :math:`g_2`
-    such that :math:`g_1 > g_2`, :expr:`swap_with()` must signal what
+    Given a pair of generators :math:`g_1` (``*this``) and :math:`g_2`
+    such that :math:`g_1 > g_2`, :func:`swap_with()` must signal what
     transformation :math:`g_1 g_2 \mapsto c g_2  g_1 + f(g)` should
     be applied to the product :math:`g_1 g_2` in order to put it into the
-    canonical order. :expr:`swap_with()` returns the constant :math:`c` and
+    canonical order. :func:`swap_with()` returns the constant :math:`c` and
     writes the linear function of generators :math:`f(g)` into its second
     argument. :math:`c` is allowed to be zero.
 
   .. function:: virtual bool \
                 simplify_prod(generator const& g2, linear_function_t & f) const
 
-    Given a pair of generators :math:`g_1` (:expr:`*this`) and :math:`g_2` such
+    Given a pair of generators :math:`g_1` (``*this``) and :math:`g_2` such
     that :math:`g_1 g_2` is in the canonical order (:math:`g_1 \leq g_2`),
     optionally apply a simplifying transformation :math:`g_1 g_2 \mapsto f(g)`.
-    If a simplification is actually possible, :expr:`simplify_prod()` must
-    return :expr:`true` and write the linear function :math:`f(g)` into its
-    second argument. Otherwise return :expr:`false`.
+    If a simplification is actually possible, :func:`simplify_prod()` must
+    return ``true`` and write the linear function :math:`f(g)` into its
+    second argument. Otherwise return ``false``.
 
-    The default implementation always returns :expr:`false`.
+    The default implementation always returns ``false``.
 
   .. function:: virtual bool \
                 reduce_power(int power, linear_function_t & f) const
 
-    Given a generator :math:`g_1` (:expr:`*this`) and a power :math:`p > 2`
-    (:expr:`power`), optionally apply a simplifying transformation
+    Given a generator :math:`g_1` (``*this``) and a power :math:`p > 2`
+    (:var:`power`), optionally apply a simplifying transformation
     :math:`g_1^p \mapsto f(g)`. If a simplification is actually possible,
-    :expr:`reduce_power()` must return :expr:`true` and write the linear
+    :func:`reduce_power()` must return ``true`` and write the linear
     function :math:`f(g)` into its second argument.
-    Otherwise return :expr:`false`.
+    Otherwise return ``false``.
 
-    The default implementation always returns :expr:`false`.
+    The default implementation always returns ``false``.
 
     .. note:: Simplifications for :math:`p = 2` must be carried out by
-              :expr:`simplify_prod()`.
+              :func:`simplify_prod()`.
 
   .. rubric:: Other methods
 
   .. function:: virtual void conj(linear_function_t & f)
 
     Return the Hermitian conjugate of generator as a linear function of other
-    generators (write the result into :expr:`f`). The default implementation
+    generators (write the result into :var:`f`). The default implementation
     returns the generator itself.
 
   .. function:: friend std::ostream & operator<<\
                 (std::ostream & os, generator const& g)
 
-     Output stream insertion operator. Calls :expr:`g.print(os)`.
+    Output stream insertion operator. Calls :expr:`g.print(os)`.
 
   .. function:: protected virtual std::ostream & print(std::ostream & os) const
 
@@ -210,7 +210,7 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
   *Defined in <libcommute/utility.hpp>*
 
-  A variadic type that holds an integer, a rational number or a general real
+  A variant type that holds an integer, a rational number or a general real
   floating point number. The actual type of the incapsulated value is determined
   at construction time.
 
@@ -234,14 +234,14 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
   .. var:: @number_type number_type
 
-      Type of the stored value.
+    Type of the stored value.
 
   .. function:: friend bool operator==(var_number const& vn1, \
                                        var_number const& vn2)
                 friend bool operator!=(var_number const& vn1, \
                                        var_number const& vn2)
 
-    Compare the values stored in two :expr:`var_number` objects. Two objects
+    Compare the values stored in two :class:`var_number` objects. Two objects
     storing values of different types are considered unequal even if the values
     coincide numerically.
 
@@ -274,7 +274,7 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
   *Defined in <libcommute/utility.hpp>*
 
-  A linear function of objects of type :expr:`T` with :struct:`var_number`
+  A linear function of objects of type :type:`T` with :struct:`var_number`
   coefficients,
 
   .. math::
@@ -362,7 +362,7 @@ rational and general real scalars.
 
   .. function:: bool dagger() const
 
-    Returns :expr:`true` for :math:`c^\dagger` and :expr:`false` for :math:`c`.
+    Returns ``true`` for :math:`c^\dagger` and ``false`` for :math:`c`.
 
 .. function:: template<typename... IndexTypes> \
               generator_fermion<IndexTypes...> \
@@ -390,7 +390,7 @@ rational and general real scalars.
 
   *Defined in <libcommute/expression/generator_fermion.hpp>*
 
-  Detect if :expr:`gen` points to a generator of the fermionic algebra.
+  Detect if :var:`gen` points to a generator of the fermionic algebra.
 
 .. code-block:: cpp
 
@@ -451,7 +451,7 @@ rational and general real scalars.
 
   .. function:: bool dagger() const
 
-    Returns :expr:`true` for :math:`a^\dagger` and :expr:`false` for :math:`a`.
+    Returns ``true`` for :math:`a^\dagger` and ``false`` for :math:`a`.
 
 .. function:: template<typename... IndexTypes> \
               generator_boson<IndexTypes...> \
@@ -479,7 +479,7 @@ rational and general real scalars.
 
   *Defined in <libcommute/expression/generator_boson.hpp>*
 
-  Detect if :expr:`gen` points to a generator of the bosonic algebra.
+  Detect if :var:`gen` points to a generator of the bosonic algebra.
 
 .. code-block:: cpp
 
@@ -505,7 +505,7 @@ Spins
 *libcommute* supports algebra of spin operators for :math:`S = 1/2` as well as
 for higher integer and half-integer spins. Generators of spin algebras with
 different :math:`S` share the same algebra ID and are distinguished by an extra
-integer data member :expr:`multiplicity` equal to :math:`2S+1`.
+property :func:`generator_spin::multiplicity()` equal to :math:`2S+1`.
 For a fixed :math:`S` and a set of indices, the spin algebra is generated
 by the triplet of operators :math:`S_+`, :math:`S_-` and :math:`S_z` subject to
 the following commutation relations.
@@ -580,7 +580,7 @@ rational scalars.
                 Args&&... indices)
 
     Construct generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-    :expr:`spin` with given indices.
+    :var:`spin` with given indices.
 
   .. function:: double spin() const
 
@@ -612,7 +612,7 @@ rational scalars.
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
   Make generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-  :expr:`spin` with given indices.
+  :var:`spin` with given indices.
 
 .. function:: template<typename... IndexTypes> \
               generator_spin<dyn_indices> \
@@ -633,7 +633,7 @@ rational scalars.
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
   Make generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-  :expr:`spin` with a given :ref:`dynamic index sequence <dyn_indices>`.
+  :var:`spin` with a given :ref:`dynamic index sequence <dyn_indices>`.
 
 .. function:: template<typename... IndexTypes> \
               bool libcommute::is_spin( \
@@ -641,7 +641,7 @@ rational scalars.
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
-  Detect if :expr:`gen` points to a generator of the spin algebra.
+  Detect if :var:`gen` points to a generator of the spin algebra.
 
 .. code-block:: cpp
 

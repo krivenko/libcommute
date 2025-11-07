@@ -21,9 +21,9 @@ differing in the index types of the created expression being static/dynamic.
 
   * - Namespace
     - Expression type
-  * - :expr:`libcommute::static_indices`
+  * - ``libcommute::static_indices``
     - :expr:`expression<ScalarType, IndexTypes...>`
-  * - :expr:`libcommute::dynamic_indices`
+  * - ``libcommute::dynamic_indices``
     - :expr:`expression<ScalarType, dynamic_indices::dyn_indices>`
 
 By default, the scalar type of expressions returned by most factory functions is
@@ -115,7 +115,7 @@ Statically typed indices
               static_indices::S_p(IndexTypes&&... indices)
 
   Make a general spin raising operator :math:`S_+` with given indices and
-  an arbitrary scalar type. The :expr:`Multiplicity` template parameter must
+  an arbitrary scalar type. The :var:`Multiplicity` template parameter must
   equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<int Multiplicity, \
@@ -124,7 +124,7 @@ Statically typed indices
               static_indices::S_m(IndexTypes&&... indices)
 
   Make a general spin lowering operator :math:`S_-` with given indices and
-  an arbitrary scalar type. The :expr:`Multiplicity` template parameter must
+  an arbitrary scalar type. The :var:`Multiplicity` template parameter must
   equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<int Multiplicity, \
@@ -133,7 +133,7 @@ Statically typed indices
               static_indices::S_z(IndexTypes&&... indices)
 
   Make a general spin z-projection operator :math:`S_z` with given indices
-  and an arbitrary scalar type. The :expr:`Multiplicity` template parameter must
+  and an arbitrary scalar type. The :var:`Multiplicity` template parameter must
   equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<typename... IndexTypes> \
@@ -156,7 +156,7 @@ Statically typed indices
               static_indices::S_x(IndexTypes&&... indices)
 
   Make a general spin x-projection operator :math:`S_x` with given indices
-  and the complex scalar type. The :expr:`Multiplicity` template parameter must
+  and the complex scalar type. The :var:`Multiplicity` template parameter must
   equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<int Multiplicity, \
@@ -165,7 +165,7 @@ Statically typed indices
               static_indices::S_y(IndexTypes&&... indices)
 
   Make a general spin y-projection operator :math:`S_y` with given indices
-  and the complex scalar type. The :expr:`Multiplicity` template parameter must
+  and the complex scalar type. The :var:`Multiplicity` template parameter must
   equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. note:: Passing a C string literal as an index argument to a factory function
@@ -241,7 +241,7 @@ Statically typed indices
               dynamic_indices::S_p(IndexTypes&&... indices)
 
   Make a general spin raising operator :math:`S_+` with given dynamically typed
-  indices and an arbitrary scalar type. The :expr:`Multiplicity` template
+  indices and an arbitrary scalar type. The :var:`Multiplicity` template
   parameter must equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<int Multiplicity, \
@@ -250,7 +250,7 @@ Statically typed indices
               dynamic_indices::S_m(IndexTypes&&... indices)
 
   Make a general spin lowering operator :math:`S_-` with given dynamically typed
-  indices and an arbitrary scalar type. The :expr:`Multiplicity` template
+  indices and an arbitrary scalar type. The :var:`Multiplicity` template
   parameter must equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<int Multiplicity, \
@@ -259,7 +259,7 @@ Statically typed indices
               dynamic_indices::S_z(IndexTypes&&... indices)
 
   Make a general spin z-projection operator :math:`S_z` with given dynamically
-  typed indices and an arbitrary scalar type. The :expr:`Multiplicity` template
+  typed indices and an arbitrary scalar type. The :var:`Multiplicity` template
   parameter must equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<typename... IndexTypes> \
@@ -282,7 +282,7 @@ Statically typed indices
               dynamic_indices::S_x(IndexTypes&&... indices)
 
   Make a general spin x-projection operator :math:`S_x` with given dynamically
-  typed indices and the complex scalar type. The :expr:`Multiplicity` template
+  typed indices and the complex scalar type. The :var:`Multiplicity` template
   parameter must equal :math:`2S+1`, where :math:`S` is the wanted spin.
 
 .. function:: template<int Multiplicity, \
@@ -291,6 +291,6 @@ Statically typed indices
               dynamic_indices::S_y(IndexTypes&&... indices)
 
   Make a general spin y-projection operator :math:`S_y` with given dynamically
-  typed indices and the complex scalar type. The :expr:`Multiplicity` template
+  typed indices and the complex scalar type. The :var:`Multiplicity` template
   parameter must equal :math:`2S+1`, where :math:`S` is the wanted spin.
 

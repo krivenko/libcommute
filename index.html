@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>libcommute &mdash; libcommute 0.8.0 documentation</title>
+  <title>libcommute &mdash; libcommute 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css?v=9bead9b5" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=486e5634"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -138,7 +138,7 @@ it can be implemented by overloading the corresponding free function
 <li><p><cite>libcommute::loperator</cite> mirrors <cite>libcommute::expression</cite> in the manner
 it can be extended to support more commutation/anticommutation algebras.</p></li>
 <li><p>As a bonus, there is an utility class
-<a class="reference internal" href="loperator/space_partition.html#_CPPv4N10libcommute15space_partitionE" title="libcommute::space_partition"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::space_partition</span></code></a>,
+<a class="reference internal" href="loperator/space_partition.html#_CPPv4I0EN10libcommute15space_partitionE" title="libcommute::space_partition"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">libcommute::space_partition</span></code></a>,
 which implements the Hilbert space partitioning algorithm
 (<a class="reference external" href="http://dx.doi.org/10.1016/j.cpc.2015.10.023">Computer Physics Communications 200, March 2016, 274-284</a>, Sec. 4.2).</p></li>
 </ul>
@@ -214,13 +214,16 @@ v. 2.0</em>. You can obtain a copy of the MPL at <a class="reference external" h
 <li class="toctree-l2"><a class="reference internal" href="loperator/state_vector.html">State vectors</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="loperator/state_vector.html#statevector-concept"><code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loperator/state_vector.html#sparse-state-vector">Sparse state vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loperator/state_vector.html#view-of-a-compressed-state-vector">View of a compressed state vector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loperator/state_vector.html#mapped-basis-view">Mapped basis view</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loperator/state_vector.html#n-fermion-sector-views">N-fermion sector views</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="loperator/space_partition.html">Finding invariant subspaces of a linear operator</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="loperator/space_partition.html#_CPPv4I0EN10libcommute19matrix_elements_mapE"><code class="docutils literal notranslate"><span class="pre">matrix_elements_map</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="loperator/space_partition.html#_CPPv4N10libcommute15space_partitionE"><code class="docutils literal notranslate"><span class="pre">space_partition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loperator/space_partition.html#_CPPv4I0EN10libcommute15space_partitionE"><code class="docutils literal notranslate"><span class="pre">space_partition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute20make_space_partitionE15space_partitionI6HSTypeERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType"><code class="docutils literal notranslate"><span class="pre">make_space_partition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute20make_space_partitionE15space_partitionI6HSTypeERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSTypeR19matrix_elements_mapIN9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsE11scalar_typeEE"><code class="docutils literal notranslate"><span class="pre">make_space_partition()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -232,6 +235,7 @@ v. 2.0</em>. You can obtain a copy of the MPL at <a class="reference external" h
 <li class="toctree-l2"><a class="reference internal" href="examples/parametric_loperator.html">Custom scalar types and <code class="docutils literal notranslate"><span class="pre">parametric_loperator</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/virasoro_algebra.html">Virasoro algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/n_fermion_sectors.html">N-fermion sector views and exact diagonalization with Eigen 3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/spin1_heisenberg.html">Spin-1 Heisenberg ring: Compressed storage of state vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/hubbard_holstein_1d.html">Partial diagonalization of a one-dimensional Hubbard-Holstein model</a></li>
 </ul>
 </li>

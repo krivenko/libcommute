@@ -43,16 +43,16 @@ The respective eigenstates in each block (dressed states) are
 
 .. math::
 
-    |n, +\rangle &= \cos\left(\frac{\alpha_n}{2}\right) |n - 1, e\rangle +
-                    \sin\left(\frac{\alpha_n}{2}\right) |n, g\rangle,\\
-    |n, -\rangle &= \sin\left(\frac{\alpha_n}{2}\right) |n - 1, e\rangle -
-                    \cos\left(\frac{\alpha_n}{2}\right) |n, g\rangle\\
+  |n, +\rangle &= \cos\left(\frac{\alpha_n}{2}\right) |n - 1, e\rangle +
+                  \sin\left(\frac{\alpha_n}{2}\right) |n, g\rangle,\\
+  |n, -\rangle &= \sin\left(\frac{\alpha_n}{2}\right) |n - 1, e\rangle -
+                  \cos\left(\frac{\alpha_n}{2}\right) |n, g\rangle\\
 
 with mixing angle
 
 .. math::
 
-    \alpha_n = \tan^{-1}\left(\frac{\Omega\sqrt{n}}{\delta}\right).
+  \alpha_n = \tan^{-1}\left(\frac{\Omega\sqrt{n}}{\delta}\right).
 
 The program below verifies these analytical results numerically.
 

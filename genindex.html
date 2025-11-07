@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; libcommute 0.8.0 documentation</title>
+  <title>Index &mdash; libcommute 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css?v=9bead9b5" />
@@ -13,7 +13,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=486e5634"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -105,6 +105,12 @@
 </li>
       <li><a href="loperator/state_vector.html#_CPPv4N10libcommute19combination_rankingE">libcommute::combination_ranking (C++ class)</a>
 </li>
+      <li><a href="loperator/state_vector.html#_CPPv4I0_bEN10libcommute21compressed_state_viewE">libcommute::compressed_state_view (C++ class)</a>
+</li>
+      <li><a href="loperator/state_vector.html#_CPPv4I00EN10libcommute21compressed_state_view21compressed_state_viewERR2SVRK6HSType">libcommute::compressed_state_view::compressed_state_view (C++ function)</a>
+</li>
+      <li><a href="loperator/state_vector.html#_CPPv4NK10libcommute21compressed_state_view9map_indexE13sv_index_type">libcommute::compressed_state_view::map_index (C++ function)</a>
+</li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute22default_es_constructorE">libcommute::default_es_constructor (C++ type)</a>
 </li>
       <li><a href="expression/factories.html#_CPPv4I0DpEN10libcommute15dynamic_indices1aE10expressionI10ScalarType11dyn_indicesEDpRR10IndexTypes">libcommute::dynamic_indices::a (C++ function)</a>
@@ -167,6 +173,8 @@
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute16elementary_space5cloneEv">libcommute::elementary_space::clone (C++ function)</a>
 </li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute16elementary_space3dimEv">libcommute::elementary_space::dim (C++ function)</a>
+</li>
       <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute16elementary_space16elementary_spaceEDpRR4Args">libcommute::elementary_space::elementary_space (C++ function)</a>, <a href="loperator/hilbert_space.html#_CPPv4N10libcommute16elementary_space16elementary_spaceERK11index_types">[1]</a>, <a href="loperator/hilbert_space.html#_CPPv4N10libcommute16elementary_space16elementary_spaceERK16elementary_space">[2]</a>, <a href="loperator/hilbert_space.html#_CPPv4N10libcommute16elementary_space16elementary_spaceERR11index_types">[3]</a>, <a href="loperator/hilbert_space.html#_CPPv4N10libcommute16elementary_space16elementary_spaceERR16elementary_space">[4]</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute16elementary_space5equalERK16elementary_space">libcommute::elementary_space::equal (C++ function)</a>
@@ -195,7 +203,7 @@
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute22elementary_space_bosonE">libcommute::elementary_space_boson (C++ class)</a>
 </li>
-      <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute22elementary_space_boson22elementary_space_bosonEiDpRR4Args">libcommute::elementary_space_boson::elementary_space_boson (C++ function)</a>
+      <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute22elementary_space_boson22elementary_space_bosonE13sv_index_typeDpRR4Args">libcommute::elementary_space_boson::elementary_space_boson (C++ function)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute24elementary_space_fermionE">libcommute::elementary_space_fermion (C++ class)</a>
 </li>
@@ -319,17 +327,23 @@
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space9bit_rangeERK16elementary_spaceIDp10IndexTypesE">libcommute::hilbert_space::bit_range (C++ function)</a>
 </li>
-      <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space3dimEv">libcommute::hilbert_space::dim (C++ function)</a>
+      <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space3dimERK16elementary_spaceIDp10IndexTypesE">libcommute::hilbert_space::dim (C++ function)</a>, <a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space3dimEv">[1]</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space23elementary_space_existsE">libcommute::hilbert_space::elementary_space_exists (C++ struct)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space26elementary_space_not_foundE">libcommute::hilbert_space::elementary_space_not_found (C++ struct)</a>
 </li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space18elementary_space_tE">libcommute::hilbert_space::elementary_space_t (C++ type)</a>
+</li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space10expressionEv">libcommute::hilbert_space::expression (C++ function)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4I0EN10libcommute13hilbert_space7foreachEvRK13hilbert_spaceRR7Functor">libcommute::hilbert_space::foreach (C++ function)</a>
 </li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4I0ENK10libcommute13hilbert_space24foreach_elementary_spaceEvRR7Functor">libcommute::hilbert_space::foreach_elementary_space (C++ function)</a>
+</li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space7get_dimERK13hilbert_space">libcommute::hilbert_space::get_dim (C++ function)</a>
+</li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space12get_vec_sizeERK13hilbert_space">libcommute::hilbert_space::get_vec_size (C++ function)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space3hasERK16elementary_spaceIDp10IndexTypesE">libcommute::hilbert_space::has (C++ function)</a>
 </li>
@@ -341,6 +355,10 @@
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space5indexERK16elementary_spaceIDp10IndexTypesE">libcommute::hilbert_space::index (C++ function)</a>
 </li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_space11index_typesE">libcommute::hilbert_space::index_types (C++ type)</a>
+</li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space9is_sparseEv">libcommute::hilbert_space::is_sparse (C++ function)</a>
+</li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_spaceneERK13hilbert_spaceRK13hilbert_space">libcommute::hilbert_space::operator!= (C++ function)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_spaceaSERK13hilbert_space">libcommute::hilbert_space::operator= (C++ function)</a>, <a href="loperator/hilbert_space.html#_CPPv4N10libcommute13hilbert_spaceaSERR13hilbert_space">[1]</a>
@@ -349,15 +367,17 @@
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space4sizeEv">libcommute::hilbert_space::size (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space12total_n_bitsEv">libcommute::hilbert_space::total_n_bits (C++ function)</a>
+</li>
+      <li><a href="loperator/hilbert_space.html#_CPPv4NK10libcommute13hilbert_space8vec_sizeEv">libcommute::hilbert_space::vec_size (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute8is_bosonEbRK9generatorIDp10IndexTypesE">libcommute::is_boson (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute10is_fermionEbRK9generatorIDp10IndexTypesE">libcommute::is_fermion (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute15dynamic_indices16make_space_bosonE22elementary_space_bosonI11dyn_indicesEiDpRR10IndexTypes">libcommute::libcommute::dynamic_indices::make_space_boson (C++ function)</a>
+      <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute15dynamic_indices16make_space_bosonE22elementary_space_bosonI11dyn_indicesE13sv_index_typeDpRR10IndexTypes">libcommute::libcommute::dynamic_indices::make_space_boson (C++ function)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute15dynamic_indices18make_space_fermionE24elementary_space_fermionI11dyn_indicesEDpRR10IndexTypes">libcommute::libcommute::dynamic_indices::make_space_fermion (C++ function)</a>
 </li>
@@ -367,7 +387,7 @@
 </li>
       <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute10libcommute7is_spinEbRKN10libcommute9generatorIDp10IndexTypesEE">libcommute::libcommute::is_spin (C++ function)</a>
 </li>
-      <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute14static_indices16make_space_bosonE22elementary_space_bosonIDp10IndexTypesEiDpRR10IndexTypes">libcommute::libcommute::static_indices::make_space_boson (C++ function)</a>
+      <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute14static_indices16make_space_bosonE22elementary_space_bosonIDp10IndexTypesE13sv_index_typeDpRR10IndexTypes">libcommute::libcommute::static_indices::make_space_boson (C++ function)</a>
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute14static_indices18make_space_fermionE24elementary_space_fermionIDp10IndexTypesEDpRR10IndexTypes">libcommute::libcommute::static_indices::make_space_fermion (C++ function)</a>
 </li>
@@ -397,7 +417,11 @@
 </li>
       <li><a href="loperator/loperator.html#_CPPv4N10libcommute9loperatoraSERK9loperator">libcommute::loperator::operator= (C++ function)</a>, <a href="loperator/loperator.html#_CPPv4N10libcommute9loperatoraSERR9loperator">[1]</a>
 </li>
+      <li><a href="loperator/state_vector.html#_CPPv4I00EN10libcommute20make_comp_state_viewEDaRR11StateVectorRK6HSType">libcommute::make_comp_state_view (C++ function)</a>
+</li>
       <li><a href="expression/factories.html#_CPPv4IDpEN10libcommute12make_complexEN14static_indices12expr_complexIDp10IndexTypesEERKN14static_indices9expr_realIDp10IndexTypesEE">libcommute::make_complex (C++ function)</a>, <a href="expression/factories.html#_CPPv4N10libcommute12make_complexERKN15dynamic_indices9expr_realE">[1]</a>
+</li>
+      <li><a href="loperator/state_vector.html#_CPPv4I00EN10libcommute26make_const_comp_state_viewEDaRR11StateVectorRK6HSType">libcommute::make_const_comp_state_view (C++ function)</a>
 </li>
       <li><a href="loperator/state_vector.html#_CPPv4I00EN10libcommute20make_const_nfms_viewEDaRR11StateVectorRK6HSTypeRKNSt6vectorI17sector_descriptorI6HSTypeEEE">libcommute::make_const_nfms_view (C++ function)</a>
 </li>
@@ -412,6 +436,8 @@
       <li><a href="loperator/state_vector.html#_CPPv4I00EN10libcommute13make_nfs_viewEDaRR11StateVectorRK6HSTypej">libcommute::make_nfs_view (C++ function)</a>
 </li>
       <li><a href="loperator/loperator.html#_CPPv4I0DpEN10libcommute20make_param_loperatorE20parametric_loperatorI10ScalarType7fermion5boson4spinERK10expressionI10ScalarTypeDp10IndexTypesERK13hilbert_spaceIDp10IndexTypesE">libcommute::make_param_loperator (C++ function)</a>
+</li>
+      <li><a href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute20make_space_partitionE15space_partitionI6HSTypeERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType">libcommute::make_space_partition (C++ function)</a>, <a href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute20make_space_partitionE15space_partitionI6HSTypeERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSTypeR19matrix_elements_mapIN9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsE11scalar_typeEE">[1]</a>
 </li>
       <li><a href="loperator/state_vector.html#_CPPv4I0_bEN10libcommute17mapped_basis_viewE">libcommute::mapped_basis_view (C++ class)</a>
 </li>
@@ -519,21 +545,21 @@
 </li>
       <li><a href="loperator/state_vector.html#_CPPv4N10libcommute17sector_descriptor1NE">libcommute::sector_descriptor::N (C++ member)</a>
 </li>
-      <li><a href="loperator/space_partition.html#_CPPv4N10libcommute15space_partitionE">libcommute::space_partition (C++ class)</a>
+      <li><a href="loperator/space_partition.html#_CPPv4I0EN10libcommute15space_partitionE">libcommute::space_partition (C++ class)</a>
 </li>
       <li><a href="loperator/space_partition.html#_CPPv4NK10libcommute15space_partition3dimEv">libcommute::space_partition::dim (C++ function)</a>
 </li>
-      <li><a href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute15space_partition16find_connectionsENSt3setINSt4pairI13sv_index_type13sv_index_typeEEEERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType">libcommute::space_partition::find_connections (C++ function)</a>
+      <li><a href="loperator/space_partition.html#_CPPv4I0_DpiEN10libcommute15space_partition16find_connectionsENSt3setINSt4pairI13sv_index_type13sv_index_typeEEEERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsE">libcommute::space_partition::find_connections (C++ function)</a>
 </li>
       <li><a href="loperator/space_partition.html#_CPPv4I0EN10libcommute15space_partition7foreachEvRK15space_partitionRR1F">libcommute::space_partition::foreach (C++ function)</a>
 </li>
-      <li><a href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute15space_partition15merge_subspacesENSt4pairI17loperator_melem_tI13LOpScalarTypeDp13LOpAlgebraIDsE17loperator_melem_tI13LOpScalarTypeDp13LOpAlgebraIDsEEERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSTypeb">libcommute::space_partition::merge_subspaces (C++ function)</a>
+      <li><a href="loperator/space_partition.html#_CPPv4I0_DpiEN10libcommute15space_partition15merge_subspacesENSt4pairI17loperator_melem_tI13LOpScalarTypeDp13LOpAlgebraIDsE17loperator_melem_tI13LOpScalarTypeDp13LOpAlgebraIDsEEERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsEb">libcommute::space_partition::merge_subspaces (C++ function)</a>
 </li>
       <li><a href="loperator/space_partition.html#_CPPv4NK10libcommute15space_partition11n_subspacesEv">libcommute::space_partition::n_subspaces (C++ function)</a>
 </li>
       <li><a href="loperator/space_partition.html#_CPPv4NK10libcommute15space_partitionixE13sv_index_type">libcommute::space_partition::operator[] (C++ function)</a>
 </li>
-      <li><a href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute15space_partition15space_partitionERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType">libcommute::space_partition::space_partition (C++ function)</a>, <a href="loperator/space_partition.html#_CPPv4I00_DpiEN10libcommute15space_partition15space_partitionERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSTypeR17loperator_melem_tI13LOpScalarTypeDp13LOpAlgebraIDsE">[1]</a>
+      <li><a href="loperator/space_partition.html#_CPPv4I0_DpiEN10libcommute15space_partition15space_partitionERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSType">libcommute::space_partition::space_partition (C++ function)</a>, <a href="loperator/space_partition.html#_CPPv4I0_DpiEN10libcommute15space_partition15space_partitionERK9loperatorI13LOpScalarTypeDp13LOpAlgebraIDsERK6HSTypeR17loperator_melem_tI13LOpScalarTypeDp13LOpAlgebraIDsE">[1]</a>
 </li>
       <li><a href="loperator/space_partition.html#_CPPv4NK10libcommute15space_partition14subspace_basesEv">libcommute::space_partition::subspace_bases (C++ function)</a>
 </li>

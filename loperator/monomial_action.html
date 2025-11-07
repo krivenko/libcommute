@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced: Linear operator representation of a user-defined algebra &mdash; libcommute 0.8.0 documentation</title>
+  <title>Advanced: Linear operator representation of a user-defined algebra &mdash; libcommute 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=9bead9b5" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=486e5634"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -102,7 +102,7 @@ the extra steps needed to plug the new algebra into the
 <a class="reference internal" href="loperator.html#loperator"><span class="std std-ref">linear operator</span></a> framework.</p>
 <ul>
 <li><p>Declare a new <a class="reference internal" href="hilbert_space.html#elementary-spaces"><span class="std std-ref">elementary space</span></a> class.
-The elementary space must share algebra ID with <span class="cpp-expr sig sig-inline cpp"><span class="n">generator_gamma</span></span>.
+The elementary space must share algebra ID with <code class="docutils literal notranslate"><span class="pre">generator_gamma</span></code>.
 Its dimension is 4, so the <a class="reference internal" href="hilbert_space.html#hilbert-space"><span class="std std-ref">number of occupied bits</span></a> is
 <span class="math notranslate nohighlight">\(b = 2\)</span>.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;gamma.hpp&quot;</span><span class="c1"> // Definition of &#39;gamma&#39; algebra ID</span>
@@ -147,9 +147,8 @@ Its dimension is 4, so the <a class="reference internal" href="hilbert_space.htm
 
 <span class="w">  </span><span class="c1">// We need 2 bits to enumerate all 4 = 2^2 basis vectors</span>
 <span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">n_bits</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="n">sv_index_type</span><span class="w"> </span><span class="n">dim</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="p">};</span>
-
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace libcommute</span>
 </pre></div>
 </div>
 </li>
@@ -235,8 +234,6 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
-
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace libcommute</span>
 </pre></div>
 </div>
 <p>In general, <a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial_action</span></code></a> is defined as follows.</p>
@@ -245,13 +242,13 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <span id="_CPPv3I_iEN10libcommute15monomial_actionE"></span><span id="_CPPv2I_iEN10libcommute15monomial_actionE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlgebraID</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">monomial_action</span></span></span><a class="headerlink" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="Link to this definition"></a><br /></dt>
 <dd><p><em>Defined in &lt;libcommute/loperator/monomial_action.hpp&gt;</em></p>
 <p>Action of a product of generators belonging to the same algebra
-<span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action::AlgebraID"><span class="n">AlgebraID</span></a></span> on a basis vector.</p>
+<a class="reference internal" href="#_CPPv4I_iEN10libcommute15monomial_actionE" title="libcommute::monomial_action::AlgebraID"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">AlgebraID</span></code></a> on a basis vector.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE">
 <span id="_CPPv3IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span id="_CPPv2IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">IndexTypes</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="sig-name descname"><span class="n"><span class="pre">monomial_action</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="../expression/monomial.html#_CPPv4IDpEN10libcommute8monomialE" title="libcommute::monomial"><span class="n"><span class="pre">monomial</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range_type</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m_range</span></span>, <a class="reference internal" href="hilbert_space.html#_CPPv4IDpEN10libcommute13hilbert_spaceE" title="libcommute::hilbert_space"><span class="n"><span class="pre">hilbert_space</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::IndexTypes"><span class="n"><span class="pre">IndexTypes</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="Link to this definition"></a><br /></dt>
-<dd><p><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::m_range"><span class="n">m_range</span></a></span> is a pair of <a class="reference internal" href="../expression/monomial.html#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial::const_iterator</span></code></a>’s.
+<dd><p><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::m_range"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">m_range</span></code></a> is a pair of <a class="reference internal" href="../expression/monomial.html#_CPPv4N10libcommute8monomial14const_iteratorE" title="libcommute::monomial::const_iterator"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">monomial::const_iterator</span></code></a>’s.
 This range represents the product of generators one wants to act with.
-<span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::hs"><span class="n">hs</span></a></span> is the Hilbert space to act in.</p>
+<a class="reference internal" href="#_CPPv4IDpEN10libcommute15monomial_action15monomial_actionERKN8monomialIDp10IndexTypesE10range_typeERK13hilbert_spaceIDp10IndexTypesE" title="libcommute::monomial_action::monomial_action::hs"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">hs</span></code></a> is the Hilbert space to act in.</p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -260,8 +257,8 @@ This range represents the product of generators one wants to act with.
 <dd><p>Act on a basis state. It is assumed the action of a generator (and,
 therefore, of a monomial) maps a single basis state to a single basis
 state multiplied by a constant.</p>
-<p><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::index"><span class="n">index</span></a></span> is the index of the input and output basis states.</p>
-<p><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::coeff"><span class="n">coeff</span></a></span> must be multiplied by the overall constant factor acquired
+<p><a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::index"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">index</span></code></a> is the index of the input and output basis states.</p>
+<p><a class="reference internal" href="#_CPPv4I0ENK10libcommute15monomial_action3actEbR13sv_index_typeR10ScalarType" title="libcommute::monomial_action::act::coeff"><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">coeff</span></code></a> must be multiplied by the overall constant factor acquired
 as a result of monomial action.</p>
 <p>This method should return <code class="docutils literal notranslate"><span class="pre">false</span></code> if the action result is the identical
 zero and <code class="docutils literal notranslate"><span class="pre">true</span></code> otherwise.</p>
@@ -315,7 +312,6 @@ apply it to 4-dimensional state vectors as usual.</p>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
 </pre></div>
 </div>
 </li>

@@ -11,8 +11,8 @@ with algebras, whose generators :math:`g_\alpha` obey commutation relations
 
 .. math::
 
-    g_\alpha g_\beta - c g_\beta g_\alpha = F_{\alpha\beta} +
-        \sum_\gamma f_{\alpha\beta}^\gamma g_\gamma
+  g_\alpha g_\beta - c g_\beta g_\alpha = F_{\alpha\beta} +
+      \sum_\gamma f_{\alpha\beta}^\gamma g_\gamma
 
 with real constants :math:`c`, :math:`F_{\alpha\beta}` and
 :math:`f_{\alpha\beta}^\gamma`. Such algebraic structures include the Lie and
