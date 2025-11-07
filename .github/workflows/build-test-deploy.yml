@@ -16,8 +16,8 @@ jobs:
         include:
           - {os: "ubuntu-22.04", cxx: "g++-11"}
           - {os: "ubuntu-22.04", cxx: "clang++"}
-          - {os: "macos-13", cxx: "g++-12"}
-          - {os: "macos-13", cxx: "clang++"}
+          - {os: "macos-15", cxx: "g++-13"}
+          - {os: "macos-15", cxx: "clang++"}
     runs-on: ${{ matrix.os }}
 
     steps:
