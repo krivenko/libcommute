@@ -1,0 +1,53 @@
+context:
+  name: libcommute
+  version: ${{ env.get("LIBCOMMUTE_VERSION") }}
+  number: 0
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+about:
+  homepage: https://krivenko.github.io/libcommute/
+  license: MPL-2.0
+  license_file: LICENSE
+  summary: >
+    A quantum operator algebra domain-specific language and exact
+    diagonalization toolkit for C++11/14/17
+  description: >
+    libcommute is a C++11/14/17 template library that includes two major parts.
+
+      - A Domain-Specific Language (DSL) designed to easily construct and
+        manipulate polynomial expressions with quantum-mechanical operators,
+        especially those used in the quantum many-body theory. The most commonly
+        used instances of such expressions are many-body Hamiltonians and
+        operators of physical observables.
+
+      - A fast intermediate representation of the quantum-mechanical operators
+        that enables their action on state vectors in finite-dimensional Hilbert
+        spaces. This feature provides a basis for writing highly performant
+        Exact Diagonalization (ED) codes without loss of flexibility.
+
+  repository: https://github.com/krivenko/libcommute
+  documentation: https://krivenko.github.io/libcommute/
+
+source:
+  git: https://github.com/krivenko/libcommute.git
+  tag: v${{ version }}
+
+build:
+  number: ${{ number }}
+  string: ${{ number }}
+  noarch: generic
+  script: build.sh
+
+requirements:
+  build:
+    - ${{ compiler('cxx') }}
+    - git
+    - cmake
+    - make
+    - eigen
+  host:
+    - boost-cpp
+    - gmp

@@ -1,0 +1,55 @@
+name: Build conda package and upload to Anaconda.org
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Detect version of libcommute
+        shell: "bash -l {0}"
+        run: |
+             TAG=${{ github.ref_name }}
+             VERSION=${TAG:1}
+             echo "libcommute version: ${VERSION}"
+             echo "LIBCOMMUTE_VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Set up micromamba
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: build-env
+          create-args: >-
+            rattler-build
+            compilers
+            cmake
+            make
+            eigen
+            boost-cpp
+            gmp
+
+      - name: Build Conda Package
+        id: build
+        shell: "bash -l {0}"
+        run: |
+             eval "$(micromamba shell hook --shell=bash)"
+             micromamba activate build-env
+             rattler-build build --recipe .conda/recipe.yaml \
+                                 --output-dir ${HOME}/output
+
+      - name: Upload package to Anaconda
+        shell: "bash -l {0}"
+        env:
+          ANACONDA_API_KEY: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: |
+             # Get the path to the built packages from the output folder
+             BUILT_PKG=$(find "${HOME}/output" -type f -name "*.conda")
+             BUILT_PKG=$(echo ${BUILT_PKG} | tr '\n' ' ')
+             echo "Built packages: ${BUILT_PKG}"
+
+             rattler-build upload anaconda -f -o krivenko ${BUILT_PKG}
