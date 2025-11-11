@@ -45,7 +45,11 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation instructions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#anaconda">Anaconda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manual-installation">Manual installation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How to use <em>libcommute</em> in your project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expression/index.html">Domain-Specific Language for polynomial expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="loperator/index.html">Tools for exact diagonalization</a></li>
@@ -81,6 +85,21 @@
              
   <section id="installation-instructions">
 <span id="installation"></span><h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Link to this heading"></a></h1>
+<section id="anaconda">
+<h2>Anaconda<a class="headerlink" href="#anaconda" title="Link to this heading"></a></h2>
+<p>The easiest way to obtain the most recent released version of <em>libcommute</em> is
+via ‘<a class="reference external" href="https://www.anaconda.com/">conda</a>’ or
+‘<a class="reference external" href="https://mamba.readthedocs.io/en/latest/">mamba</a>’ package manager.
+The packages have been provided through the
+<a class="reference external" href="https://anaconda.org/krivenko/libcommute">‘krivenko’ Anaconda.org channel</a>
+since version 1.0.0.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>krivenko::libcommute
+$<span class="w"> </span>mamba<span class="w"> </span>install<span class="w"> </span>krivenko::libcommute
+</pre></div>
+</div>
+</section>
+<section id="manual-installation">
+<h2>Manual installation<a class="headerlink" href="#manual-installation" title="Link to this heading"></a></h2>
 <p><em>libcommute</em> is a header-only C++ library, which means it is usable without
 installation. You can obtain the latest version of the library by making a local
 clone of its <a class="reference external" href="https://github.com/krivenko/libcommute">GitHub repository</a>.
@@ -200,6 +219,7 @@ flags to be passed to <code class="docutils literal notranslate"><span class="pr
 </tr>
 </tbody>
 </table>
+</section>
 </section>
 
 
