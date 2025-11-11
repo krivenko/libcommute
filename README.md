@@ -58,6 +58,12 @@ Compilation of the tests can be disabled with CMake flag `-DTESTS=OFF`
 *(not recommended)*. Examples are compiled by default, disable them with
 `-DEXAMPLES=OFF`.
 
+Since version 1.0.0, *libcommute* is also available as a `conda` package.
+
+```
+$ conda install krivenko::libcommute
+```
+
 Usage
 -----
 

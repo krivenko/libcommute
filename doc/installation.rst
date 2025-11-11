@@ -3,6 +3,24 @@
 Installation instructions
 =========================
 
+Anaconda
+--------
+
+The easiest way to obtain the most recent released version of *libcommute* is
+via '`conda <https://www.anaconda.com/>`_' or
+'`mamba <https://mamba.readthedocs.io/en/latest/>`_' package manager.
+The packages have been provided through the
+`'krivenko' Anaconda.org channel <https://anaconda.org/krivenko/libcommute>`_
+since version 1.0.0.
+
+.. code-block:: shell
+
+  $ conda install krivenko::libcommute
+  $ mamba install krivenko::libcommute
+
+Manual installation
+-------------------
+
 *libcommute* is a header-only C++ library, which means it is usable without
 installation. You can obtain the latest version of the library by making a local
 clone of its `GitHub repository <https://github.com/krivenko/libcommute>`_.
