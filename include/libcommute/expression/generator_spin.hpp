@@ -59,9 +59,11 @@ public:
 
   generator_spin(generator_spin const&) = default;
   generator_spin(generator_spin&&) noexcept = default;
-  generator_spin& operator=(generator_spin const&) = default;
-  generator_spin& operator=(generator_spin&&) noexcept = default;
   ~generator_spin() override = default;
+
+  // Generator objects are immutable
+  generator_spin& operator=(generator_spin const&) = delete;
+  generator_spin& operator=(generator_spin&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const override {
@@ -73,6 +75,7 @@ public:
     assert(*this > g2);
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
     if(base::equal(g2) && this->multiplicity_ == g2_.multiplicity_) {
+      // cppcheck-suppress knownConditionTrueFalse
       if(this->multiplicity_ == 2)
         return swap_with_spin_one_half(g2_, f);
       else
@@ -93,6 +96,7 @@ public:
   bool simplify_prod(base const& g2, linear_function_t& f) const override {
     assert(!(*this > g2));
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
+    // cppcheck-suppress knownConditionTrueFalse
     if(!base::equal(g2) || this->multiplicity_ != 2) return false;
 
     if(this->c_ == g2_.c_) {
@@ -105,9 +109,11 @@ public:
           f.set(0, clone(), var_number(1, 2));
         }
       } else { // c_ == spin_component::plus && g2.c_ == spin_component::minus
-        f.set(var_number(1, 2), g2_.clone(), 1);
-        dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
-            spin_component::z;
+        f.set(var_number(1, 2),
+              make_unique<generator_spin>(g2_.spin(),
+                                          spin_component::z,
+                                          g2_.indices()),
+              1);
       }
     }
 
@@ -138,10 +144,10 @@ public:
 
 private:
   // Multiplicity, 2S+1
-  int multiplicity_ = 2;
+  int const multiplicity_ = 2;
 
-  // Creation or annihilation operator?
-  spin_component c_;
+  // Component of the spin operator
+  spin_component const c_;
 
 protected:
   // Check two generators of the same algebra for equality
@@ -177,12 +183,14 @@ protected:
   // Print to stream
   std::ostream& print(std::ostream& os) const override {
     os << "S";
+    // cppcheck-suppress-begin knownConditionTrueFalse
     if(multiplicity_ != 2) {
       if(multiplicity_ % 2 == 0)
         os << (multiplicity_ - 1) << "/2";
       else
         os << ((multiplicity_ - 1) / 2);
     }
+    // cppcheck-suppress-end knownConditionTrueFalse
     switch(this->c_) {
     case spin_component::plus: os << "+"; break;
     case spin_component::minus: os << "-"; break;
@@ -206,9 +214,11 @@ private:
         f.set(0, g2_.clone(), var_number(-1, 2));
       }
     } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
-      f.set(var_number(1, 2), g2_.clone(), -1);
-      dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
-          spin_component::z;
+      f.set(var_number(1, 2),
+            make_unique<generator_spin>(g2_.spin(),
+                                        spin_component::z,
+                                        g2_.indices()),
+            -1);
     }
     return 0;
   }
@@ -226,9 +236,11 @@ private:
         f.set(0, g2_.clone(), -1);
       }
     } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
-      f.set(0, g2_.clone(), -2);
-      dynamic_cast<generator_spin&>(*f.terms.back().first).c_ =
-          spin_component::z;
+      f.set(0,
+            make_unique<generator_spin>(g2_.spin(),
+                                        spin_component::z,
+                                        g2_.indices()),
+            -2);
     }
     return 1;
   }

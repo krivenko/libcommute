@@ -46,9 +46,11 @@ public:
     : base(std::forward<Args>(indices)...), dagger_(dagger) {}
   generator_boson(generator_boson const&) = default;
   generator_boson(generator_boson&&) noexcept = default;
-  generator_boson& operator=(generator_boson const&) = default;
-  generator_boson& operator=(generator_boson&&) noexcept = default;
   ~generator_boson() override = default;
+
+  // Generator objects are immutable
+  generator_boson& operator=(generator_boson const&) = delete;
+  generator_boson& operator=(generator_boson&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const override {
@@ -74,7 +76,7 @@ public:
 
 private:
   // Creation or annihilation operator?
-  bool dagger_;
+  bool const dagger_;
 
 protected:
   // Check two generators of the same algebra for equality

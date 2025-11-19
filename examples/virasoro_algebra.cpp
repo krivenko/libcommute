@@ -53,12 +53,14 @@ public:
 
   // Construct generator with a given index 'n'
   explicit generator_virasoro(int n) : base(n) {}
-  // Standard constructors, assignments and destructor
+  // Standard constructors and destructor
   generator_virasoro(generator_virasoro const&) = default;
   generator_virasoro(generator_virasoro&&) noexcept = default;
-  generator_virasoro& operator=(generator_virasoro const&) = default;
-  generator_virasoro& operator=(generator_virasoro&&) noexcept = default;
   ~generator_virasoro() override = default;
+
+  // Generator objects must be immutable
+  generator_virasoro& operator=(generator_virasoro const&) = delete;
+  generator_virasoro& operator=(generator_virasoro&&) noexcept = delete;
 
   // Virtual copy-constructor: Make a smart pointer managing
   // a copy of this generator

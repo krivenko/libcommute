@@ -9,10 +9,10 @@ Algebra generators
 
 Algebra generators, such as creation/annihilation operators :math:`c^\dagger`/
 :math:`c` in `fermionic and bosonic algebras`__, are atomic structural units of
-any expression. Within *libcommute*'s framework, algebra generators are classes
-derived from the abstract base :type:`libcommute::generator`. Every generator
-carries an index sequence (possibly of zero length), and the respective
-index types must be passed as template parameters to
+any expression. Within *libcommute*'s framework, algebra generators are
+immutable classes derived from the abstract base :type:`libcommute::generator`.
+Every generator carries an index sequence (possibly of zero length), and the
+respective index types must be passed as template parameters to
 :type:`libcommute::generator`. The index types must be less-comparable and
 form strictly ordered sets so that tuples of the indices (index sequences) are
 also less-comparable and form a strictly ordered set.
@@ -74,6 +74,11 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 .. var:: static constexpr int min_user_defined_algebra_id = 0
   :nocontentsentry:
 
+All predefined generators are immutable: Their data members are declared as
+constant, and the assignment operators are explicitly deleted. User-defined
+generators should follow the same pattern. The immutability guarantee is
+crucial for the proper functioning of the :class:`libcommute::expression` class.
+
 .. _gen_base:
 
 ``generator``: abstract base class for algebra generators
@@ -108,8 +113,8 @@ mentioned in the 3rd column are defined in *<libcommute/algebra_ids.hpp>*.
 
   .. function:: generator(generator const&) = default
   .. function:: generator(generator&&) noexcept = default
-  .. function:: generator& operator=(generator const&) = default
-  .. function:: generator& operator=(generator&&) noexcept = default
+  .. function:: generator& operator=(generator const&) = delete
+  .. function:: generator& operator=(generator&&) noexcept = delete
   .. function:: virtual ~generator()
   .. function:: virtual std::unique_ptr<generator> clone() const = 0
 

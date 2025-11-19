@@ -46,9 +46,11 @@ public:
     : base(std::forward<Args>(indices)...), dagger_(dagger) {}
   generator_fermion(generator_fermion const&) = default;
   generator_fermion(generator_fermion&&) noexcept = default;
-  generator_fermion& operator=(generator_fermion const&) = default;
-  generator_fermion& operator=(generator_fermion&&) noexcept = default;
   ~generator_fermion() override = default;
+
+  // Generator objects are immutable
+  generator_fermion& operator=(generator_fermion const&) = delete;
+  generator_fermion& operator=(generator_fermion&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this generator
   std::unique_ptr<base> clone() const override {
@@ -83,7 +85,7 @@ public:
 
 private:
   // Creation or annihilation operator?
-  bool dagger_;
+  bool const dagger_;
 
 protected:
   // Check two generators of the same algebra for equality

@@ -46,6 +46,14 @@ public:
 
   // Constructor: Just pass the index to the base class
   explicit generator_gamma(int index) : base(index) {}
+  // Standard constructors and destructor
+  generator_gamma(generator_gamma const&) = default;
+  generator_gamma(generator_gamma&&) noexcept = default;
+  ~generator_gamma() override = default;
+
+  // Generator objects must be immutable
+  generator_gamma& operator=(generator_gamma const&) = delete;
+  generator_gamma& operator=(generator_gamma&&) noexcept = delete;
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this generator

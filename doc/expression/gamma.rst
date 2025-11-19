@@ -44,7 +44,7 @@ their canonical ordering. The identities we will be using in the code below are
 
 .. literalinclude:: ../../examples/gamma.hpp
   :language: cpp
-  :lines: 18-116
+  :lines: 18-124
 
 .. note::
 
@@ -69,7 +69,7 @@ containing one generator with a unity prefactor.
 
 .. literalinclude:: ../../examples/gamma.hpp
   :language: cpp
-  :lines: 118-132
+  :lines: 126-140
 
 Now we can check that generators of our algebra actually fulfil the canonical
 anti-commutation relations.

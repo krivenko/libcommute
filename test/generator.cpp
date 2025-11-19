@@ -269,6 +269,7 @@ TEST_CASE("Algebra generators", "[generator]") {
         CHECK(lin_f.vanishing());
       }
       CHECK(spin_gen_p->spin() == 0.5);
+      // cppcheck-suppress knownConditionTrueFalse
       CHECK(spin_gen_p->multiplicity() == 2);
     }
 
@@ -310,6 +311,7 @@ TEST_CASE("Algebra generators", "[generator]") {
         CHECK_LINEAR_FUNCTION_0(lin_f, 0);
       }
       CHECK(spin_gen_p->spin() == 1.0);
+      // cppcheck-suppress knownConditionTrueFalse
       CHECK(spin_gen_p->multiplicity() == 3);
     }
 
@@ -350,6 +352,7 @@ TEST_CASE("Algebra generators", "[generator]") {
         CHECK_LINEAR_FUNCTION_0(lin_f, 0);
       }
       CHECK(spin_gen_p->spin() == 1.5);
+      // cppcheck-suppress knownConditionTrueFalse
       CHECK(spin_gen_p->multiplicity() == 4);
     }
 

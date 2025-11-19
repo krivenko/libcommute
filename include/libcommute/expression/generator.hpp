@@ -42,9 +42,11 @@ public:
   generator(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
   generator(generator const&) = default;
   generator(generator&&) noexcept = default;
-  generator& operator=(generator const&) = default;
-  generator& operator=(generator&&) noexcept = default;
   virtual ~generator() = default;
+
+  // Generator objects are immutable
+  generator& operator=(generator const&) = delete;
+  generator& operator=(generator&&) noexcept = delete;
 
   // Get ID of the algebra this generator belongs to
   virtual int algebra_id() const = 0;
@@ -125,7 +127,7 @@ public:
   }
 
 private:
-  index_types indices_;
+  index_types const indices_;
 
 protected:
   // Check two generators of the same algebra for equality

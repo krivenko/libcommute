@@ -40,9 +40,11 @@ public:
   explicit generator_gamma(int index) : base(index) {}
   generator_gamma(generator_gamma const&) = default;
   generator_gamma(generator_gamma&&) noexcept = default;
-  generator_gamma& operator=(generator_gamma const&) = default;
-  generator_gamma& operator=(generator_gamma&&) noexcept = default;
   ~generator_gamma() final = default;
+
+  // Generator objects are immutable
+  generator_gamma& operator=(generator_gamma const&) = delete;
+  generator_gamma& operator=(generator_gamma&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this generator
   // cppcheck-suppress duplInheritedMember
