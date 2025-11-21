@@ -43,10 +43,11 @@ public:
   elementary_space_gamma() : base(0) {}
   elementary_space_gamma(elementary_space_gamma const&) = default;
   elementary_space_gamma(elementary_space_gamma&&) noexcept = default;
-  elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
-  elementary_space_gamma&
-  operator=(elementary_space_gamma&&) noexcept = default;
   ~elementary_space_gamma() final = default;
+
+  // Elementary space objects are immutable
+  elementary_space_gamma& operator=(elementary_space_gamma const&) = delete;
+  elementary_space_gamma& operator=(elementary_space_gamma&&) noexcept = delete;
 
   // cppcheck-suppress duplInheritedMember
   std::unique_ptr<base> clone() const final {

@@ -42,9 +42,11 @@ public:
   elementary_space(index_types&& indices) : indices_(std::move(indices)) {}
   elementary_space(elementary_space const&) = default;
   elementary_space(elementary_space&&) noexcept = default;
-  elementary_space& operator=(elementary_space const&) = default;
-  elementary_space& operator=(elementary_space&&) noexcept = default;
   virtual ~elementary_space() = default;
+
+  // Elementary space objects are immutable
+  elementary_space& operator=(elementary_space const&) = delete;
+  elementary_space& operator=(elementary_space&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this elementary space
   virtual std::unique_ptr<elementary_space> clone() const = 0;
@@ -87,7 +89,7 @@ public:
   index_types const& indices() const { return indices_; }
 
 private:
-  index_types indices_;
+  index_types const indices_;
 
 protected:
   // Check two elementary spaces for equality

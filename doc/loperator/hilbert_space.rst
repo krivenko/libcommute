@@ -339,7 +339,8 @@ Elementary spaces
 
 An elementary space has an :ref:`algebra ID <generator>` assigned to it and
 carries a tuple of indices. Together, these two pieces of information link
-the elementary space to algebra generators acting in it.
+the elementary space to algebra generators acting in it. Similarly to the
+generator objects, elementary spaces are assumed to be immutable.
 
 .. class:: template<typename... IndexTypes> elementary_space
 
@@ -364,9 +365,9 @@ the elementary space to algebra generators acting in it.
 
   .. function:: elementary_space(elementary_space const&) = default
   .. function:: elementary_space(elementary_space&&) noexcept = default
-  .. function:: elementary_space& operator=(elementary_space const&) = default
+  .. function:: elementary_space& operator=(elementary_space const&) = delete
   .. function:: elementary_space& operator=(elementary_space&&) noexcept \
-                = default
+                = delete
   .. function:: virtual ~elementary_space()
   .. function:: virtual std::unique_ptr<elementary_space> clone() const = 0
 

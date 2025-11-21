@@ -38,11 +38,13 @@ public:
     : base(std::forward<Args>(indices)...) {}
   elementary_space_fermion(elementary_space_fermion const&) = default;
   elementary_space_fermion(elementary_space_fermion&&) noexcept = default;
-  elementary_space_fermion&
-  operator=(elementary_space_fermion const&) = default;
-  elementary_space_fermion&
-  operator=(elementary_space_fermion&&) noexcept = default;
   ~elementary_space_fermion() override = default;
+
+  // Elementary space objects are immutable
+  elementary_space_fermion&
+  operator=(elementary_space_fermion const&) = delete;
+  elementary_space_fermion&
+  operator=(elementary_space_fermion&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this elementary space
   std::unique_ptr<base> clone() const override {

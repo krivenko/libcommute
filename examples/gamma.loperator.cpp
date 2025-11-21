@@ -41,10 +41,11 @@ public:
   elementary_space_gamma() : base(0) {}
   elementary_space_gamma(elementary_space_gamma const&) = default;
   elementary_space_gamma(elementary_space_gamma&&) noexcept = default;
-  elementary_space_gamma& operator=(elementary_space_gamma const&) = default;
-  elementary_space_gamma&
-  operator=(elementary_space_gamma&&) noexcept = default;
   ~elementary_space_gamma() override = default;
+
+  // Elementary space objects must be immutable
+  elementary_space_gamma& operator=(elementary_space_gamma const&) = delete;
+  elementary_space_gamma& operator=(elementary_space_gamma&&) noexcept = delete;
 
   // Virtual copy-constructor.
   // Make a smart pointer that manages a copy of this elementary space

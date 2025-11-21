@@ -21,7 +21,7 @@ the extra steps needed to plug the new algebra into the
 
   .. literalinclude:: ../../examples/gamma.loperator.cpp
     :language: cpp
-    :lines: 18-62
+    :lines: 18-63
 
 * Specialize class template :class:`monomial_action` for the new algebra. This
   specialization will describe how a product
@@ -30,7 +30,7 @@ the extra steps needed to plug the new algebra into the
 
   .. literalinclude:: ../../examples/gamma.loperator.cpp
     :language: cpp
-    :lines: 64-143
+    :lines: 65-144
 
   In general, :class:`monomial_action` is defined as follows.
 
@@ -70,4 +70,4 @@ the extra steps needed to plug the new algebra into the
 
   .. literalinclude:: ../../examples/gamma.loperator.cpp
     :language: cpp
-    :lines: 149-192
+    :lines: 150-193

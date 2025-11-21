@@ -39,16 +39,18 @@ public:
   template <typename... Args>
   elementary_space_spin(double spin, Args&&... indices)
     : base(std::forward<Args>(indices)...),
-      multiplicity_(static_cast<int>(2 * spin + 1)) {
+      multiplicity_(static_cast<int>(2 * spin + 1)),
+      n_bits_(std::ceil(std::log2(multiplicity_))) {
     // Multiplicity has to be integer
     assert(2 * spin == int(spin * 2));
-    n_bits_ = std::ceil(std::log2(multiplicity_));
   }
   elementary_space_spin(elementary_space_spin const&) = default;
   elementary_space_spin(elementary_space_spin&&) noexcept = default;
-  elementary_space_spin& operator=(elementary_space_spin const&) = default;
-  elementary_space_spin& operator=(elementary_space_spin&&) noexcept = default;
   ~elementary_space_spin() override = default;
+
+  // Elementary space objects are immutable
+  elementary_space_spin& operator=(elementary_space_spin const&) = delete;
+  elementary_space_spin& operator=(elementary_space_spin&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this elementary space
   std::unique_ptr<base> clone() const override {
@@ -67,11 +69,11 @@ public:
 
 private:
   // Multiplicity, 2S+1
-  int multiplicity_;
+  int const multiplicity_;
 
   // n_bits_ is the smallest positive number such that 2^{n_bits_} - 1
   // exceed multiplicity of the respective spin algebra.
-  int n_bits_;
+  int const n_bits_;
 
 protected:
   // Equality

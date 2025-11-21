@@ -44,10 +44,11 @@ public:
     }
   elementary_space_boson(elementary_space_boson const&) = default;
   elementary_space_boson(elementary_space_boson&&) noexcept = default;
-  elementary_space_boson& operator=(elementary_space_boson const&) = default;
-  elementary_space_boson&
-  operator=(elementary_space_boson&&) noexcept = default;
   ~elementary_space_boson() override = default;
+
+  // Elementary space objects are immutable
+  elementary_space_boson& operator=(elementary_space_boson const&) = delete;
+  elementary_space_boson& operator=(elementary_space_boson&&) noexcept = delete;
 
   // Make a smart pointer that manages a copy of this elementary space
   std::unique_ptr<base> clone() const override {
@@ -66,10 +67,10 @@ public:
 
 private:
   // This space is spanned by bosonic states |0>, |1>, ..., |dim-1>
-  sv_index_type dim_;
+  sv_index_type const dim_;
 
   // ceil(log_2(dim))
-  int n_bits_;
+  int const n_bits_;
 };
 
 namespace static_indices {
