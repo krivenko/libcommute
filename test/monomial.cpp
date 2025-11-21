@@ -217,6 +217,9 @@ TEST_CASE("Monomials", "[monomial]") {
     CHECK(*it == Cdag_dn);
     ++it;
     CHECK(it == m4.rend());
+
+    CHECK(m4.rbegin() == m4.crbegin());
+    CHECK(m4.rend() == m4.crend());
   }
 
   SECTION("Printing") {

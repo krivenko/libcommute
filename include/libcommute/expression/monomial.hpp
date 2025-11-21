@@ -147,17 +147,17 @@ public:
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   inline const_reverse_iterator rbegin() const noexcept {
-    return {generators_.rbegin()};
+    return const_reverse_iterator(end());
   }
   inline const_reverse_iterator crbegin() const noexcept {
-    return {generators_.crbegin()};
+    return const_reverse_iterator(cend());
   }
 
   inline const_reverse_iterator rend() const noexcept {
-    return {generators_.rend()};
+    return const_reverse_iterator(begin());
   }
   inline const_reverse_iterator crend() const noexcept {
-    return {generators_.crend()};
+    return const_reverse_iterator(cbegin());
   }
 
   // Element access
