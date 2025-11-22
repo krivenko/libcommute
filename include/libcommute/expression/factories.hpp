@@ -36,7 +36,7 @@ namespace static_indices {
       IndexTypes&&... indices) {                                               \
     using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>;    \
     return ret_t(scalar_traits<ScalarType>::make_const(1),                     \
-                 typename ret_t::monomial_t(__VA_ARGS__));                     \
+                 typename ret_t::monomial_t{__VA_ARGS__});                     \
   }
 
 #define DEFINE_FACTORY_SPIN(NAME, ...)                                         \
@@ -48,7 +48,7 @@ namespace static_indices {
     static_assert(Multiplicity >= 2, "Invalid multiplicity");                  \
     using ret_t = expression<ScalarType, c_str_to_string_t<IndexTypes>...>;    \
     return ret_t(scalar_traits<ScalarType>::make_const(1),                     \
-                 typename ret_t::monomial_t(__VA_ARGS__));                     \
+                 typename ret_t::monomial_t{__VA_ARGS__});                     \
   }
 
 //

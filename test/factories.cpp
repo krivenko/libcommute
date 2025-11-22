@@ -27,7 +27,7 @@ using monomial_t = monomial<int, std::string>;
 
 template <typename E, typename S, typename... Generators>
 void check_monomial(E const& expr, S ref_coeff, Generators&&... generators) {
-  monomial_t ref_monomial(std::forward<Generators>(generators)...);
+  monomial_t ref_monomial{std::forward<Generators>(generators)...};
 
   CHECK(expr.get_monomials().size() == 1);
   CHECK((expr.get_monomials().begin()->first) == ref_monomial);

@@ -62,12 +62,6 @@ public:
   generator_virasoro& operator=(generator_virasoro const&) = delete;
   generator_virasoro& operator=(generator_virasoro&&) noexcept = delete;
 
-  // Virtual copy-constructor: Make a smart pointer managing
-  // a copy of this generator
-  std::unique_ptr<base> clone() const override {
-    return make_unique<generator_virasoro>(*this);
-  }
-
   // Given a product L_m * L_n with m > n, transform it to the canonically
   // ordered form L_n * L_m plus some linear function of generators.
   // For the Virasoro algebra the transformation is
@@ -87,7 +81,7 @@ public:
 
     // Write linear terms of the transformed expressions into 'f'
     f.set(m == -n ? (central_charge * (m * m * m - m)) : 0, // Constant term
-          make_unique<generator_virasoro>(m + n),           // L_{m+n}
+          std::make_shared<generator_virasoro>(m + n),      // L_{m+n}
           m - n // Coefficient in front of L_{m+n}
     );
 
@@ -118,7 +112,7 @@ public:
   // Hermitian conjugate: (L_n)^\dagger = L_{-n}
   void conj(linear_function_t& f) const override {
     int conj_n = -std::get<0>(base::indices());
-    f.set(0, make_unique<generator_virasoro>(conj_n), 1);
+    f.set(0, std::make_shared<generator_virasoro>(conj_n), 1);
   }
 
   // Print L_n to stream

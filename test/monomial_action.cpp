@@ -120,24 +120,24 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
   // Algebra generators
   //
 
-  std::vector<std::unique_ptr<generator<int>>> gens;
-  gens.emplace_back(make_fermion(true, 0).clone());
-  gens.emplace_back(make_fermion(false, 0).clone());
-  gens.emplace_back(make_fermion(true, 1).clone());
-  gens.emplace_back(make_fermion(false, 1).clone());
-  gens.emplace_back(make_boson(true, 0).clone());
-  gens.emplace_back(make_boson(false, 0).clone());
-  gens.emplace_back(make_boson(true, 1).clone());
-  gens.emplace_back(make_boson(false, 1).clone());
-  gens.emplace_back(make_spin(0.5, spin_component::plus, 0).clone());
-  gens.emplace_back(make_spin(0.5, spin_component::minus, 0).clone());
-  gens.emplace_back(make_spin(0.5, spin_component::z, 0).clone());
-  gens.emplace_back(make_spin(1.0, spin_component::plus, 1).clone());
-  gens.emplace_back(make_spin(1.0, spin_component::minus, 1).clone());
-  gens.emplace_back(make_spin(1.0, spin_component::z, 1).clone());
-  gens.emplace_back(make_spin(1.5, spin_component::plus, 2).clone());
-  gens.emplace_back(make_spin(1.5, spin_component::minus, 2).clone());
-  gens.emplace_back(make_spin(1.5, spin_component::z, 2).clone());
+  std::vector<std::shared_ptr<const generator<int>>> gens{
+      make_fermion(true, 0),
+      make_fermion(false, 0),
+      make_fermion(true, 1),
+      make_fermion(false, 1),
+      make_boson(true, 0),
+      make_boson(false, 0),
+      make_boson(true, 1),
+      make_boson(false, 1),
+      make_spin(0.5, spin_component::plus, 0),
+      make_spin(0.5, spin_component::minus, 0),
+      make_spin(0.5, spin_component::z, 0),
+      make_spin(1.0, spin_component::plus, 1),
+      make_spin(1.0, spin_component::minus, 1),
+      make_spin(1.0, spin_component::z, 1),
+      make_spin(1.5, spin_component::plus, 2),
+      make_spin(1.5, spin_component::minus, 2),
+      make_spin(1.5, spin_component::z, 2)};
 
   //
   // Reference monomial actions
@@ -305,7 +305,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
   SECTION("1 operator") {
     // NOLINTNEXTLINE(modernize-loop-convert)
     for(unsigned int i = 0; i < gens.size(); ++i) {
-      mon_type mon{gens[i]->clone()};
+      mon_type mon{gens[i]};
       check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
     }
   }
@@ -313,7 +313,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
     for(unsigned int i = 0; i < gens.size(); ++i) {
       for(unsigned int j = 0; j < gens.size(); ++j) {
         if(!(*gens[i] < *gens[j])) continue;
-        mon_type mon{gens[i]->clone(), gens[j]->clone()};
+        mon_type mon{gens[i], gens[j]};
         check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
       }
     }
@@ -323,7 +323,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
       for(unsigned int j = 0; j < gens.size(); ++j) {
         for(unsigned int k = 0; k < gens.size(); ++k) {
           if(!(*gens[i] < *gens[j]) || !(*gens[j] < *gens[k])) continue;
-          mon_type mon{gens[i]->clone(), gens[j]->clone(), gens[k]->clone()};
+          mon_type mon{gens[i], gens[j], gens[k]};
           check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
         }
       }
@@ -337,10 +337,7 @@ TEST_CASE("Action of a mixed monomial", "[monomial_action]") {
             if(!(*gens[i] < *gens[j]) || !(*gens[j] < *gens[k]) ||
                !(*gens[k] < *gens[l]))
               continue;
-            mon_type mon{gens[i]->clone(),
-                         gens[j]->clone(),
-                         gens[k]->clone(),
-                         gens[l]->clone()};
+            mon_type mon{gens[i], gens[j], gens[k], gens[l]};
             check_monomial_action<ma_type>(mon, hs, ref_action, in_index_list);
           }
         }

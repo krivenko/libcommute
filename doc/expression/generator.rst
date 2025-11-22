@@ -9,12 +9,12 @@ Algebra generators
 
 Algebra generators, such as creation/annihilation operators :math:`c^\dagger`/
 :math:`c` in `fermionic and bosonic algebras`__, are atomic structural units of
-any expression. Within *libcommute*'s framework, algebra generators are
+an expression. Within *libcommute*'s framework, algebra generators are
 immutable classes derived from the abstract base :type:`libcommute::generator`.
 Every generator carries an index sequence (possibly of zero length), and the
 respective index types must be passed as template parameters to
 :type:`libcommute::generator`. The index types must be less-comparable and
-form strictly ordered sets so that tuples of the indices (index sequences) are
+form strictly ordered sets, so that tuples of the indices (index sequences) are
 also less-comparable and form a strictly ordered set.
 
 The few methods that derived classes have to override serve a multitude
@@ -79,16 +79,26 @@ constant, and the assignment operators are explicitly deleted. User-defined
 generators should follow the same pattern. The immutability guarantee is
 crucial for the proper functioning of the :class:`libcommute::expression` class.
 
+:class:`libcommute::generator` is derived from the `utility class template \
+<https://en.cppreference.com/w/cpp/memory/enable_shared_from_this.html>`_
+``std::enable_shared_from_this``, and instances of all its children
+are expected to be managed by ``std::shared_ptr``.
+
 .. _gen_base:
 
 ``generator``: abstract base class for algebra generators
 ---------------------------------------------------------
 
-.. class:: template<typename... IndexTypes> generator
+.. class:: template<typename... IndexTypes> generator :\
+           public std::enable_shared_from_this<generator<IndexTypes...>>
 
   *Defined in <libcommute/expression/generator.hpp>*
 
-  The abstract base class for algebra generator types.
+  The abstract base class for algebra generator types. Lifetime of the generator
+  objects derived from this base
+  `should be managed by \
+  <https://en.cppreference.com/w/cpp/memory/enable_shared_from_this.html>`_
+  a ``std::shared_ptr``.
 
   :type:`IndexTypes` - types of indices carried by this generator.
 
@@ -98,7 +108,8 @@ crucial for the proper functioning of the :class:`libcommute::expression` class.
 
     Index tuple type.
 
-  .. type:: linear_function_t = linear_function<std::unique_ptr<generator>>
+  .. type:: linear_function_t = \
+            linear_function<std::shared_ptr<const generator>>
 
     Linear combination of generators. This type is used by various methods
     dealing with transformations of generator products.
@@ -115,11 +126,7 @@ crucial for the proper functioning of the :class:`libcommute::expression` class.
   .. function:: generator(generator&&) noexcept = default
   .. function:: generator& operator=(generator const&) = delete
   .. function:: generator& operator=(generator&&) noexcept = delete
-  .. function:: virtual ~generator()
-  .. function:: virtual std::unique_ptr<generator> clone() const = 0
-
-    Virtual copy-constructor. Makes a copy of this generator managed by a
-    unique pointer.
+  .. function:: virtual ~generator() = default
 
   .. rubric:: Algebra ID
 
@@ -279,7 +286,7 @@ crucial for the proper functioning of the :class:`libcommute::expression` class.
 
   *Defined in <libcommute/utility.hpp>*
 
-  A linear function of objects of type :type:`T` with :struct:`var_number`
+  A linear combination of objects of type :type:`T` with :struct:`var_number`
   coefficients,
 
   .. math::
@@ -370,17 +377,18 @@ rational and general real scalars.
     Returns ``true`` for :math:`c^\dagger` and ``false`` for :math:`c`.
 
 .. function:: template<typename... IndexTypes> \
-              generator_fermion<IndexTypes...> \
+              std::shared_ptr<generator_fermion<IndexTypes...>> \
               static_indices::make_fermion(bool dagger, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_fermion.hpp>*
 
   Make a fermionic creation (:expr:`dagger = true`) or annihilation
-  (:expr:`dagger = false`) operator with given indices.
+  (:expr:`dagger = false`) operator with given indices, whose lifetime is
+  managed by a shared pointer.
 
 .. function:: template<typename... IndexTypes> \
-              generator_fermion<IndexTypes...> \
+              std::shared_ptr<generator_fermion<dyn_indices>> \
               dynamic_indices::make_fermion(bool dagger, \
               IndexTypes&&... indices)
 
@@ -388,7 +396,8 @@ rational and general real scalars.
 
   Make a fermionic creation (:expr:`dagger = true`) or annihilation
   (:expr:`dagger = false`) operator with a given
-  :ref:`dynamic index sequence <dyn_indices>`.
+  :ref:`dynamic index sequence <dyn_indices>`, whose lifetime is
+  managed by a shared pointer.
 
 .. function:: template<typename... IndexTypes> \
               bool is_fermion(generator<IndexTypes...> const& gen)
@@ -401,16 +410,16 @@ rational and general real scalars.
 
   using namespace libcommute::static_indices;
 
-  // Make c^\dagger_{1,up}
+  // Make c^\dagger_{1,up} wrapped in std::shared_ptr
   auto g = make_fermion(true, 1, "up");
 
   // ...
 
-  // If 'g' is a fermionic generator, print whether it is a creation
-  // or annihilation operator.
-  if(is_fermion(g)) {
-    auto const& f = dynamic_cast<generator_fermion<int, std::string> const&>(g);
-    std::cout << (f.dagger() ? "creation" : "annihilation") << '\n';
+  // If '*g' is a fermionic generator, print whether it is a creation or
+  // annihilation operator.
+  if(is_fermion(*g)) {
+    auto f = std::dynamic_pointer_cast<generator_fermion<int, std::string>>(g);
+    std::cout << (f->dagger() ? "creation" : "annihilation") << '\n';
   }
 
 .. _generator_boson:
@@ -459,17 +468,18 @@ rational and general real scalars.
     Returns ``true`` for :math:`a^\dagger` and ``false`` for :math:`a`.
 
 .. function:: template<typename... IndexTypes> \
-              generator_boson<IndexTypes...> \
+              std::shared_ptr<generator_boson<IndexTypes...>> \
               static_indices::make_boson(bool dagger, \
               IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_boson.hpp>*
 
   Make a bosonic creation (:expr:`dagger = true`) or annihilation
-  (:expr:`dagger = false`) operator with given indices.
+  (:expr:`dagger = false`) operator with given indices, whose lifetime is
+  managed by a shared pointer.
 
 .. function:: template<typename... IndexTypes> \
-              generator_fermion<IndexTypes...> \
+              std::shared_ptr<generator_boson<dyn_indices>> \
               dynamic_indices::make_boson(bool dagger, \
               IndexTypes&&... indices)
 
@@ -477,7 +487,8 @@ rational and general real scalars.
 
   Make a bosonic creation (:expr:`dagger = true`) or annihilation
   (:expr:`dagger = false`) operator with a given
-  :ref:`dynamic index sequence <dyn_indices>`.
+  :ref:`dynamic index sequence <dyn_indices>`, whose lifetime is managed by a
+  shared pointer.
 
 .. function:: template<typename... IndexTypes> \
               bool is_boson(generator<IndexTypes...> const& gen)
@@ -490,16 +501,16 @@ rational and general real scalars.
 
   using namespace libcommute::static_indices;
 
-  // Make a^\dagger_1
+  // Make a^\dagger_1 wrapped in std::shared_ptr
   auto g = make_boson(true, 1);
 
   // ...
 
-  // If 'g' is a bosonic generator, print whether it is a creation or
+  // If '*g' is a bosonic generator, print whether it is a creation or
   // annihilation operator.
-  if(is_boson(g)) {
-    auto const& b = dynamic_cast<generator_boson<int> const&>(g);
-    std::cout << (b.dagger() ? "creation" : "annihilation") << '\n';
+  if(is_boson(*g)) {
+    auto b = std::dynamic_pointer_cast<generator_boson<int>>(g);
+    std::cout << (b->dagger() ? "creation" : "annihilation") << '\n';
   }
 
 .. _generator_spin:
@@ -600,37 +611,39 @@ rational scalars.
     Is this generator :math:`S_+`, :math:`S_-` or :math:`S_z`?
 
 .. function:: template<typename... IndexTypes> \
-              generator_spin<IndexTypes...> \
+              std::shared_ptr<generator_spin<IndexTypes...>> \
               static_indices::make_spin( \
               spin_component c, IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
   Make generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-  :math:`S=1/2` with given indices.
+  :math:`S=1/2` with given indices, whose lifetime is managed by a
+  shared pointer.
 
 .. function:: template<typename... IndexTypes> \
-              generator_spin<IndexTypes...> \
+              std::shared_ptr<generator_spin<IndexTypes...>> \
               static_indices::make_spin(double spin, \
               spin_component c, IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
   Make generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-  :var:`spin` with given indices.
+  :var:`spin` with given indices, whose lifetime is managed by a shared pointer.
 
 .. function:: template<typename... IndexTypes> \
-              generator_spin<dyn_indices> \
+              std::shared_ptr<generator_spin<dyn_indices>> \
               dynamic_indices::make_spin( \
               spin_component c, IndexTypes&&... indices)
 
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
   Make generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-  :math:`S=1/2` with a given :ref:`dynamic index sequence <dyn_indices>`.
+  :math:`S=1/2` with a given :ref:`dynamic index sequence <dyn_indices>`,
+  whose lifetime is managed by a shared pointer.
 
 .. function:: template<typename... IndexTypes> \
-              generator_spin<dyn_indices> \
+              std::shared_ptr<generator_spin<dyn_indices>> \
               libcommute::dynamic_indices::make_spin( \
               double spin, libcommute::spin_component c, \
               IndexTypes&&... indices)
@@ -638,7 +651,8 @@ rational scalars.
   *Defined in <libcommute/expression/generator_spin.hpp>*
 
   Make generator :math:`S_+`, :math:`S_-` or :math:`S_z` for spin
-  :var:`spin` with a given :ref:`dynamic index sequence <dyn_indices>`.
+  :var:`spin` with a given :ref:`dynamic index sequence <dyn_indices>`,
+  whose lifetime is managed by a shared pointer.
 
 .. function:: template<typename... IndexTypes> \
               bool libcommute::is_spin( \
@@ -652,17 +666,17 @@ rational scalars.
 
   using namespace libcommute::static_indices;
 
-  // Make S^{J=1}_{1,+}
+  // Make S^{J=1}_{1,+} wrapped in std::shared_ptr
   auto g = make_spin(1.0, libcommute::plus, 1);
 
   // ...
 
-  // If 'g' is a spin algebra generator, print its properties.
-  if(is_spin(g)) {
-    auto const& s = dynamic_cast<generator_spin<int> const&>(g);
+  // If '*g' is a spin algebra generator, print its properties.
+  if(is_spin(*g)) {
+    auto s = std::dynamic_pointer_cast<generator_spin<int>>(g);
 
-    std::cout << "J = " << s.spin() << '\n';
-    std::cout << "2J+1 = " << s.multiplicity() << '\n';
+    std::cout << "J = " << s->spin() << '\n';
+    std::cout << "2J+1 = " << s->multiplicity() << '\n';
     switch(s.component()) {
       case libcommute::plus:
         std::cout << "+\n";

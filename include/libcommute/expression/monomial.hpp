@@ -43,7 +43,7 @@ template <typename... IndexTypes> class monomial {
     // NOLINTNEXTLINE(modernize-type-traits)
     using gen1_t = typename std::remove_reference<GenType1>::type;
     generators_.emplace_back(
-        make_unique<gen1_t>(std::forward<GenType1>(generator)));
+        std::make_shared<gen1_t>(std::forward<GenType1>(generator)));
     constructor_impl(std::forward<GenTypesTail>(more_gens)...);
   }
   void constructor_impl() {}
@@ -56,7 +56,7 @@ template <typename... IndexTypes> class monomial {
 public:
   using index_types = std::tuple<IndexTypes...>;
   using generator_type = generator<IndexTypes...>;
-  using gen_ptr_type = std::unique_ptr<generator_type>;
+  using gen_ptr_type = std::shared_ptr<const generator_type>;
 
   // Construct empty (constant) monomial
   monomial() = default;
@@ -69,55 +69,19 @@ public:
     constructor_impl(std::forward<GenTypes>(generators)...);
   }
 
-  // Construct from a list of pointers to generators
-  explicit monomial(std::initializer_list<generator_type*> generators) {
-    generators_.reserve(generators.size());
-    std::transform(generators.begin(),
-                   generators.end(),
-                   std::back_inserter(generators_),
-                   [](generator_type const* p) { return p->clone(); });
-  }
-
   // Construct from a list of smart pointers to generators
-  explicit monomial(std::initializer_list<gen_ptr_type> generators) {
-    generators_.reserve(generators.size());
-    std::transform(generators.begin(),
-                   generators.end(),
-                   std::back_inserter(generators_),
-                   [](gen_ptr_type const& p) { return p->clone(); });
-  }
+  explicit monomial(std::initializer_list<gen_ptr_type> generators)
+    : generators_(std::move(generators)) {}
 
   // Construct from a vector of pointers to generators
-  explicit monomial(std::vector<generator_type*> const& generators) {
-    generators_.reserve(generators.size());
-    std::transform(generators.begin(),
-                   generators.end(),
-                   std::back_inserter(generators_),
-                   [](generator_type const* p) { return p->clone(); });
-  }
+  explicit monomial(std::vector<gen_ptr_type> generators)
+    : generators_(std::move(generators)) {}
 
   // Value semantics
-  monomial(monomial const& m) {
-    generators_.reserve(m.generators_.size());
-    // cppcheck-suppress missingReturn
-    std::transform(m.generators_.begin(),
-                   m.generators_.end(),
-                   std::back_inserter(generators_),
-                   [](gen_ptr_type const& g) { return g->clone(); });
-  }
+  monomial(monomial const& m) = default;
   monomial(monomial&&) noexcept = default;
-  // cppcheck-suppress operatorEqRetRefThis
-  monomial& operator=(monomial const& m) {
-    generators_.clear();
-    generators_.reserve(m.generators_.size());
-    std::transform(m.generators_.begin(),
-                   m.generators_.end(),
-                   std::back_inserter(generators_),
-                   [](gen_ptr_type const& g) { return g->clone(); });
-    return *this;
-  }
+  monomial& operator=(monomial const&) = default;
   monomial& operator=(monomial&&) noexcept = default;
-
   ~monomial() = default;
 
   // Number of generators in this monomial
@@ -263,19 +227,21 @@ private:
 
 public:
   // Append generator
-  void append(generator_type const& g) { generators_.emplace_back(g.clone()); }
+  void append(generator_type const& g) {
+    generators_.emplace_back(g.shared_from_this());
+  }
   // Append generators from a monomial
   void append(monomial const& m) {
     generators_.reserve(generators_.size() + m.size());
     std::transform(m.generators_.begin(),
                    m.generators_.end(),
                    std::back_inserter(generators_),
-                   [](gen_ptr_type const& g) { return g->clone(); });
+                   [](gen_ptr_type const& g) { return g->shared_from_this(); });
   }
   // Append generators from a monomial range
   void append(range_type const& r) {
     for(auto it = r.first; it != r.second; ++it)
-      generators_.emplace_back(it->clone());
+      generators_.emplace_back(it->shared_from_this());
   }
 
 private:
@@ -303,7 +269,7 @@ public:
   using iterator_category = std::random_access_iterator_tag;
   using value_type = generator_type const&;
   using difference_type = std::ptrdiff_t;
-  using pointer = std::unique_ptr<generator_type> const&;
+  using pointer = std::shared_ptr<const generator_type> const&;
   using reference = generator_type const&;
 
   // cppcheck-suppress noExplicitConstructor

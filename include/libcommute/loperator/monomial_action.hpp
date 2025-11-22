@@ -40,14 +40,14 @@ namespace libcommute {
 //
 template <typename... IndexTypes>
 struct unknown_generator : public std::runtime_error {
-  std::unique_ptr<generator<IndexTypes...>> generator_ptr;
+  std::shared_ptr<const generator<IndexTypes...>> generator_ptr;
   inline static std::string make_what(generator<IndexTypes...> const& g) {
     std::stringstream ss;
     ss << "Action of generator " << g << " on a state vector is undefined";
     return ss.str();
   }
   explicit unknown_generator(generator<IndexTypes...> const& g)
-    : std::runtime_error(make_what(g)), generator_ptr(g.clone()) {}
+    : std::runtime_error(make_what(g)), generator_ptr(g.shared_from_this()) {}
 };
 
 template <int... AlgebraIDs> class monomial_action;

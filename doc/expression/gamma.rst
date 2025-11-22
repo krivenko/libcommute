@@ -7,7 +7,7 @@ Advanced: A user-defined algebra
 
 Introducing a new :ref:`algebra <generator>` is as easy as deriving a class from
 the abstract base :class:`libcommute::generator`. *libcommute*'s DSL can work
-with algebras, whose generators :math:`g_\alpha` obey commutation relations
+with algebras, whose generators :math:`g_\alpha` obey the commutation relations
 
 .. math::
 
@@ -44,7 +44,7 @@ their canonical ordering. The identities we will be using in the code below are
 
 .. literalinclude:: ../../examples/gamma.hpp
   :language: cpp
-  :lines: 18-124
+  :lines: 18-122
 
 .. note::
 
@@ -69,7 +69,7 @@ containing one generator with a unity prefactor.
 
 .. literalinclude:: ../../examples/gamma.hpp
   :language: cpp
-  :lines: 126-140
+  :lines: 124-138
 
 Now we can check that generators of our algebra actually fulfil the canonical
 anti-commutation relations.
@@ -93,4 +93,4 @@ and check that
 
 .. literalinclude:: ../../examples/gamma.expression.cpp
   :language: cpp
-  :lines: 47-61
+  :lines: 47-60

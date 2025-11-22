@@ -55,14 +55,6 @@ public:
   generator_gamma& operator=(generator_gamma const&) = delete;
   generator_gamma& operator=(generator_gamma&&) noexcept = delete;
 
-  // Virtual copy-constructor.
-  // Make a smart pointer that manages a copy of this generator
-  std::unique_ptr<base> clone() const override {
-    // With C++14 or newer, libcommute::make_unique() will be resolved to
-    // std::make_unique(). Otherwise, a custom implementation will be used.
-    return make_unique<generator_gamma>(*this);
-  }
-
   // This function will be called for g1 = *this and g2 such that g1 > g2.
   // We must transform the product g1 * g2 and put it into the
   // canonical order,
@@ -105,12 +97,18 @@ public:
   // \gamma^0 is Hermitian and \gamma^k are anti-Hermitian
   void conj(linear_function_t& f) const override {
     int index = std::get<0>(base::indices());
+    // Here, we call base::shared_from_this() to obtain a valid std::shared_ptr
+    // that co-owns *this. This approach allows to save memory, and is strongly
+    // preferred to making a copy of *this wrapped in a new shared pointer and
+    // passing it to f.set().
+    // For more details on shared_from_this() see
+    // https://en.cppreference.com/w/cpp/memory/enable_shared_from_this.html
     if(index == 0) {
       // f(g) = 0 + 1*(*this)
-      f.set(0, clone(), 1);
+      f.set(0, shared_from_this(), 1);
     } else {
       // f(g) = 0 + (-1)*(*this)
-      f.set(0, clone(), -1);
+      f.set(0, shared_from_this(), -1);
     }
   }
 

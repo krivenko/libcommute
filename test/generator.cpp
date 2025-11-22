@@ -23,11 +23,13 @@
 #include <algorithm>
 #include <initializer_list>
 #include <iterator>
+#include <memory>
 #include <vector>
 
 using namespace libcommute;
 
 using gen_type = generator<std::string, int>;
+using gen_ptr_type = std::shared_ptr<gen_type>;
 using linear_function_t = gen_type::linear_function_t;
 
 // Check if a linear function of generators has only one constant term.
@@ -43,7 +45,7 @@ using linear_function_t = gen_type::linear_function_t;
   CHECK(*NAME.terms[0].first == GEN);                                          \
   CHECK(NAME.terms[0].second == COEFF);
 
-void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
+void check_generator_spin_swap_with(std::vector<gen_ptr_type> const& v,
                                     bool one_half = false) {
   linear_function_t f;
   for(std::size_t i = 0; i < v.size(); ++i) {
@@ -79,7 +81,7 @@ void check_generator_spin_swap_with(std::vector<gen_type*> const& v,
   }
 }
 
-void check_generator_spin_simplify_prod(std::vector<gen_type*> const& v,
+void check_generator_spin_simplify_prod(std::vector<gen_ptr_type> const& v,
                                         bool one_half = false) {
   linear_function_t f;
   for(std::size_t i = 0; i < v.size(); ++i) {
@@ -135,14 +137,14 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto Cdag_up = make_fermion(true, "up", 0);
   auto C_up = make_fermion(false, "up", 0);
   auto C_dn = make_fermion(false, "dn", 0);
-  std::vector<gen_type*> fermion_ops = {&Cdag_dn, &Cdag_up, &C_up, &C_dn};
+  std::vector<gen_ptr_type> fermion_ops = {Cdag_dn, Cdag_up, C_up, C_dn};
 
   // Bosonic generators
   auto Adag_x = make_boson(true, "x", 0);
   auto Adag_y = make_boson(true, "y", 0);
   auto A_y = make_boson(false, "y", 0);
   auto A_x = make_boson(false, "x", 0);
-  std::vector<gen_type*> boson_ops = {&Adag_x, &Adag_y, &A_y, &A_x};
+  std::vector<gen_ptr_type> boson_ops = {Adag_x, Adag_y, A_y, A_x};
 
   // Spin-1/2 algebra generators
   auto Sp_i = make_spin(spin_component::plus, "i", 0);
@@ -151,7 +153,7 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto Sp_j = make_spin(spin_component::plus, "j", 0);
   auto Sm_j = make_spin(spin_component::minus, "j", 0);
   auto Sz_j = make_spin(spin_component::z, "j", 0);
-  std::vector<gen_type*> spin_ops = {&Sp_i, &Sm_i, &Sz_i, &Sp_j, &Sm_j, &Sz_j};
+  std::vector<gen_ptr_type> spin_ops = {Sp_i, Sm_i, Sz_i, Sp_j, Sm_j, Sz_j};
 
   // Spin-1 algebra generators
   auto S1p_i = make_spin(1, spin_component::plus, "i", 0);
@@ -160,8 +162,8 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto S1p_j = make_spin(1, spin_component::plus, "j", 0);
   auto S1m_j = make_spin(1, spin_component::minus, "j", 0);
   auto S1z_j = make_spin(1, spin_component::z, "j", 0);
-  std::vector<gen_type*> spin1_ops =
-      {&S1p_i, &S1m_i, &S1z_i, &S1p_j, &S1m_j, &S1z_j};
+  std::vector<gen_ptr_type> spin1_ops =
+      {S1p_i, S1m_i, S1z_i, S1p_j, S1m_j, S1z_j};
 
   // Spin-3/2 algebra generators
   auto S32p_i = make_spin(3.0 / 2, spin_component::plus, "i", 0);
@@ -170,21 +172,22 @@ TEST_CASE("Algebra generators", "[generator]") {
   auto S32p_j = make_spin(3.0 / 2, spin_component::plus, "j", 0);
   auto S32m_j = make_spin(3.0 / 2, spin_component::minus, "j", 0);
   auto S32z_j = make_spin(3.0 / 2, spin_component::z, "j", 0);
-  std::vector<gen_type*> spin32_ops =
-      {&S32p_i, &S32m_i, &S32z_i, &S32p_j, &S32m_j, &S32z_j};
+  std::vector<gen_ptr_type> spin32_ops =
+      {S32p_i, S32m_i, S32z_i, S32p_j, S32m_j, S32z_j};
 
   linear_function_t lin_f;
 
   SECTION("fermion") {
-    for(auto* op : fermion_ops) {
+    for(auto const& op : fermion_ops) {
       CHECK(op->algebra_id() == fermion);
       CHECK_FALSE(op->reduce_power(3, lin_f));
       CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
     for(std::size_t i = 0; i < fermion_ops.size(); ++i) {
-      auto const* fermion_gen_p =
-          dynamic_cast<generator_fermion<std::string, int>*>(fermion_ops[i]);
+      auto fermion_gen_p =
+          std::dynamic_pointer_cast<generator_fermion<std::string, int>>(
+              fermion_ops[i]);
       CHECK(fermion_gen_p->dagger() == (i < 2));
     }
 
@@ -208,22 +211,23 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_conj(fermion_ops, {3, 2, 1, 0});
 
-    CHECK_THAT(Cdag_dn, Prints<gen_type>("C+(dn,0)"));
-    CHECK_THAT(Cdag_up, Prints<gen_type>("C+(up,0)"));
-    CHECK_THAT(C_up, Prints<gen_type>("C(up,0)"));
-    CHECK_THAT(C_dn, Prints<gen_type>("C(dn,0)"));
+    CHECK_THAT(*Cdag_dn, Prints<gen_type>("C+(dn,0)"));
+    CHECK_THAT(*Cdag_up, Prints<gen_type>("C+(up,0)"));
+    CHECK_THAT(*C_up, Prints<gen_type>("C(up,0)"));
+    CHECK_THAT(*C_dn, Prints<gen_type>("C(dn,0)"));
   }
 
   SECTION("boson") {
-    for(auto* op : boson_ops) {
+    for(auto const& op : boson_ops) {
       CHECK(op->algebra_id() == boson);
       CHECK_FALSE(op->reduce_power(3, lin_f));
       CHECK_FALSE(op->reduce_power(4, lin_f));
     }
 
     for(std::size_t i = 0; i < boson_ops.size(); ++i) {
-      auto const* boson_gen_p =
-          dynamic_cast<generator_boson<std::string, int>*>(boson_ops[i]);
+      auto boson_gen_p =
+          std::dynamic_pointer_cast<generator_boson<std::string, int>>(
+              boson_ops[i]);
       CHECK(boson_gen_p->dagger() == (i < 2));
     }
 
@@ -247,18 +251,18 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_conj(boson_ops, {3, 2, 1, 0});
 
-    CHECK_THAT(Adag_x, Prints<gen_type>("A+(x,0)"));
-    CHECK_THAT(Adag_y, Prints<gen_type>("A+(y,0)"));
-    CHECK_THAT(A_y, Prints<gen_type>("A(y,0)"));
-    CHECK_THAT(A_x, Prints<gen_type>("A(x,0)"));
+    CHECK_THAT(*Adag_x, Prints<gen_type>("A+(x,0)"));
+    CHECK_THAT(*Adag_y, Prints<gen_type>("A+(y,0)"));
+    CHECK_THAT(*A_y, Prints<gen_type>("A(y,0)"));
+    CHECK_THAT(*A_x, Prints<gen_type>("A(x,0)"));
   }
 
   SECTION("spin-1/2") {
-    for(auto* op : spin_ops) {
+    for(auto const& op : spin_ops) {
       CHECK(op->algebra_id() == spin);
 
-      auto const* spin_gen_p =
-          dynamic_cast<generator_spin<std::string, int>*>(op);
+      auto spin_gen_p =
+          std::dynamic_pointer_cast<generator_spin<std::string, int>>(op);
       if(spin_gen_p->component() == spin_component::z) {
         CHECK_FALSE(op->reduce_power(3, lin_f));
         CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -268,9 +272,11 @@ TEST_CASE("Algebra generators", "[generator]") {
         CHECK(op->reduce_power(4, lin_f));
         CHECK(lin_f.vanishing());
       }
+      // cppcheck-suppress-begin knownConditionTrueFalse
       CHECK(spin_gen_p->spin() == 0.5);
       // cppcheck-suppress knownConditionTrueFalse
       CHECK(spin_gen_p->multiplicity() == 2);
+      // cppcheck-suppress-end knownConditionTrueFalse
     }
 
     check_equality(spin_ops);
@@ -287,20 +293,20 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_conj(spin_ops, {1, 0, 2, 4, 3, 5});
 
-    CHECK_THAT(Sp_i, Prints<gen_type>("S+(i,0)"));
-    CHECK_THAT(Sm_i, Prints<gen_type>("S-(i,0)"));
-    CHECK_THAT(Sz_i, Prints<gen_type>("Sz(i,0)"));
-    CHECK_THAT(Sp_j, Prints<gen_type>("S+(j,0)"));
-    CHECK_THAT(Sm_j, Prints<gen_type>("S-(j,0)"));
-    CHECK_THAT(Sz_j, Prints<gen_type>("Sz(j,0)"));
+    CHECK_THAT(*Sp_i, Prints<gen_type>("S+(i,0)"));
+    CHECK_THAT(*Sm_i, Prints<gen_type>("S-(i,0)"));
+    CHECK_THAT(*Sz_i, Prints<gen_type>("Sz(i,0)"));
+    CHECK_THAT(*Sp_j, Prints<gen_type>("S+(j,0)"));
+    CHECK_THAT(*Sm_j, Prints<gen_type>("S-(j,0)"));
+    CHECK_THAT(*Sz_j, Prints<gen_type>("Sz(j,0)"));
   }
 
   SECTION("spin-1") {
-    for(auto* op : spin1_ops) {
+    for(auto const& op : spin1_ops) {
       CHECK(op->algebra_id() == spin);
 
-      auto const* spin_gen_p =
-          dynamic_cast<generator_spin<std::string, int>*>(op);
+      auto spin_gen_p =
+          std::dynamic_pointer_cast<generator_spin<std::string, int>>(op);
       if(spin_gen_p->component() == spin_component::z) {
         CHECK_FALSE(op->reduce_power(3, lin_f));
         CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -310,9 +316,11 @@ TEST_CASE("Algebra generators", "[generator]") {
         CHECK(op->reduce_power(4, lin_f));
         CHECK_LINEAR_FUNCTION_0(lin_f, 0);
       }
+      // cppcheck-suppress-begin knownConditionTrueFalse
       CHECK(spin_gen_p->spin() == 1.0);
       // cppcheck-suppress knownConditionTrueFalse
       CHECK(spin_gen_p->multiplicity() == 3);
+      // cppcheck-suppress-end knownConditionTrueFalse
     }
 
     check_equality(spin1_ops);
@@ -329,20 +337,20 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_conj(spin1_ops, {1, 0, 2, 4, 3, 5});
 
-    CHECK_THAT(S1p_i, Prints<gen_type>("S1+(i,0)"));
-    CHECK_THAT(S1m_i, Prints<gen_type>("S1-(i,0)"));
-    CHECK_THAT(S1z_i, Prints<gen_type>("S1z(i,0)"));
-    CHECK_THAT(S1p_j, Prints<gen_type>("S1+(j,0)"));
-    CHECK_THAT(S1m_j, Prints<gen_type>("S1-(j,0)"));
-    CHECK_THAT(S1z_j, Prints<gen_type>("S1z(j,0)"));
+    CHECK_THAT(*S1p_i, Prints<gen_type>("S1+(i,0)"));
+    CHECK_THAT(*S1m_i, Prints<gen_type>("S1-(i,0)"));
+    CHECK_THAT(*S1z_i, Prints<gen_type>("S1z(i,0)"));
+    CHECK_THAT(*S1p_j, Prints<gen_type>("S1+(j,0)"));
+    CHECK_THAT(*S1m_j, Prints<gen_type>("S1-(j,0)"));
+    CHECK_THAT(*S1z_j, Prints<gen_type>("S1z(j,0)"));
   }
 
   SECTION("spin-3/2") {
-    for(auto* op : spin32_ops) {
+    for(auto const& op : spin32_ops) {
       CHECK(op->algebra_id() == spin);
 
-      auto const* spin_gen_p =
-          dynamic_cast<generator_spin<std::string, int>*>(op);
+      auto spin_gen_p =
+          std::dynamic_pointer_cast<generator_spin<std::string, int>>(op);
       if(spin_gen_p->component() == spin_component::z) {
         CHECK_FALSE(op->reduce_power(3, lin_f));
         CHECK_FALSE(op->reduce_power(4, lin_f));
@@ -351,9 +359,11 @@ TEST_CASE("Algebra generators", "[generator]") {
         CHECK(op->reduce_power(4, lin_f));
         CHECK_LINEAR_FUNCTION_0(lin_f, 0);
       }
+      // cppcheck-suppress-begin knownConditionTrueFalse
       CHECK(spin_gen_p->spin() == 1.5);
       // cppcheck-suppress knownConditionTrueFalse
       CHECK(spin_gen_p->multiplicity() == 4);
+      // cppcheck-suppress-end knownConditionTrueFalse
     }
 
     check_equality(spin32_ops);
@@ -370,16 +380,16 @@ TEST_CASE("Algebra generators", "[generator]") {
 
     check_conj(spin32_ops, {1, 0, 2, 4, 3, 5});
 
-    CHECK_THAT(S32p_i, Prints<gen_type>("S3/2+(i,0)"));
-    CHECK_THAT(S32m_i, Prints<gen_type>("S3/2-(i,0)"));
-    CHECK_THAT(S32z_i, Prints<gen_type>("S3/2z(i,0)"));
-    CHECK_THAT(S32p_j, Prints<gen_type>("S3/2+(j,0)"));
-    CHECK_THAT(S32m_j, Prints<gen_type>("S3/2-(j,0)"));
-    CHECK_THAT(S32z_j, Prints<gen_type>("S3/2z(j,0)"));
+    CHECK_THAT(*S32p_i, Prints<gen_type>("S3/2+(i,0)"));
+    CHECK_THAT(*S32m_i, Prints<gen_type>("S3/2-(i,0)"));
+    CHECK_THAT(*S32z_i, Prints<gen_type>("S3/2z(i,0)"));
+    CHECK_THAT(*S32p_j, Prints<gen_type>("S3/2+(j,0)"));
+    CHECK_THAT(*S32m_j, Prints<gen_type>("S3/2-(j,0)"));
+    CHECK_THAT(*S32z_j, Prints<gen_type>("S3/2z(j,0)"));
   }
 
   SECTION("different_algebras") {
-    std::vector<gen_type*> all_ops;
+    std::vector<gen_ptr_type> all_ops;
     for(auto const& op_list :
         {fermion_ops, boson_ops, spin_ops, spin1_ops, spin32_ops}) {
       std::copy(op_list.begin(), op_list.end(), std::back_inserter(all_ops));

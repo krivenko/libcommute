@@ -65,14 +65,10 @@ public:
   generator_spin& operator=(generator_spin const&) = delete;
   generator_spin& operator=(generator_spin&&) noexcept = delete;
 
-  // Make a smart pointer that manages a copy of this generator
-  std::unique_ptr<base> clone() const override {
-    return make_unique<generator_spin>(*this);
-  }
-
   // Generators with different indices or multiplicities commute.
   var_number swap_with(base const& g2, linear_function_t& f) const override {
     assert(*this > g2);
+    // cppcheck-suppress-begin knownConditionTrueFalse
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
     if(base::equal(g2) && this->multiplicity_ == g2_.multiplicity_) {
       // cppcheck-suppress knownConditionTrueFalse
@@ -84,6 +80,7 @@ public:
       f.set(0);
       return 1;
     }
+    // cppcheck-suppress-end knownConditionTrueFalse
   }
 
   // Simplifications are possible for S=1/2
@@ -95,6 +92,7 @@ public:
   // S_+ * S_- = 1/2 + S_z
   bool simplify_prod(base const& g2, linear_function_t& f) const override {
     assert(!(*this > g2));
+    // cppcheck-suppress-begin knownConditionTrueFalse
     auto const& g2_ = dynamic_cast<generator_spin const&>(g2);
     // cppcheck-suppress knownConditionTrueFalse
     if(!base::equal(g2) || this->multiplicity_ != 2) return false;
@@ -104,18 +102,19 @@ public:
     } else {
       if(g2_.c_ == spin_component::z) {
         if(this->c_ == spin_component::plus) {
-          f.set(0, clone(), var_number(-1, 2));
+          f.set(0, this->shared_from_this(), var_number(-1, 2));
         } else { /// c_ == spin_component::minus
-          f.set(0, clone(), var_number(1, 2));
+          f.set(0, this->shared_from_this(), var_number(1, 2));
         }
       } else { // c_ == spin_component::plus && g2.c_ == spin_component::minus
         f.set(var_number(1, 2),
-              make_unique<generator_spin>(g2_.spin(),
-                                          spin_component::z,
-                                          g2_.indices()),
+              std::make_shared<generator_spin>(g2_.spin(),
+                                               spin_component::z,
+                                               g2_.indices()),
               1);
       }
     }
+    // cppcheck-suppress-end knownConditionTrueFalse
 
     return true;
   }
@@ -138,8 +137,9 @@ public:
              spin_component::z :
              (c_ == spin_component::plus ? spin_component::minus :
                                            spin_component::plus));
-    double s = (multiplicity_ - 1) / 2.0;
-    f.set(0, make_unique<generator_spin>(s, new_c, base::indices()), 1);
+    f.set(0,
+          std::make_shared<generator_spin>(spin(), new_c, base::indices()),
+          1);
   }
 
 private:
@@ -209,15 +209,15 @@ private:
                                      linear_function_t& f) const {
     if(c_ == spin_component::z) {
       if(g2_.c_ == spin_component::plus) {
-        f.set(0, g2_.clone(), var_number(1, 2));
+        f.set(0, g2_.shared_from_this(), var_number(1, 2));
       } else { /// g2.c_ == spin_component::minus
-        f.set(0, g2_.clone(), var_number(-1, 2));
+        f.set(0, g2_.shared_from_this(), var_number(-1, 2));
       }
     } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
       f.set(var_number(1, 2),
-            make_unique<generator_spin>(g2_.spin(),
-                                        spin_component::z,
-                                        g2_.indices()),
+            std::make_shared<generator_spin>(g2_.spin(),
+                                             spin_component::z,
+                                             g2_.indices()),
             -1);
     }
     return 0;
@@ -231,15 +231,15 @@ private:
 
     if(c_ == spin_component::z) {
       if(g2_.c_ == spin_component::plus) {
-        f.set(0, g2_.clone(), 1);
+        f.set(0, g2_.shared_from_this(), 1);
       } else { /// g2.c_ == spin_component::minus
-        f.set(0, g2_.clone(), -1);
+        f.set(0, g2_.shared_from_this(), -1);
       }
     } else { // c_ == spin_component::minus && g2.c_ == spin_component::plus
       f.set(0,
-            make_unique<generator_spin>(g2_.spin(),
-                                        spin_component::z,
-                                        g2_.indices()),
+            std::make_shared<generator_spin>(g2_.spin(),
+                                             spin_component::z,
+                                             g2_.indices()),
             -2);
     }
     return 1;
@@ -256,15 +256,17 @@ namespace static_indices {
 
 // Convenience factory functions
 template <typename... IndexTypes>
-inline generator_spin<c_str_to_string_t<IndexTypes>...>
+inline std::shared_ptr<generator_spin<c_str_to_string_t<IndexTypes>...>>
 make_spin(spin_component c, IndexTypes&&... indices) {
-  return {c, std::forward<IndexTypes>(indices)...};
+  using gen_t = generator_spin<c_str_to_string_t<IndexTypes>...>;
+  return std::make_shared<gen_t>(c, std::forward<IndexTypes>(indices)...);
 }
 
 template <typename... IndexTypes>
-inline generator_spin<c_str_to_string_t<IndexTypes>...>
+inline std::shared_ptr<generator_spin<c_str_to_string_t<IndexTypes>...>>
 make_spin(double spin, spin_component c, IndexTypes&&... indices) {
-  return {spin, c, std::forward<IndexTypes>(indices)...};
+  using gen_t = generator_spin<c_str_to_string_t<IndexTypes>...>;
+  return std::make_shared<gen_t>(spin, c, std::forward<IndexTypes>(indices)...);
 }
 
 } // namespace static_indices
@@ -277,15 +279,22 @@ namespace libcommute::dynamic_indices {
 
 // Convenience factory functions for dynamic indices
 template <typename... IndexTypes>
-inline generator_spin<dyn_indices> make_spin(spin_component c,
-                                             IndexTypes&&... indices) {
-  return {c, dyn_indices(std::forward<IndexTypes>(indices)...)};
+inline std::shared_ptr<generator_spin<dyn_indices>>
+make_spin(spin_component c, IndexTypes&&... indices) {
+  using gen_t = generator_spin<dyn_indices>;
+  return std::make_shared<gen_t>(
+      c,
+      dyn_indices(std::forward<IndexTypes>(indices)...));
 }
 
 template <typename... IndexTypes>
-inline generator_spin<dyn_indices>
+inline std::shared_ptr<generator_spin<dyn_indices>>
 make_spin(double spin, spin_component c, IndexTypes&&... indices) {
-  return {spin, c, dyn_indices(std::forward<IndexTypes>(indices)...)};
+  using gen_t = generator_spin<dyn_indices>;
+  return std::make_shared<gen_t>(
+      spin,
+      c,
+      dyn_indices(std::forward<IndexTypes>(indices)...));
 }
 
 } // namespace libcommute::dynamic_indices

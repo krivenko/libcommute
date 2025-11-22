@@ -30,13 +30,15 @@ template <typename... IndexTypes> class elementary_space;
 // Abstract algebra generator
 //
 
-template <typename... IndexTypes> class generator {
+template <typename... IndexTypes>
+class generator
+  : public std::enable_shared_from_this<generator<IndexTypes...>> {
 
 public:
   using index_types = std::tuple<IndexTypes...>;
 
   // Linear combination of generators
-  using linear_function_t = linear_function<std::unique_ptr<generator>>;
+  using linear_function_t = linear_function<std::shared_ptr<const generator>>;
 
   template <typename... Args>
   generator(Args&&... indices) : indices_(std::forward<Args>(indices)...) {}
@@ -50,9 +52,6 @@ public:
 
   // Get ID of the algebra this generator belongs to
   virtual int algebra_id() const = 0;
-
-  // Make a smart pointer that manages a copy of this generator
-  virtual std::unique_ptr<generator> clone() const = 0;
 
   // Comparisons
   friend bool operator==(generator const& g1, generator const& g2) {
@@ -119,7 +118,9 @@ public:
   }
 
   // Return the Hermitian conjugate of this generator via f
-  virtual void conj(linear_function_t& f) const { f.set(0, clone(), 1); }
+  virtual void conj(linear_function_t& f) const {
+    f.set(0, this->shared_from_this(), 1);
+  }
 
   // Stream output
   friend std::ostream& operator<<(std::ostream& os, generator const& g) {
@@ -153,7 +154,7 @@ template <typename... IndexTypes>
 inline var_number
 swap_with(generator<IndexTypes...> const& g1,
           generator<IndexTypes...> const& g2,
-          linear_function<std::unique_ptr<generator<IndexTypes...>>>& f) {
+          linear_function<std::shared_ptr<const generator<IndexTypes...>>>& f) {
   if(g1.algebra_id() == g2.algebra_id()) {
     return g1.swap_with(g2, f);
   } else {
@@ -166,10 +167,10 @@ swap_with(generator<IndexTypes...> const& g1,
 // Check if g1 and g2 belong to the same algebra
 // and call g1.simplify_prod(g2, f) accordingly
 template <typename... IndexTypes>
-inline bool
-simplify_prod(generator<IndexTypes...> const& g1,
-              generator<IndexTypes...> const& g2,
-              linear_function<std::unique_ptr<generator<IndexTypes...>>>& f) {
+inline bool simplify_prod(
+    generator<IndexTypes...> const& g1,
+    generator<IndexTypes...> const& g2,
+    linear_function<std::shared_ptr<const generator<IndexTypes...>>>& f) {
   if(g1.algebra_id() == g2.algebra_id()) {
     return g1.simplify_prod(g2, f);
   } else {

@@ -115,7 +115,7 @@ private:
       auto v = scalar_traits<ScalarType>::make_const(g.second);
       // cppcheck-suppress knownConditionTrueFalse
       if(!scalar_traits<ScalarType>::is_zero(v))
-        *this += expression(v, monomial_t({g.first->clone()}));
+        *this += expression(v, monomial_t({g.first->shared_from_this()}));
     }
   }
 
@@ -704,7 +704,7 @@ private:
       return;
     }
 
-    linear_function<std::unique_ptr<generator<IndexTypes...>>> f;
+    linear_function<std::shared_ptr<const generator<IndexTypes...>>> f;
     auto it = m.begin(), end_it = m.end();
     auto next_it = it + 1;
     int power = 1;

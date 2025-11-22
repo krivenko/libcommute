@@ -43,8 +43,8 @@ TEST_CASE("Expression with static indices", "[expression]") {
     expr_complex<int, std::string> expr_c_from_r(expr_const);
     CHECK_THAT(expr_c_from_r, Prints<decltype(expr_c_from_r)>("(2,0)"));
 
-    monomial<int, std::string> mon(make_fermion(true, 1, "up"),
-                                   make_fermion(false, 2, "dn"));
+    monomial<int, std::string> mon{make_fermion(true, 1, "up"),
+                                   make_fermion(false, 2, "dn")};
 
     expr_real<int, std::string> expr_tiny_monomial(1e-100, mon);
     CHECK_THAT(expr_tiny_monomial, Prints<decltype(expr_tiny_monomial)>("0"));
@@ -57,7 +57,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
     CHECK(expr_monomial.size() == 0);
 
     SECTION("S_z products") {
-      monomial<int> mon_sz(make_fermion(true, 1),
+      monomial<int> mon_sz{make_fermion(true, 1),
                            make_spin(spin_component::z, 1),
                            make_spin(spin_component::z, 1),
                            make_spin(spin_component::z, 1),
@@ -73,7 +73,7 @@ TEST_CASE("Expression with static indices", "[expression]") {
                            make_fermion(true, 4),
                            make_spin(spin_component::z, 4),
                            make_spin(spin_component::z, 4),
-                           make_spin(spin_component::z, 4));
+                           make_spin(spin_component::z, 4)};
       expr_real<int> expr_sz(1.0, mon_sz);
       CHECK(expr_sz == c_dag(1) * 0.25 * 0.25 * c_dag(2) * 0.25 * 0.25 * 0.25 *
                            S_z(3) * c_dag(4) * 0.25 * S_z(4));
@@ -114,9 +114,9 @@ TEST_CASE("Expression with static indices", "[expression]") {
 
     std::vector<mon_type> ref_mons = {
         mon_type(),
-        mon_type(make_boson(true, 0, "y")),
-        mon_type(make_boson(false, 0, "x")),
-        mon_type(make_fermion(true, 1, "up"), make_fermion(false, 2, "dn"))};
+        mon_type{make_boson(true, 0, "y")},
+        mon_type{make_boson(false, 0, "x")},
+        mon_type{make_fermion(true, 1, "up"), make_fermion(false, 2, "dn")}};
     std::vector<double> ref_coeffs = {1.0, 2.0, 3.0, 4.0};
 
     int n = 0;
@@ -184,8 +184,8 @@ TEST_CASE("Expression with static indices", "[expression]") {
     auto new_expr = transform(expr, f);
 
     std::vector<mon_type> ref_mons = {
-        mon_type(make_boson(true, 0, "y")),
-        mon_type(make_boson(false, 0, "x")),
+        mon_type{make_boson(true, 0, "y")},
+        mon_type{make_boson(false, 0, "x")},
     };
     std::vector<std::complex<double>> ref_coeffs = {
         std::complex<double>(0, 4.0),

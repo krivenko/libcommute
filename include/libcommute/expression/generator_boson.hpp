@@ -52,11 +52,6 @@ public:
   generator_boson& operator=(generator_boson const&) = delete;
   generator_boson& operator=(generator_boson&&) noexcept = delete;
 
-  // Make a smart pointer that manages a copy of this generator
-  std::unique_ptr<base> clone() const override {
-    return make_unique<generator_boson>(*this);
-  }
-
   // c = 1, f(g) = \delta(g1, g2^+)
   var_number swap_with(base const& g2, linear_function_t& f) const override {
     assert(*this > g2);
@@ -71,7 +66,7 @@ public:
 
   // Return the Hermitian conjugate of this generator via f
   void conj(linear_function_t& f) const override {
-    f.set(0, make_unique<generator_boson>(!dagger_, base::indices()), 1);
+    f.set(0, std::make_shared<generator_boson>(!dagger_, base::indices()), 1);
   }
 
 private:
@@ -121,9 +116,10 @@ namespace static_indices {
 
 // Convenience factory function
 template <typename... IndexTypes>
-inline generator_boson<c_str_to_string_t<IndexTypes>...>
+inline std::shared_ptr<generator_boson<c_str_to_string_t<IndexTypes>...>>
 make_boson(bool dagger, IndexTypes&&... indices) {
-  return {dagger, std::forward<IndexTypes>(indices)...};
+  using gen_t = generator_boson<c_str_to_string_t<IndexTypes>...>;
+  return std::make_shared<gen_t>(dagger, std::forward<IndexTypes>(indices)...);
 }
 
 } // namespace static_indices
@@ -136,9 +132,12 @@ namespace libcommute::dynamic_indices {
 
 // Convenience factory functions for dynamic indices
 template <typename... IndexTypes>
-inline generator_boson<dyn_indices> make_boson(bool dagger,
-                                               IndexTypes&&... indices) {
-  return {dagger, dyn_indices(std::forward<IndexTypes>(indices)...)};
+inline std::shared_ptr<generator_boson<dyn_indices>>
+make_boson(bool dagger, IndexTypes&&... indices) {
+  using gen_t = generator_boson<dyn_indices>;
+  return std::make_shared<gen_t>(
+      dagger,
+      dyn_indices(std::forward<IndexTypes>(indices)...));
 }
 
 } // namespace libcommute::dynamic_indices

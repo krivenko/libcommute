@@ -17,6 +17,26 @@ All notable changes to this project will be documented in this file.
   https://www.boost.org/doc/libs/latest/libs/rational/rational.html) and
   [GMP](https://gmplib.org) C++ types ``mpz_class``, ``mpq_class``,
   ``mpf_class`` as ``ScalarType``.
+- ``generator`` and derived classes no longer use the 'virtual copy-constructor'
+  pattern: The virtual ``clone()`` method has been removed. Instead,
+  ``generator`` is now derived from [``std::enable_shared_from_this``](
+  https://en.cppreference.com/w/cpp/memory/enable_shared_from_this.html), and
+  instances of the generator classes are managed by shared pointers. This
+  change leads to significant memory savings and speedups when working with long
+  expressions.
+- Factory functions ``make_fermion()``, ``make_boson()`` and ``make_spin()``
+  are now returning generator objects wrapped in ``std::shared_ptr``.
+- The constructor ``monomial::monomial(GenTypes&&... gens)`` takes the ownership
+  of the generators by calling ``std::make_shared()`` on each of them.
+- The two constructors of ``monomial``, that took a vector or an
+  initializer list of ``std::unique_ptr<generator>``, now expect
+  ``std::shared_ptr<const generator>`` instead. They take co-ownership of the
+  provided generators.
+- Methods ``monomial::append()`` and ``monomial::concatenate()`` expect their
+  arguments to be managed by ``std::shared_ptr`` and will take co-ownership of
+  the provided generators by calling ``shared_from_this()``.
+- It is no longer possible to construct a ``monomial`` from a vector or an 
+  initializer list of raw pointers to generators.
 - ``n_fermion_sector_view`` and ``n_fermion_multisector_view`` are now
   parameterized on the type of ranking algorithm used to map basis state indices
   from a full Hilbert space to a sector. Supported ranking algorithms are

@@ -46,12 +46,6 @@ public:
   generator_gamma& operator=(generator_gamma const&) = delete;
   generator_gamma& operator=(generator_gamma&&) noexcept = delete;
 
-  // Make a smart pointer that manages a copy of this generator
-  // cppcheck-suppress duplInheritedMember
-  std::unique_ptr<base> clone() const final {
-    return make_unique<generator_gamma>(*this);
-  }
-
   // c = -1, f(g) = 2\eta(g1, g2)
   var_number swap_with(base const& g2, linear_function_t& f) const final {
     assert(*this > g2);
@@ -72,7 +66,7 @@ public:
 
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian
   void conj(linear_function_t& f) const final {
-    f.set(0, clone(), std::get<0>(base::indices()) == 0 ? 1 : -1);
+    f.set(0, shared_from_this(), std::get<0>(base::indices()) == 0 ? 1 : -1);
   }
 };
 

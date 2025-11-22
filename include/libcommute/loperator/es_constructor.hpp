@@ -35,7 +35,7 @@ namespace libcommute {
 //
 template <typename... IndexTypes>
 struct es_construction_failure : public std::runtime_error {
-  std::unique_ptr<generator<IndexTypes...>> generator_ptr;
+  std::shared_ptr<const generator<IndexTypes...>> generator_ptr;
   inline static std::string make_what(generator<IndexTypes...> const& g) {
     std::stringstream ss;
     ss << "Cannot construct elementary space associated with algebra generator "
@@ -43,7 +43,7 @@ struct es_construction_failure : public std::runtime_error {
     return ss.str();
   }
   explicit es_construction_failure(generator<IndexTypes...> const& g)
-    : std::runtime_error(make_what(g)), generator_ptr(g.clone()) {}
+    : std::runtime_error(make_what(g)), generator_ptr(g.shared_from_this()) {}
 };
 
 //
