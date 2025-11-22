@@ -13,6 +13,7 @@ set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 set(SPHINX_CONFIG ${CMAKE_CURRENT_BINARY_DIR}/conf.py)
 set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
 file(GLOB_RECURSE RST_FILES "*.rst")
+file(GLOB_RECURSE MD_FILES "*.md")
 file(GLOB EXAMPLE_SOURCES "${CMAKE_SOURCE_DIR}/examples/*.cpp")
 
 # Generate Sphinx config
@@ -24,7 +25,7 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
                    ${SPHINX_COMMAND} -c ${CMAKE_CURRENT_BINARY_DIR} -b html
                    ${SPHINX_SOURCE} ${SPHINX_BUILD}
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                   DEPENDS ${RST_FILES} ${EXAMPLE_SOURCES}
+                   DEPENDS ${RST_FILES} ${MD_FILES} ${EXAMPLE_SOURCES}
                    MAIN_DEPENDENCY ${CMAKE_CURRENT_BINARY_DIR}/conf.py
                    COMMENT "Generating documentation with Sphinx")
 
