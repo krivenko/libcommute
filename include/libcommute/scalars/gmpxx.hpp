@@ -89,14 +89,14 @@ template <> struct scalar_traits<mpz_class> {
     }
     return std::nearbyint(x);
   }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static mpz_class make_const(var_number const& vn) {
     if(vn.number_type == var_number::integer)
       return int(vn);
     else {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variadic number " +
+      throw std::runtime_error("Cannot convert the variant number " +
                                ss.str() + " to mpz_class");
     }
   }
@@ -119,7 +119,7 @@ template <> struct scalar_traits<mpq_class> {
     }
     return std::nearbyint(x);
   }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static mpq_class make_const(var_number const& vn) {
     if(vn.number_type == var_number::integer)
       return int(vn);
@@ -128,7 +128,7 @@ template <> struct scalar_traits<mpq_class> {
     else {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variadic number " +
+      throw std::runtime_error("Cannot convert the variant number " +
                                ss.str() + " to mpq_class");
     }
   }
@@ -145,7 +145,7 @@ template <> struct scalar_traits<mpf_class> {
   static bool is_zero(mpf_class const& x) { return x == 0; }
   // Make a constant from a double value
   static mpf_class make_const(double x) { return x; }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static mpf_class make_const(var_number const& vn) { return double(vn); }
   // Complex conjugate of x
   static mpf_class conj(mpf_class const& x) { return x; }

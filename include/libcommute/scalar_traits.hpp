@@ -60,12 +60,12 @@ template <typename S> struct scalar_traits<S, with_trait<std::is_integral, S>> {
     }
     return S(std::nearbyint(x));
   }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static S make_const(var_number const& vn) {
     if(vn.number_type != var_number::integer) {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variadic number " +
+      throw std::runtime_error("Cannot convert the variant number " +
                                ss.str() + " to an integral ScalarType");
     }
     return S(int(vn));
@@ -86,7 +86,7 @@ struct scalar_traits<S, with_trait<std::is_floating_point, S>> {
   }
   // Make a constant from a double value
   static S make_const(double x) { return x; }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static S make_const(var_number const& vn) { return S(double(vn)); }
   // Complex conjugate of x
   static S conj(S const& x) { return x; }
@@ -104,7 +104,7 @@ template <typename S> struct scalar_traits<S, with_trait<is_complex, S>> {
   }
   // Make a constant from a double value
   static S make_const(double x) { return S(x); }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static S make_const(var_number const& vn) { return S(double(vn)); }
   // Complex conjugate of x
   static S conj(S const& x) { return std::conj(x); }

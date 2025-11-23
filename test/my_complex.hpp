@@ -80,7 +80,7 @@ namespace libcommute {
 template <> struct scalar_traits<my_complex> {
   // Zero value test
   static bool is_zero(my_complex const& x) { return x.re == 0 && x.im == 0; }
-  // Make a constant from a variadic number
+  // Make a constant from a variant number
   static my_complex make_const(var_number const& x) {
     return {static_cast<float>(double(x)), 0};
   }

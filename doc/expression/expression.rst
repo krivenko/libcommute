@@ -291,8 +291,7 @@ how to deal with the new type.
     // Make a constant of type 'S' from a double value 'x'
     static S make_const(double x) { ... }
 
-    // Make a constant of type 'S' from a value of the variadic type
-    // 'var_number'
+    // Make a constant of type 'S' from a value of the variant type 'var_number'
     static S make_const(var_number const& vn) { ... }
 
     // OPTIONAL: Complex conjugate of 's'
