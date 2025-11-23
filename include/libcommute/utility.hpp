@@ -272,6 +272,11 @@ struct linear_function : std::conditional<std::is_copy_constructible<T>::value,
     terms.clear();
     construct_impl(std::forward<Args>(args)...);
   }
+  void set(var_number const& const_term,
+           std::vector<std::pair<T, var_number>> terms) {
+    this->const_term = const_term;
+    this->terms = std::move(terms);
+  }
   void set(var_number const& const_term) {
     this->const_term = const_term;
     terms.clear();

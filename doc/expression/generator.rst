@@ -327,6 +327,16 @@ are expected to be managed by ``std::shared_ptr``.
     Clear all terms and replace them with a sequence of arguments
     :math:`c, x_1, c_1, x_2, c_2, \ldots, x_n, c_n`.
 
+  .. function:: void set(var_number const& const_term, \
+                         std::vector<std::pair<T, var_number>> terms)
+
+    Clear all terms and replace them with a given constant term :math:`c` and
+    a list of pairs :math:`(x_1, c_1), \ldots, (x_n, c_n)`.
+
+  .. function:: void set(var_number const& const_term)
+
+    Clear all terms and replace them with a single constant term :math:`c`.
+
   .. function:: bool vanishing() const
 
     Is this linear function identically zero?

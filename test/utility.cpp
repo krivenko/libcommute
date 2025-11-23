@@ -166,8 +166,15 @@ TEST_CASE("linear_function<T>", "[linear_function]") {
   CHECK(f.terms[0].second == 4.0);
   CHECK_FALSE(f.vanishing());
 
-  f.set(6.0);
+  f.set(6.0, {std::make_pair("obj4", 3.0)});
   CHECK(f.const_term == 6.0);
+  CHECK(f.terms.size() == 1);
+  CHECK(f.terms[0].first == std::string("obj4"));
+  CHECK(f.terms[0].second == 3.0);
+  CHECK_FALSE(f.vanishing());
+
+  f.set(7.0);
+  CHECK(f.const_term == 7.0);
   CHECK(f.terms.empty());
   CHECK_FALSE(f.vanishing());
 }

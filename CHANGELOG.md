@@ -82,6 +82,9 @@ All notable changes to this project will be documented in this file.
 - Whenever possible, use compiler intrinsics to speed up complex bit
   manipulation operations (``popcount``, ``tzcount``, ``pdep``, ``pext``).
 - Change base type of ``spin_component`` to the 1-byte wide ``std::uint8_t``.
+- Add a new method overload
+  ``linear_function::set(var_number const& const_term,
+  std::vector<std::pair<T, var_number>> terms)``
 - New CMake option ``CPPCHECK_EXTRA_FLAGS``. It can be used to pass additional
   command line flags to ``cppcheck``.
 
