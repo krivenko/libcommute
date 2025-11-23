@@ -55,7 +55,7 @@ their canonical ordering. The identities we will be using in the code below are
   the same or wider category.
 
   :struct:`libcommute::linear_function` internally stores its coefficients as
-  instances of the variadic type :struct:`libcommute::var_number`. In the
+  instances of the variant type :struct:`libcommute::var_number`. In the
   particular example presented here, all coefficients are integers, which are
   automatically converted to :struct:`libcommute::var_number` in the expressions
   similar to ``f.set(2 * eta)``. In the case of the rational coefficients,
