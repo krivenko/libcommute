@@ -224,7 +224,7 @@ struct var_number {
   friend std::ostream& operator<<(std::ostream& os, var_number const& vn) {
     switch(vn.number_type) {
     case integer: return os << vn.i;
-    case rational: return os << vn.r[0] << " / " << vn.r[1];
+    case rational: return os << vn.r[0] << "/" << vn.r[1];
     case real: return os << vn.x;
     default: throw std::logic_error("Unknown number_type in var_number");
     }

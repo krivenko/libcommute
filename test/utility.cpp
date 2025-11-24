@@ -112,14 +112,14 @@ TEST_CASE("var_number", "[var_number]") {
   CHECK(vn3.denominator() == 4);
   CHECK(double(vn3) == 0.75);
   CHECK_FALSE(vn3.is_zero());
-  CHECK_THAT(vn3, Prints<var_number>("3 / 4"));
+  CHECK_THAT(vn3, Prints<var_number>("3/4"));
   var_number vn4(0, 4);
   CHECK(vn4.number_type == var_number::rational);
   CHECK(vn4.numerator() == 0);
   CHECK(vn4.denominator() == 4);
   CHECK(double(vn4) == 0.0);
   CHECK(vn4.is_zero());
-  CHECK_THAT(vn4, Prints<var_number>("0 / 4"));
+  CHECK_THAT(vn4, Prints<var_number>("0/4"));
 
   var_number vn5(4.1);
   CHECK(vn5.number_type == var_number::real);
