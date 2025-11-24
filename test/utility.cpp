@@ -87,6 +87,12 @@ TEST_CASE("print_tuple()", "[print_tuple]") {
 }
 
 TEST_CASE("var_number", "[var_number]") {
+  var_number vn0;
+  CHECK(vn0.number_type == var_number::integer);
+  CHECK(int(vn0) == 0);
+  CHECK(double(vn0) == 0.0);
+  CHECK(vn0.is_zero());
+  CHECK_THAT(vn0, Prints<var_number>("0"));
   var_number vn1(2);
   CHECK(vn1.number_type == var_number::integer);
   CHECK(int(vn1) == 2);

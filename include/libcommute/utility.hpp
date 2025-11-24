@@ -171,7 +171,7 @@ struct var_number {
   enum : std::uint8_t { integer, rational, real } number_type;
 
   // cppcheck-suppress noExplicitConstructor
-  inline var_number(int i) : i(i), number_type(integer) {}
+  inline var_number(int i = 0) : i(i), number_type(integer) {}
   inline var_number(int num, int denom)
     : r{num, denom}, number_type(rational) {}
   // cppcheck-suppress noExplicitConstructor

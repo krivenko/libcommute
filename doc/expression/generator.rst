@@ -226,7 +226,7 @@ are expected to be managed by ``std::shared_ptr``.
   floating point number. The actual type of the incapsulated value is determined
   at construction time.
 
-  .. function:: var_number(int i)
+  .. function:: var_number(int i = 0)
 
     Construct an object holding an integer value ``i``.
 
