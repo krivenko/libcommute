@@ -37,7 +37,7 @@ namespace libcommute {
 // Just because std::to_string(std::string) is not part of STL
 //
 
-std::string to_string(std::string const& x) {
+inline std::string to_string(std::string const& x) {
   return x;
 }
 
