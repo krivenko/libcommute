@@ -116,4 +116,21 @@ TEST_CASE("Elementary Hilbert space", "[elementary_space]") {
     check_equality(all_es);
     check_less_greater(all_es);
   }
+
+  SECTION("Empty IndexTypes") {
+    auto es_f = make_space_fermion();
+    CHECK(es_f.algebra_id() == fermion);
+    CHECK(es_f.n_bits() == 1);
+    CHECK(es_f.dim() == 2);
+
+    auto es_b = make_space_boson(13);
+    CHECK(es_b.algebra_id() == boson);
+    CHECK(es_b.n_bits() == 4);
+    CHECK(es_b.dim() == 13);
+
+    auto es_s1 = make_space_spin(1.0);
+    CHECK(es_s1.algebra_id() == spin);
+    CHECK(es_s1.n_bits() == 2);
+    CHECK(es_s1.dim() == 3);
+  }
 }

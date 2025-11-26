@@ -35,7 +35,6 @@ class elementary_space_boson : public elementary_space<IndexTypes...> {
 
 public:
   // Value semantics
-  elementary_space_boson() = delete;
   template <typename... Args>
   elementary_space_boson(sv_index_type dim, Args&&... indices)
     : base(std::forward<Args>(indices)...),

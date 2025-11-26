@@ -32,7 +32,6 @@ class elementary_space_fermion : public elementary_space<IndexTypes...> {
 
 public:
   // Value semantics
-  elementary_space_fermion() = delete;
   template <typename... Args>
   explicit elementary_space_fermion(Args&&... indices)
     : base(std::forward<Args>(indices)...) {}

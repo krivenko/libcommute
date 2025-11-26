@@ -35,7 +35,6 @@ class elementary_space_spin : public elementary_space<IndexTypes...> {
 
 public:
   // Value semantics
-  elementary_space_spin() = delete;
   template <typename... Args>
   elementary_space_spin(double spin, Args&&... indices)
     : base(std::forward<Args>(indices)...),
