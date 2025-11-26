@@ -34,6 +34,14 @@
 namespace libcommute {
 
 //
+// Just because std::to_string(std::string) is not part of STL
+//
+
+std::string to_string(std::string const& x) {
+  return x;
+}
+
+//
 // c_str_to_string_t<T> maps T to itself, unless T is a C-string that is
 // mapped to std::string.
 //
@@ -113,34 +121,40 @@ struct not_in_type_list : detail::not_in_type_list_impl<T, TypeList...> {};
 template <typename T> struct not_in_type_list<T> : std::true_type {};
 
 //
-// Print an std::tuple to an output stream as a comma-separated list
+// Convert std::tuple to a string
 //
 
 namespace detail {
 
-template <std::size_t N> struct print_tuple_impl {
+template <std::size_t N> struct tuple_to_string_impl {
   template <typename... T>
-  static void apply(std::ostream& os, std::tuple<T...> const& t) {
-    os << std::get<sizeof...(T) - 1 - N>(t) << ",";
-    print_tuple_impl<N - 1>::apply(os, t);
+  static void apply(std::tuple<T...> const& t, std::string& s) {
+    using std::to_string;
+    using libcommute::to_string;
+    s += to_string(std::get<sizeof...(T) - 1 - N>(t)) + ",";
+    tuple_to_string_impl<N - 1>::apply(t, s);
   }
 };
-template <> struct print_tuple_impl<0> {
+template <> struct tuple_to_string_impl<0> {
   template <typename... T>
-  static void apply(std::ostream& os, std::tuple<T...> const& t) {
-    os << std::get<sizeof...(T) - 1>(t);
+  static void apply(std::tuple<T...> const& t, std::string& s) {
+    using std::to_string;
+    using libcommute::to_string;
+    s += to_string(std::get<sizeof...(T) - 1>(t));
   }
 };
 
 } // namespace detail
 
 template <typename... T>
-// cppcheck-suppress constParameterReference
-inline void print_tuple(std::ostream& os, std::tuple<T...> const& t) {
-  detail::print_tuple_impl<sizeof...(T) - 1>::apply(os, t);
+inline std::string tuple_to_string(std::tuple<T...> const& t) {
+  std::string s;
+  detail::tuple_to_string_impl<sizeof...(T) - 1>::apply(t, s);
+  return s;
 }
-// cppcheck-suppress constParameterReference
-inline void print_tuple(std::ostream& os, std::tuple<> const& t) {}
+inline std::string tuple_to_string(std::tuple<> const&) {
+  return {};
+}
 
 //
 // Trivial copyable and non-copyable objects

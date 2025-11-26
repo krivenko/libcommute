@@ -21,6 +21,7 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <tuple>
 #include <utility>
 
@@ -69,6 +70,14 @@ public:
     f.set(0, std::make_shared<generator_boson>(!dagger_, base::indices()), 1);
   }
 
+  // Convert to string
+  std::string to_string() const override {
+    std::string s;
+    s += "A" + std::string(this->dagger_ ? "+" : "") + "(";
+    s += tuple_to_string(this->indices()) + ")";
+    return s;
+  }
+
 private:
   // Creation or annihilation operator?
   bool const dagger_;
@@ -96,13 +105,6 @@ protected:
       return (this->dagger_ < b_g.dagger_);
     else
       return this->dagger_ ? base::greater(g) : base::less(g);
-  }
-
-  // Print to stream
-  std::ostream& print(std::ostream& os) const override {
-    os << "A" << (this->dagger_ ? "+" : "") << "(";
-    print_tuple(os, this->indices());
-    return os << ")";
   }
 };
 

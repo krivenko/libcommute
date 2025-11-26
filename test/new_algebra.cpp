@@ -14,6 +14,7 @@
 #include <catch.hpp>
 
 #include "./gamma.hpp"
+#include "./print_matcher.hpp"
 
 #include <libcommute/algebra_ids.hpp>
 #include <libcommute/expression/expression.hpp>
@@ -53,6 +54,13 @@ TEST_CASE("Gamma matrices", "[gamma]") {
     }
     for(int mu = 0; mu < 4; ++mu) {
       CHECK(conj(Gamma[mu]) == Gamma[0] * Gamma[mu] * Gamma[0]);
+    }
+  }
+
+  SECTION("to_string()") {
+    for(int mu = 0; mu < 4; ++mu) {
+      CHECK_THAT(Gamma[mu],
+                 Prints<expr_type>("(1,0)*γ(" + std::to_string(mu) + ")"));
     }
   }
 

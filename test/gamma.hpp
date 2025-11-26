@@ -18,6 +18,7 @@
 #include <libcommute/expression/generator.hpp>
 
 #include <cassert>
+#include <string>
 
 //
 // Implement algebra of 4-dimensional \Gamma-matrices
@@ -67,6 +68,11 @@ public:
   // Gamma^0 is Hermitian and Gamma^k are anti-Hermitian
   void conj(linear_function_t& f) const final {
     f.set(0, shared_from_this(), std::get<0>(base::indices()) == 0 ? 1 : -1);
+  }
+
+  // String representation
+  std::string to_string() const override {
+    return "γ(" + std::to_string(std::get<0>(base::indices())) + ")";
   }
 };
 

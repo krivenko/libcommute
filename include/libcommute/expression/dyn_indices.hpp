@@ -14,6 +14,7 @@
 #define LIBCOMMUTE_EXPRESSION_DYN_INDICES_HPP_
 
 #include "../metafunctions.hpp"
+#include "../utility.hpp"
 
 #include <iostream>
 #include <string>
@@ -104,15 +105,27 @@ public:
   // cppcheck-suppress returnByReference
   explicit operator indices_t const&() const { return indices_; }
 
+  // Convert to string
+  friend std::string to_string(dyn_indices_generic const& ind) {
+    std::string s{};
+    const size_t N = ind.indices_.size();
+    for(size_t i = 0; i < N; ++i) {
+      std::visit(
+          [&](auto const& x) {
+            using std::to_string;
+            using libcommute::to_string;
+            s += to_string(x);
+          },
+          ind.indices_[i]);
+      if(i + 1 < N) s += ",";
+    }
+    return s;
+  }
+
   // Stream output
   friend std::ostream& operator<<(std::ostream& os,
                                   dyn_indices_generic const& ind) {
-    std::size_t const N = ind.indices_.size();
-    for(std::size_t i = 0; i < N; ++i) {
-      std::visit([&os](auto const& x) { os << x; }, ind.indices_[i]);
-      if(i + 1 < N) os << ",";
-    }
-    return os;
+    return os << to_string(ind);
   }
 };
 

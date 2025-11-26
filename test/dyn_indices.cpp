@@ -81,16 +81,16 @@ TEST_CASE("Dynamic indices", "[dyn_indices]") {
     CHECK_THAT(dyn_ind_t(), Prints<dyn_ind_t>(""));
     CHECK_THAT(dyn_ind_t("xxx"), Prints<dyn_ind_t>("xxx"));
     CHECK_THAT(dyn_ind_t(0), Prints<dyn_ind_t>("0"));
-    CHECK_THAT(dyn_ind_t(0.1), Prints<dyn_ind_t>("0.1"));
+    CHECK_THAT(dyn_ind_t(0.1), Prints<dyn_ind_t>("0.100000"));
 
     CHECK_THAT(dyn_ind_t("xxx", "yyy"), Prints<dyn_ind_t>("xxx,yyy"));
     CHECK_THAT(dyn_ind_t("xxx", 1), Prints<dyn_ind_t>("xxx,1"));
-    CHECK_THAT(dyn_ind_t("xxx", 0.2), Prints<dyn_ind_t>("xxx,0.2"));
+    CHECK_THAT(dyn_ind_t("xxx", 0.2), Prints<dyn_ind_t>("xxx,0.200000"));
     CHECK_THAT(dyn_ind_t(0, "yyy"), Prints<dyn_ind_t>("0,yyy"));
     CHECK_THAT(dyn_ind_t(0, 1), Prints<dyn_ind_t>("0,1"));
-    CHECK_THAT(dyn_ind_t(0, 0.2), Prints<dyn_ind_t>("0,0.2"));
-    CHECK_THAT(dyn_ind_t(0.1, "yyy"), Prints<dyn_ind_t>("0.1,yyy"));
-    CHECK_THAT(dyn_ind_t(0.1, 1), Prints<dyn_ind_t>("0.1,1"));
-    CHECK_THAT(dyn_ind_t(0.1, 0.2), Prints<dyn_ind_t>("0.1,0.2"));
+    CHECK_THAT(dyn_ind_t(0, 0.2), Prints<dyn_ind_t>("0,0.200000"));
+    CHECK_THAT(dyn_ind_t(0.1, "yyy"), Prints<dyn_ind_t>("0.100000,yyy"));
+    CHECK_THAT(dyn_ind_t(0.1, 1), Prints<dyn_ind_t>("0.100000,1"));
+    CHECK_THAT(dyn_ind_t(0.1, 0.2), Prints<dyn_ind_t>("0.100000,0.200000"));
   }
 }

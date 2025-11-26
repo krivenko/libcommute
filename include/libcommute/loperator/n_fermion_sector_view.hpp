@@ -28,7 +28,6 @@
 #include <iterator>
 #include <numeric>
 #include <set>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -668,10 +667,8 @@ void validate_sectors(
   for(auto const& sector : sectors) {
     for(auto const& ind : sector.indices) {
       if(!hs.has(elementary_space_fermion<IndexTypes...>(ind))) {
-        std::stringstream ss;
-        print_tuple(ss, ind);
         throw std::runtime_error("Fermionic elementary space with indices " +
-                                 ss.str() +
+                                 tuple_to_string(ind) +
                                  " is not part of this Hilbert space");
       }
       all_indices.insert(ind);

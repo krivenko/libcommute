@@ -208,15 +208,15 @@ are expected to be managed by ``std::shared_ptr``.
     generators (write the result into :var:`f`). The default implementation
     returns the generator itself.
 
+  .. function:: virtual std::string to_string() const
+
+    Returns a string representation of this generator. To be overridden by
+    derived classes.
+
   .. function:: friend std::ostream & operator<<\
                 (std::ostream & os, generator const& g)
 
-    Output stream insertion operator. Calls :expr:`g.print(os)`.
-
-  .. function:: protected virtual std::ostream & print(std::ostream & os) const
-
-    Virtual stream output function to be overridden by the derived classes.
-
+    Output stream insertion operator. Calls :expr:`os << g.to_string()`.
 
 .. struct:: var_number
 

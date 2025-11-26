@@ -112,10 +112,10 @@ public:
     }
   }
 
-  // Stream output function
-  std::ostream& print(std::ostream& os) const override {
+  // String representation of this \gamma-matrix
+  std::string to_string() const override {
     int index = std::get<0>(base::indices());
-    return os << "\\gamma^" << index;
+    return "γ^" + std::to_string(index);
   }
 };
 

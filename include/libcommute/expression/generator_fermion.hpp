@@ -21,6 +21,7 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <tuple>
 #include <utility>
 
@@ -80,6 +81,14 @@ public:
           1);
   }
 
+  // Convert to string
+  std::string to_string() const override {
+    std::string s;
+    s += "C" + std::string(this->dagger_ ? "+" : "") + "(";
+    s += tuple_to_string(this->indices()) + ")";
+    return s;
+  }
+
 private:
   // Creation or annihilation operator?
   bool const dagger_;
@@ -107,13 +116,6 @@ protected:
       return (this->dagger_ < f_g.dagger_);
     else
       return this->dagger_ ? base::greater(g) : base::less(g);
-  }
-
-  // Print to stream
-  std::ostream& print(std::ostream& os) const override {
-    os << "C" << (this->dagger_ ? "+" : "") << "(";
-    print_tuple(os, this->indices());
-    return os << ")";
   }
 };
 

@@ -26,6 +26,14 @@ All notable changes to this project will be documented in this file.
   expressions.
 - Factory functions ``make_fermion()``, ``make_boson()`` and ``make_spin()``
   are now returning generator objects wrapped in ``std::shared_ptr``.
+- The virtual method ``generator::print(std::ostream& os)`` has been replaced
+  with ``generator::to_string()`` that returns a string representation of the
+  generator object.
+- New free function ``to_string(dyn_indices_generic const& ind)`` that returns a
+  string representation of ``ind``.
+- The stream insertion operator for ``dyn_indices_generic`` now calls
+  ``to_string()``, which can give a different result in some cases (for example,
+  for indices of the type ``double``).
 - The constructor ``monomial::monomial(GenTypes&&... gens)`` takes the ownership
   of the generators by calling ``std::make_shared()`` on each of them.
 - The two constructors of ``monomial``, that took a vector or an

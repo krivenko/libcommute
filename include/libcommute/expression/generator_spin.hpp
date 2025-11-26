@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <tuple>
 #include <utility>
 
@@ -142,6 +143,27 @@ public:
           1);
   }
 
+  // Convert to string
+  std::string to_string() const override {
+    std::string s("S");
+    // cppcheck-suppress-begin knownConditionTrueFalse
+    if(multiplicity_ != 2) {
+      if(multiplicity_ % 2 == 0)
+        s += std::to_string(multiplicity_ - 1) + "/2";
+      else
+        s += std::to_string((multiplicity_ - 1) / 2);
+    }
+    // cppcheck-suppress-end knownConditionTrueFalse
+    switch(this->c_) {
+    case spin_component::plus: s += "+"; break;
+    case spin_component::minus: s += "-"; break;
+    case spin_component::z: s += "z"; break;
+    }
+    s += "(";
+    s += tuple_to_string(this->indices()) + ")";
+    return s;
+  }
+
 private:
   // Multiplicity, 2S+1
   int const multiplicity_ = 2;
@@ -178,27 +200,6 @@ protected:
       return base::greater(g);
     else
       return this->c_ > s_g.c_;
-  }
-
-  // Print to stream
-  std::ostream& print(std::ostream& os) const override {
-    os << "S";
-    // cppcheck-suppress-begin knownConditionTrueFalse
-    if(multiplicity_ != 2) {
-      if(multiplicity_ % 2 == 0)
-        os << (multiplicity_ - 1) << "/2";
-      else
-        os << ((multiplicity_ - 1) / 2);
-    }
-    // cppcheck-suppress-end knownConditionTrueFalse
-    switch(this->c_) {
-    case spin_component::plus: os << "+"; break;
-    case spin_component::minus: os << "-"; break;
-    case spin_component::z: os << "z"; break;
-    }
-    os << "(";
-    print_tuple(os, this->indices());
-    return os << ")";
   }
 
 private:

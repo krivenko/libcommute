@@ -38,7 +38,7 @@ int main() {
       auto gamma_nu = make_gamma(nu);
 
       std::cout << "{" << gamma_mu << ", " << gamma_nu << "}"
-                << " - 2\\eta(" << mu << ", " << nu << "} = "
+                << " - 2η(" << mu << ", " << nu << ") = "
                 << (gamma_mu * gamma_nu + gamma_nu * gamma_mu - 2 * eta(mu, nu))
                 << '\n';
     }
@@ -50,12 +50,12 @@ int main() {
       I * make_gamma(0) * make_gamma(1) * make_gamma(2) * make_gamma(3);
 
   // \gamma^5 is Hermitian ...
-  std::cout << "gamma5 - conj(gamma5) = " << (gamma5 - conj(gamma5)) << '\n';
+  std::cout << "γ^5 - conj(γ^5) = " << (gamma5 - conj(gamma5)) << '\n';
 
   // ... and anti-commutes with \gamma^\mu.
   for(int mu = 0; mu < 4; ++mu) {
     auto gamma_mu = make_gamma(mu);
-    std::cout << "{gamma5, " << gamma_mu
+    std::cout << "{γ^5, " << gamma_mu
               << "} = " << (gamma5 * gamma_mu + gamma_mu * gamma5) << '\n';
   }
 }
