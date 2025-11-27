@@ -418,10 +418,14 @@ nested namespace ``libcommute::dynamic_indices``.
     lengths call the `corresponding methods of std::vector
     <https://en.cppreference.com/w/cpp/container/vector/operator_cmp>`_.
 
+  .. function:: friend std::string to_string(dyn_indices_generic const& ind)
+
+    Returns a string representation of :var:`ind`.
+
   .. function:: friend std::ostream & operator<< \
                 (std::ostream & os, dyn_indices_generic const& ind)
 
-    Output stream insertion operator.
+    Output stream insertion operator. Calls :expr:`os << to_string(ind)`.
 
 .. code-block:: cpp
   :caption: Dynamic index sequence example

@@ -145,15 +145,17 @@
 </li>
       <li><a href="expression/expression.html#_CPPv4NK10libcommute15dynamic_indices19dyn_indices_generic4sizeEv">libcommute::dynamic_indices::dyn_indices_generic::size (C++ function)</a>
 </li>
+      <li><a href="expression/expression.html#_CPPv4N10libcommute15dynamic_indices19dyn_indices_generic9to_stringERK19dyn_indices_generic">libcommute::dynamic_indices::dyn_indices_generic::to_string (C++ function)</a>
+</li>
       <li><a href="expression/expression.html#_CPPv4N10libcommute15dynamic_indices12expr_complexE">libcommute::dynamic_indices::expr_complex (C++ type)</a>
 </li>
       <li><a href="expression/expression.html#_CPPv4N10libcommute15dynamic_indices9expr_realE">libcommute::dynamic_indices::expr_real (C++ type)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute15dynamic_indices10make_bosonE17generator_fermionIDp10IndexTypesEbDpRR10IndexTypes">libcommute::dynamic_indices::make_boson (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute15dynamic_indices10make_bosonENSt10shared_ptrI15generator_bosonI11dyn_indicesEEEbDpRR10IndexTypes">libcommute::dynamic_indices::make_boson (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute15dynamic_indices12make_fermionE17generator_fermionIDp10IndexTypesEbDpRR10IndexTypes">libcommute::dynamic_indices::make_fermion (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute15dynamic_indices12make_fermionENSt10shared_ptrI17generator_fermionI11dyn_indicesEEEbDpRR10IndexTypes">libcommute::dynamic_indices::make_fermion (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute15dynamic_indices9make_spinE14generator_spinI11dyn_indicesE14spin_componentDpRR10IndexTypes">libcommute::dynamic_indices::make_spin (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute15dynamic_indices9make_spinENSt10shared_ptrI14generator_spinI11dyn_indicesEEE14spin_componentDpRR10IndexTypes">libcommute::dynamic_indices::make_spin (C++ function)</a>
 </li>
       <li><a href="expression/factories.html#_CPPv4I0DpEN10libcommute15dynamic_indices1nE10expressionI10ScalarType11dyn_indicesEDpRR10IndexTypes">libcommute::dynamic_indices::n (C++ function)</a>
 </li>
@@ -259,8 +261,6 @@
 </li>
       <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator10algebra_idEv">libcommute::generator::algebra_id (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator5cloneEv">libcommute::generator::clone (C++ function)</a>
-</li>
       <li><a href="expression/generator.html#_CPPv4N10libcommute9generator4conjER17linear_function_t">libcommute::generator::conj (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator5equalERK9generator">libcommute::generator::equal (C++ function)</a>
@@ -289,13 +289,13 @@
 </li>
       <li><a href="expression/generator.html#_CPPv4N10libcommute9generatorgtERK9generatorRK9generator">libcommute::generator::operator&gt; (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator5printERNSt7ostreamE">libcommute::generator::print (C++ function)</a>
-</li>
       <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator12reduce_powerEiR17linear_function_t">libcommute::generator::reduce_power (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator13simplify_prodERK9generatorR17linear_function_t">libcommute::generator::simplify_prod (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator9swap_withERK9generatorR17linear_function_t">libcommute::generator::swap_with (C++ function)</a>
+</li>
+      <li><a href="expression/generator.html#_CPPv4NK10libcommute9generator9to_stringEv">libcommute::generator::to_string (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4N10libcommute9generatorD0Ev">libcommute::generator::~generator (C++ function)</a>
 </li>
@@ -383,7 +383,7 @@
 </li>
       <li><a href="loperator/hilbert_space.html#_CPPv4IDpEN10libcommute10libcommute15dynamic_indices15make_space_spinE21elementary_space_spinI11dyn_indicesEdDpRR10IndexTypes">libcommute::libcommute::dynamic_indices::make_space_spin (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute10libcommute15dynamic_indices9make_spinE14generator_spinI11dyn_indicesEdN10libcommute14spin_componentEDpRR10IndexTypes">libcommute::libcommute::dynamic_indices::make_spin (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute10libcommute15dynamic_indices9make_spinENSt10shared_ptrI14generator_spinI11dyn_indicesEEEdN10libcommute14spin_componentEDpRR10IndexTypes">libcommute::libcommute::dynamic_indices::make_spin (C++ function)</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute10libcommute7is_spinEbRKN10libcommute9generatorIDp10IndexTypesEE">libcommute::libcommute::is_spin (C++ function)</a>
 </li>
@@ -401,7 +401,7 @@
 </li>
       <li><a href="expression/generator.html#_CPPv4N10libcommute15linear_function15linear_functionERK10var_number">libcommute::linear_function::linear_function (C++ function)</a>, <a href="expression/generator.html#_CPPv4N10libcommute15linear_function15linear_functionERK10var_numberDpRR4Args">[1]</a>, <a href="expression/generator.html#_CPPv4N10libcommute15linear_function15linear_functionERK10var_numberNSt6vectorINSt4pairI1T10var_numberEEEE">[2]</a>, <a href="expression/generator.html#_CPPv4N10libcommute15linear_function15linear_functionEv">[3]</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4N10libcommute15linear_function3setERK10var_numberDpRR4Args">libcommute::linear_function::set (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4N10libcommute15linear_function3setERK10var_number">libcommute::linear_function::set (C++ function)</a>, <a href="expression/generator.html#_CPPv4N10libcommute15linear_function3setERK10var_numberDpRR4Args">[1]</a>, <a href="expression/generator.html#_CPPv4N10libcommute15linear_function3setERK10var_numberNSt6vectorINSt4pairI1T10var_numberEEEE">[2]</a>
 </li>
       <li><a href="expression/generator.html#_CPPv4N10libcommute15linear_function5termsE">libcommute::linear_function::terms (C++ member)</a>
 </li>
@@ -477,7 +477,7 @@
 </li>
       <li><a href="expression/monomial.html#_CPPv4NK10libcommute8monomial10is_orderedEv">libcommute::monomial::is_ordered (C++ function)</a>
 </li>
-      <li><a href="expression/monomial.html#_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes">libcommute::monomial::monomial (C++ function)</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE">[1]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listIP14generator_typeEE">[2]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialENSt6vectorIP14generator_typeEE">[3]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialERK8monomial">[4]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialERR8monomial">[5]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialEv">[6]</a>
+      <li><a href="expression/monomial.html#_CPPv4IDpEN10libcommute8monomial8monomialEDpRR8GenTypes">libcommute::monomial::monomial (C++ function)</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialENSt16initializer_listI12gen_ptr_typeEE">[1]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialENSt6vectorI12gen_ptr_typeEE">[2]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialERK8monomial">[3]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialERR8monomial">[4]</a>, <a href="expression/monomial.html#_CPPv4N10libcommute8monomial8monomialEv">[5]</a>
 </li>
       <li><a href="expression/monomial.html#_CPPv4N10libcommute8monomialneERK8monomialRK8monomial">libcommute::monomial::operator!= (C++ function)</a>
 </li>
@@ -601,11 +601,11 @@
 </li>
       <li><a href="expression/expression.html#_CPPv4IDpEN10libcommute14static_indices9expr_realE">libcommute::static_indices::expr_real (C++ type)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices10make_bosonE15generator_bosonIDp10IndexTypesEbDpRR10IndexTypes">libcommute::static_indices::make_boson (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices10make_bosonENSt10shared_ptrI15generator_bosonIDp10IndexTypesEEEbDpRR10IndexTypes">libcommute::static_indices::make_boson (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices12make_fermionE17generator_fermionIDp10IndexTypesEbDpRR10IndexTypes">libcommute::static_indices::make_fermion (C++ function)</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices12make_fermionENSt10shared_ptrI17generator_fermionIDp10IndexTypesEEEbDpRR10IndexTypes">libcommute::static_indices::make_fermion (C++ function)</a>
 </li>
-      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices9make_spinE14generator_spinIDp10IndexTypesE14spin_componentDpRR10IndexTypes">libcommute::static_indices::make_spin (C++ function)</a>, <a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices9make_spinE14generator_spinIDp10IndexTypesEd14spin_componentDpRR10IndexTypes">[1]</a>
+      <li><a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices9make_spinENSt10shared_ptrI14generator_spinIDp10IndexTypesEEE14spin_componentDpRR10IndexTypes">libcommute::static_indices::make_spin (C++ function)</a>, <a href="expression/generator.html#_CPPv4IDpEN10libcommute14static_indices9make_spinENSt10shared_ptrI14generator_spinIDp10IndexTypesEEEd14spin_componentDpRR10IndexTypes">[1]</a>
 </li>
       <li><a href="expression/factories.html#_CPPv4I0DpEN10libcommute14static_indices1nE10expressionI10ScalarTypeDp10IndexTypesEDpRR10IndexTypes">libcommute::static_indices::n (C++ function)</a>
 </li>

@@ -6,8 +6,9 @@ Monomial
 .. default-domain:: cpp
 
 Monomials are ordered products of :ref:`algebra generators <generator>`. Even
-though monomials stored as parts of a :ref:`polynomial expression <expression>`
-are always canonically ordered, that need not be true in general.
+though the monomials stored as parts of a
+:ref:`polynomial expression <expression>` are always canonically ordered,
+that need not be true in general.
 
 .. namespace:: libcommute
 
@@ -26,36 +27,31 @@ are always canonically ordered, that need not be true in general.
 
   .. type:: index_types = std::tuple<IndexTypes...>
   .. type:: generator_type = generator<IndexTypes...>
-  .. type:: gen_ptr_type = std::unique_ptr<generator_type>
+  .. type:: gen_ptr_type = std::shared_ptr<const generator_type>
 
   .. rubric:: Constructors
 
   .. function:: monomial() = default
 
-    Construct an empty (zero-length) monomial :math:`M^{(0)} = 1`.
+    Construct an empty (zero-length) monomial :math:`M^{(0)} \equiv 1`.
 
   .. function:: template<typename... GenTypes> \
                 explicit monomial(GenTypes&&... generators)
 
-    Construct a non-empty monomial from a list of generators.
+    Construct a non-empty monomial from a list of generators. This constructor
+    calls ``std::make_shared()`` for each of the provided generators, and the
+    constructed monomial object takes ownership of the generators.
 
-  .. function:: monomial(std::initializer_list<generator_type*> generators)
+  .. function:: monomial(std::vector<gen_ptr_type> generators)
 
-    Construct a monomial from a list of pointers to generators using the
-    list initialization syntax. This constructor creates copies of the
-    generators by calling :func:`generator::clone()`.
-
-  .. function:: monomial(std::vector<generator_type*> generators)
-
-    Construct a monomial from a vector of pointers to generators. This
-    constructor creates copies of the generators by calling
-    :func:`generator::clone()`.
+    Construct a monomial from a vector of shared pointers to generators. The
+    constructed monomial object shares ownership of the generators.
 
   .. function:: monomial(std::initializer_list<gen_ptr_type> generators)
 
-    Construct a monomial from a list of smart pointers to generators using the
-    list initialization syntax. This constructor creates copies of the
-    generators by calling :func:`generator::clone()`.
+    Construct a monomial from a list of shared pointers to generators using the
+    list initialization syntax. The constructed monomial object shares
+    ownership of the generators.
 
   .. rubric:: Copy/move-constructors and assignments
 
@@ -135,8 +131,11 @@ are always canonically ordered, that need not be true in general.
                 void append(std::pair<const_iterator, const_iterator> const& r)
 
     Append a generator, a monomial or a range of generators specified by a
-    begin-end iterator pair :expr:`std::pair\<const_iterator, const_iterator>`
-    to this monomial.
+    begin-end iterator pair :var:`r` to this monomial. All appended generators
+    are expected to be managed by ``std::shared_ptr`` objects, and the monomial
+    will take co-ownership of them by `calling \
+    <https://en.cppreference.com/w/cpp/memory/enable_shared_from_this/
+    shared_from_this.html>`_ ``shared_from_this()``.
 
   .. function:: template<typename... PartTypes> \
                 friend monomial concatenate(PartTypes&&... parts)

@@ -104,6 +104,33 @@ The compatibility is then checked in the trait method
 <li><p>Added optional support for <a class="reference external" href="https://www.boost.org/doc/libs/latest/libs/rational/rational.html">boost::rational</a> and
 <a class="reference external" href="https://gmplib.org">GMP</a> C++ types <code class="docutils literal notranslate"><span class="pre">mpz_class</span></code>, <code class="docutils literal notranslate"><span class="pre">mpq_class</span></code>,
 <code class="docutils literal notranslate"><span class="pre">mpf_class</span></code> as <code class="docutils literal notranslate"><span class="pre">ScalarType</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generator</span></code> and derived classes no longer use the ‘virtual copy-constructor’
+pattern: The virtual <code class="docutils literal notranslate"><span class="pre">clone()</span></code> method has been removed. Instead,
+<code class="docutils literal notranslate"><span class="pre">generator</span></code> is now derived from <a class="reference external" href="https://en.cppreference.com/w/cpp/memory/enable_shared_from_this.html"><code class="docutils literal notranslate"><span class="pre">std::enable_shared_from_this</span></code></a>, and
+instances of the generator classes are managed by shared pointers. This
+change leads to significant memory savings and speedups when working with long
+expressions.</p></li>
+<li><p>Factory functions <code class="docutils literal notranslate"><span class="pre">make_fermion()</span></code>, <code class="docutils literal notranslate"><span class="pre">make_boson()</span></code> and <code class="docutils literal notranslate"><span class="pre">make_spin()</span></code>
+are now returning generator objects wrapped in <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code>.</p></li>
+<li><p>The virtual method <code class="docutils literal notranslate"><span class="pre">generator::print(std::ostream&amp;</span> <span class="pre">os)</span></code> has been replaced
+with <code class="docutils literal notranslate"><span class="pre">generator::to_string()</span></code> that returns a string representation of the
+generator object.</p></li>
+<li><p>New free function <code class="docutils literal notranslate"><span class="pre">to_string(dyn_indices_generic</span> <span class="pre">const&amp;</span> <span class="pre">ind)</span></code> that returns a
+string representation of <code class="docutils literal notranslate"><span class="pre">ind</span></code>.</p></li>
+<li><p>The stream insertion operator for <code class="docutils literal notranslate"><span class="pre">dyn_indices_generic</span></code> now calls
+<code class="docutils literal notranslate"><span class="pre">to_string()</span></code>, which can give a different result in some cases (for example,
+for indices of the type <code class="docutils literal notranslate"><span class="pre">double</span></code>).</p></li>
+<li><p>The constructor <code class="docutils literal notranslate"><span class="pre">monomial::monomial(GenTypes&amp;&amp;...</span> <span class="pre">gens)</span></code> takes the ownership
+of the generators by calling <code class="docutils literal notranslate"><span class="pre">std::make_shared()</span></code> on each of them.</p></li>
+<li><p>The two constructors of <code class="docutils literal notranslate"><span class="pre">monomial</span></code>, that took a vector or an
+initializer list of <code class="docutils literal notranslate"><span class="pre">std::unique_ptr&lt;generator&gt;</span></code>, now expect
+<code class="docutils literal notranslate"><span class="pre">std::shared_ptr&lt;const</span> <span class="pre">generator&gt;</span></code> instead. They take co-ownership of the
+provided generators.</p></li>
+<li><p>Methods <code class="docutils literal notranslate"><span class="pre">monomial::append()</span></code> and <code class="docutils literal notranslate"><span class="pre">monomial::concatenate()</span></code> expect their
+arguments to be managed by <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> and will take co-ownership of
+the provided generators by calling <code class="docutils literal notranslate"><span class="pre">shared_from_this()</span></code>.</p></li>
+<li><p>It is no longer possible to construct a <code class="docutils literal notranslate"><span class="pre">monomial</span></code> from a vector or an
+initializer list of raw pointers to generators.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_fermion_sector_view</span></code> and <code class="docutils literal notranslate"><span class="pre">n_fermion_multisector_view</span></code> are now
 parameterized on the type of ranking algorithm used to map basis state indices
 from a full Hilbert space to a sector. Supported ranking algorithms are
@@ -148,6 +175,8 @@ Credits to Dr. Cezary Śliwa for providing the patch.</p></li>
 <li><p>Whenever possible, use compiler intrinsics to speed up complex bit
 manipulation operations (<code class="docutils literal notranslate"><span class="pre">popcount</span></code>, <code class="docutils literal notranslate"><span class="pre">tzcount</span></code>, <code class="docutils literal notranslate"><span class="pre">pdep</span></code>, <code class="docutils literal notranslate"><span class="pre">pext</span></code>).</p></li>
 <li><p>Change base type of <code class="docutils literal notranslate"><span class="pre">spin_component</span></code> to the 1-byte wide <code class="docutils literal notranslate"><span class="pre">std::uint8_t</span></code>.</p></li>
+<li><p>Add a new method overload
+<code class="docutils literal notranslate"><span class="pre">linear_function::set(var_number</span> <span class="pre">const&amp;</span> <span class="pre">const_term,</span> <span class="pre">std::vector&lt;std::pair&lt;T,</span> <span class="pre">var_number&gt;&gt;</span> <span class="pre">terms)</span></code></p></li>
 <li><p>New CMake option <code class="docutils literal notranslate"><span class="pre">CPPCHECK_EXTRA_FLAGS</span></code>. It can be used to pass additional
 command line flags to <code class="docutils literal notranslate"><span class="pre">cppcheck</span></code>.</p></li>
 </ul>
