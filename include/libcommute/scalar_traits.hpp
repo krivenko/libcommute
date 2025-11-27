@@ -65,8 +65,8 @@ template <typename S> struct scalar_traits<S, with_trait<std::is_integral, S>> {
     if(vn.number_type != var_number::integer) {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variant number " +
-                               ss.str() + " to an integral ScalarType");
+      throw std::runtime_error("Cannot convert the variant number " + ss.str() +
+                               " to an integral ScalarType");
     }
     return S(int(vn));
   }

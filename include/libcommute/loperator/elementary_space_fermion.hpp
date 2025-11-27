@@ -40,8 +40,7 @@ public:
   ~elementary_space_fermion() override = default;
 
   // Elementary space objects are immutable
-  elementary_space_fermion&
-  operator=(elementary_space_fermion const&) = delete;
+  elementary_space_fermion& operator=(elementary_space_fermion const&) = delete;
   elementary_space_fermion&
   operator=(elementary_space_fermion&&) noexcept = delete;
 

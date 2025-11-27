@@ -153,8 +153,7 @@ template <> class es_constructor<boson> {
 
 public:
   es_constructor() = delete;
-  explicit es_constructor(sv_index_type dim_boson)
-    : dim_boson_(dim_boson) {}
+  explicit es_constructor(sv_index_type dim_boson) : dim_boson_(dim_boson) {}
 
   template <typename... IndexTypes>
   inline std::unique_ptr<elementary_space<IndexTypes...>>

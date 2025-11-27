@@ -92,12 +92,12 @@ template <typename B, typename MT> struct invoke_impl<MT B::*> {
       typename... Args,
       typename MT1,
       typename = typename std::enable_if<std::is_function<MT1>::value>::type>
-  static auto call(MT1 B::*pmf, T&& t, Args&&... args)
+  static auto call(MT1 B::* pmf, T&& t, Args&&... args)
       -> decltype((invoke_impl::get(std::forward<T>(t)).*
                    pmf)(std::forward<Args>(args)...));
 
   template <typename T>
-  static auto call(MT B::*pmd, T&& t)
+  static auto call(MT B::* pmd, T&& t)
       -> decltype(invoke_impl::get(std::forward<T>(t)).*pmd);
 };
 

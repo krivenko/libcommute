@@ -101,10 +101,9 @@ TEST_CASE("Action of a bosonic monomial on an index",
   for(unsigned int n1 = 0; n1 < dims[0]; ++n1) {
     for(unsigned int n2 = 0; n2 < dims[1]; ++n2) {
       for(unsigned int n3 = 0; n3 < dims[2]; ++n3) {
-        in_index_list.push_back((n1 << bit_ranges[0].first) +
-                                (n2 << bit_ranges[1].first) +
-                                (n3 << bit_ranges[2].first) +
-                                ((1 << n_pad_bits) - 1));
+        in_index_list.push_back(
+            (n1 << bit_ranges[0].first) + (n2 << bit_ranges[1].first) +
+            (n3 << bit_ranges[2].first) + ((1 << n_pad_bits) - 1));
       }
     }
   }

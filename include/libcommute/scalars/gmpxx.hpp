@@ -96,8 +96,8 @@ template <> struct scalar_traits<mpz_class> {
     else {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variant number " +
-                               ss.str() + " to mpz_class");
+      throw std::runtime_error("Cannot convert the variant number " + ss.str() +
+                               " to mpz_class");
     }
   }
   // Complex conjugate of x
@@ -128,8 +128,8 @@ template <> struct scalar_traits<mpq_class> {
     else {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variant number " +
-                               ss.str() + " to mpq_class");
+      throw std::runtime_error("Cannot convert the variant number " + ss.str() +
+                               " to mpq_class");
     }
   }
   // Complex conjugate of x

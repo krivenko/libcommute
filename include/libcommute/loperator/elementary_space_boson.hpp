@@ -38,9 +38,10 @@ public:
   template <typename... Args>
   elementary_space_boson(sv_index_type dim, Args&&... indices)
     : base(std::forward<Args>(indices)...),
-      dim_(dim), n_bits_(std::ceil(std::log2(dim))) {
-      assert(dim > 0);
-    }
+      dim_(dim),
+      n_bits_(std::ceil(std::log2(dim))) {
+    assert(dim > 0);
+  }
   elementary_space_boson(elementary_space_boson const&) = default;
   elementary_space_boson(elementary_space_boson&&) noexcept = default;
   ~elementary_space_boson() override = default;

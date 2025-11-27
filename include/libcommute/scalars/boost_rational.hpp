@@ -48,8 +48,8 @@ template <typename IntType> struct scalar_traits<boost::rational<IntType>> {
     else {
       std::stringstream ss;
       ss << vn;
-      throw std::runtime_error("Cannot convert the variant number " +
-                               ss.str() + " to boost::rational");
+      throw std::runtime_error("Cannot convert the variant number " + ss.str() +
+                               " to boost::rational");
     }
   }
   // Complex conjugate of x
