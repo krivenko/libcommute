@@ -34,14 +34,6 @@
 namespace libcommute {
 
 //
-// Just because std::to_string(std::string) is not part of STL
-//
-
-inline std::string to_string(std::string const& x) {
-  return x;
-}
-
-//
 // c_str_to_string_t<T> maps T to itself, unless T is a C-string that is
 // mapped to std::string.
 //
@@ -126,21 +118,30 @@ template <typename T> struct not_in_type_list<T> : std::true_type {};
 
 namespace detail {
 
+//
+// Just because std::to_string(std::string) is not defined in STL
+//
+
+template <typename T> inline std::string to_string_impl(T const& x) {
+  using std::to_string;
+  return to_string(x);
+}
+template <>
+inline std::string to_string_impl<std::string>(std::string const& x) {
+  return x;
+}
+
 template <std::size_t N> struct tuple_to_string_impl {
   template <typename... T>
   static void apply(std::tuple<T...> const& t, std::string& s) {
-    using std::to_string;
-    using libcommute::to_string;
-    s += to_string(std::get<sizeof...(T) - 1 - N>(t)) + ",";
+    s += to_string_impl(std::get<sizeof...(T) - 1 - N>(t)) + ",";
     tuple_to_string_impl<N - 1>::apply(t, s);
   }
 };
 template <> struct tuple_to_string_impl<0> {
   template <typename... T>
   static void apply(std::tuple<T...> const& t, std::string& s) {
-    using std::to_string;
-    using libcommute::to_string;
-    s += to_string(std::get<sizeof...(T) - 1>(t));
+    s += to_string_impl(std::get<sizeof...(T) - 1>(t));
   }
 };
 

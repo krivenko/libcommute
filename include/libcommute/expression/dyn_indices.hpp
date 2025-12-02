@@ -110,13 +110,8 @@ public:
     std::string s{};
     const size_t N = ind.indices_.size();
     for(size_t i = 0; i < N; ++i) {
-      std::visit(
-          [&](auto const& x) {
-            using std::to_string;
-            using libcommute::to_string;
-            s += to_string(x);
-          },
-          ind.indices_[i]);
+      std::visit([&](auto const& x) { s += detail::to_string_impl(x); },
+                 ind.indices_[i]);
       if(i + 1 < N) s += ",";
     }
     return s;
