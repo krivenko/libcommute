@@ -14,10 +14,10 @@ In its rotationally invariant form, the Hamiltonian reads
   \hat H_K = U \sum_{m} n_{m\uparrow} n_{m\downarrow} +
              (U-2J)\sum_{m\neq m'} n_{m\uparrow} n_{m'\downarrow} +\\+
              (U-3J)\sum_{m<m',\sigma} n_{m\sigma} n_{m'\sigma}
-             -J\sum_{m\neq m'} d^\dagger_{m\uparrow} d_{m\downarrow}
-                               d^\dagger_{m'\uparrow} d_{m'\uparrow}
-             +J\sum_{m\neq m'} d^\dagger_{m\uparrow} d^\dagger_{m\downarrow}
-                               d_{m'\downarrow} d_{m'\uparrow}.
+             -J\sum_{m\neq m'} c^\dagger_{m\uparrow} c_{m\downarrow}
+                               c^\dagger_{m'\uparrow} c_{m'\uparrow}
+             +J\sum_{m\neq m'} c^\dagger_{m\uparrow} c^\dagger_{m\downarrow}
+                               c_{m'\downarrow} c_{m'\uparrow}.
   \end{multline}
 
 The orbital indices :math:`m`, :math:`m'` run over the :math:`t_{2g}` triplet
