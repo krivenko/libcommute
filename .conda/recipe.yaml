@@ -37,7 +37,7 @@ source:
 
 build:
   number: ${{ number }}
-  string: ${{ number }}
+  string: h${{ hash }}_${{ number }}
   noarch: generic
   script: build.sh
 
