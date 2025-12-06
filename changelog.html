@@ -51,11 +51,11 @@
 <li class="toctree-l1"><a class="reference internal" href="loperator/index.html">Tools for exact diagonalization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Advanced examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#unreleased">[1.0.0] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">[0.7.2] - 2022-11-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.1] - 2021-12-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">[0.7.0] - 2021-10-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">[0.6.1] - 2021-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">[1.0.0] - 2025-12-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">[0.7.2] - 2022-11-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">[0.7.1] - 2021-12-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">[0.7.0] - 2021-10-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">[0.6.1] - 2021-03-30</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
@@ -89,8 +89,8 @@
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
-<section id="unreleased">
-<h2>[1.0.0] - Unreleased<a class="headerlink" href="#unreleased" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>[1.0.0] - 2025-12-06<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Better support for user-defined scalar types in <code class="docutils literal notranslate"><span class="pre">expression</span></code>. In particular,
 it is now possible to use integer-like and rational-like numeric types, as
@@ -111,7 +111,7 @@ instances of the generator classes are managed by shared pointers. This
 change leads to significant memory savings and speedups when working with long
 expressions.</p></li>
 <li><p>Factory functions <code class="docutils literal notranslate"><span class="pre">make_fermion()</span></code>, <code class="docutils literal notranslate"><span class="pre">make_boson()</span></code> and <code class="docutils literal notranslate"><span class="pre">make_spin()</span></code>
-are now returning generator objects wrapped in <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code>.</p></li>
+now return generator objects wrapped in <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code>.</p></li>
 <li><p>The virtual method <code class="docutils literal notranslate"><span class="pre">generator::print(std::ostream&amp;</span> <span class="pre">os)</span></code> has been replaced
 with <code class="docutils literal notranslate"><span class="pre">generator::to_string()</span></code> that returns a string representation of the
 generator object.</p></li>
@@ -122,7 +122,7 @@ string representation of <code class="docutils literal notranslate"><span class=
 for indices of the type <code class="docutils literal notranslate"><span class="pre">double</span></code>).</p></li>
 <li><p>The constructor <code class="docutils literal notranslate"><span class="pre">monomial::monomial(GenTypes&amp;&amp;...</span> <span class="pre">gens)</span></code> takes the ownership
 of the generators by calling <code class="docutils literal notranslate"><span class="pre">std::make_shared()</span></code> on each of them.</p></li>
-<li><p>The two constructors of <code class="docutils literal notranslate"><span class="pre">monomial</span></code>, that took a vector or an
+<li><p>The two constructors of <code class="docutils literal notranslate"><span class="pre">monomial</span></code>, which took a vector or an
 initializer list of <code class="docutils literal notranslate"><span class="pre">std::unique_ptr&lt;generator&gt;</span></code>, now expect
 <code class="docutils literal notranslate"><span class="pre">std::shared_ptr&lt;const</span> <span class="pre">generator&gt;</span></code> instead. They take co-ownership of the
 provided generators.</p></li>
@@ -179,10 +179,12 @@ manipulation operations (<code class="docutils literal notranslate"><span class=
 <code class="docutils literal notranslate"><span class="pre">linear_function::set(var_number</span> <span class="pre">const&amp;</span> <span class="pre">const_term,</span> <span class="pre">std::vector&lt;std::pair&lt;T,</span> <span class="pre">var_number&gt;&gt;</span> <span class="pre">terms)</span></code></p></li>
 <li><p>New CMake option <code class="docutils literal notranslate"><span class="pre">CPPCHECK_EXTRA_FLAGS</span></code>. It can be used to pass additional
 command line flags to <code class="docutils literal notranslate"><span class="pre">cppcheck</span></code>.</p></li>
+<li><p>A <a class="reference external" href="https://anaconda.org/channels/krivenko/packages/libcommute/overview">conda package</a> is now
+being provided.</p></li>
 </ul>
 </section>
-<section id="id1">
-<h2>[0.7.2] - 2022-11-12<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id2">
+<h2>[0.7.2] - 2022-11-12<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Export namespaced CMake target <code class="docutils literal notranslate"><span class="pre">libcommute::libcommute</span></code> instead of
 plain <code class="docutils literal notranslate"><span class="pre">libcommute</span></code>.</p></li>
@@ -195,8 +197,8 @@ location.</p></li>
 <li><p>Added project citation information.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>[0.7.1] - 2021-12-17<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>[0.7.1] - 2021-12-17<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>New methods <code class="docutils literal notranslate"><span class="pre">space_partition::subspace_basis()</span></code> and
 <code class="docutils literal notranslate"><span class="pre">space_partition::subspace_bases()</span></code>.</p></li>
@@ -204,8 +206,8 @@ location.</p></li>
 <li><p>New example <code class="docutils literal notranslate"><span class="pre">hubbard_holstein_1d</span></code> and minor updates to the documentation.</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>[0.7.0] - 2021-10-09<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>[0.7.0] - 2021-10-09<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Added an implementation of the <code class="docutils literal notranslate"><span class="pre">StateVector</span></code> concept for some
 <a class="reference external" href="https://eigen.tuxfamily.org/">Eigen 3</a> types (vectors, vector segments,
@@ -233,8 +235,8 @@ tests and examples as part of build process.</p></li>
 <li><p>Reformatted C++ sources using <code class="docutils literal notranslate"><span class="pre">clang-format</span></code> and a style based on <code class="docutils literal notranslate"><span class="pre">LLVM</span></code>.</p></li>
 </ul>
 </section>
-<section id="id4">
-<h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id5">
+<h2>[0.6.1] - 2021-03-30<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>New method <code class="docutils literal notranslate"><span class="pre">hilbert_space::index()</span></code>.</p></li>
 </ul>

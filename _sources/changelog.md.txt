@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - Unreleased
+## [1.0.0] - 2025-12-06
 
 - Better support for user-defined scalar types in ``expression``. In particular,
   it is now possible to use integer-like and rational-like numeric types, as
@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
   change leads to significant memory savings and speedups when working with long
   expressions.
 - Factory functions ``make_fermion()``, ``make_boson()`` and ``make_spin()``
-  are now returning generator objects wrapped in ``std::shared_ptr``.
+  now return generator objects wrapped in ``std::shared_ptr``.
 - The virtual method ``generator::print(std::ostream& os)`` has been replaced
   with ``generator::to_string()`` that returns a string representation of the
   generator object.
@@ -36,7 +36,7 @@ All notable changes to this project will be documented in this file.
   for indices of the type ``double``).
 - The constructor ``monomial::monomial(GenTypes&&... gens)`` takes the ownership
   of the generators by calling ``std::make_shared()`` on each of them.
-- The two constructors of ``monomial``, that took a vector or an
+- The two constructors of ``monomial``, which took a vector or an
   initializer list of ``std::unique_ptr<generator>``, now expect
   ``std::shared_ptr<const generator>`` instead. They take co-ownership of the
   provided generators.
@@ -95,6 +95,9 @@ All notable changes to this project will be documented in this file.
   std::vector<std::pair<T, var_number>> terms)``
 - New CMake option ``CPPCHECK_EXTRA_FLAGS``. It can be used to pass additional
   command line flags to ``cppcheck``.
+- A [conda package](
+  https://anaconda.org/channels/krivenko/packages/libcommute/overview) is now
+  being provided.
 
 ## [0.7.2] - 2022-11-12
 
