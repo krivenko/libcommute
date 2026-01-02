@@ -121,6 +121,7 @@ template <typename V>
 void check_conj(V const& v, std::initializer_list<int> ref) {
   linear_function_t f;
   int n = 0;
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   for(auto ref_it = ref.begin(); ref_it != ref.end(); ++ref_it, ++n) {
     v[n]->conj(f);
     CHECK_LINEAR_FUNCTION_1(f, 0, 1, *v[*ref_it]);

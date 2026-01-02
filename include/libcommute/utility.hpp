@@ -183,6 +183,7 @@ struct var_number {
     std::array<int, 2> r;
     double x;
   };
+  // NOLINTNEXTLINE(cppcoreguidelines-use-enum-class)
   enum : std::uint8_t { integer, rational, real } number_type;
 
   // cppcheck-suppress noExplicitConstructor

@@ -68,7 +68,7 @@ public:
 
 private:
   // Multiplicity, 2S+1
-  int const multiplicity_;
+  int const multiplicity_; // NOLINT(*-use-default-member-init)
 
   // n_bits_ is the smallest positive number such that 2^{n_bits_} - 1
   // exceed multiplicity of the respective spin algebra.
