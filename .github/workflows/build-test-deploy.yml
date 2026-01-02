@@ -14,10 +14,17 @@ jobs:
     strategy:
       matrix:
         include:
-          - {os: "ubuntu-22.04", cxx: "g++-11"}
-          - {os: "ubuntu-22.04", cxx: "clang++"}
-          - {os: "macos-15", cxx: "g++-13"}
-          - {os: "macos-15", cxx: "clang++"}
+          # Ubuntu
+          - {os: "ubuntu-latest", cxx: "g++-14"}
+          - {os: "ubuntu-latest", cxx: "clang++"}
+          # macOS aarch64
+          - {os: "macos-latest", cxx: "g++-15"}
+          - {os: "macos-latest", cxx: "clang++"}
+          # macOS x86-64
+          # macos-15-intel is probably the last supported macOS x86-64 runner
+          # https://github.com/actions/runner-images/issues/13074
+          - {os: "macos-15-intel", cxx: "g++-15"}
+          - {os: "macos-15-intel", cxx: "clang++"}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -30,14 +37,14 @@ jobs:
              sudo apt-get install libboost-dev libgmp-dev libeigen3-dev
            else
              brew update
-             brew install boost gmp eigen
+             brew install boost eigen
            fi
 
-    - name: Set up Python 3.11
+    - name: Set up Python 3.14
       if: startsWith(matrix.cxx, 'clang')
       uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version: 3.14
 
     - name: Install cppcheck
       if: startsWith(matrix.os, 'ubuntu')
