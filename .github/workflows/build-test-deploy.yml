@@ -9,9 +9,15 @@ on:
     branches:
       - master
 
+# Cancel existing runs when a new commit is pushed to the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-test-deploy:
     strategy:
+      fail-fast: false
       matrix:
         include:
           # Ubuntu
@@ -26,6 +32,7 @@ jobs:
           - {os: "macos-15-intel", cxx: "g++-15"}
           - {os: "macos-15-intel", cxx: "clang++"}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
 
     steps:
     - uses: actions/checkout@v4
