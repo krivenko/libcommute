@@ -8,15 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to use libcommute in your project &mdash; libcommute 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css?v=9bead9b5" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=8d563738"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -123,7 +123,7 @@ project.</p>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">myproject</span><span class="w"> </span><span class="s">LANGUAGES</span><span class="w"> </span><span class="s">CXX</span><span class="p">)</span>
 
-<span class="c"># Change the C++ standard to &#39;17&#39; if you plan to use</span>
+<span class="c"># Change the C++ standard to '17' if you plan to use</span>
 <span class="c"># the dynamic index sequence feature</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">11</span><span class="p">)</span>
 
@@ -133,7 +133,7 @@ project.</p>
 <span class="c"># Import libcommute target</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">libcommute</span><span class="w"> </span><span class="s">1.0.0</span><span class="w"> </span><span class="s">CONFIG</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 
-<span class="c"># Build an executable called &#39;myprog&#39;</span>
+<span class="c"># Build an executable called 'myprog'</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">myprog.cpp</span><span class="p">)</span>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">myprog</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">libcommute::libcommute</span><span class="p">)</span>
 </pre></div>

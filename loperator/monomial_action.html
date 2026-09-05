@@ -8,16 +8,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Advanced: Linear operator representation of a user-defined algebra &mdash; libcommute 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=9bead9b5" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=8d563738"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -105,7 +105,7 @@ the extra steps needed to plug the new algebra into the
 The elementary space must share algebra ID with <code class="docutils literal notranslate"><span class="pre">generator_gamma</span></code>.
 Its dimension is 4, so the <a class="reference internal" href="hilbert_space.html#hilbert-space"><span class="std std-ref">number of occupied bits</span></a> is
 <span class="math notranslate nohighlight">\(b = 2\)</span>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;gamma.hpp&quot;</span><span class="c1"> // Definition of &#39;gamma&#39; algebra ID</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"gamma.hpp"</span><span class="w"> </span><span class="c1">// Definition of 'gamma' algebra ID</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;libcommute/loperator/elementary_space.hpp&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;libcommute/loperator/loperator.hpp&gt;</span>
@@ -194,9 +194,9 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <span class="w">  </span><span class="c1">//</span>
 <span class="w">  </span><span class="c1">// [1] https://en.wikipedia.org/wiki/Generalized_permutation_matrix</span>
 <span class="w">  </span><span class="c1">//</span>
-<span class="w">  </span><span class="c1">// &#39;index&#39; is the index (a 64-bit unsigned integer) of the basis state we are</span>
+<span class="w">  </span><span class="c1">// 'index' is the index (a 64-bit unsigned integer) of the basis state we are</span>
 <span class="w">  </span><span class="c1">// acting upon. It must also receive the index of the resulting basis state.</span>
-<span class="w">  </span><span class="c1">// &#39;coeff&#39; must be multiplied by the overall constant factor acquired as</span>
+<span class="w">  </span><span class="c1">// 'coeff' must be multiplied by the overall constant factor acquired as</span>
 <span class="w">  </span><span class="c1">// a result of monomial action.</span>
 <span class="w">  </span><span class="c1">//</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ScalarType</span><span class="o">&gt;</span>
@@ -209,7 +209,7 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <span class="w">      </span><span class="k">switch</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
 <span class="w">        </span><span class="c1">// Action of \gamma^0</span>
-<span class="w">        </span><span class="c1">// It is diagonal =&gt; &#39;index&#39; does not change</span>
+<span class="w">        </span><span class="c1">// It is diagonal =&gt; 'index' does not change</span>
 <span class="w">        </span><span class="n">coeff</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">}[</span><span class="n">index</span><span class="p">];</span>
 <span class="w">        </span><span class="k">break</span><span class="p">;</span>
 <span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
@@ -229,8 +229,8 @@ state <span class="math notranslate nohighlight">\(|n\rangle, n = \{0,1,2,3\}\)<
 <span class="w">        </span><span class="k">break</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="c1">// This &#39;true&#39; signals that the action result is not identically zero.</span>
-<span class="w">    </span><span class="c1">// Returning &#39;false&#39; in cases when it is zero would help improve</span>
+<span class="w">    </span><span class="c1">// This 'true' signals that the action result is not identically zero.</span>
+<span class="w">    </span><span class="c1">// Returning 'false' in cases when it is zero would help improve</span>
 <span class="w">    </span><span class="c1">// performance.</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
@@ -300,16 +300,16 @@ apply it to 4-dimensional state vectors as usual.</p>
 <span class="w">    </span><span class="c1">// Reset vectors |\psi&gt; and |\phi&gt; to zero.</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">psi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">psi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">phi</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">phi</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// &#39;psi&#39; is i-th basis vector now</span>
+<span class="w">    </span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// 'psi' is i-th basis vector now</span>
 
 <span class="w">    </span><span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gamma5op</span><span class="p">(</span><span class="n">psi</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Print the result</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;gamma5|&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;&gt; = &quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"gamma5|"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"&gt; = "</span><span class="p">;</span>
 <span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;+&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;|&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;&gt;&quot;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"+"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"|"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"&gt;"</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">'\n'</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
